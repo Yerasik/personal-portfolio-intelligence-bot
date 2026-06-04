@@ -30,6 +30,9 @@ class AppConfig(BaseModel):
     digest_minute: int = Field(default=0, ge=0, le=59)
     focus_industries: list[str] = Field(default_factory=list)
     extra_watchlist: list[str] = Field(default_factory=list)
+    rss_feed_urls: list[str] = Field(default_factory=list)
+    news_max_items: int = Field(default=500, ge=50, le=5000)
+    news_retention_days: int = Field(default=14, ge=1, le=90)
     alert_price_change_pct: float = Field(default=5.0, gt=0)
     enable_llm_summaries: bool = False
 
@@ -73,11 +76,16 @@ class NewsItem(BaseModel):
 
     id: str
     title: str
-    url: str
     source: str = ""
+    url: str
     published_at: datetime | None = None
     fetched_at: datetime
-    related_tickers: list[str] = Field(default_factory=list)
+    ticker_tags: list[str] = Field(default_factory=list)
+    sector_tags: list[str] = Field(default_factory=list)
+    sentiment: float | None = None
+    importance: float | None = None
+    processed: bool = False
+    alert_sent: bool = False
     summary: str = ""
 
 

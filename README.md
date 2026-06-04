@@ -168,6 +168,8 @@ TZ=Asia/Hong_Kong
    - Add holdings to `data/portfolio.json` under `positions` (each entry needs a `ticker` and `shares`).
    - The bot reads those tickers and fetches quotes via yfinance on a 30-minute schedule.
    - Successful fetches are written to `data/state.json` as `latest_prices` with `last_market_fetch_at`.
+   - Add RSS feed URLs to `data/config.json` under `rss_feed_urls`. The news collector runs hourly, tags articles to portfolio/watchlist tickers and `focus_industries`, and stores matches in `data/news_cache.json`.
+   - Tune cache size with `news_max_items` (default 500) and `news_retention_days` (default 14).
 3. Start the containers with `docker compose up --build -d`.[cite:37][cite:42]
 4. Pull a model with `docker exec -it ollama ollama pull llama3.1:8b`.[cite:43]
 5. View logs with `docker compose logs -f portfolio-bot`.
@@ -182,3 +184,11 @@ docker compose run --rm --no-deps portfolio-bot python scripts/test_market_data.
 ```
 
 This loads `portfolio.json`, fetches quotes for each ticker, updates `state.json`, and prints a short summary. A single bad ticker is logged and skipped without failing the rest of the batch.
+
+### Manual news fetch smoke test
+
+```bash
+docker compose run --rm --no-deps portfolio-bot python scripts/test_news_data.py
+```
+
+This uses a mocked RSS feed to verify tagging, deduplication, cache retention settings, and `last_news_fetch_at` updates without relying on live news sources.

@@ -4,6 +4,9 @@
   "digest_minute": 0,
   "focus_industries": [],
   "extra_watchlist": [],
+  "rss_feed_urls": [],
+  "news_max_items": 500,
+  "news_retention_days": 14,
   "alert_price_change_pct": 5.0,
   "enable_llm_summaries": false
 }

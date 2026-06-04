@@ -4,19 +4,32 @@
 from __future__ import annotations
 
 import json
+import logging
 import shutil
 import sys
 import tempfile
+from datetime import UTC, datetime
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from collectors.market_data import MarketDataService, portfolio_tickers
-from storage.models import Portfolio, Position
+from collectors import market_data as market_data_module
+from collectors.market_data import MarketDataService, fetch_quote, portfolio_tickers
+from storage.models import MarketQuote, Portfolio, Position
 from storage.paths import resolve_data_paths
 from storage.repository import DataRepository
+
+logging.basicConfig(level=logging.INFO, format="%(levelname)s [%(name)s] %(message)s")
+
+
+def _fetch_quote_or_fail(ticker: str, fetched_at: datetime | None = None) -> MarketQuote:
+    """Call the real fetcher, but simulate a bad ticker without hitting Yahoo."""
+    if ticker == "ZZZZ.INVALID":
+        raise ValueError(f"Unknown or delisted ticker: {ticker}")
+    return fetch_quote(ticker, fetched_at=fetched_at)
 
 
 def run_test() -> None:
@@ -30,13 +43,14 @@ def run_test() -> None:
         portfolio = Portfolio(
             positions=[
                 Position(ticker="AAPL", shares=1),
-                Position(ticker="INVALID.TICKER.XYZ", shares=1),
+                Position(ticker="ZZZZ.INVALID", shares=1),
             ]
         )
         repository.save_portfolio(portfolio)
 
         service = MarketDataService()
-        batch = service.run(repository, portfolio)
+        with patch.object(market_data_module, "fetch_quote", side_effect=_fetch_quote_or_fail):
+            batch = service.run(repository, portfolio)
 
         print(f"Tickers requested: {portfolio_tickers(portfolio)}")
         print(f"Succeeded: {list(batch.quotes.keys())}")
@@ -56,7 +70,10 @@ def run_test() -> None:
         if aapl.price is None:
             raise AssertionError("AAPL price should not be null")
 
-        if "INVALID.TICKER.XYZ" in state.latest_prices:
+        if batch.failures != {"ZZZZ.INVALID": "Unknown or delisted ticker: ZZZZ.INVALID"}:
+            raise AssertionError(f"unexpected failures map: {batch.failures}")
+
+        if "ZZZZ.INVALID" in state.latest_prices:
             raise AssertionError("failed ticker should not be stored in latest_prices")
 
         print("state.json snapshot:")

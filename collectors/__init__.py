@@ -8,7 +8,7 @@ from collectors.market_data import (
     fetch_quote,
     portfolio_tickers,
 )
-from collectors.news_data import NewsDataCollector
+from collectors.news_data import NewsDataCollector, NewsDataService, NewsFetchBatchResult
 from collectors.sector_data import SectorDataCollector
 
 __all__ = [
@@ -18,6 +18,8 @@ __all__ = [
     "MarketDataCollector",
     "MarketDataService",
     "NewsDataCollector",
+    "NewsDataService",
+    "NewsFetchBatchResult",
     "SectorDataCollector",
     "fetch_quote",
     "portfolio_tickers",

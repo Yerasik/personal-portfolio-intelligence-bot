@@ -10,12 +10,14 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 from collectors.base import CollectorContext
 from collectors.market_data import MarketDataCollector
+from collectors.news_data import NewsDataCollector
 from config.loader import ConfigurationBundle
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
 
 MARKET_FETCH_INTERVAL_MINUTES = 30
+NEWS_FETCH_INTERVAL_MINUTES = 60
 
 
 @dataclass
@@ -54,6 +56,26 @@ def run_market_data_collector(
     )
 
 
+def run_news_data_collector(
+    configuration: ConfigurationBundle,
+    repository: DataRepository,
+) -> None:
+    """Execute the news collector with freshly loaded config and portfolio data."""
+    portfolio = repository.load_portfolio()
+    app_config = repository.load_config()
+    context = CollectorContext(
+        repository=repository,
+        app_config=app_config,
+        portfolio=portfolio,
+    )
+    result = NewsDataCollector().run(context)
+    logger.info(
+        "News data job finished (success=%s): %s",
+        result.success,
+        result.message,
+    )
+
+
 def build_scheduler(
     configuration: ConfigurationBundle,
     repository: DataRepository,
@@ -63,6 +85,9 @@ def build_scheduler(
 
     def market_fetch_job() -> None:
         run_market_data_collector(configuration, repository)
+
+    def news_fetch_job() -> None:
+        run_news_data_collector(configuration, repository)
 
     def heartbeat() -> None:
         logger.debug(
@@ -74,6 +99,14 @@ def build_scheduler(
         market_fetch_job,
         trigger=IntervalTrigger(minutes=MARKET_FETCH_INTERVAL_MINUTES),
         id="market_fetch",
+        replace_existing=True,
+        next_run_time=datetime.now(tz=UTC),
+    )
+
+    scheduler.add_job(
+        news_fetch_job,
+        trigger=IntervalTrigger(minutes=NEWS_FETCH_INTERVAL_MINUTES),
+        id="news_fetch",
         replace_existing=True,
         next_run_time=datetime.now(tz=UTC),
     )

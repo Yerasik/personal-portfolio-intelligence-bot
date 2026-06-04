@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import logging
+import warnings
+from collections.abc import Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 
@@ -13,6 +16,30 @@ from storage.models import MarketQuote, Portfolio
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
+
+_YFINANCE_LOGGERS = (
+    "yfinance",
+    "urllib3",
+    "urllib3.connectionpool",
+    "peewee",
+)
+
+
+@contextmanager
+def _quiet_yfinance() -> Iterator[None]:
+    """Suppress noisy yfinance, HTTP client, and pandas warnings during API calls."""
+    previous_levels = {
+        name: logging.getLogger(name).level for name in _YFINANCE_LOGGERS
+    }
+    try:
+        for name in _YFINANCE_LOGGERS:
+            logging.getLogger(name).setLevel(logging.CRITICAL)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            yield
+    finally:
+        for name, level in previous_levels.items():
+            logging.getLogger(name).setLevel(level)
 
 
 def portfolio_tickers(portfolio: Portfolio) -> list[str]:
@@ -54,6 +81,48 @@ def _pick_str(source: dict[str, object], *keys: str) -> str:
     return ""
 
 
+def _quote_from_history(symbol: str, history: object) -> tuple[float | None, float | None, int | None]:
+    """Extract price, daily change %, and volume from a yfinance history frame."""
+    if history is None or getattr(history, "empty", True):
+        return None, None, None
+
+    closes = history["Close"].dropna()
+    volumes = history["Volume"].dropna()
+    if closes.empty:
+        return None, None, None
+
+    price = _coerce_float(closes.iloc[-1])
+    volume = _coerce_int(volumes.iloc[-1]) if not volumes.empty else None
+    change_pct: float | None = None
+    if len(closes) >= 2:
+        previous = _coerce_float(closes.iloc[-2])
+        if price is not None and previous not in (None, 0):
+            change_pct = ((price - previous) / previous) * 100
+
+    return price, change_pct, volume
+
+
+def _load_price_history(symbol: str) -> object:
+    """Fetch recent daily bars for a ticker using a single yfinance call."""
+    with _quiet_yfinance():
+        return yf.Ticker(symbol).history(period="5d")
+
+
+def _load_company_info(symbol: str) -> dict[str, object]:
+    """Fetch company metadata only after price data confirms the ticker exists."""
+    with _quiet_yfinance():
+        stock = yf.Ticker(symbol)
+        try:
+            raw_info = stock.info
+        except Exception as exc:
+            logger.debug("yfinance info lookup failed for %s: %s", symbol, exc)
+            return {}
+
+    if isinstance(raw_info, dict):
+        return raw_info
+    return {}
+
+
 def fetch_quote(ticker: str, fetched_at: datetime | None = None) -> MarketQuote:
     """Fetch a normalized quote for one ticker via yfinance."""
     symbol = ticker.strip().upper()
@@ -61,60 +130,13 @@ def fetch_quote(ticker: str, fetched_at: datetime | None = None) -> MarketQuote:
         raise ValueError("Ticker symbol is empty")
 
     when = fetched_at or datetime.now(tz=UTC)
-    stock = yf.Ticker(symbol)
-    info: dict[str, object] = {}
-
-    try:
-        raw_info = stock.info
-        if isinstance(raw_info, dict):
-            info = raw_info
-    except Exception as exc:
-        logger.debug("yfinance info lookup failed for %s: %s", symbol, exc)
-
-    price: float | None = None
-    change_pct: float | None = None
-    volume: int | None = None
-
-    try:
-        fast = stock.fast_info
-        price = _coerce_float(
-            getattr(fast, "last_price", None)
-            or getattr(fast, "regular_market_price", None)
-        )
-        previous_close = _coerce_float(
-            getattr(fast, "previous_close", None)
-            or getattr(fast, "regular_market_previous_close", None)
-        )
-        volume = _coerce_int(
-            getattr(fast, "last_volume", None)
-            or getattr(fast, "three_month_average_volume", None)
-        )
-        if price is not None and previous_close not in (None, 0):
-            change_pct = ((price - previous_close) / previous_close) * 100
-    except Exception as exc:
-        logger.debug("yfinance fast_info lookup failed for %s: %s", symbol, exc)
+    history = _load_price_history(symbol)
+    price, change_pct, volume = _quote_from_history(symbol, history)
 
     if price is None:
-        price = _coerce_float(
-            info.get("currentPrice") or info.get("regularMarketPrice")
-        )
-    if change_pct is None:
-        change_pct = _coerce_float(info.get("regularMarketChangePercent"))
-    if volume is None:
-        volume = _coerce_int(info.get("volume") or info.get("regularMarketVolume"))
+        raise ValueError(f"Unknown or delisted ticker: {symbol}")
 
-    if price is None:
-        history = stock.history(period="5d")
-        if not history.empty:
-            price = _coerce_float(history["Close"].iloc[-1])
-            volume = _coerce_int(history["Volume"].iloc[-1])
-            if len(history) >= 2:
-                previous = _coerce_float(history["Close"].iloc[-2])
-                if price is not None and previous not in (None, 0):
-                    change_pct = ((price - previous) / previous) * 100
-
-    if price is None:
-        raise ValueError(f"No price data returned for {symbol}")
+    info = _load_company_info(symbol)
 
     return MarketQuote(
         ticker=symbol,
