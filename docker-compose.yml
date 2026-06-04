@@ -5,8 +5,13 @@ services:
     restart: unless-stopped
     env_file:
       - .env
+    environment:
+      DATA_DIR: /app/data
+      LOG_DIR: /app/logs
+      TZ: ${TZ:-Asia/Hong_Kong}
     depends_on:
-      - ollama
+      ollama:
+        condition: service_started
     volumes:
       - ./data:/app/data
       - ./logs:/app/logs

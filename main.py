@@ -7,11 +7,17 @@ import signal
 import sys
 from types import FrameType
 
-from analysis.llm import LlmClient, resolve_ollama_settings
+from analysis.llm import LlmClient
 from analysis.rules import RulesEngine
 from analysis.summarizer import Summarizer
 from bot.app import build_bot_context
 from config.loader import ConfigurationBundle, load_configuration
+from config.startup import (
+    StartupError,
+    load_runtime_settings,
+    run_startup_checks,
+    validate_telegram_credentials,
+)
 from logging_setup import setup_logging
 from scheduler.jobs import AppScheduler, build_scheduler, start_scheduler_background
 from storage.repository import DataRepository
@@ -19,26 +25,12 @@ from storage.repository import DataRepository
 logger = logging.getLogger(__name__)
 
 
-def _log_startup_summary(configuration: ConfigurationBundle) -> None:
-    portfolio = configuration.portfolio
-    app_config = configuration.app_config
-    runtime = configuration.runtime
-
-    logger.info("Portfolio bot skeleton starting")
-    logger.info("Data directory: %s", configuration.paths.root)
-    logger.info("Timezone: %s", app_config.timezone)
-    logger.info("Positions loaded: %d", len(portfolio.positions))
-    logger.info("Focus industries: %d", len(app_config.focus_industries))
-    ollama_base_url, ollama_model = resolve_ollama_settings(runtime, app_config)
-    logger.info("Cached news items: %d", len(configuration.news_cache.items))
-    logger.info("Ollama endpoint: %s", ollama_base_url)
-    logger.info("Ollama model: %s", ollama_model)
-    logger.info("Telegram chat id configured: %s", bool(runtime.telegram_chat_id))
-
-
 def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
     rules = RulesEngine(app_config=configuration.app_config)
-    llm = LlmClient(settings=configuration.runtime, app_config=configuration.app_config)
+    llm = LlmClient(
+        settings=configuration.runtime,
+        app_config=configuration.app_config,
+    )
     return Summarizer(
         app_config=configuration.app_config,
         rules=rules,
@@ -47,10 +39,20 @@ def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
 
 
 def run() -> int:
-    """Load configuration, wire modules, and start Telegram plus scheduled jobs."""
-    configuration = load_configuration()
-    setup_logging(configuration.runtime.log_level, configuration.runtime.log_dir)
-    _log_startup_summary(configuration)
+    """Load configuration, validate startup state, and run the bot process."""
+    try:
+        runtime = load_runtime_settings()
+        validate_telegram_credentials(runtime)
+    except StartupError:
+        return 1
+
+    setup_logging(runtime.log_level, runtime.log_dir)
+
+    try:
+        configuration = load_configuration(runtime)
+        run_startup_checks(configuration)
+    except StartupError:
+        return 1
 
     repository = DataRepository(configuration.paths)
     summarizer = _build_analysis_stack(configuration)
@@ -59,7 +61,7 @@ def run() -> int:
         configuration.state,
         configuration.news_cache,
     )
-    logger.info("Digest preview:\n%s", digest_preview)
+    logger.info("Startup digest preview:\n%s", digest_preview)
 
     llm = LlmClient(
         settings=configuration.runtime,
@@ -77,9 +79,12 @@ def run() -> int:
     signal.signal(signal.SIGINT, handle_shutdown)
     signal.signal(signal.SIGTERM, handle_shutdown)
 
-    logger.info("Starting Telegram polling")
-    bot_context.application.run_polling(drop_pending_updates=True)
-    app_scheduler.shutdown()
+    logger.info("Starting Telegram polling (single-process mode)")
+    try:
+        bot_context.application.run_polling(drop_pending_updates=True)
+    finally:
+        app_scheduler.shutdown()
+        logger.info("Portfolio bot stopped cleanly")
     return 0
 
 

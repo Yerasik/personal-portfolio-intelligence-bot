@@ -17,6 +17,80 @@ def truncate_message(text: str, limit: int = TELEGRAM_MESSAGE_LIMIT) -> str:
     return text[: limit - len(suffix)] + suffix
 
 
+def _suggested_action(alert: AlertCandidate) -> str:
+    if alert.type in {"price_drop", "repeated_negative_news"} and alert.ticker:
+        return f"Review {alert.ticker}"
+    if alert.type == "price_rise" and alert.ticker:
+        return f"Monitor {alert.ticker}"
+    if alert.type == "sector_attention" and alert.industry:
+        return f"Investigate {alert.industry}"
+    return "Review and monitor"
+
+
+def format_urgent_alert(alert: AlertCandidate) -> str:
+    """Format an urgent alert for Telegram delivery."""
+    target = alert.ticker or alert.industry or "portfolio"
+    return truncate_message(
+        "\n".join(
+            [
+                "URGENT ALERT",
+                alert.title,
+                f"Target: {target}",
+                alert.explanation,
+                f"Suggested: {_suggested_action(alert)}.",
+            ]
+        )
+    )
+
+
+def format_informational_alert(alert: AlertCandidate) -> str:
+    """Format a non-urgent alert for Telegram delivery."""
+    target = alert.ticker or alert.industry or "portfolio"
+    return truncate_message(
+        "\n".join(
+            [
+                f"{alert.urgency.upper()} update",
+                alert.title,
+                f"Target: {target}",
+                alert.explanation,
+            ]
+        )
+    )
+
+
+def format_daily_summary(
+    portfolio: Portfolio,
+    alerts: list[AlertCandidate],
+    advisory: LlmAdvisoryResult | None,
+    app_config: AppConfig,
+) -> str:
+    """Format a concise daily summary for Telegram delivery."""
+    lines = [
+        "Daily Portfolio Summary",
+        f"Holdings: {len(portfolio.positions)} | Active alerts: {len(alerts)}",
+        "",
+    ]
+
+    if alerts:
+        lines.append("Alerts:")
+        for alert in alerts[:5]:
+            target = alert.ticker or alert.industry or "n/a"
+            lines.append(f"- [{alert.urgency}] {alert.title} ({target})")
+        if len(alerts) > 5:
+            lines.append(f"- plus {len(alerts) - 5} more")
+        lines.append("")
+
+    if app_config.enable_llm_summaries and advisory is not None:
+        lines.extend(["Advisory:", advisory.summary])
+        if advisory.suggested_actions:
+            actions = "; ".join(advisory.suggested_actions[:3])
+            lines.append(f"Actions: {actions}")
+        lines.append("")
+
+    lines.append("Advisory only — no trades executed.")
+    return truncate_message("\n".join(lines))
+
+
 def format_start() -> str:
     """Welcome message for /start."""
     return (
@@ -148,8 +222,17 @@ def format_analyze(
 
 
 def format_alert(alert: PendingAlert) -> str:
-    """Render a pending alert as a Telegram-friendly message."""
-    tickers = ", ".join(alert.related_tickers) if alert.related_tickers else "n/a"
-    return truncate_message(
-        f"[{alert.severity.upper()}] {alert.message}\nTickers: {tickers}"
+    """Render a pending alert using the appropriate Telegram template."""
+    candidate = AlertCandidate(
+        id=alert.id,
+        type="price_drop",
+        ticker=alert.related_tickers[0] if alert.related_tickers else None,
+        industry=None,
+        urgency=alert.severity,
+        title=alert.message.split(":", 1)[0],
+        explanation=alert.message.split(":", 1)[-1].strip(),
+        created_at=alert.created_at,
     )
+    if alert.severity == "urgent":
+        return format_urgent_alert(candidate)
+    return format_informational_alert(candidate)

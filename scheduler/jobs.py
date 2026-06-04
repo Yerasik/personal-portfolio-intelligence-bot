@@ -24,6 +24,8 @@ from config.settings import RuntimeSettings
 from storage.models import AppConfig, PendingAlert
 from storage.repository import DataRepository
 
+from bot.notifier import TelegramNotifier
+
 logger = logging.getLogger(__name__)
 
 JOB_MARKET_FETCH: Final = "market_fetch"
@@ -42,6 +44,12 @@ class SchedulerServices:
 
     repository: DataRepository
     runtime: RuntimeSettings
+    notifier: TelegramNotifier | None = None
+
+    def get_notifier(self) -> TelegramNotifier:
+        if self.notifier is None:
+            self.notifier = TelegramNotifier(self.runtime)
+        return self.notifier
 
     def load_app_config(self) -> AppConfig:
         return self.repository.load_config()
@@ -139,7 +147,7 @@ def run_news_data_job(services: SchedulerServices) -> None:
 
 
 def run_rule_evaluation_job(services: SchedulerServices) -> None:
-    """Evaluate rules and persist pending alerts to state.json."""
+    """Evaluate rules, persist pending alerts, and deliver urgent Telegram alerts."""
     app_config = services.load_app_config()
     portfolio = services.repository.load_portfolio()
     state = services.repository.load_state()
@@ -153,9 +161,21 @@ def run_rule_evaluation_job(services: SchedulerServices) -> None:
 
     logger.info("Rule evaluation finished with %d alert(s)", len(alerts))
 
+    delivery = services.get_notifier().deliver_urgent_alerts(
+        alerts,
+        services.repository,
+        app_config,
+    )
+    logger.info(
+        "Telegram urgent alert delivery: sent=%d skipped=%d failed=%d",
+        delivery.sent,
+        delivery.skipped,
+        delivery.failed,
+    )
+
 
 def run_daily_summary_job(services: SchedulerServices) -> None:
-    """Build and log the daily portfolio digest."""
+    """Build the daily digest and send it to Telegram."""
     app_config = services.load_app_config()
     if not app_config.enable_daily_summary:
         logger.info("Daily summary disabled in config.json")
@@ -165,12 +185,35 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
     state = services.repository.load_state()
     news_cache = services.repository.load_news_cache()
     summarizer = services.build_summarizer()
+    alerts = summarizer.rules.evaluate(portfolio, state, news_cache)
+
+    advisory = None
+    if app_config.enable_llm_summaries:
+        advisory = summarizer.llm.synthesize_advisory(
+            portfolio,
+            app_config,
+            state,
+            news_cache,
+            alerts,
+        )
+
     digest = summarizer.build_digest(portfolio, state, news_cache)
-
-    state.last_digest_at = datetime.now(tz=UTC)
-    services.repository.save_state(state)
-
     logger.info("Daily summary generated:\n%s", digest)
+
+    sent = services.get_notifier().deliver_daily_summary(
+        portfolio=portfolio,
+        alerts=alerts,
+        advisory=advisory,
+        app_config=app_config,
+        repository=services.repository,
+    )
+    if sent:
+        state = services.repository.load_state()
+        state.last_digest_at = datetime.now(tz=UTC)
+        services.repository.save_state(state)
+        logger.info("Daily summary sent to Telegram")
+    else:
+        logger.warning("Daily summary was not sent to Telegram")
 
 
 def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> None:
@@ -238,6 +281,7 @@ def build_scheduler(
         services = SchedulerServices(
             repository=repository,
             runtime=configuration.runtime,
+            notifier=TelegramNotifier(configuration.runtime),
         )
         scheduler = BlockingScheduler(timezone=services.load_app_config().timezone)
         register_jobs(scheduler, services)

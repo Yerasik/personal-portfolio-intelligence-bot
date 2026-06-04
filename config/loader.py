@@ -20,9 +20,8 @@ class ConfigurationBundle:
     news_cache: NewsCache
 
 
-def load_configuration() -> ConfigurationBundle:
-    """Load runtime env settings and hydrate JSON documents from disk."""
-    runtime = RuntimeSettings()
+def load_configuration(runtime: RuntimeSettings) -> ConfigurationBundle:
+    """Load JSON documents from disk using pre-validated runtime settings."""
     paths = resolve_data_paths(runtime.data_dir)
     repository = DataRepository(paths)
 
