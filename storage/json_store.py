@@ -1,5 +1,7 @@
 """Low-level atomic JSON read/write with file locking."""
 
+from __future__ import annotations
+
 import json
 import logging
 import os
@@ -7,13 +9,17 @@ import tempfile
 from pathlib import Path
 from typing import TypeVar
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 from storage.locking import locked_json_file
 
 logger = logging.getLogger(__name__)
 
 TModel = TypeVar("TModel", bound=BaseModel)
+
+
+class JsonStorageError(Exception):
+    """Raised when a JSON document cannot be read, validated, or written."""
 
 
 class JsonStore:
@@ -29,8 +35,25 @@ class JsonStore:
 
         with locked_json_file(path):
             raw = path.read_text(encoding="utf-8")
+
+        try:
             payload = json.loads(raw) if raw.strip() else {}
+        except json.JSONDecodeError as exc:
+            raise JsonStorageError(
+                f"Malformed JSON in {path}: {exc.msg} (line {exc.lineno}, column {exc.colno})"
+            ) from exc
+
+        if not isinstance(payload, dict):
+            raise JsonStorageError(
+                f"Expected a JSON object at {path}, got {type(payload).__name__}"
+            )
+
+        try:
             return model_type.model_validate(payload)
+        except ValidationError as exc:
+            raise JsonStorageError(
+                f"Invalid schema in {path} for {model_type.__name__}:\n{exc}"
+            ) from exc
 
     def write_model(self, path: Path, model: BaseModel) -> None:
         """Persist a model using an atomic replace and an exclusive file lock."""
@@ -56,4 +79,11 @@ class JsonStore:
             handle.write("\n")
             temp_name = handle.name
 
-        os.replace(temp_name, path)
+        try:
+            os.replace(temp_name, path)
+        except OSError as exc:
+            try:
+                os.unlink(temp_name)
+            except OSError:
+                pass
+            raise JsonStorageError(f"Failed to write {path}: {exc}") from exc

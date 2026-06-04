@@ -39,3 +39,44 @@ class DataRepository:
 
     def save_news_cache(self, cache: NewsCache) -> None:
         self._store.write_model(self._paths.news_cache, cache)
+
+
+def load_config(paths: DataPaths, store: JsonStore | None = None) -> AppConfig:
+    """Load and validate config.json."""
+    return DataRepository(paths, store).load_config()
+
+
+def load_portfolio(paths: DataPaths, store: JsonStore | None = None) -> Portfolio:
+    """Load and validate portfolio.json."""
+    return DataRepository(paths, store).load_portfolio()
+
+
+def load_state(paths: DataPaths, store: JsonStore | None = None) -> BotState:
+    """Load and validate state.json."""
+    return DataRepository(paths, store).load_state()
+
+
+def load_news_cache(paths: DataPaths, store: JsonStore | None = None) -> NewsCache:
+    """Load and validate news_cache.json."""
+    return DataRepository(paths, store).load_news_cache()
+
+
+def save_state(
+    paths: DataPaths, state: BotState, store: JsonStore | None = None
+) -> None:
+    """Persist state.json."""
+    DataRepository(paths, store).save_state(state)
+
+
+def save_news_cache(
+    paths: DataPaths, cache: NewsCache, store: JsonStore | None = None
+) -> None:
+    """Persist news_cache.json."""
+    DataRepository(paths, store).save_news_cache(cache)
+
+
+def save_portfolio(
+    paths: DataPaths, portfolio: Portfolio, store: JsonStore | None = None
+) -> None:
+    """Persist portfolio.json."""
+    DataRepository(paths, store).save_portfolio(portfolio)
