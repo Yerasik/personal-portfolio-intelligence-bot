@@ -13,5 +13,9 @@
   "alert_sector_article_count": 3,
   "alert_sector_window_hours": 24,
   "alert_suppression_hours": 12,
+  "market_fetch_interval_minutes": 30,
+  "news_fetch_interval_minutes": 60,
+  "rule_evaluation_interval_minutes": 60,
+  "enable_daily_summary": true,
   "enable_llm_summaries": false
 }

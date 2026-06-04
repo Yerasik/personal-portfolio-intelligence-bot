@@ -39,6 +39,10 @@ class AppConfig(BaseModel):
     alert_sector_article_count: int = Field(default=3, ge=2, le=20)
     alert_sector_window_hours: int = Field(default=24, ge=1, le=168)
     alert_suppression_hours: int = Field(default=12, ge=1, le=168)
+    market_fetch_interval_minutes: int = Field(default=30, ge=5, le=1440)
+    news_fetch_interval_minutes: int = Field(default=60, ge=5, le=1440)
+    rule_evaluation_interval_minutes: int = Field(default=60, ge=5, le=1440)
+    enable_daily_summary: bool = True
     ollama_base_url: str = ""
     ollama_model: str = ""
     enable_llm_summaries: bool = False

@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 import signal
 import sys
-import threading
 from types import FrameType
 
 from analysis.llm import LlmClient, resolve_ollama_settings
@@ -14,7 +13,7 @@ from analysis.summarizer import Summarizer
 from bot.app import build_bot_context
 from config.loader import ConfigurationBundle, load_configuration
 from logging_setup import setup_logging
-from scheduler.jobs import AppScheduler, build_scheduler
+from scheduler.jobs import AppScheduler, build_scheduler, start_scheduler_background
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -47,13 +46,6 @@ def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
     )
 
 
-def _start_scheduler(app_scheduler: AppScheduler) -> None:
-    try:
-        app_scheduler.start()
-    except Exception:
-        logger.exception("Scheduler stopped unexpectedly")
-
-
 def run() -> int:
     """Load configuration, wire modules, and start Telegram plus scheduled jobs."""
     configuration = load_configuration()
@@ -75,15 +67,7 @@ def run() -> int:
     )
     bot_context = build_bot_context(configuration.runtime, repository, llm)
     app_scheduler = build_scheduler(configuration, repository)
-
-    scheduler_thread = threading.Thread(
-        target=_start_scheduler,
-        args=(app_scheduler,),
-        name="apscheduler",
-        daemon=True,
-    )
-    scheduler_thread.start()
-    logger.info("Background scheduler started")
+    start_scheduler_background(app_scheduler)
 
     def handle_shutdown(signum: int, _frame: FrameType | None) -> None:
         logger.info("Received signal %s, shutting down", signum)
