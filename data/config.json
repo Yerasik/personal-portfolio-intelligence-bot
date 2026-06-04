@@ -8,5 +8,10 @@
   "news_max_items": 500,
   "news_retention_days": 14,
   "alert_price_change_pct": 5.0,
+  "alert_negative_news_count": 3,
+  "alert_negative_news_window_hours": 24,
+  "alert_sector_article_count": 3,
+  "alert_sector_window_hours": 24,
+  "alert_suppression_hours": 12,
   "enable_llm_summaries": false
 }

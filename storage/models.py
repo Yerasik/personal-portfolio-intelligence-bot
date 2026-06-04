@@ -34,6 +34,11 @@ class AppConfig(BaseModel):
     news_max_items: int = Field(default=500, ge=50, le=5000)
     news_retention_days: int = Field(default=14, ge=1, le=90)
     alert_price_change_pct: float = Field(default=5.0, gt=0)
+    alert_negative_news_count: int = Field(default=3, ge=2, le=20)
+    alert_negative_news_window_hours: int = Field(default=24, ge=1, le=168)
+    alert_sector_article_count: int = Field(default=3, ge=2, le=20)
+    alert_sector_window_hours: int = Field(default=24, ge=1, le=168)
+    alert_suppression_hours: int = Field(default=12, ge=1, le=168)
     enable_llm_summaries: bool = False
 
 
@@ -61,6 +66,14 @@ class MarketQuote(BaseModel):
     fetched_at: datetime
 
 
+class SentAlertRecord(BaseModel):
+    """Recently sent rule alert used for duplicate suppression."""
+
+    alert_key: str
+    alert_id: str
+    sent_at: datetime
+
+
 class BotState(BaseModel):
     """Operational state persisted in state.json."""
 
@@ -68,6 +81,7 @@ class BotState(BaseModel):
     last_market_fetch_at: datetime | None = None
     last_news_fetch_at: datetime | None = None
     latest_prices: dict[str, MarketQuote] = Field(default_factory=dict)
+    last_sent_alerts: list[SentAlertRecord] = Field(default_factory=list)
     pending_alerts: list[PendingAlert] = Field(default_factory=list)
 
 
