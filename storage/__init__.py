@@ -5,6 +5,7 @@ from storage.locking import lock_path_for, locked_json_file
 from storage.models import (
     AppConfig,
     BotState,
+    MarketQuote,
     NewsCache,
     NewsItem,
     PendingAlert,
@@ -26,6 +27,7 @@ from storage.repository import (
 __all__ = [
     "AppConfig",
     "BotState",
+    "MarketQuote",
     "DataPaths",
     "DataRepository",
     "JsonStorageError",

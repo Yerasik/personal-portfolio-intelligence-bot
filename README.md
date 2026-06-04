@@ -165,7 +165,20 @@ TZ=Asia/Hong_Kong
 
 1. Copy `.env.example` to `.env` and fill in your Telegram values.
 2. Edit the JSON files in `data/`.
+   - Add holdings to `data/portfolio.json` under `positions` (each entry needs a `ticker` and `shares`).
+   - The bot reads those tickers and fetches quotes via yfinance on a 30-minute schedule.
+   - Successful fetches are written to `data/state.json` as `latest_prices` with `last_market_fetch_at`.
 3. Start the containers with `docker compose up --build -d`.[cite:37][cite:42]
 4. Pull a model with `docker exec -it ollama ollama pull llama3.1:8b`.[cite:43]
 5. View logs with `docker compose logs -f portfolio-bot`.
 6. Stop the stack with `docker compose down`.
+
+### Manual market fetch smoke test
+
+Run a one-off fetch against your mounted `data/` directory:
+
+```bash
+docker compose run --rm --no-deps portfolio-bot python scripts/test_market_data.py
+```
+
+This loads `portfolio.json`, fetches quotes for each ticker, updates `state.json`, and prints a short summary. A single bad ticker is logged and skipped without failing the rest of the batch.

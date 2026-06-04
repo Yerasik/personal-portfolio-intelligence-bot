@@ -44,12 +44,27 @@ class PendingAlert(BaseModel):
     related_tickers: list[str] = Field(default_factory=list)
 
 
+class MarketQuote(BaseModel):
+    """Latest market snapshot for a single ticker."""
+
+    ticker: str
+    price: float | None = None
+    change_pct: float | None = None
+    volume: int | None = None
+    company_name: str = ""
+    sector: str = ""
+    industry: str = ""
+    currency: str = ""
+    fetched_at: datetime
+
+
 class BotState(BaseModel):
     """Operational state persisted in state.json."""
 
     last_digest_at: datetime | None = None
     last_market_fetch_at: datetime | None = None
     last_news_fetch_at: datetime | None = None
+    latest_prices: dict[str, MarketQuote] = Field(default_factory=dict)
     pending_alerts: list[PendingAlert] = Field(default_factory=list)
 
 
