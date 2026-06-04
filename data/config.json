@@ -1,0 +1,9 @@
+{
+  "timezone": "Asia/Hong_Kong",
+  "digest_hour": 8,
+  "digest_minute": 0,
+  "focus_industries": [],
+  "extra_watchlist": [],
+  "alert_price_change_pct": 5.0,
+  "enable_llm_summaries": false
+}

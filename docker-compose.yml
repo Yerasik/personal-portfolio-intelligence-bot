@@ -1,0 +1,26 @@
+services:
+  portfolio-bot:
+    build: .
+    container_name: portfolio-bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - ollama
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    working_dir: /app
+    command: ["python", "main.py"]
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+volumes:
+  ollama_data:

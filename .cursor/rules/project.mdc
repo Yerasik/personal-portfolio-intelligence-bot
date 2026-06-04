@@ -1,0 +1,25 @@
+---
+alwaysApply: true
+---
+# Portfolio Intelligence Bot
+
+## Project context
+- Docker-first Python 3.11 project: run via `docker compose`, not on the host.
+- Personal Telegram portfolio intelligence bot (advisory only; no trade execution).
+- JSON persistence under `/app/data` (config, portfolio, state, news cache).
+- Services: `portfolio-bot` (Python app) and `ollama` (local LLM API).
+
+## Stack
+- python-telegram-bot, APScheduler, yfinance, httpx, feedparser, BeautifulSoup, filelock, pydantic, pydantic-settings
+
+## Code standards
+- Modular packages: `bot`, `collectors`, `analysis`, `scheduler`, `storage`, `config`.
+- Small files, type hints on all public functions, clear docstrings, explicit error handling.
+- JSON writes: atomic replace via temp file; mutations guarded by filelock sidecar locks.
+- Do not invent unrequested features or rewrite unrelated files.
+- Before implementing: propose a short plan. After implementing: summarize changes and follow-ups.
+- Keep `docker-compose.yml` and environment variable names compatible when extending.
+
+## Boundaries
+- No frontend.
+- Bot recommends only (review, hold, investigate); never auto-trades.
