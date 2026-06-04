@@ -5,9 +5,10 @@ from __future__ import annotations
 import logging
 import signal
 import sys
+import threading
 from types import FrameType
 
-from analysis.llm import LlmClient
+from analysis.llm import LlmClient, resolve_ollama_settings
 from analysis.rules import RulesEngine
 from analysis.summarizer import Summarizer
 from bot.app import build_bot_context
@@ -29,14 +30,16 @@ def _log_startup_summary(configuration: ConfigurationBundle) -> None:
     logger.info("Timezone: %s", app_config.timezone)
     logger.info("Positions loaded: %d", len(portfolio.positions))
     logger.info("Focus industries: %d", len(app_config.focus_industries))
+    ollama_base_url, ollama_model = resolve_ollama_settings(runtime, app_config)
     logger.info("Cached news items: %d", len(configuration.news_cache.items))
-    logger.info("Ollama endpoint: %s", runtime.ollama_base_url)
+    logger.info("Ollama endpoint: %s", ollama_base_url)
+    logger.info("Ollama model: %s", ollama_model)
     logger.info("Telegram chat id configured: %s", bool(runtime.telegram_chat_id))
 
 
 def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
     rules = RulesEngine(app_config=configuration.app_config)
-    llm = LlmClient(settings=configuration.runtime)
+    llm = LlmClient(settings=configuration.runtime, app_config=configuration.app_config)
     return Summarizer(
         app_config=configuration.app_config,
         rules=rules,
@@ -44,8 +47,15 @@ def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
     )
 
 
+def _start_scheduler(app_scheduler: AppScheduler) -> None:
+    try:
+        app_scheduler.start()
+    except Exception:
+        logger.exception("Scheduler stopped unexpectedly")
+
+
 def run() -> int:
-    """Load configuration, wire modules, and start the blocking scheduler."""
+    """Load configuration, wire modules, and start Telegram plus scheduled jobs."""
     configuration = load_configuration()
     setup_logging(configuration.runtime.log_level, configuration.runtime.log_dir)
     _log_startup_summary(configuration)
@@ -59,10 +69,21 @@ def run() -> int:
     )
     logger.info("Digest preview:\n%s", digest_preview)
 
-    bot_context = build_bot_context(configuration.runtime, repository)
-    logger.info("Telegram application initialized (handlers not registered)")
-
+    llm = LlmClient(
+        settings=configuration.runtime,
+        app_config=configuration.app_config,
+    )
+    bot_context = build_bot_context(configuration.runtime, repository, llm)
     app_scheduler = build_scheduler(configuration, repository)
+
+    scheduler_thread = threading.Thread(
+        target=_start_scheduler,
+        args=(app_scheduler,),
+        name="apscheduler",
+        daemon=True,
+    )
+    scheduler_thread.start()
+    logger.info("Background scheduler started")
 
     def handle_shutdown(signum: int, _frame: FrameType | None) -> None:
         logger.info("Received signal %s, shutting down", signum)
@@ -72,8 +93,9 @@ def run() -> int:
     signal.signal(signal.SIGINT, handle_shutdown)
     signal.signal(signal.SIGTERM, handle_shutdown)
 
-    _ = bot_context
-    app_scheduler.start()
+    logger.info("Starting Telegram polling")
+    bot_context.application.run_polling(drop_pending_updates=True)
+    app_scheduler.shutdown()
     return 0
 
 

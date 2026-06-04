@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-from analysis.llm import LlmClient
+from analysis.llm import LlmAdvisoryResult, LlmClient
 from analysis.rules import AlertCandidate, RulesEngine
 from storage.models import AppConfig, BotState, NewsCache, Portfolio
 
@@ -31,8 +31,17 @@ class Summarizer:
             f"Rule alerts: {len(alerts)}",
         ]
         lines.extend(self._format_alert(candidate) for candidate in alerts)
-        if self.app_config.enable_llm_summaries and self.llm.is_configured:
-            lines.append("LLM summaries enabled (not yet implemented)")
+
+        if self.app_config.enable_llm_summaries:
+            advisory = self.llm.synthesize_advisory(
+                portfolio,
+                self.app_config,
+                state,
+                news_cache,
+                alerts,
+            )
+            lines.extend(self._format_advisory(advisory))
+
         return "\n".join(lines)
 
     def _format_alert(self, candidate: AlertCandidate) -> str:
@@ -41,3 +50,14 @@ class Summarizer:
             f"[{candidate.urgency.upper()}] {candidate.title} "
             f"({candidate.type}, {target}): {candidate.explanation}"
         )
+
+    def _format_advisory(self, advisory: LlmAdvisoryResult) -> list[str]:
+        lines = [
+            f"LLM advisory ({advisory.source}, {advisory.urgency}): {advisory.summary}",
+        ]
+        if advisory.suggested_actions:
+            actions = "; ".join(advisory.suggested_actions)
+            lines.append(f"Suggested actions: {actions}")
+        if advisory.error:
+            lines.append(f"LLM note: {advisory.error}")
+        return lines
