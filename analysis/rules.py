@@ -129,6 +129,7 @@ class RulesEngine:
         return suppressed
 
     def _tracked_tickers(self, portfolio: Portfolio) -> list[str]:
+        """Portfolio tickers plus any symbols from extra_watchlist in config."""
         tickers = portfolio_tickers(portfolio)
         for symbol in self.app_config.extra_watchlist:
             normalized = symbol.strip().upper()
@@ -141,6 +142,7 @@ class RulesEngine:
         state: BotState,
         evaluated_at: datetime,
     ) -> list[AlertCandidate]:
+        """Alert when a cached quote dropped beyond alert_price_change_pct."""
         threshold = self.app_config.alert_price_change_pct
         alerts: list[AlertCandidate] = []
 
@@ -174,6 +176,7 @@ class RulesEngine:
         state: BotState,
         evaluated_at: datetime,
     ) -> list[AlertCandidate]:
+        """Alert when a cached quote rose beyond alert_price_change_pct."""
         threshold = self.app_config.alert_price_change_pct
         alerts: list[AlertCandidate] = []
 
@@ -210,6 +213,7 @@ class RulesEngine:
         news_cache: NewsCache,
         evaluated_at: datetime,
     ) -> list[AlertCandidate]:
+        """Alert when many negative articles tag the same ticker in a time window."""
         window = timedelta(hours=self.app_config.alert_negative_news_window_hours)
         minimum = self.app_config.alert_negative_news_count
         alerts: list[AlertCandidate] = []
@@ -249,6 +253,7 @@ class RulesEngine:
         news_cache: NewsCache,
         evaluated_at: datetime,
     ) -> list[AlertCandidate]:
+        """Alert when a focus industry gets unusually many news articles."""
         window = timedelta(hours=self.app_config.alert_sector_window_hours)
         minimum = self.app_config.alert_sector_article_count
         alerts: list[AlertCandidate] = []
@@ -291,6 +296,7 @@ class RulesEngine:
         state: BotState,
         evaluated_at: datetime,
     ) -> list[AlertCandidate]:
+        """Drop alerts whose alert_key was already sent within the cooldown window."""
         suppression_window = timedelta(hours=self.app_config.alert_suppression_hours)
         recent_keys = {
             record.alert_key
@@ -317,6 +323,7 @@ class RulesEngine:
         explanation: str,
         created_at: datetime,
     ) -> AlertCandidate:
+        """Build an AlertCandidate with a stable dedup key and short id hash."""
         alert_key = f"{alert_type}:{ticker or ''}:{industry or ''}"
         alert_id = hashlib.sha256(
             f"{alert_key}:{created_at.isoformat()}".encode("utf-8")
@@ -337,6 +344,7 @@ class RulesEngine:
         change_pct: float,
         threshold: float,
     ) -> AlertUrgency:
+        """Escalate to urgent when the drop is at least 2× the configured threshold."""
         if change_pct <= -threshold * 2:
             return "urgent"
         return "warning"
@@ -347,6 +355,7 @@ class RulesEngine:
         evaluated_at: datetime,
         window: timedelta,
     ) -> list[NewsItem]:
+        """Keep only articles published/fetched within the given time window."""
         cutoff = evaluated_at - window
         recent: list[NewsItem] = []
         for item in articles:
@@ -356,6 +365,7 @@ class RulesEngine:
         return recent
 
     def _is_negative_news(self, item: NewsItem) -> bool:
+        """Detect negative sentiment via score or keyword matching in title/summary."""
         if item.sentiment is not None:
             return item.sentiment < 0
 

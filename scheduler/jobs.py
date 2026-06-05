@@ -1,4 +1,8 @@
-"""Scheduler setup and job registration."""
+"""Scheduler setup and job registration.
+
+Runs on a daemon thread alongside Telegram polling. Job intervals come from
+data/config.json (market_fetch_interval_minutes, etc.).
+"""
 
 from __future__ import annotations
 
@@ -47,14 +51,17 @@ class SchedulerServices:
     notifier: TelegramNotifier | None = None
 
     def get_notifier(self) -> TelegramNotifier:
+        """Lazily create the Telegram notifier used for outbound alerts."""
         if self.notifier is None:
             self.notifier = TelegramNotifier(self.runtime)
         return self.notifier
 
     def load_app_config(self) -> AppConfig:
+        """Reload config.json on each job run so interval/threshold edits apply."""
         return self.repository.load_config()
 
     def build_summarizer(self) -> Summarizer:
+        """Construct rules + LLM stack for the daily summary job."""
         app_config = self.load_app_config()
         rules = RulesEngine(app_config=app_config)
         llm = LlmClient(settings=self.runtime, app_config=app_config)
@@ -80,6 +87,7 @@ class AppScheduler:
         self.scheduler.start()
 
     def shutdown(self) -> None:
+        """Stop APScheduler without blocking the main Telegram thread."""
         if not self.scheduler.running:
             return
         self.scheduler.shutdown(wait=False)
@@ -99,6 +107,7 @@ def _run_job(job_id: str, action: Callable[[], None]) -> None:
 
 
 def _alert_to_pending(alert: AlertCandidate) -> PendingAlert:
+    """Convert a rules-engine candidate into the JSON shape stored in state.json."""
     return PendingAlert(
         id=alert.id,
         severity=alert.urgency,

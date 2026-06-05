@@ -1,4 +1,8 @@
-"""High-level accessors for persisted application data."""
+"""High-level accessors for persisted application data.
+
+All bot modules should load/save JSON through this class rather than calling
+JsonStore directly — it keeps path handling consistent.
+"""
 
 from storage.json_store import JsonStore
 from storage.models import AppConfig, BotState, NewsCache, Portfolio
@@ -9,35 +13,45 @@ class DataRepository:
     """Typed load/save operations for all JSON-backed documents."""
 
     def __init__(self, paths: DataPaths, store: JsonStore | None = None) -> None:
+        """Bind to a data directory; optionally inject a JsonStore for tests."""
         self._paths = paths
         self._store = store or JsonStore()
 
     @property
     def paths(self) -> DataPaths:
+        """Resolved paths to config.json, portfolio.json, state.json, etc."""
         return self._paths
 
     def load_config(self) -> AppConfig:
+        """Read and validate data/config.json."""
         return self._store.read_model(self._paths.config, AppConfig)
 
     def save_config(self, config: AppConfig) -> None:
+        """Write data/config.json atomically."""
         self._store.write_model(self._paths.config, config)
 
     def load_portfolio(self) -> Portfolio:
+        """Read and validate data/portfolio.json (your holdings)."""
         return self._store.read_model(self._paths.portfolio, Portfolio)
 
     def save_portfolio(self, portfolio: Portfolio) -> None:
+        """Write data/portfolio.json atomically."""
         self._store.write_model(self._paths.portfolio, portfolio)
 
     def load_state(self) -> BotState:
+        """Read runtime state: latest prices, alerts, last fetch timestamps."""
         return self._store.read_model(self._paths.state, BotState)
 
     def save_state(self, state: BotState) -> None:
+        """Write data/state.json atomically."""
         self._store.write_model(self._paths.state, state)
 
     def load_news_cache(self) -> NewsCache:
+        """Read cached RSS articles from data/news_cache.json."""
         return self._store.read_model(self._paths.news_cache, NewsCache)
 
     def save_news_cache(self, cache: NewsCache) -> None:
+        """Write data/news_cache.json atomically."""
         self._store.write_model(self._paths.news_cache, cache)
 
 

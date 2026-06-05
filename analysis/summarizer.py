@@ -1,4 +1,7 @@
-"""Compose human-readable summaries from collector output."""
+"""Compose human-readable summaries from collector output.
+
+Used by the daily summary scheduler job and startup digest preview in main.py.
+"""
 
 from dataclasses import dataclass
 
@@ -45,6 +48,7 @@ class Summarizer:
         return "\n".join(lines)
 
     def _format_alert(self, candidate: AlertCandidate) -> str:
+        """Format one rule alert as a single digest line."""
         target = candidate.ticker or candidate.industry or "portfolio"
         return (
             f"[{candidate.urgency.upper()}] {candidate.title} "
@@ -52,6 +56,7 @@ class Summarizer:
         )
 
     def _format_advisory(self, advisory: LlmAdvisoryResult) -> list[str]:
+        """Format LLM (or fallback) advisory lines appended to the digest."""
         lines = [
             f"LLM advisory ({advisory.source}, {advisory.urgency}): {advisory.summary}",
         ]

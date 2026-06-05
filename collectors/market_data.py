@@ -1,4 +1,8 @@
-"""Market price and quote collection."""
+"""Market price and quote collection.
+
+Uses yfinance to fetch daily bars for portfolio tickers and writes results to
+state.json → latest_prices. Failures for one ticker do not block others.
+"""
 
 from __future__ import annotations
 
@@ -56,6 +60,7 @@ def portfolio_tickers(portfolio: Portfolio) -> list[str]:
 
 
 def _coerce_float(value: object | None) -> float | None:
+    """Safely convert yfinance values to float; return None on bad data."""
     if value is None:
         return None
     try:
@@ -65,6 +70,7 @@ def _coerce_float(value: object | None) -> float | None:
 
 
 def _coerce_int(value: object | None) -> int | None:
+    """Safely convert yfinance volume values to int."""
     if value is None:
         return None
     try:
@@ -74,6 +80,7 @@ def _coerce_int(value: object | None) -> int | None:
 
 
 def _pick_str(source: dict[str, object], *keys: str) -> str:
+    """Return the first non-empty string value from a yfinance info dict."""
     for key in keys:
         raw = source.get(key)
         if raw is not None and str(raw).strip():
@@ -236,9 +243,11 @@ class MarketDataCollector(BaseCollector):
     name = "market_data"
 
     def __init__(self, service: MarketDataService | None = None) -> None:
+        """Use the default MarketDataService unless a test double is injected."""
         self._service = service or MarketDataService()
 
     def run(self, context: CollectorContext) -> CollectorResult:
+        """Fetch quotes for all portfolio tickers and report success/failure counts."""
         portfolio = context.repository.load_portfolio()
         tickers = portfolio_tickers(portfolio)
 

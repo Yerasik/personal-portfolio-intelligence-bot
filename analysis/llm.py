@@ -1,4 +1,9 @@
-"""Ollama-backed portfolio advisory summaries."""
+"""Ollama-backed portfolio advisory summaries.
+
+When enable_llm_summaries is true, builds a prompt from portfolio + news + alerts,
+calls Ollama /api/generate, and parses JSON advice. On any failure, falls back to
+deterministic text built from rule alerts (build_fallback_advisory).
+"""
 
 from __future__ import annotations
 
@@ -54,6 +59,7 @@ class LlmAdvisoryResult:
 
 
 def _format_holdings(portfolio: Portfolio) -> str:
+    """Format portfolio positions as bullet lines for the LLM prompt."""
     if not portfolio.positions:
         return "None"
     lines = []
@@ -66,6 +72,7 @@ def _format_holdings(portfolio: Portfolio) -> str:
 
 
 def _format_prices(state: BotState, portfolio: Portfolio) -> str:
+    """Format latest cached quotes from state.json for the LLM prompt."""
     symbols = portfolio_tickers(portfolio)
     lines: list[str] = []
     for symbol in symbols:
@@ -84,6 +91,7 @@ def _format_prices(state: BotState, portfolio: Portfolio) -> str:
 
 
 def _news_timestamp(item: NewsItem) -> datetime:
+    """Prefer article publish time; fall back to when we fetched it."""
     return item.published_at or item.fetched_at
 
 
@@ -109,6 +117,7 @@ def select_relevant_news(
 
 
 def _format_news(items: list[NewsItem]) -> str:
+    """Format tagged news headlines for the LLM prompt."""
     if not items:
         return "- None"
     lines: list[str] = []
@@ -119,6 +128,7 @@ def _format_news(items: list[NewsItem]) -> str:
 
 
 def _format_alerts(alerts: list[AlertCandidate]) -> str:
+    """Format rule-engine alerts for the LLM prompt."""
     if not alerts:
         return "- None"
     lines = [
@@ -153,6 +163,7 @@ def build_advisory_prompt(
 
 
 def _extract_json_object(text: str) -> dict[str, Any]:
+    """Pull the first JSON object from model output (strips markdown fences)."""
     cleaned = text.strip()
     if cleaned.startswith("```"):
         cleaned = re.sub(r"^```(?:json)?\s*", "", cleaned, flags=re.IGNORECASE)
@@ -209,6 +220,7 @@ def _fallback_actions(
     alerts: list[AlertCandidate],
     portfolio: Portfolio,
 ) -> list[str]:
+    """Map alert types to review-only suggested actions when LLM is unavailable."""
     actions: list[str] = []
     for alert in alerts:
         if alert.type in {"price_drop", "repeated_negative_news"} and alert.ticker:
@@ -232,6 +244,7 @@ class LlmClient:
         *,
         timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS,
     ) -> None:
+        """Resolve Ollama URL/model from env + config and store HTTP timeout."""
         self._base_url, self._model = resolve_ollama_settings(settings, app_config)
         self._timeout = timeout_seconds
 

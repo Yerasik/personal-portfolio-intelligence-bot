@@ -1,4 +1,14 @@
-"""Application entrypoint for the portfolio intelligence bot."""
+"""Application entrypoint for the portfolio intelligence bot.
+
+Startup order (see docs/CODEBASE_TOUR.md for the full reading guide):
+  1. Load .env credentials          → config/startup.py
+  2. Load JSON data files           → config/loader.py + storage/
+  3. Validate config and probe Ollama
+  4. Start background scheduler     → scheduler/jobs.py
+  5. Block on Telegram polling      → bot/handlers.py
+
+The process uses one main thread (Telegram) plus one daemon thread (APScheduler).
+"""
 
 from __future__ import annotations
 
@@ -26,6 +36,7 @@ logger = logging.getLogger(__name__)
 
 
 def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
+    """Wire rules engine + LLM client into a digest builder for startup preview."""
     rules = RulesEngine(app_config=configuration.app_config)
     llm = LlmClient(
         settings=configuration.runtime,
@@ -39,7 +50,10 @@ def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
 
 
 def run() -> int:
-    """Load configuration, validate startup state, and run the bot process."""
+    """Load configuration, validate startup state, and run the bot process.
+
+    Returns 0 on clean shutdown, 1 when mandatory startup checks fail.
+    """
     try:
         runtime = load_runtime_settings()
         validate_telegram_credentials(runtime)
@@ -72,6 +86,7 @@ def run() -> int:
     start_scheduler_background(app_scheduler)
 
     def handle_shutdown(signum: int, _frame: FrameType | None) -> None:
+        """Stop the scheduler when Docker or Ctrl+C sends SIGTERM/SIGINT."""
         logger.info("Received signal %s, shutting down", signum)
         app_scheduler.shutdown()
         sys.exit(0)

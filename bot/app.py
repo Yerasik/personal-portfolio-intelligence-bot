@@ -1,4 +1,8 @@
-"""Telegram application factory and runtime context."""
+"""Telegram application factory and runtime context.
+
+build_bot_context() creates the python-telegram-bot Application, attaches
+BotCommands + auth settings, and registers /command handlers.
+"""
 
 from dataclasses import dataclass
 

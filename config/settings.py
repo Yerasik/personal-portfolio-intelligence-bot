@@ -1,4 +1,8 @@
-"""Environment-backed runtime settings."""
+"""Environment-backed runtime settings.
+
+Loaded from .env via pydantic-settings. Required: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID.
+Optional: OLLAMA_*, DATA_DIR, LOG_DIR, TZ, LOG_LEVEL.
+"""
 
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict

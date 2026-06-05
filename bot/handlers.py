@@ -1,4 +1,10 @@
-"""Telegram update handlers."""
+"""Telegram update handlers.
+
+Each /command handler follows the same pattern:
+  1. _guard() — reject messages from chats other than TELEGRAM_CHAT_ID
+  2. BotCommands — load data, run analysis, format text
+  3. reply_text() — send the response back to the user
+"""
 
 from __future__ import annotations
 
@@ -14,6 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 def _expected_chat_id(settings: RuntimeSettings) -> str:
+    """Return the authorized chat id from env, normalized as a string."""
     return str(settings.telegram_chat_id).strip()
 
 
@@ -25,6 +32,7 @@ def is_authorized(update: Update, settings: RuntimeSettings) -> bool:
 
 
 async def _reject_unauthorized(update: Update) -> None:
+    """Tell unknown users this bot is single-user only."""
     if update.message is None:
         return
     await update.message.reply_text(
@@ -33,14 +41,17 @@ async def _reject_unauthorized(update: Update) -> None:
 
 
 def _commands(context: ContextTypes.DEFAULT_TYPE) -> BotCommands:
+    """Fetch the shared BotCommands instance stored in application.bot_data."""
     return context.application.bot_data["commands"]
 
 
 def _settings(context: ContextTypes.DEFAULT_TYPE) -> RuntimeSettings:
+    """Fetch runtime settings (token, chat id) from application.bot_data."""
     return context.application.bot_data["settings"]
 
 
 async def _guard(update: Update, context: ContextTypes.DEFAULT_TYPE) -> bool:
+    """Return True when the sender is authorized; otherwise reply and return False."""
     settings = _settings(context)
     if is_authorized(update, settings):
         return True
@@ -51,30 +62,35 @@ async def _guard(update: Update, context: ContextTypes.DEFAULT_TYPE) -> bool:
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /start — send the welcome message."""
     if not await _guard(update, context):
         return
     await update.message.reply_text(_commands(context).start_message())
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /help — list available commands."""
     if not await _guard(update, context):
         return
     await update.message.reply_text(_commands(context).help_message())
 
 
 async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /portfolio — show holdings and latest cached prices."""
     if not await _guard(update, context):
         return
     await update.message.reply_text(_commands(context).portfolio_message())
 
 
 async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /industries — show focus industries and related news counts."""
     if not await _guard(update, context):
         return
     await update.message.reply_text(_commands(context).industries_message())
 
 
 async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /analyze — run rules (+ optional LLM) and return advisory text."""
     if not await _guard(update, context):
         return
     await update.message.reply_text(_commands(context).analyze_message())

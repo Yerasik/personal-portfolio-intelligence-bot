@@ -1,4 +1,8 @@
-"""Startup validation for container and local runs."""
+"""Startup validation for container and local runs.
+
+Runs before Telegram polling starts. Fatal errors (bad Telegram creds, invalid
+JSON) stop the process; Ollama probe failures are warnings only.
+"""
 
 from __future__ import annotations
 
@@ -61,6 +65,7 @@ class StartupReport:
 
 
 def _fatal(message: str) -> None:
+    """Print a startup error to stderr before exiting the process."""
     print(f"FATAL: {message}", file=sys.stderr)
 
 

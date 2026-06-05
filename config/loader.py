@@ -1,4 +1,8 @@
-"""Load environment settings and JSON-backed application configuration."""
+"""Load environment settings and JSON-backed application configuration.
+
+RuntimeSettings comes from .env; JSON documents are loaded via DataRepository
+into a single ConfigurationBundle used at startup.
+"""
 
 from dataclasses import dataclass
 
