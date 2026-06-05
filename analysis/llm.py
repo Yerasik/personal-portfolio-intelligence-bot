@@ -13,13 +13,12 @@ from pydantic import BaseModel, Field, ValidationError
 
 from analysis.rules import AlertCandidate
 from collectors.market_data import portfolio_tickers
+from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.models import AppConfig, BotState, NewsCache, NewsItem, Portfolio
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_OLLAMA_BASE_URL = "http://ollama:11434"
-DEFAULT_OLLAMA_MODEL = "llama3.1:8b"
 DEFAULT_REQUEST_TIMEOUT_SECONDS = 90.0
 MAX_NEWS_IN_PROMPT = 6
 
@@ -52,19 +51,6 @@ class LlmAdvisoryResult:
     suggested_actions: list[str]
     source: AdvisorySource = "fallback"
     error: str | None = None
-
-
-def resolve_ollama_settings(
-    settings: RuntimeSettings,
-    app_config: AppConfig | None = None,
-) -> tuple[str, str]:
-    """Resolve Ollama endpoint settings from environment variables with config fallback."""
-    config_base = app_config.ollama_base_url.strip() if app_config else ""
-    config_model = app_config.ollama_model.strip() if app_config else ""
-
-    base_url = settings.ollama_base_url or config_base or DEFAULT_OLLAMA_BASE_URL
-    model = settings.ollama_model or config_model or DEFAULT_OLLAMA_MODEL
-    return base_url.rstrip("/"), model
 
 
 def _format_holdings(portfolio: Portfolio) -> str:

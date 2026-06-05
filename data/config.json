@@ -17,5 +17,6 @@
   "news_fetch_interval_minutes": 60,
   "rule_evaluation_interval_minutes": 60,
   "enable_daily_summary": true,
+  "ollama_model": "qwen3:30b",
   "enable_llm_summaries": false
 }

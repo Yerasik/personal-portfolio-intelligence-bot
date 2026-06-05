@@ -9,8 +9,8 @@ from dataclasses import dataclass, field
 import httpx
 from pydantic import ValidationError
 
-from analysis.llm import resolve_ollama_settings
 from config.loader import ConfigurationBundle
+from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.json_store import JsonStorageError, JsonStore
 from storage.models import AppConfig, BotState, NewsCache, Portfolio

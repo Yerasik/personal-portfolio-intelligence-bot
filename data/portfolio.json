@@ -1,4 +1,6 @@
 {
-  "positions": [],
+  "positions": [
+    { "ticker": "1810.HK", "shares": 10, "cost_basis": 31.0 }
+  ],
   "notes": ""
 }

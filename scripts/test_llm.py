@@ -21,9 +21,9 @@ from analysis.llm import (
     build_advisory_prompt,
     build_fallback_advisory,
     parse_advisory_response,
-    resolve_ollama_settings,
 )
 from analysis.rules import AlertCandidate
+from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.models import AppConfig, BotState, MarketQuote, NewsCache, NewsItem, Portfolio, Position
 
@@ -117,7 +117,7 @@ def test_fallback_on_connection_error() -> None:
         telegram_bot_token="token",
         telegram_chat_id="chat",
         ollama_base_url="http://ollama:11434",
-        ollama_model="llama3.1:8b",
+        ollama_model="qwen3:30b",
     )
     client = LlmClient(settings=settings, timeout_seconds=1.0)
     portfolio = Portfolio(positions=[Position(ticker="AAPL", shares=1)])
@@ -145,7 +145,7 @@ def test_successful_ollama_response() -> None:
         telegram_bot_token="token",
         telegram_chat_id="chat",
         ollama_base_url="http://ollama:11434",
-        ollama_model="llama3.1:8b",
+        ollama_model="qwen3:30b",
     )
     client = LlmClient(settings=settings)
     portfolio = Portfolio(positions=[Position(ticker="AAPL", shares=1)])

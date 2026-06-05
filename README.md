@@ -51,7 +51,7 @@ Optional overrides (defaults work inside Docker):
 
 ```env
 OLLAMA_BASE_URL=http://ollama:11434
-OLLAMA_MODEL=llama3.1:8b
+OLLAMA_MODEL=qwen3:30b
 LOG_LEVEL=INFO
 DATA_DIR=/app/data
 LOG_DIR=/app/logs
@@ -95,7 +95,7 @@ docker compose up --build -d
 Only needed if `enable_llm_summaries` is `true` in `data/config.json`:
 
 ```bash
-docker exec -it ollama ollama pull llama3.1:8b
+docker exec -it ollama ollama pull qwen3:30b
 ```
 
 Verify models:
@@ -194,7 +194,7 @@ Expected when `enable_llm_summaries` is true but Ollama is down or the model is 
 
 ```bash
 docker compose up -d ollama
-docker exec -it ollama ollama pull llama3.1:8b
+docker exec -it ollama ollama pull qwen3:30b
 docker compose restart portfolio-bot
 ```
 
@@ -221,7 +221,7 @@ chmod u+rwX data logs
 | `TELEGRAM_BOT_TOKEN` | Yes | — | Bot token from BotFather |
 | `TELEGRAM_CHAT_ID` | Yes | — | Authorized user chat id |
 | `OLLAMA_BASE_URL` | No | `http://ollama:11434` | Ollama API base URL |
-| `OLLAMA_MODEL` | No | `llama3.1:8b` | Model name for summaries |
+| `OLLAMA_MODEL` | No | `qwen3:30b` | Model name for summaries |
 | `DATA_DIR` | No | `/app/data` | JSON persistence directory |
 | `LOG_DIR` | No | `/app/logs` | Log file directory |
 | `LOG_LEVEL` | No | `INFO` | Python log level |

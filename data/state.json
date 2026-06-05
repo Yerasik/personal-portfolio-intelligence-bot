@@ -1,8 +1,20 @@
 {
-  "last_digest_at": null,
-  "last_market_fetch_at": null,
+  "last_digest_at": "2026-06-05T00:00:00.620928Z",
+  "last_market_fetch_at": "2026-06-05T01:39:20.293950Z",
   "last_news_fetch_at": null,
-  "latest_prices": {},
+  "latest_prices": {
+    "1810.HK": {
+      "ticker": "1810.HK",
+      "price": 28.3799991607666,
+      "change_pct": -0.6997927343364332,
+      "volume": 88262656,
+      "company_name": "XIAOMI-W",
+      "sector": "Technology",
+      "industry": "Consumer Electronics",
+      "currency": "HKD",
+      "fetched_at": "2026-06-05T01:39:20.293950Z"
+    }
+  },
   "last_sent_alerts": [],
   "pending_alerts": []
 }
