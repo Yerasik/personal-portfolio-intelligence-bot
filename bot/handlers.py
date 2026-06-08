@@ -79,7 +79,7 @@ async def _guard_developer(
         return None
     if user.role == "developer":
         return user
-    await update.message.reply_text(t("developer_only", user.language))
+    await update.message.reply_text(t("command_unavailable", user.language))
     return None
 
 
@@ -196,8 +196,8 @@ _REMOVE_TICKER_USAGE = (
 
 
 async def add_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /add_ticker — add a validated holding to portfolio.json."""
-    user = await _guard(update, context)
+    """Handle /add_ticker — add a validated holding (developer only)."""
+    user = await _guard_developer(update, context)
     if user is None:
         return
 
@@ -223,8 +223,8 @@ async def add_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /remove_ticker — remove a holding from portfolio.json."""
-    user = await _guard(update, context)
+    """Handle /remove_ticker — remove a holding (developer only)."""
+    user = await _guard_developer(update, context)
     if user is None:
         return
 

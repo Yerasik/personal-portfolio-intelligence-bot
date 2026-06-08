@@ -1,6 +1,23 @@
 {
   "items": [
     {
+      "id": "9a279dcdbe9b4082",
+      "title": "Hong Kong’s southbound travel scheme opens to 5 more Greater Bay Area cities",
+      "source": "News - South China Morning Post",
+      "url": "https://www.scmp.com/news/hong-kong/transport/article/3356351/hong-kongs-southbound-travel-scheme-opens-5-more-greater-bay-area-cities?utm_source=rss_feed",
+      "published_at": "2026-06-08T08:51:28Z",
+      "fetched_at": "2026-06-08T08:55:35.624263Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Hong Kong"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Hong Kong will expand a travel scheme that allows mainland Chinese motorists to enter the city for leisure, opening it to drivers from five more Greater Bay Area cities and doubling the daily quota for urban trips. Authorities said on Monday that the Southbound Travel Scheme for Guangdong Vehicles would be extended to all nine mainland cities under the Greater Bay Area scheme, up from the current four, while the daily quota for urban trips would be doubled to 200 from July 25 from 100 at..."
+    },
+    {
       "id": "03a9bf6f2de73c0f",
       "title": "Hong Kong’s Hang Seng Tech Index welcomes MiniMax, Zhipu in AI milestone amid slump",
       "source": "Business - South China Morning Post",
@@ -3939,5 +3956,5 @@
       "summary": "Chinese chip stocks rise in Hong Kong on hopes for Huawei Tech    Moneycontrol.com"
     }
   ],
-  "updated_at": "2026-06-08T08:47:11.485026Z"
+  "updated_at": "2026-06-08T09:17:35.620850Z"
 }

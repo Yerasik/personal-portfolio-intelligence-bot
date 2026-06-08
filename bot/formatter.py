@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from datetime import datetime
+
 from analysis.llm import LlmAdvisoryResult
 from analysis.move_explainer import PriceMoveExplanation
 from analysis.news_summarizer import NewsSummary
@@ -10,6 +12,11 @@ from bot.i18n import t
 from storage.models import AppConfig, BotState, MarketQuote, NewsCache, PendingAlert, Portfolio
 
 TELEGRAM_MESSAGE_LIMIT = 4096
+
+
+def _format_user_date(value: datetime) -> str:
+    """Plain calendar date for ordinary users (no ISO time component)."""
+    return value.date().isoformat()
 
 
 def truncate_message(text: str, limit: int = TELEGRAM_MESSAGE_LIMIT) -> str:
@@ -133,14 +140,18 @@ def format_daily_summary(
     return truncate_message("\n".join(lines))
 
 
-def format_start(*, lang: str = "en") -> str:
+def format_start(*, lang: str = "en", is_developer: bool = False) -> str:
     """Welcome message for /start."""
-    return (
-        f"{t('welcome_title', lang)}\n\n"
-        f"{t('welcome_body', lang)}\n\n"
-        f"{t('welcome_menu', lang)}\n\n"
-        f"{t('welcome_edit', lang)}"
-    )
+    lines = [
+        t("welcome_title", lang),
+        "",
+        t("welcome_body", lang),
+        "",
+        t("welcome_user", lang),
+    ]
+    if is_developer:
+        lines.extend(["", t("welcome_dev_extra", lang)])
+    return "\n".join(lines)
 
 
 def format_help(*, lang: str = "en", is_developer: bool = False) -> str:
@@ -156,10 +167,12 @@ def format_portfolio(
     state: BotState,
     *,
     lang: str = "en",
+    is_developer: bool = False,
 ) -> str:
     """Render portfolio holdings with latest market quotes."""
     if not portfolio.positions:
-        return t("portfolio_empty", lang)
+        key = "portfolio_empty_dev" if is_developer else "portfolio_empty"
+        return t(key, lang)
 
     lines = [t("portfolio_header", lang, count=len(portfolio.positions)), ""]
     for position in portfolio.positions:
@@ -192,13 +205,22 @@ def format_portfolio(
             )
             lines.append(t("portfolio_company", lang, name=label))
             if quote.fetched_at:
-                lines.append(
-                    t(
-                        "portfolio_quote_as_of",
-                        lang,
-                        timestamp=quote.fetched_at.isoformat(),
+                if is_developer:
+                    lines.append(
+                        t(
+                            "portfolio_quote_as_of",
+                            lang,
+                            timestamp=quote.fetched_at.isoformat(),
+                        )
                     )
-                )
+                else:
+                    lines.append(
+                        t(
+                            "portfolio_quote_as_of_user",
+                            lang,
+                            date=_format_user_date(quote.fetched_at),
+                        )
+                    )
         if position.notes:
             lines.append(
                 t("portfolio_position_notes", lang, notes=position.notes)
@@ -209,16 +231,28 @@ def format_portfolio(
         lines.extend([t("portfolio_notes_header", lang), portfolio.notes])
 
     if state.last_market_fetch_at:
-        lines.extend(
-            [
-                "",
-                t(
-                    "portfolio_last_fetch",
-                    lang,
-                    timestamp=state.last_market_fetch_at.isoformat(),
-                ),
-            ]
-        )
+        if is_developer:
+            lines.extend(
+                [
+                    "",
+                    t(
+                        "portfolio_last_fetch",
+                        lang,
+                        timestamp=state.last_market_fetch_at.isoformat(),
+                    ),
+                ]
+            )
+        else:
+            lines.extend(
+                [
+                    "",
+                    t(
+                        "portfolio_last_fetch_user",
+                        lang,
+                        date=_format_user_date(state.last_market_fetch_at),
+                    ),
+                ]
+            )
 
     return truncate_message("\n".join(lines).strip())
 
@@ -228,10 +262,12 @@ def format_industries(
     news_cache: NewsCache,
     *,
     lang: str = "en",
+    is_developer: bool = False,
 ) -> str:
     """Render focus industries with recent tagged news counts."""
     if not focus_industries:
-        return t("industries_empty", lang)
+        key = "industries_empty" if is_developer else "industries_empty_user"
+        return t(key, lang)
 
     lines = [t("industries_header", lang), ""]
     for industry in focus_industries:
@@ -239,17 +275,35 @@ def format_industries(
         if not label:
             continue
         count = sum(1 for item in news_cache.items if label in item.sector_tags)
-        lines.append(t("industries_line", lang, label=label, count=count))
+        if is_developer:
+            lines.append(t("industries_line", lang, label=label, count=count))
+        elif count == 0:
+            lines.append(t("industries_line_none_user", lang, label=label))
+        else:
+            lines.append(t("industries_line_user", lang, label=label, count=count))
 
-    lines.extend(["", t("industries_total", lang, count=len(news_cache.items))])
-    if news_cache.updated_at:
-        lines.append(
-            t(
-                "industries_updated",
-                lang,
-                timestamp=news_cache.updated_at.isoformat(),
+    if is_developer:
+        lines.extend(["", t("industries_total", lang, count=len(news_cache.items))])
+        if news_cache.updated_at:
+            lines.append(
+                t(
+                    "industries_updated",
+                    lang,
+                    timestamp=news_cache.updated_at.isoformat(),
+                )
             )
+    else:
+        lines.extend(
+            ["", t("industries_total_user", lang, count=len(news_cache.items))]
         )
+        if news_cache.updated_at:
+            lines.append(
+                t(
+                    "industries_updated_user",
+                    lang,
+                    date=_format_user_date(news_cache.updated_at),
+                )
+            )
 
     return truncate_message("\n".join(lines))
 
@@ -260,6 +314,7 @@ def format_analyze(
     app_config: AppConfig,
     *,
     lang: str = "en",
+    is_developer: bool = False,
 ) -> str:
     """Render rule alerts and optional LLM advisory output."""
     lines = [t("analyze_header", lang), ""]
@@ -278,26 +333,31 @@ def format_analyze(
 
     if app_config.enable_llm_summaries:
         if advisory is None:
-            lines.append(t("analyze_llm_empty", lang))
+            key = "analyze_llm_empty" if is_developer else "analyze_llm_empty_user"
+            lines.append(t(key, lang))
         else:
-            lines.extend(
-                [
-                    t(
-                        "analyze_llm_header",
-                        lang,
-                        source=advisory.source,
-                        urgency=advisory.urgency,
-                    ),
-                    advisory.summary,
-                ]
-            )
+            if is_developer:
+                lines.extend(
+                    [
+                        t(
+                            "analyze_llm_header",
+                            lang,
+                            source=advisory.source,
+                            urgency=advisory.urgency,
+                        ),
+                        advisory.summary,
+                    ]
+                )
+            else:
+                lines.extend([t("advisory", lang), advisory.summary])
             if advisory.suggested_actions:
                 actions = "; ".join(advisory.suggested_actions)
                 lines.append(t("analyze_suggested", lang, actions=actions))
-            if advisory.error:
+            if advisory.error and is_developer:
                 lines.append(t("analyze_llm_note", lang, note=advisory.error))
     else:
-        lines.append(t("analyze_llm_disabled", lang))
+        key = "analyze_llm_disabled" if is_developer else "analyze_llm_disabled_user"
+        lines.append(t(key, lang))
 
     return truncate_message("\n".join(lines))
 
@@ -310,8 +370,8 @@ def format_ticker_analysis(
     app_config: AppConfig,
     *,
     lang: str = "en",
+    is_developer: bool = False,
 ) -> str:
-    """Render on-demand /analyze output for a single ticker."""
     symbol = ticker.strip().upper()
     lines = [t("ticker_header", lang, symbol=symbol), ""]
 
@@ -340,9 +400,11 @@ def format_ticker_analysis(
     lines.append("")
 
     if not app_config.enable_llm_summaries:
-        lines.append(t("ticker_llm_disabled", lang))
+        key = "ticker_llm_disabled" if is_developer else "ticker_llm_disabled_user"
+        lines.append(t(key, lang))
     elif explanation is None:
-        lines.append(t("ticker_llm_empty", lang))
+        key = "ticker_llm_empty" if is_developer else "ticker_llm_empty_user"
+        lines.append(t(key, lang))
     else:
         lines.append(explanation.to_message())
 

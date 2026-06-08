@@ -1,7 +1,7 @@
 {
   "last_digest_at": "2026-06-05T00:00:00.620928Z",
-  "last_market_fetch_at": "2026-06-08T08:47:09.290651Z",
-  "last_news_fetch_at": "2026-06-08T08:47:11.485026Z",
+  "last_market_fetch_at": "2026-06-08T09:17:33.289907Z",
+  "last_news_fetch_at": "2026-06-08T09:17:35.620850Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
@@ -12,7 +12,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-08T08:47:09.290651Z"
+      "fetched_at": "2026-06-08T09:17:33.289907Z"
     },
     "AAPL": {
       "ticker": "AAPL",
@@ -23,7 +23,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "USD",
-      "fetched_at": "2026-06-08T08:47:09.290651Z"
+      "fetched_at": "2026-06-08T09:17:33.289907Z"
     },
     "NVDA": {
       "ticker": "NVDA",
@@ -34,7 +34,7 @@
       "sector": "Technology",
       "industry": "Semiconductors",
       "currency": "USD",
-      "fetched_at": "2026-06-08T08:47:09.290651Z"
+      "fetched_at": "2026-06-08T09:17:33.289907Z"
     },
     "MSFT": {
       "ticker": "MSFT",
@@ -45,7 +45,7 @@
       "sector": "Technology",
       "industry": "Software - Infrastructure",
       "currency": "USD",
-      "fetched_at": "2026-06-08T08:47:09.290651Z"
+      "fetched_at": "2026-06-08T09:17:33.289907Z"
     }
   },
   "last_sent_alerts": [
@@ -57,33 +57,33 @@
   ],
   "pending_alerts": [
     {
-      "id": "c5af150afe9a2838",
+      "id": "38c7185c54217611",
       "type": "price_drop",
       "severity": "warning",
       "message": "MSFT down 2.7% today: MSFT fell 2.66% since the last market fetch, breaching the 2.0% drop threshold.",
-      "created_at": "2026-06-08T08:47:20.033371Z",
+      "created_at": "2026-06-08T09:17:54.122634Z",
       "related_tickers": [
         "MSFT"
       ],
       "industry": null,
-      "llm_explanation": "Explanation (likely reasons):\n- Tech sector underperformance\n- Broader market risk-off sentiment\nSentiment: negative — Microsoft's stock declined amid general technology sector weakness and shifting market sentiment, though specific catalysts were not detailed in the provided context.\nNote: This is a hypothetical, best-effort explanation based only on the provided price and news context. It may be incomplete or inaccurate and is not investment advice."
+      "llm_explanation": "Explanation (likely reasons):\n- Tech sector underperformance\n- Market risk-off sentiment\nSentiment: negative — Microsoft's stock declined amid broader technology sector weakness and shifting market sentiment.\nNote: This is a hypothetical, best-effort explanation based only on the provided price and news context. It may be incomplete or inaccurate and is not investment advice."
     },
     {
-      "id": "80819a3ff8c4eb70",
+      "id": "71d415adf711e9c0",
       "type": "sector_attention",
       "severity": "warning",
-      "message": "Sector attention: AI: 81 articles tagged to AI were found in the last 24 hour(s).",
-      "created_at": "2026-06-08T08:47:20.033371Z",
+      "message": "Sector attention: AI: 80 articles tagged to AI were found in the last 24 hour(s).",
+      "created_at": "2026-06-08T09:17:54.122634Z",
       "related_tickers": [],
       "industry": "AI",
       "llm_explanation": null
     },
     {
-      "id": "b4d09487bb6abe98",
+      "id": "9d4b731f01f85d95",
       "type": "sector_attention",
       "severity": "warning",
-      "message": "Sector attention: Hong Kong: 20 articles tagged to Hong Kong were found in the last 24 hour(s).",
-      "created_at": "2026-06-08T08:47:20.033371Z",
+      "message": "Sector attention: Hong Kong: 21 articles tagged to Hong Kong were found in the last 24 hour(s).",
+      "created_at": "2026-06-08T09:17:54.122634Z",
       "related_tickers": [],
       "industry": "Hong Kong",
       "llm_explanation": null

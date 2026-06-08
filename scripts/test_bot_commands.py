@@ -54,6 +54,7 @@ def run_test() -> None:
             BotUsers(
                 users=[
                     BotUser(chat_id=12345, language="en", role="developer"),
+                    BotUser(chat_id=67890, language="en", role="ordinary"),
                 ]
             )
         )
@@ -108,7 +109,21 @@ def run_test() -> None:
 
         industries_text = commands.industries_message(12345)
         if "Consumer Electronics" not in industries_text or "1 cached" not in industries_text:
-            raise AssertionError("industries message missing expected content")
+            raise AssertionError("developer industries message missing expected content")
+
+        ordinary_industries = commands.industries_message(67890)
+        if "Consumer Electronics" not in ordinary_industries or "1 headline" not in ordinary_industries:
+            raise AssertionError("ordinary industries message missing expected content")
+        if any(token in ordinary_industries.lower() for token in ("cached", "cache")):
+            raise AssertionError("ordinary industries must not mention cache")
+        if "+00:00" in ordinary_industries or "T12:00:00" in ordinary_industries:
+            raise AssertionError("ordinary industries must not show ISO timestamps")
+
+        ordinary_portfolio = commands.portfolio_message(67890)
+        if "+00:00" in ordinary_portfolio or "T12:00:00" in ordinary_portfolio:
+            raise AssertionError("ordinary portfolio must not show ISO timestamps")
+        if "2026-06-04" not in ordinary_portfolio:
+            raise AssertionError("ordinary portfolio should show plain dates")
 
         sector_alert_text = format_alert(
             PendingAlert(
@@ -138,7 +153,7 @@ def run_test() -> None:
             raise AssertionError(f"set_language failed: {lang_msg}")
 
         ru_help = commands.help_message(12345)
-        if "Доступные команды" not in ru_help:
+        if "Справка по командам" not in ru_help:
             raise AssertionError("Russian help header missing after set_language")
 
         if not is_authorized(FakeUpdate(12345), repository):
@@ -156,7 +171,7 @@ def run_test() -> None:
             for row in dev_kb.keyboard
             for button in row
         }
-        for cmd in ("/list_users", "/add_user", "/remove_user"):
+        for cmd in ("/list_users", "/add_user", "/remove_user", "/add_ticker", "/remove_ticker"):
             if cmd not in dev_labels:
                 raise AssertionError(f"developer keyboard missing {cmd}")
 
@@ -166,10 +181,15 @@ def run_test() -> None:
             for row in ordinary_kb.keyboard
             for button in row
         }
-        if "/add_user" in ordinary_labels:
-            raise AssertionError("ordinary keyboard must not expose /add_user")
+        for cmd in ("/add_user", "/add_ticker", "/remove_ticker"):
+            if cmd in ordinary_labels:
+                raise AssertionError(f"ordinary keyboard must not expose {cmd}")
 
-        print(format_start(lang="en"))
+        ordinary_help = format_help(lang="en", is_developer=False)
+        if any(token in ordinary_help for token in ("/list_users", "/reload_config", "/add_ticker", "/remove_ticker", "Developer")):
+            raise AssertionError("ordinary help must not expose developer or portfolio-edit commands")
+
+        print(format_start(lang="en", is_developer=False))
         print(format_help(lang="en", is_developer=True))
         print("Portfolio preview:\n", portfolio_text)
         print("Industries preview:\n", industries_text)

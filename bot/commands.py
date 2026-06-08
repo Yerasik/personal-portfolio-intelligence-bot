@@ -46,7 +46,10 @@ class BotCommands:
 
     def start_message(self, chat_id: int) -> str:
         """Return the welcome text for /start."""
-        return format_start(lang=self._lang(chat_id))
+        return format_start(
+            lang=self._lang(chat_id),
+            is_developer=self._is_developer(chat_id),
+        )
 
     def help_message(self, chat_id: int) -> str:
         """Return the command list for /help."""
@@ -59,11 +62,17 @@ class BotCommands:
         """Load portfolio + state and format holdings with latest prices."""
         portfolio = self.repository.load_portfolio()
         state = self.repository.load_state()
-        return format_portfolio(portfolio, state, lang=self._lang(chat_id))
+        return format_portfolio(
+            portfolio,
+            state,
+            lang=self._lang(chat_id),
+            is_developer=self._is_developer(chat_id),
+        )
 
     def industries_message(self, chat_id: int) -> str:
         """Load config + news cache and summarize focus industries."""
         lang = self._lang(chat_id)
+        is_developer = self._is_developer(chat_id)
         app_config = self.repository.load_config()
         portfolio = self.repository.load_portfolio()
         ticker_industries = self.repository.load_ticker_industries()
@@ -73,7 +82,12 @@ class BotCommands:
             portfolio,
             ticker_industries.ticker_to_industry,
         )
-        return format_industries(focus_industries, news_cache, lang=lang)
+        return format_industries(
+            focus_industries,
+            news_cache,
+            lang=lang,
+            is_developer=is_developer,
+        )
 
     def analyze_message(self, chat_id: int) -> str:
         """Run rules (and optional LLM) and format an on-demand advisory."""
@@ -102,7 +116,13 @@ class BotCommands:
                 language=lang,
             )
 
-        return format_analyze(alerts, advisory, app_config, lang=lang)
+        return format_analyze(
+            alerts,
+            advisory,
+            app_config,
+            lang=lang,
+            is_developer=self._is_developer(chat_id),
+        )
 
     def news_summary_message(self, chat_id: int) -> str:
         """Summarize cached news by sector and portfolio ticker via the LLM."""
@@ -171,6 +191,7 @@ class BotCommands:
             explanation,
             app_config,
             lang=lang,
+            is_developer=self._is_developer(chat_id),
         )
 
     def add_ticker_message(self, chat_id: int, ticker: str, shares: float = 1.0) -> str:
