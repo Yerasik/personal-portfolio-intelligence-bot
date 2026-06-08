@@ -14,6 +14,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 from bot.commands import BotCommands
+from bot.menu import main_menu_keyboard
 from config.settings import RuntimeSettings
 
 logger = logging.getLogger(__name__)
@@ -61,18 +62,43 @@ async def _guard(update: Update, context: ContextTypes.DEFAULT_TYPE) -> bool:
     return False
 
 
+async def _reply_with_menu(
+    update: Update,
+    text: str,
+    *,
+    show_menu: bool = True,
+) -> None:
+    """Send a text reply and attach the main reply keyboard when requested."""
+    if update.message is None:
+        return
+    await update.message.reply_text(
+        text,
+        reply_markup=main_menu_keyboard() if show_menu else None,
+    )
+
+
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /start — send the welcome message."""
     if not await _guard(update, context):
         return
-    await update.message.reply_text(_commands(context).start_message())
+    await _reply_with_menu(update, _commands(context).start_message())
+
+
+async def menu_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /menu — show the tap-to-run reply keyboard."""
+    if not await _guard(update, context):
+        return
+    await _reply_with_menu(
+        update,
+        "Choose an action from the menu below, or type a command (e.g. /analyze AAPL).",
+    )
 
 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /help — list available commands."""
     if not await _guard(update, context):
         return
-    await update.message.reply_text(_commands(context).help_message())
+    await _reply_with_menu(update, _commands(context).help_message())
 
 
 async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -87,6 +113,13 @@ async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     if not await _guard(update, context):
         return
     await update.message.reply_text(_commands(context).industries_message())
+
+
+async def news_summary_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /news_summary — LLM summaries of cached news by sector and ticker."""
+    if not await _guard(update, context):
+        return
+    await update.message.reply_text(_commands(context).news_summary_message())
 
 
 async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -118,9 +151,11 @@ def register_handlers(
 
     command_handlers = (
         ("start", start_command),
+        ("menu", menu_command),
         ("help", help_command),
         ("portfolio", portfolio_command),
         ("industries", industries_command),
+        ("news_summary", news_summary_command),
         ("analyze", analyze_command),
     )
     for name, handler in command_handlers:

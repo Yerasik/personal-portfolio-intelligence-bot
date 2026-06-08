@@ -15,11 +15,13 @@ from analysis.move_explainer import (
     explain_price_move,
     recent_news_titles_for_ticker,
 )
+from analysis.news_summarizer import summarize_news
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
     format_help,
     format_industries,
+    format_news_summary,
     format_portfolio,
     format_start,
     format_ticker_analysis,
@@ -87,6 +89,30 @@ class BotCommands:
             )
 
         return format_analyze(alerts, advisory, app_config)
+
+    def news_summary_message(self) -> str:
+        """Summarize cached news by sector and portfolio ticker via the LLM."""
+        app_config = self.repository.load_config()
+        portfolio = self.repository.load_portfolio()
+        ticker_industries = self.repository.load_ticker_industries()
+        state = self.repository.load_state()
+        news_cache = self.repository.load_news_cache()
+
+        company_names = {
+            symbol: quote.company_name
+            for symbol, quote in state.latest_prices.items()
+            if quote.company_name
+        }
+        summary = summarize_news(
+            self.llm,
+            portfolio,
+            app_config,
+            news_cache,
+            ticker_industries.ticker_to_industry,
+            company_names=company_names,
+            enabled=app_config.enable_llm_summaries,
+        )
+        return format_news_summary(summary)
 
     def analyze_ticker_message(self, ticker: str, *, window: str = "today") -> str:
         """Explain the latest price move for one ticker using the shared helper."""

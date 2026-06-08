@@ -11,6 +11,7 @@ from telegram.ext import Application
 from analysis.llm import LlmClient
 from bot.commands import BotCommands
 from bot.handlers import register_handlers
+from bot.menu import setup_telegram_menu
 from config.settings import RuntimeSettings
 from storage.repository import DataRepository
 
@@ -34,6 +35,7 @@ def build_bot_context(
     application = (
         Application.builder()
         .token(settings.telegram_bot_token)
+        .post_init(setup_telegram_menu)
         .build()
     )
     commands = BotCommands(repository=repository, llm=llm)

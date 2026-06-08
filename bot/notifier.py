@@ -9,6 +9,7 @@ from datetime import UTC, datetime, timedelta
 import httpx
 
 from analysis.llm import LlmAdvisoryResult
+from analysis.news_summarizer import NewsSummary
 from analysis.rules import AlertCandidate
 from bot.formatter import format_daily_summary, format_urgent_alert
 from config.settings import RuntimeSettings
@@ -153,13 +154,20 @@ class TelegramNotifier:
         advisory: LlmAdvisoryResult | None,
         app_config: AppConfig,
         repository: DataRepository,
+        news_summary: NewsSummary | None = None,
     ) -> bool:
         """Send the daily summary message to Telegram."""
         if not self.is_configured:
             logger.warning("Telegram notifier not configured; skipping daily summary send")
             return False
 
-        message = format_daily_summary(portfolio, alerts, advisory, app_config)
+        message = format_daily_summary(
+            portfolio,
+            alerts,
+            advisory,
+            app_config,
+            news_summary=news_summary,
+        )
         try:
             self.send_text(message)
         except Exception:

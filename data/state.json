@@ -1,30 +1,64 @@
 {
   "last_digest_at": "2026-06-05T00:00:00.620928Z",
-  "last_market_fetch_at": "2026-06-08T07:10:16.190925Z",
-  "last_news_fetch_at": "2026-06-08T07:10:22.162924Z",
+  "last_market_fetch_at": "2026-06-08T07:52:33.024098Z",
+  "last_news_fetch_at": "2026-06-08T07:52:46.056376Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
-      "price": 27.239999771118164,
-      "change_pct": -2.0143866234206227,
-      "volume": 115279431,
+      "price": 27.31999969482422,
+      "change_pct": -1.726617105789105,
+      "volume": 125216127,
       "company_name": "XIAOMI-W",
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-08T07:10:16.190925Z"
+      "fetched_at": "2026-06-08T07:52:33.024098Z"
+    },
+    "AAPL": {
+      "ticker": "AAPL",
+      "price": 307.3399963378906,
+      "change_pct": -1.24988417283717,
+      "volume": 65246700,
+      "company_name": "Apple Inc.",
+      "sector": "Technology",
+      "industry": "Consumer Electronics",
+      "currency": "USD",
+      "fetched_at": "2026-06-08T07:52:33.024098Z"
+    },
+    "NVDA": {
+      "ticker": "NVDA",
+      "price": 205.10000610351562,
+      "change_pct": -6.201407359138127,
+      "volume": 218529000,
+      "company_name": "NVIDIA Corporation",
+      "sector": "Technology",
+      "industry": "Semiconductors",
+      "currency": "USD",
+      "fetched_at": "2026-06-08T07:52:33.024098Z"
     }
   },
   "last_sent_alerts": [],
   "pending_alerts": [
     {
-      "id": "d5fabb52fd6ad8ca",
-      "type": "",
+      "id": "b7cf14b0fabee4fa",
+      "type": "price_drop",
       "severity": "warning",
-      "message": "Sector attention: AI: 66 articles tagged to AI were found in the last 24 hour(s).",
-      "created_at": "2026-06-08T06:37:51.471599Z",
-      "related_tickers": [],
+      "message": "1810.HK down 2.0% today: 1810.HK fell 2.01% since the last market fetch, breaching the 2.0% drop threshold.",
+      "created_at": "2026-06-08T07:10:58.877326Z",
+      "related_tickers": [
+        "1810.HK"
+      ],
       "industry": null,
+      "llm_explanation": "Explanation (likely reasons):\n- Technology sector weakness\n- Broad market correction\nSentiment: negative — The 2.01% decline is likely driven by sector-wide technology underperformance and broader market risk aversion, consistent with general market context.\nNote: This is a hypothetical, best-effort explanation based only on the provided price and news context. It may be incomplete or inaccurate and is not investment advice."
+    },
+    {
+      "id": "625467869fab14b1",
+      "type": "sector_attention",
+      "severity": "warning",
+      "message": "Sector attention: AI: 65 articles tagged to AI were found in the last 24 hour(s).",
+      "created_at": "2026-06-08T07:10:58.877326Z",
+      "related_tickers": [],
+      "industry": "AI",
       "llm_explanation": null
     }
   ]

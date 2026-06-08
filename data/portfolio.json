@@ -1,6 +1,8 @@
 {
   "positions": [
-    { "ticker": "1810.HK", "shares": 10, "cost_basis": 31.0 }
+    { "ticker": "1810.HK", "shares": 10, "cost_basis": 31.0 },
+    { "ticker": "AAPL", "shares": 10 },
+    { "ticker": "NVDA", "shares": 5 }
   ],
   "notes": ""
 }

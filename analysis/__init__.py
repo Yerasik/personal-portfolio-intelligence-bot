@@ -7,6 +7,7 @@ from analysis.move_explainer import (
     explain_price_move,
     recent_news_titles_for_ticker,
 )
+from analysis.news_summarizer import NewsSummary, summarize_news
 from analysis.rules import AlertCandidate, RulesEngine
 from analysis.summarizer import Summarizer
 
@@ -14,6 +15,7 @@ __all__ = [
     "AlertCandidate",
     "LlmAdvisoryResult",
     "LlmClient",
+    "NewsSummary",
     "PriceMoveExplanation",
     "RulesEngine",
     "Summarizer",
@@ -21,4 +23,5 @@ __all__ = [
     "build_price_move_explanation_prompt",
     "explain_price_move",
     "recent_news_titles_for_ticker",
+    "summarize_news",
 ]

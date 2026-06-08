@@ -21,6 +21,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 from analysis.industries import build_news_focus_industries
 from analysis.llm import LlmClient
 from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
+from analysis.news_summarizer import summarize_news
 from analysis.rules import AlertCandidate, RulesEngine
 from analysis.summarizer import Summarizer
 from collectors.base import CollectorContext
@@ -263,6 +264,12 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
     alerts = summarizer.rules.evaluate(portfolio, state, news_cache)
 
     advisory = None
+    news_summary = None
+    company_names = {
+        symbol: quote.company_name
+        for symbol, quote in state.latest_prices.items()
+        if quote.company_name
+    }
     if app_config.enable_llm_summaries:
         advisory = summarizer.llm.synthesize_advisory(
             portfolio,
@@ -271,6 +278,14 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
             news_cache,
             alerts,
             ticker_to_industry=ticker_industries.ticker_to_industry,
+        )
+        news_summary = summarize_news(
+            summarizer.llm,
+            portfolio,
+            app_config,
+            news_cache,
+            ticker_industries.ticker_to_industry,
+            company_names=company_names,
         )
 
     logger.info("Daily summary generated with %d alert(s)", len(alerts))
@@ -281,6 +296,7 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
         advisory=advisory,
         app_config=app_config,
         repository=services.repository,
+        news_summary=news_summary,
     )
     if sent:
         state = services.repository.load_state()

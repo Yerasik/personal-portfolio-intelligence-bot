@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from analysis.llm import LlmAdvisoryResult
 from analysis.move_explainer import PriceMoveExplanation
+from analysis.news_summarizer import NewsSummary
 from analysis.rules import AlertCandidate
 from storage.models import AppConfig, BotState, MarketQuote, NewsCache, PendingAlert, Portfolio
 
@@ -57,11 +58,37 @@ def format_informational_alert(alert: AlertCandidate) -> str:
     return truncate_message("\n".join(lines))
 
 
+def _append_news_summary_sections(lines: list[str], news_summary: NewsSummary) -> None:
+    """Append sector and ticker news blocks to a message."""
+    if news_summary.sector_summaries:
+        lines.extend(["News by sector", ""])
+        for sector, summary in news_summary.sector_summaries.items():
+            lines.append(f"{sector}:")
+            lines.append(summary)
+            lines.append("")
+
+    if news_summary.ticker_summaries:
+        lines.extend(["News by ticker", ""])
+        for ticker, summary in news_summary.ticker_summaries.items():
+            lines.append(f"{ticker}:")
+            lines.append(summary)
+            lines.append("")
+
+
+def format_news_summary(news_summary: NewsSummary) -> str:
+    """Render on-demand /news_summary output."""
+    lines = ["News summary", ""]
+    _append_news_summary_sections(lines, news_summary)
+    lines.append("Advisory only — summaries are based on cached headlines.")
+    return truncate_message("\n".join(lines).strip())
+
+
 def format_daily_summary(
     portfolio: Portfolio,
     alerts: list[AlertCandidate],
     advisory: LlmAdvisoryResult | None,
     app_config: AppConfig,
+    news_summary: NewsSummary | None = None,
 ) -> str:
     """Format a concise daily summary for Telegram delivery."""
     lines = [
@@ -86,6 +113,9 @@ def format_daily_summary(
             lines.append(f"Actions: {actions}")
         lines.append("")
 
+    if news_summary is not None:
+        _append_news_summary_sections(lines, news_summary)
+
     lines.append("Advisory only — no trades executed.")
     return truncate_message("\n".join(lines))
 
@@ -96,7 +126,7 @@ def format_start() -> str:
         "Portfolio Intelligence Bot\n\n"
         "This bot monitors your portfolio, news, and rule-based alerts. "
         "It provides advisory guidance only and does not execute trades.\n\n"
-        "Use /help to see available commands."
+        "Use the menu below or /help to see available commands."
     )
 
 
@@ -105,9 +135,11 @@ def format_help() -> str:
     return (
         "Available commands:\n\n"
         "/start — welcome message\n"
+        "/menu — show the tap-to-run menu\n"
         "/help — show this help\n"
         "/portfolio — holdings and latest prices\n"
         "/industries — focus industries and recent news counts\n"
+        "/news_summary — LLM summaries of cached news by sector and ticker\n"
         "/analyze — run rules and optional LLM advisory summary\n"
         "/analyze <ticker> — explain a ticker's recent price move"
     )

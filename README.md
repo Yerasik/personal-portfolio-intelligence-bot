@@ -134,10 +134,16 @@ Use direct RSS/Atom XML endpoints in `rss_feed_urls`, not HTML index or landing 
 docker compose up --build -d
 ```
 
-On NVIDIA hosts with the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed, enable GPU inference for Ollama with the optional override:
+On NVIDIA hosts with the [NVIDIA Container Toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed, **you must use the GPU override** — plain `docker compose up` does not pass a GPU to Ollama:
 
 ```bash
 docker compose -f docker-compose.yml -f docker-compose.gpu.yml up --build -d
+```
+
+Verify GPU inside the container (Ollama logs should show `inference compute` with your GPU name, not `id=cpu`):
+
+```bash
+docker logs ollama 2>&1 | grep "inference compute"
 ```
 
 Without the GPU override, Ollama runs on CPU (slower for large models like `qwen3:30b`).
@@ -172,10 +178,12 @@ Healthy startup logs include:
 
 Message your bot in Telegram (from the configured chat id only):
 
-- `/start` — welcome
+- `/start` — welcome (shows the tap-to-run menu keyboard)
+- `/menu` — show the reply keyboard menu again
 - `/help` — commands
 - `/portfolio` — holdings and latest prices
 - `/industries` — tracked industries (config + portfolio map) and cached news counts per industry
+- `/news_summary` — LLM summaries of cached news by sector and by portfolio ticker
 - `/analyze` — rules + optional LLM portfolio advisory
 - `/analyze <ticker>` — explain a ticker's recent price move using ticker-tagged news (e.g. `/analyze AAPL`)
 
@@ -202,7 +210,10 @@ Configured in `data/config.json`:
 
 Job failures are logged and do not crash the bot process.
 
-When `enable_llm_summaries` is `true`, price-move alerts (`price_drop`/`price_rise`) are enriched with a best-effort LLM explanation of likely reasons, drawn from recent **ticker-tagged** news for that symbol. The explanation is hypothetical, carries a "not investment advice" disclaimer, and falls back to raw price info if the LLM is unavailable. The same explainer powers `/analyze <ticker>`.
+When `enable_llm_summaries` is `true`:
+
+- Price-move alerts (`price_drop`/`price_rise`) are enriched with a best-effort LLM explanation (recent **ticker-tagged** news). The same explainer powers `/analyze <ticker>`.
+- `/news_summary` and the daily digest include grounded LLM summaries of cached news **by sector** and **by portfolio ticker** (headline-only fallback when the LLM is unavailable).
 
 Large models on CPU can take several minutes per LLM request (default timeout: 300s). Use the GPU compose override on supported hardware for faster inference.
 
@@ -215,6 +226,7 @@ docker compose run --rm --no-deps portfolio-bot python scripts/test_storage.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_market_data.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_news_data.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_industries.py
+docker compose run --rm --no-deps portfolio-bot python scripts/test_news_summarizer.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_rules.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_llm.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_move_explainer.py
@@ -253,9 +265,22 @@ Verify the container has new code, e.g. `docker compose exec portfolio-bot grep 
 
 ### Ollama slow or using CPU only
 
-- Confirm GPU override is active: `docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d`
-- Inside the Ollama container: `nvidia-smi` (should work when GPU is passed through)
-- Pull the configured model: `docker exec -it ollama ollama pull qwen3:30b`
+**Symptom:** `docker logs ollama` shows `inference compute id=cpu` and `offloaded 0/N layers to GPU`.
+
+**Cause:** The stack was started with `docker compose up` only. GPU access requires the override file.
+
+**Fix:**
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d ollama
+docker logs ollama 2>&1 | grep "inference compute"
+# Should show your GPU, e.g. "NVIDIA GeForce RTX 4090"
+```
+
+Also check:
+- Host GPU works: `nvidia-smi`
+- Docker sees GPU: `docker run --rm --gpus all nvidia/cuda:12.2.0-base-ubuntu22.04 nvidia-smi`
+- Model is pulled: `docker exec -it ollama ollama pull qwen3:30b`
 
 ### No Telegram responses
 
