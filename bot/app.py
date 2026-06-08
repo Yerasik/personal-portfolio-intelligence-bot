@@ -39,7 +39,7 @@ def build_bot_context(
         .build()
     )
     commands = BotCommands(repository=repository, llm=llm)
-    register_handlers(application, commands, settings)
+    register_handlers(application, commands, repository)
     return BotContext(
         settings=settings,
         repository=repository,

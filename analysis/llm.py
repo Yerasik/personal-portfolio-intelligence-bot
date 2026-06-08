@@ -156,8 +156,11 @@ def build_advisory_prompt(
     alerts: list[AlertCandidate],
     *,
     ticker_to_industry: dict[str, str] | None = None,
+    language: str = "en",
 ) -> str:
     """Build a deterministic concise prompt for Ollama."""
+    from bot.i18n import llm_language_clause
+
     focus_industries = build_news_focus_industries(
         app_config.focus_industries,
         portfolio,
@@ -179,6 +182,7 @@ def build_advisory_prompt(
         f"Latest prices:\n{_format_prices(state, portfolio)}\n"
         f"Recent tagged news:\n{_format_news(news_items)}\n"
         f"Triggered rule alerts:\n{_format_alerts(alerts)}\n\n"
+        f"{llm_language_clause(language)}\n\n"
         "Respond with JSON only using this schema:\n"
         '{"urgency":"info|warning|urgent","summary":"one concise paragraph",'
         '"suggested_actions":["review","hold","investigate","monitor"]}'
@@ -315,6 +319,7 @@ class LlmClient:
         alerts: list[AlertCandidate],
         *,
         ticker_to_industry: dict[str, str] | None = None,
+        language: str = "en",
     ) -> LlmAdvisoryResult:
         """Build a prompt, call Ollama, and return structured advisory output."""
         if not self.is_configured:
@@ -331,6 +336,7 @@ class LlmClient:
             news_cache,
             alerts,
             ticker_to_industry=ticker_to_industry,
+            language=language,
         )
 
         try:

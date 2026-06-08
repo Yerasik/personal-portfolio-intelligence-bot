@@ -17,10 +17,13 @@ from analysis.llm import LlmClient
 from bot.commands import BotCommands
 from bot.formatter import format_alert, format_help, format_portfolio, format_start
 from bot.handlers import is_authorized
+from bot.menu import main_menu_keyboard
 from config.settings import RuntimeSettings
 from storage.models import (
     AppConfig,
     BotState,
+    BotUser,
+    BotUsers,
     MarketQuote,
     NewsCache,
     NewsItem,
@@ -47,6 +50,13 @@ def run_test() -> None:
     try:
         paths = resolve_data_paths(temp_dir)
         repository = DataRepository(paths)
+        repository.save_users(
+            BotUsers(
+                users=[
+                    BotUser(chat_id=12345, language="en", role="developer"),
+                ]
+            )
+        )
         repository.save_config(AppConfig(focus_industries=["AI"]))
         repository.save_ticker_industries(
             TickerIndustryMap(ticker_to_industry={"AAPL": "Consumer Electronics"})
@@ -92,11 +102,11 @@ def run_test() -> None:
         llm = LlmClient(settings=settings)
         commands = BotCommands(repository=repository, llm=llm)
 
-        portfolio_text = commands.portfolio_message()
+        portfolio_text = commands.portfolio_message(12345)
         if "AAPL" not in portfolio_text or "180.00" not in portfolio_text:
             raise AssertionError("portfolio message missing expected content")
 
-        industries_text = commands.industries_message()
+        industries_text = commands.industries_message(12345)
         if "Consumer Electronics" not in industries_text or "1 cached" not in industries_text:
             raise AssertionError("industries message missing expected content")
 
@@ -111,27 +121,56 @@ def run_test() -> None:
                 ),
                 created_at=NOW,
                 industry="Consumer Electronics",
-            )
+            ),
+            lang="en",
         )
         if "Investigate Consumer Electronics" not in sector_alert_text:
             raise AssertionError(
                 f"sector alert formatted incorrectly: {sector_alert_text}"
             )
 
-        analyze_text = commands.analyze_message()
+        analyze_text = commands.analyze_message(12345)
         if "Portfolio analysis" not in analyze_text:
             raise AssertionError("analyze message missing header")
 
-        class SettingsStub:
-            telegram_chat_id = "12345"
+        lang_msg = commands.set_language_message(12345, "ru")
+        if "Язык изменён" not in lang_msg:
+            raise AssertionError(f"set_language failed: {lang_msg}")
 
-        if not is_authorized(FakeUpdate(12345), SettingsStub()):  # type: ignore[arg-type]
+        ru_help = commands.help_message(12345)
+        if "Доступные команды" not in ru_help:
+            raise AssertionError("Russian help header missing after set_language")
+
+        if not is_authorized(FakeUpdate(12345), repository):
             raise AssertionError("authorized chat should pass")
-        if is_authorized(FakeUpdate(99999), SettingsStub()):  # type: ignore[arg-type]
+        if is_authorized(FakeUpdate(99999), repository):
             raise AssertionError("unauthorized chat should fail")
 
-        print(format_start())
-        print(format_help())
+        help_dev = commands.help_message(12345)
+        if "/reload_config" not in help_dev:
+            raise AssertionError("developer help should list reload_config")
+
+        dev_kb = main_menu_keyboard(is_developer=True)
+        dev_labels = {
+            button.text
+            for row in dev_kb.keyboard
+            for button in row
+        }
+        for cmd in ("/list_users", "/add_user", "/remove_user"):
+            if cmd not in dev_labels:
+                raise AssertionError(f"developer keyboard missing {cmd}")
+
+        ordinary_kb = main_menu_keyboard(is_developer=False)
+        ordinary_labels = {
+            button.text
+            for row in ordinary_kb.keyboard
+            for button in row
+        }
+        if "/add_user" in ordinary_labels:
+            raise AssertionError("ordinary keyboard must not expose /add_user")
+
+        print(format_start(lang="en"))
+        print(format_help(lang="en", is_developer=True))
         print("Portfolio preview:\n", portfolio_text)
         print("Industries preview:\n", industries_text)
         print("Analyze preview:\n", analyze_text)

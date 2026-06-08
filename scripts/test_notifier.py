@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 import shutil
 import sys
 import tempfile
@@ -18,8 +17,7 @@ if str(ROOT) not in sys.path:
 from analysis.rules import AlertCandidate
 from bot.formatter import format_daily_summary, format_informational_alert, format_urgent_alert
 from bot.notifier import TelegramNotifier
-from config.settings import RuntimeSettings
-from storage.models import AppConfig, Portfolio, Position, SentAlertRecord
+from storage.models import AppConfig, BotUser, BotUsers, Portfolio, Position, SentAlertRecord
 from storage.paths import resolve_data_paths
 from storage.repository import DataRepository
 
@@ -54,7 +52,6 @@ def _info_alert() -> AlertCandidate:
 
 class SettingsStub:
     telegram_bot_token = "test-token"
-    telegram_chat_id = "12345"
 
 
 def run_test() -> None:
@@ -62,27 +59,38 @@ def run_test() -> None:
     print(f"Using temp data dir: {temp_dir}")
 
     try:
-        urgent_text = format_urgent_alert(_urgent_alert())
-        info_text = format_informational_alert(_info_alert())
+        urgent_text = format_urgent_alert(_urgent_alert(), lang="en")
+        info_text = format_informational_alert(_info_alert(), lang="en")
         summary_text = format_daily_summary(
             Portfolio(positions=[Position(ticker="AAPL", shares=1)]),
             [_urgent_alert()],
             None,
             AppConfig(),
+            lang="de",
         )
         for text in (urgent_text, info_text, summary_text):
             if "{" in text and "}" in text:
                 raise AssertionError("formatted message looks like raw JSON/dict")
+        if "Tägliche Portfolio-Zusammenfassung" not in summary_text:
+            raise AssertionError("German daily summary header missing")
 
         paths = resolve_data_paths(temp_dir)
         repository = DataRepository(paths)
         repository.save_config(AppConfig(alert_suppression_hours=12))
+        repository.save_users(
+            BotUsers(
+                users=[
+                    BotUser(chat_id=111, language="en", role="developer"),
+                    BotUser(chat_id=222, language="de", role="ordinary"),
+                ]
+            )
+        )
 
         notifier = TelegramNotifier(SettingsStub())  # type: ignore[arg-type]
-        sent_messages: list[str] = []
+        sent_messages: list[dict] = []
 
         def _mock_post(url: str, json: dict):
-            sent_messages.append(json["text"])
+            sent_messages.append(json)
 
             class Response:
                 def raise_for_status(self) -> None:
@@ -113,6 +121,12 @@ def run_test() -> None:
             raise AssertionError(f"expected first delivery to send 1 alert, got {first}")
         if second.sent != 0 or second.skipped != 1:
             raise AssertionError(f"expected second delivery to skip cooldown, got {second}")
+        if len(sent_messages) != 2:
+            raise AssertionError("expected two Telegram payloads for two users")
+        if "URGENT ALERT" not in sent_messages[0]["text"]:
+            raise AssertionError("English user should receive English labels")
+        if "DRINGENDE WARNUNG" not in sent_messages[1]["text"]:
+            raise AssertionError("German user should receive German labels")
 
         state = repository.load_state()
         if len(state.last_sent_alerts) != 1:

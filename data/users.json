@@ -1,0 +1,14 @@
+{
+  "users": [
+    {
+      "chat_id": 1303775573,
+      "language": "en",
+      "role": "developer"
+    },
+    {
+      "chat_id": 589115817,
+      "language": "en",
+      "role": "ordinary"
+    }
+  ]
+}

@@ -8,12 +8,12 @@ from datetime import UTC, datetime, timedelta
 
 import httpx
 
-from analysis.llm import LlmAdvisoryResult
-from analysis.news_summarizer import NewsSummary
+from analysis.llm import LlmAdvisoryResult, LlmClient
+from analysis.news_summarizer import NewsSummary, summarize_news
 from analysis.rules import AlertCandidate
 from bot.formatter import format_daily_summary, format_urgent_alert
 from config.settings import RuntimeSettings
-from storage.models import AppConfig, SentAlertRecord
+from storage.models import AppConfig, BotUser, SentAlertRecord
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -31,24 +31,23 @@ class AlertDeliveryResult:
 
 
 class TelegramNotifier:
-    """Send formatted messages to the configured single-user Telegram chat."""
+    """Send formatted messages to all authorized Telegram users."""
 
     def __init__(self, settings: RuntimeSettings) -> None:
-        self._token = settings.telegram_bot_token
-        self._chat_id = str(settings.telegram_chat_id).strip()
+        self._token = settings.telegram_bot_token.strip()
 
     @property
     def is_configured(self) -> bool:
-        return bool(self._token and self._chat_id)
+        return bool(self._token)
 
-    def send_text(self, text: str) -> None:
+    def send_text(self, chat_id: int | str, text: str) -> None:
         """Send a plain-text message via the Telegram Bot API."""
         if not self.is_configured:
             raise RuntimeError("Telegram notifier is not configured")
 
         url = f"https://api.telegram.org/bot{self._token}/sendMessage"
         payload = {
-            "chat_id": self._chat_id,
+            "chat_id": str(chat_id),
             "text": text,
             "disable_web_page_preview": True,
         }
@@ -61,15 +60,23 @@ class TelegramNotifier:
         if not isinstance(body, dict) or not body.get("ok"):
             raise RuntimeError(f"Telegram API returned failure: {body!r}")
 
+    def _authorized_users(self, repository: DataRepository) -> list[BotUser]:
+        return repository.load_users().users
+
     def deliver_urgent_alerts(
         self,
         alerts: list[AlertCandidate],
         repository: DataRepository,
         app_config: AppConfig,
     ) -> AlertDeliveryResult:
-        """Send unsent urgent alerts and record successful deliveries in state."""
+        """Send unsent urgent alerts to all users and record deliveries in state."""
         if not self.is_configured:
             logger.warning("Telegram notifier not configured; skipping alert delivery")
+            return AlertDeliveryResult(skipped=len(alerts))
+
+        users = self._authorized_users(repository)
+        if not users:
+            logger.warning("No authorized users; skipping alert delivery")
             return AlertDeliveryResult(skipped=len(alerts))
 
         urgent_alerts = [alert for alert in alerts if alert.urgency == "urgent"]
@@ -101,16 +108,22 @@ class TelegramNotifier:
                 result.skipped += 1
                 continue
 
-            message = format_urgent_alert(alert)
-            try:
-                self.send_text(message)
-            except Exception as exc:
-                logger.exception(
-                    "Failed to send urgent alert id=%s key=%s: %s",
-                    alert.id,
-                    alert.alert_key,
-                    exc,
-                )
+            delivery_failed = False
+            for user in users:
+                message = format_urgent_alert(alert, lang=user.language)
+                try:
+                    self.send_text(user.chat_id, message)
+                except Exception as exc:
+                    logger.exception(
+                        "Failed to send urgent alert id=%s key=%s to chat_id=%s: %s",
+                        alert.id,
+                        alert.alert_key,
+                        user.chat_id,
+                        exc,
+                    )
+                    delivery_failed = True
+
+            if delivery_failed:
                 result.failed += 1
                 continue
 
@@ -125,10 +138,10 @@ class TelegramNotifier:
             recent_keys.add(alert.alert_key)
             result.sent += 1
             logger.info(
-                "Delivered urgent alert id=%s key=%s to chat_id=%s",
+                "Delivered urgent alert id=%s key=%s to %d user(s)",
                 alert.id,
                 alert.alert_key,
-                self._chat_id,
+                len(users),
             )
 
         state.last_sent_alerts = _prune_sent_alerts(
@@ -151,31 +164,90 @@ class TelegramNotifier:
         *,
         portfolio,
         alerts: list[AlertCandidate],
-        advisory: LlmAdvisoryResult | None,
+        advisory_by_language: dict[str, LlmAdvisoryResult | None],
         app_config: AppConfig,
         repository: DataRepository,
-        news_summary: NewsSummary | None = None,
+        news_summary_by_language: dict[str, NewsSummary | None] | None = None,
     ) -> bool:
-        """Send the daily summary message to Telegram."""
+        """Send the daily summary message to each authorized user in their language."""
         if not self.is_configured:
             logger.warning("Telegram notifier not configured; skipping daily summary send")
             return False
 
-        message = format_daily_summary(
-            portfolio,
-            alerts,
-            advisory,
-            app_config,
-            news_summary=news_summary,
-        )
-        try:
-            self.send_text(message)
-        except Exception:
-            logger.exception("Failed to send daily summary to Telegram")
+        users = self._authorized_users(repository)
+        if not users:
+            logger.warning("No authorized users; skipping daily summary send")
             return False
 
-        logger.info("Daily summary delivered to chat_id=%s", self._chat_id)
-        return True
+        summaries = news_summary_by_language or {}
+        delivered = False
+        for user in users:
+            lang = user.language
+            message = format_daily_summary(
+                portfolio,
+                alerts,
+                advisory_by_language.get(lang),
+                app_config,
+                news_summary=summaries.get(lang),
+                lang=lang,
+            )
+            try:
+                self.send_text(user.chat_id, message)
+            except Exception:
+                logger.exception(
+                    "Failed to send daily summary to chat_id=%s",
+                    user.chat_id,
+                )
+                continue
+            delivered = True
+            logger.info("Daily summary delivered to chat_id=%s (lang=%s)", user.chat_id, lang)
+
+        return delivered
+
+
+def build_localized_daily_content(
+    *,
+    llm: LlmClient,
+    portfolio,
+    app_config: AppConfig,
+    state,
+    news_cache,
+    alerts: list[AlertCandidate],
+    ticker_to_industry: dict[str, str],
+    company_names: dict[str, str],
+    languages: set[str],
+) -> tuple[dict[str, LlmAdvisoryResult | None], dict[str, NewsSummary | None]]:
+    """Build advisory and news summaries once per distinct user language."""
+    advisory_by_language: dict[str, LlmAdvisoryResult | None] = {}
+    news_summary_by_language: dict[str, NewsSummary | None] = {}
+
+    if not app_config.enable_llm_summaries:
+        for lang in languages:
+            advisory_by_language[lang] = None
+            news_summary_by_language[lang] = None
+        return advisory_by_language, news_summary_by_language
+
+    for lang in languages:
+        advisory_by_language[lang] = llm.synthesize_advisory(
+            portfolio,
+            app_config,
+            state,
+            news_cache,
+            alerts,
+            ticker_to_industry=ticker_to_industry,
+            language=lang,
+        )
+        news_summary_by_language[lang] = summarize_news(
+            llm,
+            portfolio,
+            app_config,
+            news_cache,
+            ticker_to_industry,
+            company_names=company_names,
+            language=lang,
+        )
+
+    return advisory_by_language, news_summary_by_language
 
 
 def _recent_sent_keys(

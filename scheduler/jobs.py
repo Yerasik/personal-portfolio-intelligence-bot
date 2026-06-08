@@ -21,7 +21,6 @@ from apscheduler.triggers.interval import IntervalTrigger
 from analysis.industries import build_news_focus_industries
 from analysis.llm import LlmClient
 from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
-from analysis.news_summarizer import summarize_news
 from analysis.rules import AlertCandidate, RulesEngine
 from analysis.summarizer import Summarizer
 from collectors.base import CollectorContext
@@ -32,7 +31,7 @@ from config.settings import RuntimeSettings
 from storage.models import AppConfig, BotState, NewsCache, PendingAlert
 from storage.repository import DataRepository
 
-from bot.notifier import TelegramNotifier
+from bot.notifier import TelegramNotifier, build_localized_daily_content
 
 logger = logging.getLogger(__name__)
 
@@ -263,29 +262,28 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
     summarizer = services.build_summarizer()
     alerts = summarizer.rules.evaluate(portfolio, state, news_cache)
 
-    advisory = None
-    news_summary = None
+    advisory_by_language: dict[str, object | None] = {}
+    news_summary_by_language: dict[str, object | None] = {}
     company_names = {
         symbol: quote.company_name
         for symbol, quote in state.latest_prices.items()
         if quote.company_name
     }
+    languages = {
+        user.language for user in services.repository.load_users().users
+    } or {"en"}
+
     if app_config.enable_llm_summaries:
-        advisory = summarizer.llm.synthesize_advisory(
-            portfolio,
-            app_config,
-            state,
-            news_cache,
-            alerts,
+        advisory_by_language, news_summary_by_language = build_localized_daily_content(
+            llm=summarizer.llm,
+            portfolio=portfolio,
+            app_config=app_config,
+            state=state,
+            news_cache=news_cache,
+            alerts=alerts,
             ticker_to_industry=ticker_industries.ticker_to_industry,
-        )
-        news_summary = summarize_news(
-            summarizer.llm,
-            portfolio,
-            app_config,
-            news_cache,
-            ticker_industries.ticker_to_industry,
             company_names=company_names,
+            languages=languages,
         )
 
     logger.info("Daily summary generated with %d alert(s)", len(alerts))
@@ -293,10 +291,10 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
     sent = services.get_notifier().deliver_daily_summary(
         portfolio=portfolio,
         alerts=alerts,
-        advisory=advisory,
+        advisory_by_language=advisory_by_language,
         app_config=app_config,
         repository=services.repository,
-        news_summary=news_summary,
+        news_summary_by_language=news_summary_by_language,
     )
     if sent:
         state = services.repository.load_state()

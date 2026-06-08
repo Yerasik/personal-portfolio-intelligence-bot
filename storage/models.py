@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 
 class Position(BaseModel):
@@ -20,6 +20,30 @@ class Portfolio(BaseModel):
 
     positions: list[Position] = Field(default_factory=list)
     notes: str = ""
+
+
+UserRole = Literal["developer", "ordinary"]
+
+
+class BotUser(BaseModel):
+    """Authorized Telegram user with language and role."""
+
+    chat_id: int
+    language: str = "en"
+    role: UserRole = "ordinary"
+
+    @field_validator("language")
+    @classmethod
+    def _normalize_language(cls, value: str) -> str:
+        from storage.languages import normalize_language
+
+        return normalize_language(value)
+
+
+class BotUsers(BaseModel):
+    """Access control list persisted in users.json."""
+
+    users: list[BotUser] = Field(default_factory=list)
 
 
 class TickerIndustryMap(BaseModel):

@@ -17,7 +17,7 @@ from config.loader import ConfigurationBundle
 from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.json_store import JsonStorageError, JsonStore
-from storage.models import AppConfig, BotState, NewsCache, Portfolio, TickerIndustryMap
+from storage.models import AppConfig, BotState, BotUsers, NewsCache, Portfolio, TickerIndustryMap
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -91,9 +91,8 @@ def load_runtime_settings() -> RuntimeSettings:
 
 
 def validate_telegram_credentials(runtime: RuntimeSettings) -> None:
-    """Fail loudly when Telegram credentials are missing or still placeholders."""
+    """Fail loudly when the Telegram bot token is missing or still a placeholder."""
     token = runtime.telegram_bot_token.strip()
-    chat_id = str(runtime.telegram_chat_id).strip()
 
     if token.lower() in _PLACEHOLDER_TOKENS:
         _fatal(
@@ -102,12 +101,35 @@ def validate_telegram_credentials(runtime: RuntimeSettings) -> None:
         )
         raise StartupError("Invalid TELEGRAM_BOT_TOKEN")
 
+
+def bootstrap_users_if_needed(
+    repository: DataRepository,
+    runtime: RuntimeSettings,
+) -> None:
+    """Seed users.json with the env chat id when no authorized users exist."""
+    users = repository.load_users()
+    if users.users:
+        return
+
+    chat_id = str(runtime.telegram_chat_id).strip()
     if chat_id.lower() in _PLACEHOLDER_CHAT_IDS:
         _fatal(
-            "TELEGRAM_CHAT_ID is missing or still set to a placeholder. "
-            "Set TELEGRAM_CHAT_ID to your personal Telegram chat id."
+            "users.json is empty and TELEGRAM_CHAT_ID is missing or still a placeholder. "
+            "Set TELEGRAM_CHAT_ID to bootstrap the first developer user."
         )
-        raise StartupError("Invalid TELEGRAM_CHAT_ID")
+        raise StartupError("Invalid TELEGRAM_CHAT_ID for user bootstrap")
+
+    try:
+        seed_chat_id = int(chat_id)
+    except ValueError as exc:
+        _fatal("TELEGRAM_CHAT_ID must be a numeric Telegram chat id.")
+        raise StartupError("Invalid TELEGRAM_CHAT_ID") from exc
+
+    repository.bootstrap_users_if_empty(seed_chat_id)
+    logger.info(
+        "Bootstrapped users.json with developer chat_id=%s",
+        seed_chat_id,
+    )
 
 
 def validate_json_documents(repository: DataRepository) -> StartupReport:
@@ -120,6 +142,7 @@ def validate_json_documents(repository: DataRepository) -> StartupReport:
         ("ticker_industries", paths.ticker_industries, TickerIndustryMap),
         ("state", paths.state, BotState),
         ("news_cache", paths.news_cache, NewsCache),
+        ("users", paths.users, BotUsers),
     )
 
     report = StartupReport()
@@ -182,7 +205,12 @@ def probe_ollama(configuration: ConfigurationBundle) -> StartupReport:
     return report
 
 
-def log_startup_summary(configuration: ConfigurationBundle, report: StartupReport) -> None:
+def log_startup_summary(
+    configuration: ConfigurationBundle,
+    report: StartupReport,
+    *,
+    authorized_users: int,
+) -> None:
     """Emit a health-conscious startup summary for operators."""
     runtime = configuration.runtime
     app_config = configuration.app_config
@@ -196,7 +224,7 @@ def log_startup_summary(configuration: ConfigurationBundle, report: StartupRepor
     logger.info("Data directory: %s", configuration.paths.root)
     logger.info("Log directory: %s", runtime.log_dir)
     logger.info("Timezone: %s", app_config.timezone)
-    logger.info("Telegram chat id: %s", runtime.telegram_chat_id)
+    logger.info("Authorized Telegram users: %d", authorized_users)
     logger.info("Portfolio positions: %d", len(portfolio.positions))
     logger.info("Focus industries: %d", len(app_config.focus_industries))
     logger.info("RSS feeds configured: %d", len(app_config.rss_feed_urls))
@@ -233,9 +261,16 @@ def log_startup_summary(configuration: ConfigurationBundle, report: StartupRepor
 
 def run_startup_checks(configuration: ConfigurationBundle) -> StartupReport:
     """Validate JSON persistence and probe optional dependencies."""
-    json_report = validate_json_documents(DataRepository(configuration.paths))
+    repository = DataRepository(configuration.paths)
+    bootstrap_users_if_needed(repository, configuration.runtime)
+    json_report = validate_json_documents(repository)
     ollama_report = probe_ollama(configuration)
     json_report.ollama_reachable = ollama_report.ollama_reachable
     json_report.ollama_message = ollama_report.ollama_message
-    log_startup_summary(configuration, json_report)
+    authorized_users = len(repository.load_users().users)
+    log_startup_summary(
+        configuration,
+        json_report,
+        authorized_users=authorized_users,
+    )
     return json_report

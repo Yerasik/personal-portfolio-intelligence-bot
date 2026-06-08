@@ -5,7 +5,17 @@ JsonStore directly — it keeps path handling consistent.
 """
 
 from storage.json_store import JsonStore
-from storage.models import AppConfig, BotState, NewsCache, Portfolio, TickerIndustryMap
+from storage.languages import SUPPORTED_LANGUAGES, normalize_language
+from storage.models import (
+    AppConfig,
+    BotState,
+    BotUser,
+    BotUsers,
+    NewsCache,
+    Portfolio,
+    TickerIndustryMap,
+    UserRole,
+)
 from storage.paths import DataPaths
 from storage.portfolio_ops import (
     PortfolioTickerResult,
@@ -121,6 +131,121 @@ class DataRepository:
     def save_ticker_industries(self, mapping: TickerIndustryMap) -> None:
         """Write data/ticker_industries.json atomically."""
         self._store.write_model(self._paths.ticker_industries, mapping)
+
+    def load_users(self) -> BotUsers:
+        """Read authorized Telegram users from data/users.json."""
+        return self._store.read_model(self._paths.users, BotUsers)
+
+    def save_users(self, users: BotUsers) -> None:
+        """Write data/users.json atomically."""
+        self._store.write_model(self._paths.users, users)
+
+    def find_user(self, chat_id: int) -> BotUser | None:
+        """Return the authorized user record for a chat id, if any."""
+        for user in self.load_users().users:
+            if user.chat_id == chat_id:
+                return user
+        return None
+
+    def is_authorized_user(self, chat_id: int) -> bool:
+        """Return True when chat_id appears in the users access list."""
+        return self.find_user(chat_id) is not None
+
+    def user_language(self, chat_id: int) -> str:
+        """Return the stored language for a user, defaulting to English."""
+        user = self.find_user(chat_id)
+        return user.language if user is not None else "en"
+
+    def is_developer(self, chat_id: int) -> bool:
+        """Return True when the user has the developer role."""
+        user = self.find_user(chat_id)
+        return user is not None and user.role == "developer"
+
+    def bootstrap_users_if_empty(self, seed_chat_id: int) -> BotUsers:
+        """Create a single developer user when users.json has no entries."""
+        users = self.load_users()
+        if users.users:
+            return users
+        bootstrapped = BotUsers(
+            users=[
+                BotUser(
+                    chat_id=seed_chat_id,
+                    language="en",
+                    role="developer",
+                )
+            ]
+        )
+        self.save_users(bootstrapped)
+        return bootstrapped
+
+    def set_user_language(self, chat_id: int, language: str) -> tuple[bool, str]:
+        """Update a user's language preference under file lock."""
+        lang = normalize_language(language)
+        if lang not in SUPPORTED_LANGUAGES:
+            return False, "invalid_language"
+
+        updated = False
+
+        def _mutate(users: BotUsers) -> BotUsers:
+            nonlocal updated
+            for index, user in enumerate(users.users):
+                if user.chat_id != chat_id:
+                    continue
+                users.users[index] = user.model_copy(update={"language": lang})
+                updated = True
+                break
+            return users
+
+        self._store.mutate_model(self._paths.users, BotUsers, _mutate)
+        if not updated:
+            return False, "not_found"
+        return True, lang
+
+    def add_user(
+        self,
+        chat_id: int,
+        *,
+        role: UserRole = "ordinary",
+        language: str = "en",
+    ) -> tuple[bool, str]:
+        """Add an authorized user under file lock."""
+        lang = normalize_language(language)
+        if lang not in SUPPORTED_LANGUAGES:
+            return False, "invalid_language"
+
+        added = False
+
+        def _mutate(users: BotUsers) -> BotUsers:
+            nonlocal added
+            for user in users.users:
+                if user.chat_id == chat_id:
+                    return users
+            users.users.append(
+                BotUser(chat_id=chat_id, language=lang, role=role)
+            )
+            added = True
+            return users
+
+        self._store.mutate_model(self._paths.users, BotUsers, _mutate)
+        if not added:
+            return False, "exists"
+        return True, "added"
+
+    def remove_user(self, chat_id: int) -> tuple[bool, str]:
+        """Remove an authorized user under file lock."""
+        removed = False
+
+        def _mutate(users: BotUsers) -> BotUsers:
+            nonlocal removed
+            before = len(users.users)
+            users.users = [user for user in users.users if user.chat_id != chat_id]
+            removed = len(users.users) < before
+            return users
+
+        self._store.mutate_model(self._paths.users, BotUsers, _mutate)
+        if not removed:
+            return False, "not_found"
+        return True, "removed"
 
 
 def load_config(paths: DataPaths, store: JsonStore | None = None) -> AppConfig:

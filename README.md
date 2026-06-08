@@ -287,9 +287,18 @@ Also check:
 
 ### No Telegram responses
 
-- Confirm `TELEGRAM_CHAT_ID` matches the chat sending commands (not the bot id)
+- Ensure your chat id is listed in `data/users.json` (or bootstrap via `TELEGRAM_CHAT_ID` on first run)
+- Developers can authorize users with `/add_user <chat_id> [role] [lang]`
 - Check logs for `Ignoring unauthorized Telegram chat_id=...`
 - Ensure the bot process is running: `docker compose ps`
+
+### Multi-user access and languages
+
+- Authorized users live in `data/users.json` with `chat_id`, `language` (`en`, `de`, `zh`, `ru`), and `role` (`developer` or `ordinary`)
+- On first run with an empty user list, the bot seeds one **developer** from `TELEGRAM_CHAT_ID`
+- All authorized users share the same portfolio; alerts and daily summaries fan out to every user in their language
+- Developer-only commands: `/reload_config`, `/debug_state`, `/list_users`, `/add_user`, `/remove_user`
+- Any authorized user: `/set_language <code>` to change reply language
 
 ### Ollama / LLM warnings but bot runs
 
@@ -322,7 +331,7 @@ chmod u+rwX data logs
 | Variable | Required | Default (in container) | Description |
 |----------|----------|------------------------|-------------|
 | `TELEGRAM_BOT_TOKEN` | Yes | — | Bot token from BotFather |
-| `TELEGRAM_CHAT_ID` | Yes | — | Authorized user chat id |
+| `TELEGRAM_CHAT_ID` | Bootstrap only | — | Seeds first developer when `users.json` is empty |
 | `OLLAMA_BASE_URL` | No | `http://ollama:11434` | Ollama API base URL |
 | `OLLAMA_MODEL` | No | `qwen3:30b` | Model name for summaries |
 | `DATA_DIR` | No | `/app/data` | JSON persistence directory |

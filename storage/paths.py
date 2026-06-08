@@ -30,6 +30,10 @@ class DataPaths:
     def ticker_industries(self) -> Path:
         return self.root / "ticker_industries.json"
 
+    @property
+    def users(self) -> Path:
+        return self.root / "users.json"
+
 
 def resolve_data_paths(data_dir: str | Path) -> DataPaths:
     """Build path helpers for the configured data directory."""

@@ -80,8 +80,15 @@ def news_items_for_ticker(news_cache: NewsCache, ticker: str) -> list[NewsItem]:
     return matched[:MAX_ITEMS_PER_GROUP]
 
 
-def build_sector_summary_prompt(sector: str, item_lines: list[str]) -> str:
+def build_sector_summary_prompt(
+    sector: str,
+    item_lines: list[str],
+    *,
+    language: str = "en",
+) -> str:
     """Build a grounded prompt for sector-level news summarization."""
+    from bot.i18n import llm_language_clause
+
     news_block = "\n".join(f"- {line}" for line in item_lines)
     return (
         f"{_SECTOR_ROLE}\n\n"
@@ -90,6 +97,7 @@ def build_sector_summary_prompt(sector: str, item_lines: list[str]) -> str:
         "Write a concise summary with:\n"
         "- 2–4 bullet points on the main themes\n"
         "- One short sentence on overall sentiment or key risks\n"
+        f"{llm_language_clause(language)}\n"
         "Use only the items above. If coverage is thin, say so explicitly."
     )
 
@@ -98,8 +106,12 @@ def build_ticker_summary_prompt(
     ticker: str,
     company_name: str,
     item_lines: list[str],
+    *,
+    language: str = "en",
 ) -> str:
     """Build a grounded prompt for per-ticker news summarization."""
+    from bot.i18n import llm_language_clause
+
     news_block = "\n".join(f"- {line}" for line in item_lines)
     name = company_name.strip() or "unknown"
     return (
@@ -110,6 +122,7 @@ def build_ticker_summary_prompt(
         "Write a concise shareholder-focused summary with:\n"
         "- 2–4 bullet points on the most relevant developments\n"
         "- One short takeaway sentence\n"
+        f"{llm_language_clause(language)}\n"
         "Use only the items above. If coverage is thin, say so explicitly."
     )
 
@@ -162,6 +175,7 @@ def summarize_news(
     *,
     company_names: dict[str, str] | None = None,
     enabled: bool = True,
+    language: str = "en",
 ) -> NewsSummary:
     """Produce sector- and ticker-level summaries from the news cache."""
     names = company_names or {}
@@ -186,7 +200,7 @@ def summarize_news(
             sector_summaries[sector] = _NO_SECTOR_NEWS
             continue
         lines = [_format_item_line(item) for item in items]
-        prompt = build_sector_summary_prompt(sector, lines)
+        prompt = build_sector_summary_prompt(sector, lines, language=language)
         sector_summaries[sector] = _summarize_group(
             llm, prompt, label=sector, items=items
         )
@@ -198,7 +212,12 @@ def summarize_news(
             ticker_summaries[symbol] = _NO_TICKER_NEWS
             continue
         lines = [_format_item_line(item) for item in items]
-        prompt = build_ticker_summary_prompt(symbol, names.get(symbol, ""), lines)
+        prompt = build_ticker_summary_prompt(
+            symbol,
+            names.get(symbol, ""),
+            lines,
+            language=language,
+        )
         ticker_summaries[symbol] = _summarize_group(
             llm, prompt, label=symbol, items=items
         )

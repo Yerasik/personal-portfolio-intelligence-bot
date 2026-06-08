@@ -1,6 +1,92 @@
 {
   "items": [
     {
+      "id": "03a9bf6f2de73c0f",
+      "title": "Hong Kong’s Hang Seng Tech Index welcomes MiniMax, Zhipu in AI milestone amid slump",
+      "source": "Business - South China Morning Post",
+      "url": "https://www.scmp.com/business/banking-finance/article/3356344/hong-kongs-hang-seng-tech-index-welcomes-minimax-zhipu-ai-milestone-amid-slump?utm_source=rss_feed",
+      "published_at": "2026-06-08T08:45:20Z",
+      "fetched_at": "2026-06-08T08:47:11.485026Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Hong Kong"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Chinese artificial intelligence firms MiniMax Group and Knowledge Atlas Technology were added to the Hang Seng Tech Index on Monday, marking the first inclusion of pure-play AI companies in Hong Kong’s benchmark technology gauge, in a move analysts said could drive substantial passive inflows. The shares moved in opposite directions, as a broader market sell-off weighed on regional benchmarks. MiniMax slid 8.4 per cent to HK$506, while Knowledge Atlas – also known as Zhipu – gained 1.3 per cent."
+    },
+    {
+      "id": "fc1671cfb7dbf917",
+      "title": "Stock markets fall as concerns persist over tech firms at heart of AI boom",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/business/2026/jun/08/stock-markets-fall-tech-firms-ai-boom-oil-prices-iran-israel",
+      "published_at": "2026-06-08T08:32:17Z",
+      "fetched_at": "2026-06-08T08:45:15.676317Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Falls follow sharp sell-off of US tech stock last week while oil prices jump after Iran and Israel exchange strikes Business live – latest updates Global stock markets have fallen amid concern about the prospects for tech stocks while oil prices have risen as attacks in the Middle East stoked fears that a fragile truce in the region could break. Stock markets in Asia and Europe fell on Monday after a sharp sell-off in US tech stocks late last week, as investors fretted over how companies at the "
+    },
+    {
+      "id": "676f7dacd32ab553",
+      "title": "Moonshot AI eyes US$30 billion valuation as China’s AI race intensifies",
+      "source": "News - South China Morning Post",
+      "url": "https://www.scmp.com/tech/article/3356348/moonshot-ai-eyes-us30-billion-valuation-chinas-ai-race-intensifies?utm_source=rss_feed",
+      "published_at": "2026-06-08T08:30:45Z",
+      "fetched_at": "2026-06-08T08:32:38.671207Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Moonshot AI, the developer of China’s popular Kimi chatbot, is seeking to raise between US$1 billion and US$2 billion in a new funding round that could value the company at as much as US$30 billion, according to a person familiar with the matter, as competition among the country’s leading artificial intelligence developers intensifies. The Beijing-based company was targeting a valuation roughly 50 per cent higher than the US$20 billion it achieved in its previous financing round, completed in..."
+    },
+    {
+      "id": "a012aad55d92b0d5",
+      "title": "As AI upends humanity, we must focus on what makes us human",
+      "source": "News - South China Morning Post",
+      "url": "https://www.scmp.com/opinion/world-opinion/article/3355710/ai-upends-humanity-we-must-focus-what-makes-us-human?utm_source=rss_feed",
+      "published_at": "2026-06-08T08:30:09Z",
+      "fetched_at": "2026-06-08T08:32:38.671207Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "“When we graduate, what can we do?” As a philosophy professor, questions like this – about employability – often crop up in my conversations with students. Indeed, with youth unemployment on the Chinese mainland standing at almost 17 per cent, and intense competition among those seeking employment, it is no wonder that the priority for many – even students graduating from elite universities – is actually securing a job. The proliferation of artificial intelligence (AI) has only compounded such.."
+    },
+    {
+      "id": "35bc71455d5ef7e7",
+      "title": "Delta resumes direct Hong Kong-US flights despite higher fuel costs",
+      "source": "News - South China Morning Post",
+      "url": "https://www.scmp.com/news/hong-kong/transport/article/3356333/delta-resumes-direct-hong-kong-us-flights-despite-higher-fuel-costs?utm_source=rss_feed",
+      "published_at": "2026-06-08T08:18:50Z",
+      "fetched_at": "2026-06-08T08:32:38.671207Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Hong Kong"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "United States carrier Delta Air Lines has resumed direct flights to the city after the pandemic, launching a daily Hong Kong-Los Angeles service amid surging fuel prices. Jeff Moomaw, the airline’s vice-president for Asia-Pacific, said on Monday that it would take some time to increase services connecting the city to more destinations as the carrier remained focused on current demand. “Our focus right now is making sure that this flight is a success,” Moomaw said. “As it grows over time, and we."
+    },
+    {
       "id": "0a3446e31de8ce18",
       "title": "Nvidia strikes a new memory-chip deal as SK Hynix and Samsung shares close with big losses",
       "source": "MarketWatch.com - Top Stories",
@@ -2882,6 +2968,23 @@
       "summary": "Betty Yuen So Siu-mai, a non-executive director of Hong Kong power company CLP Holdings, has sold a luxury flat at Mid-Levels, joining a growing number of prominent owners taking advantage of improved market sentiment to dispose of high-end properties. Yuen sold a 1,943 sq ft home on the 11th floor of Po Garden at 9 Brewin Path for HK$51 million (US$6.5 million) in a transaction completed on Tuesday, Land Registry records showed. That translates to HK$26,248 per square foot and marks the..."
     },
     {
+      "id": "f5d6df3d744d9238",
+      "title": "Alibaba Group Holding Stock Slips 2.4% in Hong Kong - Moomoo",
+      "source": "\"Alibaba stock OR 9988.HK\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQclBhRHpsLWFmd0lxZUV2YXBQeDlPYm9yOXRyVVpLOHpzM0l3NHA3YWY5czBOSnl2UXlGVld0aGpqUmVSaTgwQTdtRHZEdzhsOVltQTBlbTZtLXR1QzRPZHJKV0dGZFRBN2ZoTjRjSXg4WTBWbXhNWTdMaGF2cWs0RDl5aEFDYnFZX2VWN0RDMHdMa3hXVzFj?oc=5",
+      "published_at": "2026-06-04T08:38:06Z",
+      "fetched_at": "2026-06-08T08:32:38.671207Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Hong Kong"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Alibaba Group Holding Stock Slips 2.4% in Hong Kong    Moomoo"
+    },
+    {
       "id": "18067787556afd86",
       "title": "World champion swimmer Siobhan Haughey reflects on life outside the pool",
       "source": "Business - South China Morning Post",
@@ -3836,5 +3939,5 @@
       "summary": "Chinese chip stocks rise in Hong Kong on hopes for Huawei Tech    Moneycontrol.com"
     }
   ],
-  "updated_at": "2026-06-08T08:09:35.580594Z"
+  "updated_at": "2026-06-08T08:47:11.485026Z"
 }

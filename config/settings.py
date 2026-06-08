@@ -1,6 +1,7 @@
 """Environment-backed runtime settings.
 
-Loaded from .env via pydantic-settings. Required: TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID.
+Loaded from .env via pydantic-settings. Required: TELEGRAM_BOT_TOKEN.
+TELEGRAM_CHAT_ID bootstraps the first developer when users.json is empty.
 Optional: OLLAMA_*, DATA_DIR, LOG_DIR, TZ, LOG_LEVEL.
 """
 

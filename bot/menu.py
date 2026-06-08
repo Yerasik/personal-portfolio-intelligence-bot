@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 
-from telegram import BotCommand, KeyboardButton, ReplyKeyboardMarkup
+from telegram import BotCommand, BotCommandScopeChat, BotCommandScopeDefault, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Application
 
 logger = logging.getLogger(__name__)
@@ -19,27 +19,72 @@ TELEGRAM_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("add_ticker", "Add shares (new or existing holding)"),
     BotCommand("remove_ticker", "Remove a holding from the portfolio"),
     BotCommand("analyze", "Portfolio advisory or /analyze AAPL"),
+    BotCommand("set_language", "Set your language (en, de, zh, ru)"),
+)
+
+DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = TELEGRAM_BOT_COMMANDS + (
+    BotCommand("list_users", "List authorized users"),
+    BotCommand("add_user", "Authorize a Telegram user"),
+    BotCommand("remove_user", "Revoke user access"),
+    BotCommand("reload_config", "Reload config.json from disk"),
+    BotCommand("debug_state", "Show internal runtime counters"),
 )
 
 
-def main_menu_keyboard() -> ReplyKeyboardMarkup:
-    """Persistent reply keyboard with the main bot actions."""
+def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
+    """Persistent reply keyboard; developers get user-management buttons."""
+    rows = [
+        [KeyboardButton("/portfolio"), KeyboardButton("/industries")],
+        [KeyboardButton("/news_summary"), KeyboardButton("/analyze")],
+        [KeyboardButton("/add_ticker"), KeyboardButton("/remove_ticker")],
+        [KeyboardButton("/set_language"), KeyboardButton("/help")],
+    ]
+    if is_developer:
+        rows.extend(
+            [
+                [KeyboardButton("/list_users")],
+                [KeyboardButton("/add_user"), KeyboardButton("/remove_user")],
+            ]
+        )
+    rows.append([KeyboardButton("/menu")])
     return ReplyKeyboardMarkup(
-        [
-            [KeyboardButton("/portfolio"), KeyboardButton("/industries")],
-            [KeyboardButton("/news_summary"), KeyboardButton("/analyze")],
-            [KeyboardButton("/add_ticker"), KeyboardButton("/remove_ticker")],
-            [KeyboardButton("/help"), KeyboardButton("/menu")],
-        ],
+        rows,
         resize_keyboard=True,
         is_persistent=True,
     )
 
 
 async def setup_telegram_menu(application: Application) -> None:
-    """Register slash commands with Telegram so they appear in the client menu."""
-    await application.bot.set_my_commands(list(TELEGRAM_BOT_COMMANDS))
+    """Register default slash commands visible to all users."""
+    await application.bot.set_my_commands(
+        list(TELEGRAM_BOT_COMMANDS),
+        scope=BotCommandScopeDefault(),
+    )
     logger.info(
-        "Telegram command menu updated: %s",
+        "Telegram default command menu updated: %s",
         ", ".join(f"/{cmd.command}" for cmd in TELEGRAM_BOT_COMMANDS),
     )
+
+
+async def setup_developer_telegram_menu(application: Application, chat_id: int) -> None:
+    """Register extended slash commands for one developer chat."""
+    await application.bot.set_my_commands(
+        list(DEVELOPER_BOT_COMMANDS),
+        scope=BotCommandScopeChat(chat_id=chat_id),
+    )
+    logger.info(
+        "Telegram developer command menu updated for chat_id=%s",
+        chat_id,
+    )
+
+
+async def setup_user_telegram_menu(
+    application: Application,
+    *,
+    chat_id: int,
+    is_developer: bool,
+) -> None:
+    """Refresh slash commands for one chat (extended list for developers)."""
+    await setup_telegram_menu(application)
+    if is_developer:
+        await setup_developer_telegram_menu(application, chat_id)

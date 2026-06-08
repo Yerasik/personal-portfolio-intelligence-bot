@@ -115,12 +115,16 @@ def build_price_move_explanation_prompt(
     pct_change: float,
     window: str,
     news_items: list[str],
+    *,
+    language: str = "en",
 ) -> str:
     """Build the reusable LLM prompt for a price-move explanation.
 
     `pct_change` is the move magnitude (use the absolute value); `direction`
     carries the up/down sign so the model does not have to infer it.
     """
+    from bot.i18n import llm_language_clause
+
     if news_items:
         news_block = "\n".join(f"- {item}" for item in news_items)
         news_guidance = (
@@ -141,6 +145,7 @@ def build_price_move_explanation_prompt(
         f"Move: {pct_change:.2f}% over {window}\n"
         f"{news_guidance}\n"
         f"Recent news:\n{news_block}\n\n"
+        f"{llm_language_clause(language)}\n\n"
         "Respond with JSON only using this schema:\n"
         '{"drivers":["2-3 short likely drivers"],'
         '"sentiment":"positive|negative|mixed|uncertain",'
@@ -213,6 +218,7 @@ def explain_price_move(
     *,
     company_name: str = "",
     sector: str = "",
+    language: str = "en",
 ) -> PriceMoveExplanation:
     """Build the prompt, call the LLM, and return a structured explanation.
 
@@ -234,7 +240,12 @@ def explain_price_move(
         context_items.insert(0, f"Sector: {sector}")
 
     prompt = build_price_move_explanation_prompt(
-        ticker, direction, magnitude, window, context_items
+        ticker,
+        direction,
+        magnitude,
+        window,
+        context_items,
+        language=language,
     )
 
     try:
