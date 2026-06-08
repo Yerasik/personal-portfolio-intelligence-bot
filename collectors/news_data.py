@@ -230,11 +230,13 @@ class NewsDataService:
         portfolio: Portfolio,
         latest_prices: dict[str, MarketQuote],
         existing_cache: NewsCache,
+        focus_industries: list[str] | None = None,
     ) -> NewsFetchBatchResult:
         """Fetch configured feeds and return newly tagged articles."""
         fetched_at = datetime.now(tz=UTC)
         result = NewsFetchBatchResult(fetched_at=fetched_at)
         feed_urls = [url.strip() for url in app_config.rss_feed_urls if url.strip()]
+        industry_keywords = focus_industries or app_config.focus_industries
 
         if not feed_urls:
             logger.info("No RSS feed URLs configured")
@@ -271,7 +273,7 @@ class NewsDataService:
                     feed_source=feed_source,
                     fetched_at=fetched_at,
                     ticker_keywords=ticker_keywords,
-                    focus_industries=app_config.focus_industries,
+                    focus_industries=industry_keywords,
                 )
                 if item is None:
                     result.entries_skipped_untagged += 1
@@ -293,9 +295,15 @@ class NewsDataService:
         )
         return result
 
-    def run(self, repository: DataRepository, app_config: AppConfig) -> NewsFetchBatchResult:
+    def run(
+        self,
+        repository: DataRepository,
+        app_config: AppConfig,
+        portfolio: Portfolio | None = None,
+        focus_industries: list[str] | None = None,
+    ) -> NewsFetchBatchResult:
         """Fetch feeds, merge into news_cache.json, and update bot state."""
-        portfolio = repository.load_portfolio()
+        portfolio = portfolio or repository.load_portfolio()
         state = repository.load_state()
         cache = repository.load_news_cache()
 
@@ -304,6 +312,7 @@ class NewsDataService:
             portfolio,
             state.latest_prices,
             cache,
+            focus_industries,
         )
 
         updated_cache, _, total_items = merge_news_cache(
@@ -335,7 +344,7 @@ class NewsDataCollector(BaseCollector):
         self._service = service or NewsDataService()
 
     def run(self, context: CollectorContext) -> CollectorResult:
-        app_config = context.repository.load_config()
+        app_config = context.app_config
         feed_count = len([url for url in app_config.rss_feed_urls if url.strip()])
 
         if feed_count == 0:
@@ -345,7 +354,12 @@ class NewsDataCollector(BaseCollector):
                 message="no RSS feeds configured",
             )
 
-        batch = self._service.run(context.repository, app_config)
+        batch = self._service.run(
+            context.repository,
+            app_config,
+            context.portfolio,
+            list(context.focus_industries) or None,
+        )
         success = batch.feeds_failed < feed_count
 
         if batch.feeds_failed and batch.feeds_fetched:

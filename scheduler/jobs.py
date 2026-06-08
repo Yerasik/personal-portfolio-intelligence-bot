@@ -13,10 +13,12 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Final
 
+from apscheduler.executors.pool import ThreadPoolExecutor
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
+from analysis.industries import build_news_focus_industries
 from analysis.llm import LlmClient
 from analysis.rules import AlertCandidate, RulesEngine
 from analysis.summarizer import Summarizer
@@ -140,10 +142,21 @@ def run_news_data_job(services: SchedulerServices) -> None:
     """Refresh RSS news cache."""
     app_config = services.load_app_config()
     portfolio = services.repository.load_portfolio()
+    ticker_industries = services.repository.load_ticker_industries()
+    focus_industries = build_news_focus_industries(
+        app_config.focus_industries,
+        portfolio,
+        ticker_industries.ticker_to_industry,
+    )
     context = CollectorContext(
         repository=services.repository,
         app_config=app_config,
         portfolio=portfolio,
+        focus_industries=tuple(focus_industries),
+    )
+    logger.info(
+        "News focus industries selected from config + portfolio: %s",
+        focus_industries or "none",
     )
     result = NewsDataCollector().run(context)
     logger.info(
@@ -206,8 +219,7 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
             alerts,
         )
 
-    digest = summarizer.build_digest(portfolio, state, news_cache)
-    logger.info("Daily summary generated:\n%s", digest)
+    logger.info("Daily summary generated with %d alert(s)", len(alerts))
 
     sent = services.get_notifier().deliver_daily_summary(
         portfolio=portfolio,
@@ -292,7 +304,18 @@ def build_scheduler(
             runtime=configuration.runtime,
             notifier=TelegramNotifier(configuration.runtime),
         )
-        scheduler = BlockingScheduler(timezone=services.load_app_config().timezone)
+        # A single worker serializes all jobs so concurrent load/modify/save
+        # cycles cannot clobber each other's state.json updates. coalesce +
+        # misfire_grace_time absorb the startup burst and any delayed runs.
+        scheduler = BlockingScheduler(
+            timezone=services.load_app_config().timezone,
+            executors={"default": ThreadPoolExecutor(max_workers=1)},
+            job_defaults={
+                "coalesce": True,
+                "max_instances": 1,
+                "misfire_grace_time": 60,
+            },
+        )
         register_jobs(scheduler, services)
 
         _built_scheduler = AppScheduler(scheduler=scheduler, services=services)

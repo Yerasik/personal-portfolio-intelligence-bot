@@ -11,6 +11,7 @@ from storage.models import (
     PendingAlert,
     Portfolio,
     Position,
+    TickerIndustryMap,
 )
 from storage.paths import DataPaths, resolve_data_paths
 from storage.repository import (
@@ -37,6 +38,7 @@ __all__ = [
     "PendingAlert",
     "Portfolio",
     "Position",
+    "TickerIndustryMap",
     "load_config",
     "load_news_cache",
     "load_portfolio",

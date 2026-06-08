@@ -1,20 +1,28 @@
 {
   "last_digest_at": "2026-06-05T00:00:00.620928Z",
-  "last_market_fetch_at": "2026-06-05T08:39:20.295036Z",
-  "last_news_fetch_at": null,
+  "last_market_fetch_at": "2026-06-08T04:17:40.448095Z",
+  "last_news_fetch_at": "2026-06-08T04:17:44.201568Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
-      "price": 27.799999237060547,
-      "change_pct": -2.0436925329718285,
-      "volume": 154077195,
+      "price": 27.600000381469727,
+      "change_pct": -0.7194203635955471,
+      "volume": 74041068,
       "company_name": "XIAOMI-W",
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-05T08:39:20.295036Z"
+      "fetched_at": "2026-06-08T04:17:40.448095Z"
     }
   },
   "last_sent_alerts": [],
-  "pending_alerts": []
+  "pending_alerts": [
+    {
+      "id": "a99e19e152ace345",
+      "severity": "warning",
+      "message": "Sector attention: AI: 51 articles tagged to AI were found in the last 24 hour(s).",
+      "created_at": "2026-06-08T04:18:22.925604Z",
+      "related_tickers": []
+    }
+  ]
 }

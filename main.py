@@ -18,10 +18,8 @@ import sys
 from types import FrameType
 
 from analysis.llm import LlmClient
-from analysis.rules import RulesEngine
-from analysis.summarizer import Summarizer
 from bot.app import build_bot_context
-from config.loader import ConfigurationBundle, load_configuration
+from config.loader import load_configuration
 from config.startup import (
     StartupError,
     load_runtime_settings,
@@ -29,24 +27,10 @@ from config.startup import (
     validate_telegram_credentials,
 )
 from logging_setup import setup_logging
-from scheduler.jobs import AppScheduler, build_scheduler, start_scheduler_background
+from scheduler.jobs import build_scheduler, start_scheduler_background
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
-
-
-def _build_analysis_stack(configuration: ConfigurationBundle) -> Summarizer:
-    """Wire rules engine + LLM client into a digest builder for startup preview."""
-    rules = RulesEngine(app_config=configuration.app_config)
-    llm = LlmClient(
-        settings=configuration.runtime,
-        app_config=configuration.app_config,
-    )
-    return Summarizer(
-        app_config=configuration.app_config,
-        rules=rules,
-        llm=llm,
-    )
 
 
 def run() -> int:
@@ -69,14 +53,6 @@ def run() -> int:
         return 1
 
     repository = DataRepository(configuration.paths)
-    summarizer = _build_analysis_stack(configuration)
-    digest_preview = summarizer.build_digest(
-        configuration.portfolio,
-        configuration.state,
-        configuration.news_cache,
-    )
-    logger.info("Startup digest preview:\n%s", digest_preview)
-
     llm = LlmClient(
         settings=configuration.runtime,
         app_config=configuration.app_config,

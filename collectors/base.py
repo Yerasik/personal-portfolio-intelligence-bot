@@ -14,6 +14,7 @@ class CollectorContext:
     repository: DataRepository
     app_config: AppConfig
     portfolio: Portfolio
+    focus_industries: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)

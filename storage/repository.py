@@ -5,7 +5,7 @@ JsonStore directly — it keeps path handling consistent.
 """
 
 from storage.json_store import JsonStore
-from storage.models import AppConfig, BotState, NewsCache, Portfolio
+from storage.models import AppConfig, BotState, NewsCache, Portfolio, TickerIndustryMap
 from storage.paths import DataPaths
 
 
@@ -53,6 +53,14 @@ class DataRepository:
     def save_news_cache(self, cache: NewsCache) -> None:
         """Write data/news_cache.json atomically."""
         self._store.write_model(self._paths.news_cache, cache)
+
+    def load_ticker_industries(self) -> TickerIndustryMap:
+        """Read static ticker-to-industry mappings from data/ticker_industries.json."""
+        return self._store.read_model(self._paths.ticker_industries, TickerIndustryMap)
+
+    def save_ticker_industries(self, mapping: TickerIndustryMap) -> None:
+        """Write data/ticker_industries.json atomically."""
+        self._store.write_model(self._paths.ticker_industries, mapping)
 
 
 def load_config(paths: DataPaths, store: JsonStore | None = None) -> AppConfig:

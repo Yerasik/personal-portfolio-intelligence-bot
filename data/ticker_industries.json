@@ -1,0 +1,8 @@
+{
+  "ticker_to_industry": {
+    "1810.HK": "Consumer Electronics",
+    "AAPL": "Consumer Electronics",
+    "MSFT": "Software - Infrastructure",
+    "NVDA": "Semiconductors"
+  }
+}

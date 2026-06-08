@@ -79,6 +79,10 @@ class JsonStore:
             handle.write("\n")
             temp_name = handle.name
 
+        # NamedTemporaryFile defaults to 0600; widen to 0644 so the file stays
+        # readable by the host user when the container writes it as root.
+        os.chmod(temp_name, 0o644)
+
         try:
             os.replace(temp_name, path)
         except OSError as exc:

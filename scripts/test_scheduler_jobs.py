@@ -25,9 +25,18 @@ from scheduler.jobs import (
     _run_job,
     build_scheduler,
     register_jobs,
+    run_news_data_job,
     run_rule_evaluation_job,
 )
-from storage.models import AppConfig, BotState, MarketQuote, Portfolio, Position
+from collectors.base import CollectorContext, CollectorResult
+from storage.models import (
+    AppConfig,
+    BotState,
+    MarketQuote,
+    Portfolio,
+    Position,
+    TickerIndustryMap,
+)
 from storage.paths import resolve_data_paths
 from storage.repository import DataRepository
 
@@ -114,6 +123,39 @@ def run_test() -> None:
         updated_state = repository.load_state()
         if len(updated_state.pending_alerts) != 1:
             raise AssertionError("rule evaluation should persist one pending alert")
+
+        captured_industries: tuple[str, ...] | None = None
+
+        class RecordingNewsCollector:
+            def run(self, context: CollectorContext) -> CollectorResult:
+                nonlocal captured_industries
+                captured_industries = context.focus_industries
+                return CollectorResult(
+                    name="news_data",
+                    success=True,
+                    message="captured",
+                )
+
+        original_news_collector = jobs_module.NewsDataCollector
+        try:
+            repository.save_config(AppConfig(focus_industries=["AI"]))
+            repository.save_ticker_industries(
+                TickerIndustryMap(
+                    ticker_to_industry={
+                        "AAPL": "Consumer Electronics",
+                        "MSFT": "Software - Infrastructure",
+                    }
+                )
+            )
+            jobs_module.NewsDataCollector = RecordingNewsCollector
+            run_news_data_job(services)
+        finally:
+            jobs_module.NewsDataCollector = original_news_collector
+
+        if captured_industries != ("AI", "Consumer Electronics"):
+            raise AssertionError(
+                f"news job passed unexpected industries: {captured_industries}"
+            )
 
         repository.save_config(AppConfig(enable_daily_summary=False))
         from apscheduler.schedulers.blocking import BlockingScheduler

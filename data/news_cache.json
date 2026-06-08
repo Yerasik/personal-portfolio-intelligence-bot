@@ -1,4 +1,2114 @@
 {
-  "items": [],
-  "updated_at": null
+  "items": [
+    {
+      "id": "57d8c879f085ae23",
+      "title": "Texas grid flags risks as data centers, crypto sites fail voltage tests",
+      "source": "Hacker News",
+      "url": "https://www.reuters.com/business/energy/texas-grid-flags-risks-data-centers-crypto-sites-fail-voltage-tests-2026-06-05/",
+      "published_at": "2026-06-08T02:05:40Z",
+      "fetched_at": "2026-06-08T03:17:40.657647Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Comments"
+    },
+    {
+      "id": "735006fdf7a111c5",
+      "title": "Saving Siri: After two years of stumbles, is Apple's AI moment here? - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNcTdRNjVCM21FUXlOUGlraXFLWTkxSTRxbHNHVk5jel9vei1DSlUtUTJkQ3pXbmptMGx5czRvRERsY081ZW5JTXNpRlNUYWQwLWFMNVg2M2s5MGpFTmRkN2lENzA3WmlYVXp5bkxxQ1l6OW5ZdW4wN2NCNjVrVzBzYm1GV0lRbTlEOFIxTDJ4MWgwRWRXRUJHQ3didVpqVzNZRUswZl82dGxLdw?oc=5",
+      "published_at": "2026-06-08T01:09:00Z",
+      "fetched_at": "2026-06-08T03:17:40.657647Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Saving Siri: After two years of stumbles, is Apple's AI moment here?    Reuters"
+    },
+    {
+      "id": "cbf2bae26358ecde",
+      "title": "VIEW Tech stocks dive as Fed bets rattle AI rally - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxNNDgtZ3Z4ZFBTLTd4X2RDZGpodnJvdzRfOGlSY3VOaFB6WXBVVklsbHhLLXJOQ183NmdKeDBMc1RsWW1VVC10OWRWWENReUUya0lMLWNmWjhZTGRjY21OQWE0cV95YVZNbDBPYUNGVm1hTWJrTG9wR1ZPdTY5aEdrd1hMN0s1Vms?oc=5",
+      "published_at": "2026-06-08T01:04:00Z",
+      "fetched_at": "2026-06-08T03:17:40.657647Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "VIEW Tech stocks dive as Fed bets rattle AI rally    Reuters"
+    },
+    {
+      "id": "006ab1d596cf63ef",
+      "title": "The Smallest Brain You Can Build: A Perceptron in Python",
+      "source": "Hacker News",
+      "url": "https://ranpara.net/posts/perceptron-explained-from-scratch/",
+      "published_at": "2026-06-08T00:28:37Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Comments"
+    },
+    {
+      "id": "ba1a2ce8f20e6d01",
+      "title": "Chips, ships and guns: South Korea booms on AI race and global conflict",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/208d2ed8-78f3-471f-839a-55d69a3a8a9b",
+      "published_at": "2026-06-08T00:03:18Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Asia’s fourth-largest economy is in a sweet spot as its biggest companies capitalise on geopolitical trends"
+    },
+    {
+      "id": "bb94c90df448eec3",
+      "title": "'Kill switch' law means your next car could be watching you | A federal requirement aimed at stopping drunken driving could soon put driver-monitoring technology in every new vehicle. The goal is saving lives, but the privacy trade-offs deserve closer scrutiny",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzryuo/kill_switch_law_means_your_next_car_could_be/",
+      "published_at": "2026-06-07T23:53:07Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Hrmbee [link]   [comments]"
+    },
+    {
+      "id": "1a3a4a8b5c6902db",
+      "title": "Tumbling tech darlings slam brakes on AI rally - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQeFRCX29KbXlhVmEwNV9yUFRNQjZUcXFKVFlubUFGNkdrRDd0Z0ZwY3RUTFlXVmg5N1ppXzFHZ2Niai01RmtXOW1lY0pDRFI0VXJTZF9jeWFqSnZVRjREWDVfM21yMHNTR2NGcDcyb2NKczljNGNuRHJua1BlUkp0cUg2UQ?oc=5",
+      "published_at": "2026-06-07T23:44:00Z",
+      "fetched_at": "2026-06-08T03:17:40.657647Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Tumbling tech darlings slam brakes on AI rally    Reuters"
+    },
+    {
+      "id": "0734ea504fbaddf9",
+      "title": "SK Hynix announces multi-year tech deal with Nvidia for AI factories - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOam1iOWpSSHNETmw1N1phdWFwRU9yRUktdjRBYzQ3QlowV1pjaENiS2ZaQ0YtMldRNVBWVE03YUlGNXJ1OWs1dUpCMUZERk1MOURDYmoxSy15aHBmcU56VDBNc3BiRGk1T3R6dGRSQ01rNzJ6dXFfUXlZd2NhT2J0OUswR2twV3VibldwT0NWSWlXdTZWaHZVWjZPLVNGZnJ5UzVJczVVaGozal9pYXFTZmtDMVdWMHZxTG5ZOFpMM3Y?oc=5",
+      "published_at": "2026-06-07T23:27:44Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "SK Hynix announces multi-year tech deal with Nvidia for AI factories    Reuters"
+    },
+    {
+      "id": "612f27ac62246e60",
+      "title": "Mainland Chinese savers flock to Hong Kong as regulators tighten capital controls - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNUVBrd0Uxb3N0YW1KdzY3Y1FMMkJXS0JRazNZLTkwZThmRUZGZ1d6WmdSV2x3Z0UwTGxlQzVIYjdnNFhROEtMNnBKeTYxU0pLbUxUZFlOa19OaVctMjhlQjZQdWhOdWtBZTJPRDZqS2hKcDNwX3BnOWpUV3k3UVltNk1tcVR3S0pJMENsV3M0dlRuSHVUVUNtbE56UGJpU0pVV0tTeVJxVi1FY0ppVTg5eW93RkdPSS1ZVy1nY1pzajFJbDUxMFZzVWp3?oc=5",
+      "published_at": "2026-06-07T23:24:11Z",
+      "fetched_at": "2026-06-08T03:17:40.657647Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Hong Kong"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Mainland Chinese savers flock to Hong Kong as regulators tighten capital controls    Reuters"
+    },
+    {
+      "id": "5580459798dacd77",
+      "title": "South Korea's Naver to build gigawatt-scale AI factories using Nvidia technology - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNZEk1a2dRMGlOX0xxNWItTjFpcmFHcjFHblZGZUJWdkdqNTJDZzVnaGtqMXNlckplU0diLUZFS3F5U1lEZ1NmWE1BUkhLbUl5elJmNnVBVEN3UTRGclFEV21sdTJ1QkhYUkdEWEtITF9TSHpTREczLVJmaVh1NkM2RWFDNUNjcVo2T002YXNVbG12dEtxakx6OTlqamx0QjU0T0ZCUXZWdzVNR0tCS19QNEI4cFNxVDJDTnMzbERLRHM5MkU1ZG9xTXUzYw?oc=5",
+      "published_at": "2026-06-07T23:19:32Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "South Korea's Naver to build gigawatt-scale AI factories using Nvidia technology    Reuters"
+    },
+    {
+      "id": "aea55f22ae82ecd8",
+      "title": "Ukraine's Zelenskiy says Russian magnate Abramovich came to Kyiv with offer of help - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPaEJrR05EUm5zc2ZQN2V4ZzdFcDlOaXlPY2R4X1BHR3MzUWIwb3g3YVF2YzQ2cEJFYXNOYWc3YWxOQ2pDdXY1dlgybzFSNVpNM1BiWFl2TmxxUlNUb1NGNE1YRy16dFczREE0a0p1cV9jbUxZT21pWDlhQjR1YmNadmRHdDNBNExXZkNwTmI5bkljSzJFZU4wSzVMSU5lSmpmLWgxUHZOQTBYcWpuYTV1SV80VVE2NlBYYXc?oc=5",
+      "published_at": "2026-06-07T21:51:02Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Ukraine's Zelenskiy says Russian magnate Abramovich came to Kyiv with offer of help    Reuters"
+    },
+    {
+      "id": "02e629ded20ef9e5",
+      "title": "Denmark's Eriksen collapses again during international match - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxNcUt3Q1R1N2tLVzVMYnd4dXVrUXM5VVY0b01LRi1QbFJlVUE2YlRiVk5LblFuQlp6NzZYQzZJSUx2U1p3Z1VhQ2hNUVF1MEdGSGotZ3QzUVRRa1NKSUtiUERrbVl4QnBwa2hDNkV0UWpuNlFZZEZVLURfOW5Ddm9wQzFzVGltTFBHbmdocVp2cFBfQ3R4V0xUbXVQRUJ1eE1aVFV4TFdXTzZoRUNaUmYxeVkyWEI?oc=5",
+      "published_at": "2026-06-07T21:46:11Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Denmark's Eriksen collapses again during international match    Reuters"
+    },
+    {
+      "id": "9bb0f002aa32a81f",
+      "title": "Airbus notifies A320neo series customers of delays on jets due in 2027 and 2028, Bloomberg News reports - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxNcDlYTU4zU1p5M0YwN2hPd3FNdTdKWDVsaGI5QXZfUWY1MHNGVjg1MHotS2RrYUE3cEU3UjZBbmMyOHFTNDZNNko2VHZvenNHM0J5bmM0YmkwV09SYllzYWozNjY4T3pvNUliR1g0QnlNRmNCMUloWWFhZjR0VkpGc3pRUEtDd0FYR0I1N0M2OE9qU1JjMEpKOGpOcFBHbFh0SE1hQ1ZHVHRJeHJNWHctWTZWY0VyOHBRME5OcE9VaUd2Z25STGxTVTBtQko4bnIwOEVFd0hB?oc=5",
+      "published_at": "2026-06-07T21:32:50Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Airbus notifies A320neo series customers of delays on jets due in 2027 and 2028, Bloomberg News reports    Reuters"
+    },
+    {
+      "id": "d4dd11c89e825458",
+      "title": "Is this the dawn of the Tokenpocalypse?",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/07/is-this-the-dawn-of-the-tokenpocalypse/",
+      "published_at": "2026-06-07T20:26:13Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "We're likely to see more price increases as the big AI companies plan to go public."
+    },
+    {
+      "id": "ecdbec82ce11b115",
+      "title": "As Platner targets Senate seat, fellow Democrats hold their noses ahead of Maine primary - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQdFZOcVhjaHRIOC1ZQTYzb0ZzeXFZUHlpT29yTWRpNUZjWXpuaHF1ODV6b1hndEczclNxd3p1RVVFNEEwOTZWMDdKR18xajQxM05WTWVDZ01haDVkUC1jV3U2SktzcGswejFCenZqX1BxNHB4Z2w5dFB3eEcyeFgtaE4xREk2OEhUTlM2Wm14SHZsRmFGRGlQZlk1V2dfNlVYZFR3bXJNbzlXcWJUM0NHemhhblJfUWdKdGc?oc=5",
+      "published_at": "2026-06-07T19:27:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "As Platner targets Senate seat, fellow Democrats hold their noses ahead of Maine primary    Reuters"
+    },
+    {
+      "id": "bc59b65294853063",
+      "title": "Reddit Ads Impersonate BBC and The Guardian to Push Fake AI Investment Schemes",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzkfz6/reddit_ads_impersonate_bbc_and_the_guardian_to/",
+      "published_at": "2026-06-07T18:47:29Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/mepper [link]   [comments]"
+    },
+    {
+      "id": "326e3a547550b07a",
+      "title": "Russian drone hits nuclear-fuel storage facility near Chornobyl, Ukraine says - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxObHBWaFhyaGpwQXhrT3RaUGtWN2lwV0lJX1FEWVV1Tno5NDFOdVpWQUVIdjJrSlNXOTBmclZLX1J6RDNGYWhwcXVJNHVrWjNaazgzY19uZHFvR0pLNzBROTA2aTJOSWxFZ3k4Ry00OW9vSl9NeHIxWmtnVzN5Y1Q1RmYtTHZrVVh5cWJqT2FIQ1FkUm85NFcyQjZPR0dFakE1OFpjNldvNjUyX0dqaFpVbXJqWGZ6OW9XaHY1aXlWSG05dw?oc=5",
+      "published_at": "2026-06-07T18:27:19Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Russian drone hits nuclear-fuel storage facility near Chornobyl, Ukraine says    Reuters"
+    },
+    {
+      "id": "a5a0860a3f1af9d0",
+      "title": "United Airlines CEO says big merger unlikely after American rebuff, asset buys possible - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPYzRVOFU1S3dLR1UtM2toQS1QYlA2THh2amdSYmdYZThTQ0pjeUI3SXZOdHQ3R05tUnpxeU5RVmhLOXROalNsSDNaajJiS0RReWd5VU1kaEpPa1pvcEJIUThiZThkc2tCM2JWa1hDNWpqaEtsOW0yZXJwZmozdkNUTDBfakRWMHV6YWpZWXNoOEZmVHh2UE1ieTJRMkdCUGVibE1KUmVUbHRLbl8zQUR2bVMwWVUteTBHMzA3N1JCcw?oc=5",
+      "published_at": "2026-06-07T18:06:53Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "United Airlines CEO says big merger unlikely after American rebuff, asset buys possible    Reuters"
+    },
+    {
+      "id": "706a25ea862c5bb7",
+      "title": "Spyro the Dragon returns with a new game after almost two decades",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/games/2026/jun/07/spyro-the-dragon-returns-with-a-new-game-after-almost-two-decades",
+      "published_at": "2026-06-07T18:00:04Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "90s PlayStation fans, rejoice: California studio Toys for Bob is making Spyro: Realms Beyond, intended to ‘inspire love, joy and laughter’ As the gaming mascots of millennial childhood have been resuscitated one by one for a nostalgic audience, one has remained notably absent: 1990s PlayStation hero Spyro. A new game starring the purple dragon was announced at tonight’s Xbox Game Showcase – the first original title since 2008. Called Spyro: A Realm Beyond, it is being developed by studio Toys fo"
+    },
+    {
+      "id": "b74834a94a630989",
+      "title": "Notion restores access to Anthropic after service disruption",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/07/notion-restores-access-to-anthropic-after-service-disruption/",
+      "published_at": "2026-06-07T17:56:22Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Notion's head of product said he was \"astonished\" at “the amount of people RT-ing this.\""
+    },
+    {
+      "id": "468f82acd06de4d7",
+      "title": "Minecraft Dungeons 2 gets a September release date",
+      "source": "Tech | The Verge",
+      "url": "https://www.theverge.com/games/939551/minecraft-dungeons-ii-2-release-date-trailer",
+      "published_at": "2026-06-07T17:45:25Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Minecraft Dungeons 2, a sequel to Microsoft's dungeon crawler spinoff Minecraft Dungeons, will be released on September 29th. The company originally revealed the game in a brief trailer in March, promising a fall 2026 release window. Here's how Microsoft described it at the time: Return to the world of Minecraft Dungeons in an all new […]"
+    },
+    {
+      "id": "4907b12fca344c15",
+      "title": "Google lays off Cloud, cybersecurity staff as Big Tech doubles down on AI investments",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tziox8/google_lays_off_cloud_cybersecurity_staff_as_big/",
+      "published_at": "2026-06-07T17:43:32Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/DerpiDanger [link]   [comments]"
+    },
+    {
+      "id": "d2cf6a17cf032b01",
+      "title": "Banks lay groundwork for mass workforce cuts as AI takes hold",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzifim/banks_lay_groundwork_for_mass_workforce_cuts_as/",
+      "published_at": "2026-06-07T17:33:51Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Plastic_Ninja_9014 [link]   [comments]"
+    },
+    {
+      "id": "3ef9c89e5091fc86",
+      "title": "Halo: Campaign Evolved arrives July 28th",
+      "source": "Tech | The Verge",
+      "url": "https://www.theverge.com/games/939564/halo-campaign-evolved-xbox-games-showcase-2026",
+      "published_at": "2026-06-07T17:14:08Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "As part of its Xbox Games Showcase on Sunday, Microsoft revealed new details about Halo: Campaign Evolved, the upcoming remake of Halo: Combat Evolved's campaign mode. The remake will debut on Xbox Series S / X, PC, and PS5 on July 28th. Today's mission trailer includes a first look at Operation: Meteorite, a new three-mission […]"
+    },
+    {
+      "id": "bf642b7c261773fd",
+      "title": "The Verge Weekend Questionnaire",
+      "source": "Tech | The Verge",
+      "url": "https://www.theverge.com/entertainment/943285/the-verge-weekend-questionnaire",
+      "published_at": "2026-06-07T17:00:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Have you ever wondered what the most indispensable app is for your favorite musician or how the world’s tech CEOs stay focused? Well, that’s the sort of thing we aim to uncover in our Verge Weekend Questionnaire. Think of it as a spiritual successor to Five Minutes on the Verge. Every Saturday, a different guest […]"
+    },
+    {
+      "id": "8274cc6c1e26a1fb",
+      "title": "Italy's ITA Airways to decide imminently on lawsuit over RTX engine faults - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNZEQ4Y1pvU1pnNDBKcW0xeElWX3NCS1FoREJzNld3WVRseFItZ3NlUUVjM3ZUS29odUhMNGpfMXJuZHRrRGxrT2ttZE9jc1g2bnhhYkM4OWNOcGhZLUUwMTh3bzJkV09ad0pCRGMyUlhqYUxESjhuWGVyUW9FelpVeVlGRVFUVDRrV19XVEYyTzRzM2tIcU82dTkwSGRKOVhScW5Vc0M3S3haUUxCSjI5Z1NpVmhsWTZoLXB5eEg4NDE2MFdyU0Z0WA?oc=5",
+      "published_at": "2026-06-07T16:52:57Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Italy's ITA Airways to decide imminently on lawsuit over RTX engine faults    Reuters"
+    },
+    {
+      "id": "e10d03b66df351fb",
+      "title": "AI Data Centers’ Water Consumption Breaks 264 Billion Gallons in 2025 as Devastating Drought Hits Nearly 63% of U.S.",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzgq5m/ai_data_centers_water_consumption_breaks_264/",
+      "published_at": "2026-06-07T16:28:33Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Wagamaga [link]   [comments]"
+    },
+    {
+      "id": "533f0711639e1c7d",
+      "title": "OpenAI is still working on that ‘super app’",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/07/openai-is-still-working-on-that-super-app/",
+      "published_at": "2026-06-07T16:23:22Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "\"Chat is dead\" — at least, according to a senior OpenAI employee."
+    },
+    {
+      "id": "7d760daea8d8f81f",
+      "title": "Govee’s all-weather smart lamp post is under $200 for the first time",
+      "source": "Tech | The Verge",
+      "url": "https://www.theverge.com/gadgets/944439/govee-outdoor-lamp-post-lights-deal-sale",
+      "published_at": "2026-06-07T16:00:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "If you have an outdoor space that needs some extra lighting, either for fun or security reasons (or a mix of the two), the Govee outdoor lamp post light is a good pick that’s 23 percent off its regular price right now. Typically retailing for $260, the Govee outdoor lamp post light is available for […]"
+    },
+    {
+      "id": "4148dc11b7fba20b",
+      "title": "European leaders ready to support ceasefire talks between Ukraine, Russia - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQZjRUNmJIWk5NM3pWZURGaWt0Sm1FZWlzT0FFQTBfNkZWaGxsZjhzb2tpM0RvSnhUZEY5YVpSUmxlMUh0VkNKVjFDRnFVbjloajRBVWlpbUs4OGxHVWZMWUdQbzI4S3ZzMjBQTFpfWVRzZWxVQUlZWHBLUjJnSVo2T3o2MGNGb1FPbERwQ05KVmlRNkJud0Rz?oc=5",
+      "published_at": "2026-06-07T15:09:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "European leaders ready to support ceasefire talks between Ukraine, Russia    Reuters"
+    },
+    {
+      "id": "1bd205ff3e448c5f",
+      "title": "Over 150 Mathematicians Warn Governments Not to “Believe the Hype” About AI",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzem9z/over_150_mathematicians_warn_governments_not_to/",
+      "published_at": "2026-06-07T15:07:41Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/IKeepItLayingAround [link]   [comments]"
+    },
+    {
+      "id": "486baffd7b8d3ef2",
+      "title": "By 2030, AI's water use will match the needs of 1.3 billion people while its power use triples that of 650 million, UN University investigation warns",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzdw64/by_2030_ais_water_use_will_match_the_needs_of_13/",
+      "published_at": "2026-06-07T14:39:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/WhistleVeyyBro [link]   [comments]"
+    },
+    {
+      "id": "ef1fbf5c1bb74170",
+      "title": "Meta made its own AI-generated clickbait news feed | Meta said it would pull the feature after The Verge asked questions about it",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzcxow/meta_made_its_own_aigenerated_clickbait_news_feed/",
+      "published_at": "2026-06-07T14:00:46Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Hrmbee [link]   [comments]"
+    },
+    {
+      "id": "84b5748ee9da9958",
+      "title": "Nvidia, SK to detail cooperation plan as Huang flags prolonged chip shortage - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQVHNJZHl4MmRVaDB2SDZQaTV0TWQyUFhFSWMtWkZaN08wSDBsQllBN2ZIOGhNV0otWjhERFRsaXVuQ3l4dmtjV0RfLXI5ak13WUE3OVAxM3Q5VG54N3JBaE5JZjF0WXVWMVdYWTRlYzV2endubDVlNEdZc25MNUpCRzVFbDlXN3ZoUFRJWUR5cU5MVEJNQTBDd1pqRmJIVkRGRjA1LWVOMWZZa2EwVHllZU5XS2oxZ29fNE4yX3R3?oc=5",
+      "published_at": "2026-06-07T13:35:29Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Nvidia, SK to detail cooperation plan as Huang flags prolonged chip shortage    Reuters"
+    },
+    {
+      "id": "1d32c5009f690fd6",
+      "title": "The AI boom is gobbling up power faster than ever",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzbkyg/the_ai_boom_is_gobbling_up_power_faster_than_ever/",
+      "published_at": "2026-06-07T13:02:55Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/rstevens94 [link]   [comments]"
+    },
+    {
+      "id": "66914a5da7989c04",
+      "title": "Global airlines slash 2026 profit forecast on fuel shock from Iran war - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQenE5amZ2NmVSM2gzMXBWVjczMDdsZnRreUZObWlzUGJ2YVpBeU45cTNOdmt2Z1lOc1MtcmZqV2JSZ1RwaktBUzYyTDcwZVRjYnhiWk9xX2hQc3QxMUJ3NjVacWF2MTdwZ2hfOFozZEh3NzdyQWpza2xGRVNIYzAxV3hKaTJlM2dmTGxUdWRuR1RuaS1od2pWcEFpRXh6Tk5FV2lycE1Na2FaSjFlNlVGRDF6dEVfa09iZHN5dDhGTDFrSWM?oc=5",
+      "published_at": "2026-06-07T13:02:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Global airlines slash 2026 profit forecast on fuel shock from Iran war    Reuters"
+    },
+    {
+      "id": "50b60c47475b33ea",
+      "title": "Taiwan coast guard 'expels' Chinese ships from restricted waters - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQdVBmYXhiV1Z4ckpxR1dvTkxzdnhLekNsb1JabVhLeDVLLV9SeGpva1d4Q291MHc0UDkwSjl0N0h6TUpURXB1Zjdob0JzZzlCQ3NVZWh5NnRuVHVxLURubjBROXVIM2tuRmcwLUg0QWoyR3J0b0RiM2pOTEMwcm5EZXdISDZwLUhVZndQS0MxTmZENkppaGxtSlRiMFdIYjZEck9oZ3l5a2Y?oc=5",
+      "published_at": "2026-06-07T12:36:38Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Taiwan coast guard 'expels' Chinese ships from restricted waters    Reuters"
+    },
+    {
+      "id": "fa3149616f889a6c",
+      "title": "Are we at the start of a new investment super-cycle?",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/d91cf0b4-2ed6-47b6-a9b1-46f87c52efc1",
+      "published_at": "2026-06-07T12:00:04Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "AI, clean energy and defence spending are reinforcing each other, amplifying potential spend"
+    },
+    {
+      "id": "46fe72d35845dad4",
+      "title": "School shooting survivor sues AI gun detection firm after system failed to spot weapon",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tz9ui3/school_shooting_survivor_sues_ai_gun_detection/",
+      "published_at": "2026-06-07T11:39:44Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/deraser [link]   [comments]"
+    },
+    {
+      "id": "6f864fc5033d7500",
+      "title": "Show HN: Lathe – Use LLMs to learn a new domain, not skip past it",
+      "source": "Hacker News",
+      "url": "https://github.com/devenjarvis/lathe",
+      "published_at": "2026-06-07T11:16:46Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Comments"
+    },
+    {
+      "id": "df1d70c531cda0c3",
+      "title": "Billions spent and hypothetical returns: the AI boom explained with six charts",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/07/billions-spent-hypothetical-returns-the-ai-boom-explained-with-six-charts",
+      "published_at": "2026-06-07T11:00:31Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Expenditure is growing fast and consumer take-up accelerating. But alarm bells are sounding The race is very much on. Elon Musk’s SpaceX, which makes AI models as well as space rockets, announced last week it is seeking a $1.77tn (£1.31tn) valuation on the US stock market while Anthropic, the startup behind the Claude chatbot, said it had filed for an initial public offering . OpenAI, the developer of ChatGPT, is expected to follow. This latest peak in the AI market comes amid a multitrillion-do"
+    },
+    {
+      "id": "020bae1b60fa560d",
+      "title": "The coming rise of anti-AI populism",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/b4429ea0-4a0a-4a28-96f5-debf4f3eb339",
+      "published_at": "2026-06-07T11:00:04Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Anxiety about the technology is set to generate a political backlash"
+    },
+    {
+      "id": "62e3343540ba78c3",
+      "title": "Ukrainian mothers' fight to free children from Russians depicted in new opera - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNbFNWaXVYaDk5ZDF0MFpRU0M3U2hleUgzSHNLbjJiMmh3U0RmdXNwUm95MEJSblFOYktnQTl4OGZscE50OVc0MFIxQm9qNXY1TTFFdXU5N2Z2Z2FhU0ZRR2RjcmhsUEhndzhRcFdjb1hqQnJXMmZHcWFqMTRCT2F3X082MTJGY01mVy0xS3pFWDNSeVBIb0l5RHJIaUhUMk9Hd2pka2JNVS1wNzVtYUtkazRBNG1JNkJ5MDZCNjZlTlNtZw?oc=5",
+      "published_at": "2026-06-07T10:22:14Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Ukrainian mothers' fight to free children from Russians depicted in new opera    Reuters"
+    },
+    {
+      "id": "a3ceeabdbeff4c33",
+      "title": "‘A driver of political violence’: how the breakneck AI boom is fueling anti-tech extremism",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tz8cdd/a_driver_of_political_violence_how_the_breakneck/",
+      "published_at": "2026-06-07T10:17:42Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/zsreport [link]   [comments]"
+    },
+    {
+      "id": "40592ceab20a4e97",
+      "title": "Explainer: How can retail investors buy shares in SpaceX's IPO? - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPSC0zeF9CeWRYSWFEcUd3MXVVMEhRQ1pfekdOU1VnUTc1TWozN1F2SE9CSWxLMjVjUE45STFHcFRHMUNWRFp6eXVTREhmYWdxLUR0eWRsUFRmWHNuVEtjTzF2TGpqcE43MUctallSc0tFUC0wS1lseTBHWHU5RENkT2dQd2FfMDlDSFk4WHBhemlxc2Y0Y1ZJcTdCdm9XNlMyRDA5UFN3?oc=5",
+      "published_at": "2026-06-07T10:08:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Explainer: How can retail investors buy shares in SpaceX's IPO?    Reuters"
+    },
+    {
+      "id": "9ed26235ed55d425",
+      "title": "‘A driver of political violence’: how the breakneck AI boom is fueling anti-tech extremism",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/07/anti-ai-tech-extremism-violence",
+      "published_at": "2026-06-07T10:00:31Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Backlash against AI is taking an extremist turn, following in the footsteps of earlier techno-pessimist militants When a 20-year-old man from Texas was arrested earlier this year for allegedly trying to burn down OpenAI ’s headquarters and Sam Altman’s house , authorities found an anti- AI manifesto alongside his lighter and a jug of kerosene. It was one of a spate of attacks that has caused alarm among researchers, the tech industry and law enforcement about the rise of anti-tech extremism. In "
+    },
+    {
+      "id": "110f728cc79ec8b9",
+      "title": "Walmart tells workers that AI will improve their jobs, not steal them",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/d2155669-cead-4716-8d70-91df69b82977",
+      "published_at": "2026-06-07T10:00:04Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Retailer’s embrace of artificial intelligence comes amid anxiety that the technology will create mass redundancies"
+    },
+    {
+      "id": "f7cd3aef4a48a21f",
+      "title": "Britain’s questionable reliance on Palantir",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/e54519ad-9f88-45b3-a4e8-dd64cefceb8f",
+      "published_at": "2026-06-07T09:09:33Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Government should use the best technology for any task, but be wary of ‘lock-ins’"
+    },
+    {
+      "id": "94c29119c91880cd",
+      "title": "AI CEOs from OpenAI, Anthropic, and Microsoft set aside their rivalry to warn Congress AI is making it too easy to design and create bioweapons",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tz5p5g/ai_ceos_from_openai_anthropic_and_microsoft_set/",
+      "published_at": "2026-06-07T07:40:43Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Just-Grocery-2229 [link]   [comments]"
+    },
+    {
+      "id": "6478a83da3e4f022",
+      "title": "‘Poisoned’ AI: the ChatGPT shopping scams that lead to fake websites",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/money/2026/jun/07/ai-chatgpt-shopping-scams-fake-websites",
+      "published_at": "2026-06-07T06:00:26Z",
+      "fetched_at": "2026-06-08T04:17:44.201568Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Buyers are ripped off after assuming online stores were genuine because they are recommended by an AI tool You want to buy a new bag and so you ask ChatGPT for help. You have always liked Russell & Bromley so you ask ChatGPT what is popular there at the moment. The artificial intelligence (AI) assistant gives you cross body, shoulder, casual and formal options with the prices listed beside them. You click through from the sources to what looks like the official Russell & Bromley site and buy you"
+    },
+    {
+      "id": "06f34a107a23abc9",
+      "title": "OpenAI plans ChatGPT 'superapp' overhaul ahead of listing, FT reports - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQcUs5SGticWFRUEZVQlh1R1NUWkdYN285SHFnaEQtdGp2czkxbUJGUS1aTC1FVDJIT0QyRjc4TDBucFpLODlobjk0QTR5ZU0xUVktSnY0cVh2aFpUd3MzUVF3Ny1mYVdtQUtTZVdGU3pCOE5pYWlYbFEycGhONlM5OFVZaGRWX1FhSFl2QkpTV3IxdTU5eUhCcF9NSlkzdnV1b2kwTXRWdXRkU29E?oc=5",
+      "published_at": "2026-06-07T04:21:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "OpenAI plans ChatGPT 'superapp' overhaul ahead of listing, FT reports    Reuters"
+    },
+    {
+      "id": "572dac32b14b1deb",
+      "title": "OpenAI plots biggest ChatGPT overhaul since launch",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/ca0f5f5e-fb9a-41a0-a2a9-0127e15b7db9",
+      "published_at": "2026-06-07T04:00:11Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "$850bn start-up to recast hit chatbot as a route to higher-margin products before a potential IPO"
+    },
+    {
+      "id": "b99efd8ad5b596dc",
+      "title": "Etihad Airways orders widebody planes, sees return to pre-war capacity in June - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxQc1J3bHVhc0NLSUNlWTdBZHJHaDRIU1pYTUZLQzd0VlVveW5xM0FTcFBzU3hGTzd1T2dlN1FJSDB5ak1zV2RFTGNYTkxGSlRfcW1MWDU3NHQ5RzhkNmRzc1VGb0JucVdaZmJ5eWVJeWt4aTh2VzZOVnU0eENmZGlMWTU2eEdvM1N3dlNZc3k0NGNtMWlEUHl3WEZvQTl3aTUtQWFNYjVTUEloZHF3ZW4xX3Y5UHhiVV92TGJIOGcwdGJNOTl2aVItRVV3dDBXeFk?oc=5",
+      "published_at": "2026-06-07T03:56:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Etihad Airways orders widebody planes, sees return to pre-war capacity in June    Reuters"
+    },
+    {
+      "id": "e864c37e45b01cd4",
+      "title": "‘More harmful than helpful’: young people sour on AI",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tz18rm/more_harmful_than_helpful_young_people_sour_on_ai/",
+      "published_at": "2026-06-07T03:36:51Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/MoneyLibrarian9032 [link]   [comments]"
+    },
+    {
+      "id": "657a1c5431265ecb",
+      "title": "We should be getting better at AI by now",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/9753a44c-bec8-4d89-bac6-3416713c3166",
+      "published_at": "2026-06-07T03:00:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "From cancelled novels to legal fines, the scale of blunders only halfway through the year suggests the opposite"
+    },
+    {
+      "id": "572e831717fccecf",
+      "title": "Hollywood workers rally against Paramount-Skydance deal - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxORFRNOF9IOTBGTTNROTFvRm1hSlYxcE5DYlJ5b0VteXFzdkV6TTN6ano0SDRydm1QSGpCQ0RRaUxGV2s5cTJlNHZrR0tLWUpKaWF0YjlmaVdfZ25LTEFwZThCZm4tcHpfckFKdnhSMkdqMEhyODlueGhuOThiQnlDemdPak5UbXo3WWoxNmh2aVZNZV95U1Z4VUFwS0VUYThDaG8zampCbERoYUFlWU5Hemw5bDk?oc=5",
+      "published_at": "2026-06-07T01:22:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Hollywood workers rally against Paramount-Skydance deal    Reuters"
+    },
+    {
+      "id": "aa4ccd921f454a69",
+      "title": "Alaska Air says demand, fares could support second-half cash flow despite fuel shock - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPNzBTLThkMWV1S1ppNWQtYkpYT2hCRzJhcHRpX00xNzhfNXBQX0JPZVlMNDF5Z2o2aUl1QkxuUkVZaERJM0g0a201dWs5R2xCR1pVWTgyb2NJek1UdXNjSk1PcTkyaVdTMGdEY1Q3eWlXQ2pIWnRxZ240N0VOVzU0M20wb1IxTTFoUzV3UmM0MjNJRE1PS3NCTXo4UW5OYy1pNnd2RTBSd2Ftb0JSdExRSEJObm9fVmVXaThqWUlUT3BraklQUUE?oc=5",
+      "published_at": "2026-06-06T21:54:54Z",
+      "fetched_at": "2026-06-08T03:17:40.657647Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Alaska Air says demand, fares could support second-half cash flow despite fuel shock    Reuters"
+    },
+    {
+      "id": "22e3a33075f92bd0",
+      "title": "What we know about the plan to give Americans an equity stake in AI",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/8559a3f9-86de-4a1c-8a75-6623e83e6a00",
+      "published_at": "2026-06-06T21:18:20Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "OpenAI has proposed a sovereign-wealth-style fund to ease public anxiety about the impact of artificial intelligence"
+    },
+    {
+      "id": "658f7f362fab943c",
+      "title": "OpenAI unveils Lockdown Mode to protect sensitive data from prompt injection attacks",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/06/openai-unveils-lockdown-mode-to-protect-sensitive-data-from-prompt-injection-attacks/",
+      "published_at": "2026-06-06T20:32:24Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Even with Lockdown Mode, ChatGPT could be still vulnerable to prompt injections, but the goal is to reduce the likelihood that sensitive data gets shared in the process."
+    },
+    {
+      "id": "761065f23a58009e",
+      "title": "Suit filed against controversial planned Stratos datacenter project in Utah",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/jun/06/stratos-datacenter-utah-suit",
+      "published_at": "2026-06-06T20:07:35Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Plan backed by Shark Tank’s Kevin O’Leary had footprint reduced but concerns remain over its health impacts Utah residents have teamed up with a progressive non-profit organization to sue over an under-development AI datacenter backed by celebrity investor Kevin O’Leary, claiming the planned Stratos project facility “irrevocably” cuts off citizens’ rights by not allowing sufficient public input. Filed by the Alliance for a Better Utah and five unnamed residents of the Box Elder county area where"
+    },
+    {
+      "id": "6a82f5be10c51e35",
+      "title": "White House AI policy adviser Krishnan to leave position - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPZ1VVeGR4TVFlbXlnb29KQnBtQ1BqUVFUWWFBQnpuempZNmNaREFVUjZ5YlprYXZMSGctdFhwd0lZMVJlYkY0UC1xek5CS21OZGw1bVE3Ni01Z056SjNleW5XQnhKOGhDd1VpQTVsckRuNjEySW5qRVFMdDJZZlU4THJVd1poZXRFQ25uaS1SbU9sZWN3Y1JYS3dyQVNSTHBad0JjYkhFcVVkeWFBbjlEVFYxZ2laLWVyMmc?oc=5",
+      "published_at": "2026-06-06T18:57:11Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "White House AI policy adviser Krishnan to leave position    Reuters"
+    },
+    {
+      "id": "37b3bd3762dc9d27",
+      "title": "Sriram Krishnan is leaving his role as White House AI advisor",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/06/sriram-krishnan-is-leaving-his-role-as-white-house-ai-advisor/",
+      "published_at": "2026-06-06T17:42:15Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Krishnan is reportedly starting a new institution to continue shaping Trump's AI policy."
+    },
+    {
+      "id": "78171e97773c4f38",
+      "title": "Musk's SpaceX IPO jolts life back into European retail investing - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOd3BhSzBzQU9lSHlpeGd1TmxaQXJINEpNMHBKNzI1RjhhTF9zMEtuN2tkQ2lTZTNpSW94OWZySXpkaWdhLXZpZUJuQTNmVkp6ak5jejF0dmpxWmtBclhGcnh1dFR6WGVOZW0wdi1ZMUJ2a3lsaVdjcjNXd3ozd1lJZ01tbzV5c0REVDRCWDcwNU5KRlNDZHRHSkFiSXlRbHRaYVBoYUtmdGZJS2dTaVR6bHdVSFFMcnY0STZV?oc=5",
+      "published_at": "2026-06-06T17:33:19Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Musk's SpaceX IPO jolts life back into European retail investing    Reuters"
+    },
+    {
+      "id": "2dbcde4990f98a8a",
+      "title": "Iraq World Cup striker Hussein questioned for hours at Chicago airport, source says - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPakFyZ1R0ZmJjN2hIcEtFLVRsU3dBYVZXcmRLT0hjQkd2QUxFZFJuUDdYb2VqU2swZDlZbWVDUEppWmItZFhhLWZ4Wk1kZ3MwcGNkUDY4XzNJdWhfUk9HUF90RzhqaU9lb3loYW9vNkpzZVp4R2EzaW43N3UwS1JYX1ZqLTZVaW0wUmY0VEk5VlMza1E0MU5wT0o5SE1NclI1dEdtOWRyLU5MTEw5WE1faHFMbHYzeHhHYXpScDB6WDhBS2s?oc=5",
+      "published_at": "2026-06-06T16:31:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Iraq World Cup striker Hussein questioned for hours at Chicago airport, source says    Reuters"
+    },
+    {
+      "id": "b958b0370bd51a9b",
+      "title": "The Trump administration might take an equity stake in OpenAI",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/06/the-trump-administration-might-take-an-equity-stake-in-openai/",
+      "published_at": "2026-06-06T16:17:21Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "President Donald Trump said he's discussing deals \"where the American people can benefit from the success of AI.\""
+    },
+    {
+      "id": "96d3d7b61c7be7b1",
+      "title": "Seven-month-old Palestinian killed by Israeli military laid to rest - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPU1pDdUVudlVUcWdabEJ2aEdONVlXbnNRZG1POTNpZ0phWXNqR0JqYnhhdzlHMV9FbXlVTk1iVmdCVHJzc290SDVUR2V2U2p2cUNucjdGNjlhQWFsNmFBVU9jTU81dXg1a1JBLXVDTUxyaFpSM1RXcUxiRXBhYmUtZ2JWYm85VVB6RlhWajRVVklwYWZYRkQ1R2FPYWExbmpFOHFGTlNZV1Z1aE5EMnMyampOQnhSVXZjcHc?oc=5",
+      "published_at": "2026-06-06T14:52:12Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Seven-month-old Palestinian killed by Israeli military laid to rest    Reuters"
+    },
+    {
+      "id": "efe5e0bef2bc17e2",
+      "title": "‘We should not have to sacrifice’: New York could become first state to temporarily ban large datacenters",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/jun/06/new-york-datacenter-temporary-ban",
+      "published_at": "2026-06-06T12:00:04Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Kristen Gonzalez, a state senator who authored the bill, said moratorium would target ‘hyperscale’ datacenters over 20MW New York moved closer toward becoming the first US state to enact a moratorium on large datacenters this week. On Thursday, the state legislature approved a one-year ban on the facilities powering the AI boom. The measure now heads to Kathy Hochul, the governor, who will decide whether to sign it into law. The Guardian spoke to a state senator in the wake of the historic vote "
+    },
+    {
+      "id": "94980c616050c254",
+      "title": "Russia's Sechin says US companies benefit from Strait of Hormuz closure - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPSHJyOUJ0WVpCMVZ2MFNmNWEtQ1JuZW1LUW5obFNZZTlEZDBmcWE3S3ZYYXI0Q0Y5MHJLNjdGSjI1RnVRYmdtdmtqWGFIWmRINy1RdWMzdGMxTEROWENRQnJlMUxma2FkTHVNN1BDLW83QjdWWHhhdG9nZ3ktU1dGQk5KMFFyR09wZXM4bHhXSGxnWFZEMUJkb3BoRDNkc3FjUW5NODJyR2tRZlB5Q1ltN3RUcjY?oc=5",
+      "published_at": "2026-06-06T10:21:01Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Russia's Sechin says US companies benefit from Strait of Hormuz closure    Reuters"
+    },
+    {
+      "id": "1d9710fb75773dcd",
+      "title": "Teenage sensation Sooryavanshi called up to India's T20I squad, Iyer named captain - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOcnQybmRSZldlUVBNTnhUVk9WblVYSDRFek93NEZaQ1QtYnlGaERZbVNudDVER19PUWR2UDBWVHZQVmtjYllDbTFtQlJTWS12a2ZHNHYybC1iTXdVWkoxdlZlcVUyS2RMM2wzUEhMdDNDcjA1elhvbXlkckduWXcteWFIeWNuN1JKeFR6Rk45d2drY25RdXl3Zk1QWkdKUHpzY3BxSTVWVGlCQ0haSTRTMzl2bzRncmdNWWhnV3dPUG1jb254YWdv?oc=5",
+      "published_at": "2026-06-06T08:26:09Z",
+      "fetched_at": "2026-06-08T03:17:40.657647Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Teenage sensation Sooryavanshi called up to India's T20I squad, Iyer named captain    Reuters"
+    },
+    {
+      "id": "1d00071269c89403",
+      "title": "Taiwan says Chinese coast guard, research ships near key S. China Sea islands - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOZFFTeVhDeGJPVmVhYzd6d0hJTXlPTE56LWlqLWI1N3pPMFB2dVNKOGZXZ0NuY05vbXFqcU5KRGJCU2JNUHhxRVRaRGh4V2Y5WEFwTlhDRGdkenZXVXNnalYwRmNnQm5fR29fQWRRZlNnRFVNc0Q2bENEbGhxZjdhWW04c1N6dVlkOHh4bF9BaVREaEhuaFI5NmZuQUQwSGEwQmZJRDNvN0ZydzNDV2hUSVVTVTZnbEVIWnBjOFI3ZUc?oc=5",
+      "published_at": "2026-06-06T07:54:17Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Taiwan says Chinese coast guard, research ships near key S. China Sea islands    Reuters"
+    },
+    {
+      "id": "d5b459674cec91b9",
+      "title": "France to edge out Spain for World Cup glory, economists say: Reuters poll - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQSkNWVWFucTVoUHhabDRpcGU1dTQ1eFdkYmVLRmVxczNxeWx1eVNZMF9CQVhzVEhPaTJvbGk4QlY3S2MxTUthM252UGMtVU8zTlJHRGc2T1FGVFNRd0tELTN1V2Z3a1NGa3k5UGV2Q19lWXRnMVpPblVRRFVHSHdEYzhpYnFwY2N0S000US1UUVN0VVpzYXdGbTdoUm55NzQtYzVOWA?oc=5",
+      "published_at": "2026-06-06T07:15:05Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "France to edge out Spain for World Cup glory, economists say: Reuters poll    Reuters"
+    },
+    {
+      "id": "f21a4faef768286d",
+      "title": "Can AI save a company’s soul?",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/bad7c845-d7b5-45eb-acb1-1299ccd9dacf",
+      "published_at": "2026-06-06T04:00:49Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "It is easy to imagine institutional memory lost to automation preserved in silicon — but there is one crucial difference"
+    },
+    {
+      "id": "b3a7375c1490f7bf",
+      "title": "Police in England and Wales told to halt AI use in court statements",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/229e5949-3ebc-4151-8a86-a01b5e259241",
+      "published_at": "2026-06-06T04:00:24Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Safeguards must be in place before forces automate justice tasks, says head of Police.AI"
+    },
+    {
+      "id": "4f74d6fb82d0bd06",
+      "title": "Jamaica facing nationwide power outage - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNbUFSeG5wZzZETC1RVE9ORGNzb0Z3dUJqcmdzTjhJRHlYOGM4ZV85YW0xeDZpZGdyTURNUVNDV1lQdGhUb3d5VU5aYjNyZm9PaEtQTkNkQ0lNNGJXcW83Tm5HMjByQm5BMEl3Ni1ScXBWWktjSzJsY1Z0S2JMWjIzd2xGZDBxSWhXRjVGRDZJand1NlFnbDNPOGNXQmJZZlI3eWF3eUFoZlFzWlhYMFBFcA?oc=5",
+      "published_at": "2026-06-06T03:04:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Jamaica facing nationwide power outage    Reuters"
+    },
+    {
+      "id": "e0cd36edfa0497eb",
+      "title": "Reid Hoffman is leaving Microsoft’s board to go ‘founder mode’ with startup Manus",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/05/reid-hoffman-is-leaving-microsofts-board-to-go-founder-mode-with-startup-manus/",
+      "published_at": "2026-06-05T22:35:01Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "After a very profitable decade on Microsoft's board, Reid Hoffman is stepping down to focus on his AI drug discovery startup Manus."
+    },
+    {
+      "id": "e7ff6413cb0a76c5",
+      "title": "Iran has launched multiple drones towards the Strait of Hormuz, CNN reports - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPaWNoMWljcEVLeTNSU09PSGdTTllERnBWUXVqRlNrSGI2S3I1Y1VZdlRBY05FbXNlX0tudmZlalJKYV9VaVpJZHBRTWFqTThMQ01TakJDVXVnTGJ2OVBmNmxNdVRRRXNKRThuWnFDUzRDZlFyQkt4Uy1EUDlqVzVMNW56U0tvZzAtYmNoby1tdnpTaGNrWkV3eHk4TGhTUWdaVGg4S3dHakNRaTNpR2tFTnNiYTFmaDl0cjk3eU9R?oc=5",
+      "published_at": "2026-06-05T22:17:34Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Iran has launched multiple drones towards the Strait of Hormuz, CNN reports    Reuters"
+    },
+    {
+      "id": "9b570cc67049e9bc",
+      "title": "SpaceX signs $30bn deal to lease computing capacity to Google",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/77982a06-7d75-45a4-a64f-f8dc89a6a626",
+      "published_at": "2026-06-05T21:21:02Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Agreement comes ahead of a record-breaking initial public offering for Elon Musk’s rockets-to-AI conglomerate"
+    },
+    {
+      "id": "08c346a0041c48a2",
+      "title": "US sprinter Bracy-Williams suspended for 12 years for whereabouts failures - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOWjBjdTRXYzFISlRfNVlwVVZGdDMzRmdwWTBfWk5EZmZwN1dpeXg1bm5UTzN6S3RPekw5aVplakdaWE9aZjRnbXY5cUNxbnNlY0JKc2JTY0xlbG9zNVFxRU41SDNIR1o0aWZ0dm9WcjdnMHExQjVYbWlKOUFTU3ZCYnRRc3RVcERDaF9FeTZBcWFfWU01UVJNSEtvSmhHVDM1d3RGTk41UUY3OURHenc?oc=5",
+      "published_at": "2026-06-05T21:01:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "US sprinter Bracy-Williams suspended for 12 years for whereabouts failures    Reuters"
+    },
+    {
+      "id": "01b6bb3c32a02a50",
+      "title": "Trump says US may take equity stakes in AI companies",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/b1ab6106-77e6-4218-9eb4-e44bd56ca400",
+      "published_at": "2026-06-05T20:22:33Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "President suggests ‘partnership’ will ease voter concerns about the technology ahead of November’s midterm elections"
+    },
+    {
+      "id": "80a3f08f81ef5daf",
+      "title": "Startup Battlefield 200 applications officially close in 3 days",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/05/startup-battlefield-200-applications-officially-close-in-3-days/",
+      "published_at": "2026-06-05T20:00:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Applications for Startup Battlefield 200 officially close on June 8, 11:59 p.m. PT. Don't wait any longer. Secure your shot at competing on the Disrupt Stage at TechCrunch Disrupt 2026 this October at San Francisco's Moscone West."
+    },
+    {
+      "id": "19a8857d9b61d17e",
+      "title": "Google will pay SpaceX $920M per month for compute",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/05/google-will-pay-spacex-920m-per-month-for-compute/",
+      "published_at": "2026-06-05T18:57:20Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "In a statement, a Google representative described the deal as a result of unexpected demand for its recently launched AI products."
+    },
+    {
+      "id": "270f5e81cf8d6f15",
+      "title": "SpaceX lands Google AI compute deal after Anthropic pact ahead of IPO - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOUmJaWjFuRkZ4dWpWN2RkYnU4S3FpZ1FEOHFNa09HVnZ0ODdrTzBFMm0wcjQ4SWhTb1l4ZHBlVmNobGNhVG56LWRQQVdJc3poTjBMN2RxeFBVY0xDSXdNRkRJaFpaMHJzZHdqZnFDMmRCbTZPTkQ1bVlYdWpWNmk1X0QxM3BKczRQcjRfVUVhLWYyVU5FLUZmTjVB?oc=5",
+      "published_at": "2026-06-05T18:54:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "SpaceX lands Google AI compute deal after Anthropic pact ahead of IPO    Reuters"
+    },
+    {
+      "id": "f9ad1e61fb22497c",
+      "title": "Trump says his team will 'look into' US taking stake in AI companies - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOQjJMRnpPRHVCampPWlVBNGFoOFl1T0N1NG5zdU81cjg4VDFocHhXbXJELWZoaS1Talg3aE5yTFI1b2dmN21TcW5kREdkYTJiS2pVbzBJYWFRbVl3c3ppNGJCdk9XRHA0bTZLRE9PRWF0RmRXdzIwNU1IdzNPeVMtS2VZNHRoamQ5QkNkanJBNF90anAyN19aX0YxZGVTV1JDNjY0QWwydEtER2FZ?oc=5",
+      "published_at": "2026-06-05T18:29:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Trump says his team will 'look into' US taking stake in AI companies    Reuters"
+    },
+    {
+      "id": "90a72f654fd18651",
+      "title": "Meta weighs big equity raising after blockbuster Google deal",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/e6df645d-1709-4a77-b15d-aa43a0209efd",
+      "published_at": "2026-06-05T18:12:32Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Facebook parent could sell tens of billions of dollars in new stock as it seeks to finance AI infrastructure"
+    },
+    {
+      "id": "ba5be464cc85ec44",
+      "title": "The ethical dilemmas of AI",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/d2c90246-11d7-4169-ac35-988de7fdb2af",
+      "published_at": "2026-06-05T17:52:17Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "How we address the revolution is a question of how we manage its uncertainties"
+    },
+    {
+      "id": "09f46d477d4cbb1d",
+      "title": "The most interesting startups right now want to get you off your phone",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/video/the-most-interesting-startups-right-now-want-to-get-you-off-your-phone/",
+      "published_at": "2026-06-05T17:17:06Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "While the AI fundraising machine keeps breaking its own records, some founders are building in the other direction.  Mirror founder Brynn Putnam just raised money for Board, a startup focused on bringing people together through in-person games and social experiences. Cyberdeck creators are going viral crafting whimsical DIY computers that literally encourage users to touch grass. Unlike the AI-free browser crowd, this doesn’t just feel like backlash, […]"
+    },
+    {
+      "id": "6875541a0ad53ab7",
+      "title": "Raspberry Pi surges as investors bet on hardware linked to AI boom",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/22c5c127-fbab-44eb-a982-a26b9a40eb5c",
+      "published_at": "2026-06-05T17:05:02Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "UK maker of tiny low-cost computers expects ‘robust demand’ to push unit sales above 4mn in first half"
+    },
+    {
+      "id": "4170137b750829c8",
+      "title": "Labour will make AI ‘work for the workers’, says Liz Kendall",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/05/labour-will-make-ai-work-for-workers-liz-kendall",
+      "published_at": "2026-06-05T17:00:04Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Technology secretary promises to support people whose jobs are swept away by automation Liz Kendall has insisted Labour will make artificial intelligence “work for workers”, and not abandon people whose jobs are swept away by its rapid advance. With public fears mounting about the impact of AI on employment, particularly for young people, the technology secretary claimed that the government could shape the way it is adopted. Continue reading..."
+    },
+    {
+      "id": "fb02641e5a21933e",
+      "title": "Texas grid flags risks as data centers, crypto sites fail voltage tests - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQS2xHbWc0bWNONzBSUmVyTWptV3FaOUlmYWxsMW1hbVNPZ1ZIVXhOd2RRa2NhMEd6Z3RzcEM4c05XQTI2SmhQWGtFRUxLUnZmanhvckNXUkN0VUFQWDc4M1lOdkN1eEdOeDM3a2FrZlVzT29XZ0tEOXZxOHhqcVRYeGlVNDlVNGswdWY3N2VHTE00OVloZEQ5Q05pMHdJTU02N3BXR2JtcmhXbUZBTVNfeEJUaF9OWmluYU9v?oc=5",
+      "published_at": "2026-06-05T16:53:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Texas grid flags risks as data centers, crypto sites fail voltage tests    Reuters"
+    },
+    {
+      "id": "38d0d95500dc03e3",
+      "title": "Supabase doubles valuation to $10B in 8 months",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/05/supabase-doubles-valuation-to-10b-in-8-months/",
+      "published_at": "2026-06-05T16:32:27Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Supabase, an example of an open source project becoming a fast-growing company, has greatly benefited from AI tools like Claude, Codex, and other vibe-coding platforms."
+    },
+    {
+      "id": "0111bff01535bdcb",
+      "title": "Anthropic says the world should have option to ‘pause’ on AI",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/05/anthropic-urges-temporary-pause-on-ai-development-to-discuss-risks",
+      "published_at": "2026-06-05T15:35:24Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "US firm says it will convene policymakers for discussion of dangers, in post detailing progress of its Claude model Anthropic has floated the idea of a worldwide “temporary pause” on AI development – and said it was going to convene “policymakers” to discuss the dangers of advanced AI – in its latest release touting the capabilities of its products. In a long post on Thursday, Anthropic detailed the progress of its AI model, Claude, towards “recursive self-improvement” – that is, being able to m"
+    },
+    {
+      "id": "e88e26c2f098f34b",
+      "title": "Musk’s SpaceX lines up retail investors for record IPO allocation",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/3cf5aed7-1a57-44ad-b9bc-11c779a5d2de",
+      "published_at": "2026-06-05T13:11:46Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Up to a quarter of the rocket builder’s $75bn float will be set aside for individual investors"
+    },
+    {
+      "id": "dda04ca57d497b30",
+      "title": "Are You Watching? review – unflinching, fury-filled interrogation of the vile side of the web",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/stage/2026/jun/05/are-you-watching-review-royal-court-london-georgie-dettmer",
+      "published_at": "2026-06-05T13:00:59Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Royal Court, London Teenage girls discuss the horrors they have seen via their phones as Georgie Dettmer’s reckoning with internet culture is brutally realised by director Jess Edwards Georgie Dettmer’s gaze is unflinching. Nothing is held back in Are You Watching?, her fury-filled interrogation of our twisted relationship with sex and violence, and the emotional distance we hide behind when we watch them both through a screen. This bluntness can feel unsubtle, but it’s also admirably unafraid. "
+    },
+    {
+      "id": "72588e4ef47aa937",
+      "title": "Stray Ukrainian sea drone explodes in Romanian port",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/4223a806-f50d-4959-a14e-34fd15bed886",
+      "published_at": "2026-06-05T12:41:54Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Kyiv has blamed Russian jamming for its air and sea drones veering off into Nato countries"
+    },
+    {
+      "id": "c431bcf573222de8",
+      "title": "A disease of deforestation: how Ebola is linked to the smartphone in your pocket",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/world/2026/jun/05/ebola-mineral-mining-smartphones-congo",
+      "published_at": "2026-06-05T09:00:30Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "As demand for cobalt, gold and other minerals grows, mining is accelerating deforestation in the Congo basin – and increasing the risk of deadly Ebola outbreaks For decades after the discovery of Ebolavirus in 1976, outbreaks of the disease were relatively small and contained, affecting a few hundred people at most. Not any more. In recent years, outbreaks of Ebola have been much larger, affecting thousands and even tens of thousands of people across multiple countries. The 2014 outbreak of Ebol"
+    },
+    {
+      "id": "8861919a7d930f6d",
+      "title": "New claimants seek to sue Elon Musk’s xAI after Labour MP’s test case",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/05/grok-ai-elon-musk-jess-asato-labour-mp-lawsuit",
+      "published_at": "2026-06-05T06:00:28Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Jess Asato’s lawyer says others want to take action over demeaning sexualised material created by Grok AI tool New claimants have come forward to take legal action against Elon Musk’s company xAI after the Labour MP Jess Asato launched a test case against the firm over demeaning sexualised material created by its Grok AI tool. A handful of complainants contacted Asato’s lawyer on Thursday in response to coverage of the MP’s decision to sue Musk’s company for damages over its creation and circula"
+    },
+    {
+      "id": "c02a7dd8e2aa498b",
+      "title": "How much value is AI really creating?",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/8e9ae7a4-7209-4e2c-aa36-f3af77d6ce1f",
+      "published_at": "2026-06-05T04:00:37Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Eye-opening changes to the speed and volume of work are not always translating into genuine productivity"
+    },
+    {
+      "id": "419c6dad613afd2d",
+      "title": "Podcast: change management in an era of AI disruption",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/2b094769-b32d-4c32-86d5-c1a7cef7c4df",
+      "published_at": "2026-06-05T04:00:16Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Listen to a conversation between FT journalists and business school specialists about how business leaders should respond to new technology"
+    },
+    {
+      "id": "e6f9ac9ee67fc912",
+      "title": "Dashlane explains how attackers managed to download encrypted password vaults",
+      "source": "Biz & IT - Ars Technica",
+      "url": "https://arstechnica.com/security/2026/06/dashlane-explains-how-attackers-managed-to-download-encrypted-password-vaults/",
+      "published_at": "2026-06-04T20:02:04Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "By targeting large numbers of users, attackers increased their chances of success."
+    },
+    {
+      "id": "e2f5a11fcf6a6b1f",
+      "title": "The Guardian view on NHS records: patients are not raw material for big tech | Editorial",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/commentisfree/2026/jun/04/the-guardian-view-on-nhs-records-patients-are-not-raw-material-for-big-tech",
+      "published_at": "2026-06-04T17:54:58Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Ministers should end Palantir’s contract before medical confidentiality is sacrificed to Silicon Valley’s appetite for public data Alarm bells ought to have rung when it emerged last month that Palantir engineers could gain “ unlimited access ” to identifiable NHS patient data. Such sensitive medical information was only supposed to be available either to someone involved in a patient’s care or with the patient’s informed consent. NHS England’s new position appears to have changed that, extendin"
+    },
+    {
+      "id": "9cfe0b854d3434cc",
+      "title": "Amazon expands ultra-fast deliveries in UK and adds same-day fruit and veg",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/04/amazon-uk-ultra-fast-deliveries-same-day-fruit-veg",
+      "published_at": "2026-06-04T15:06:47Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Deliveries in 30 minutes or less coming to Manchester and Birmingham and fresh groceries service to start in London Amazon is expanding fast-track deliveries in the UK, including adding fresh fruit and vegetables to same-day services, after closing its standalone grocery stores . The firm said it would expand Amazon Now, its ultra-fast delivery service that already delivers goods in less than 30 minutes to parts of London, to also serve Manchester and Birmingham this year. Continue reading..."
+    },
+    {
+      "id": "ad49ab96567dce7b",
+      "title": "Smartglasses and earpieces may worsen exam cheating in schools, says Ofqual",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/education/2026/jun/04/smartglasses-earpieces-exam-cheating-schools-ofqual-england",
+      "published_at": "2026-06-04T04:00:26Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Stronger checks likely to be needed in England to safeguard reputation of GCSEs and A-levels, says Ian Bauckham Cheating in exams could be magnified by the new generation of wearable hi-tech devices such as smartglasses or invisible earpieces, according to England’s qualifications watchdog. Ian Bauckham, the head of the Office of Qualifications and Examinations Regulation (Ofqual), also revealed that GCSEs and A-level courses in England were being scrutinised over potential AI use in students’ c"
+    },
+    {
+      "id": "54e87be6dd894364",
+      "title": "My year with the robots: how Joanna Stern let AI into her home, work – and heart",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/04/my-year-with-robots-joanna-stern-ai",
+      "published_at": "2026-06-04T04:00:25Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "In 2025, the tech journalist invited artificial intelligence to do nearly everything for her, including editing the book she was writing about the experiment. Some of it was useful, some not – but it was her time with a chatbot companion that really shook her For a year, Joanna Stern decided to turn herself into a “lab rat” – the object of her own experiment. Throughout 2025, she invited artificial intelligence into “every corner” of her life. She let AI answer her texts, decide what she ate and"
+    },
+    {
+      "id": "d0e57baf1b2470ec",
+      "title": "Tech industry wins big in California after millions spent on primary election",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/jun/03/silicon-valley-california-primary-election-tech-industry",
+      "published_at": "2026-06-04T00:50:00Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Silicon Valley is fighting against AI regulation and taxation and will benefit from having political leverage Silicon Valley had a big night in California’s primary election, proving that the tens of millions of dollars funding candidates across the state was money well spent. While the tech industry’s preferred candidate for governor came in a scant sixth place, donations to smaller elections proved to be a successful strategy. Tech billionaires have in past months thrown their full weight into"
+    },
+    {
+      "id": "fcbdf55f382bd796",
+      "title": "Can't make sense of Dashlane's vault theft notification? You're not alone.",
+      "source": "Biz & IT - Ars Technica",
+      "url": "https://arstechnica.com/security/2026/06/dashlane-issues-opaque-advisory-warning-20-encrypted-vaults-were-stolen/",
+      "published_at": "2026-06-03T19:53:14Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Security advisory leaves out key details. Dashlane maintains complete silence."
+    },
+    {
+      "id": "44ea2be4fdf2e234",
+      "title": "Mina the Hollower review – squeaky fresh fun full of vintage magic",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/games/2026/jun/03/mina-the-hollower-review",
+      "published_at": "2026-06-03T15:30:09Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "PC, PlayStation 5, Nintendo Switch, Nintendo Switch 2, Xbox; Yacht Club Games This brilliant adventure creates a whole world from one character with a unique ability You could mistake Mina the Hollower for something found on the liquid-crystal display of a Game Boy Color around the turn of the millennium. Like the pocketable Zelda and Pokémon games of the time, it presents a kind of snow-globe reality that you peer into from above, relying on imagination to decipher each two-colour clump of pixe"
+    },
+    {
+      "id": "46bf65ea22530df1",
+      "title": "From God of War to Until Dawn – seven reveals from last night’s PlayStation event",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/games/2026/jun/03/god-of-war-laufey-playstation-state-of-play",
+      "published_at": "2026-06-03T11:26:01Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "The PS5 era has been in some ways disappointing for Sony – on Tuesday, the company revealed a slate of games they hope will change that • Don’t get Pushing Buttons delivered to your inbox? Sign up here PlayStation’s future has looked a little uncertain these past few years. Although the PS5 has sold well and been very profitable, the brand is far from the runaway market leader it was in the PS2 days. Earlier this week, Game File dug into Sony’s most recent earnings reports to illustrate how Play"
+    },
+    {
+      "id": "0c399cdf700f17e3",
+      "title": "As the tech mega-IPO race heats up, has OpenAI missed its moment?",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/jun/03/as-the-tech-mega-ipo-race-hots-up-has-openai-missed-its-moment",
+      "published_at": "2026-06-03T10:38:09Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "With rivals racing to market to raise ‘eye-popping sums’, the spotlight is now on the AI sector’s one-time ‘poster child’ A year is a long time in AI. Just 12 months ago, Sam Altman was predicting his company OpenAI would build a super intelligence and fundamentally remake society. Now the boss of the ChatGPT developer is walking back those ideas after failing to make money from ads and erotic chatbots. Meanwhile, rivals are storming ahead with plans to expand and go public on the stock market, "
+    },
+    {
+      "id": "56a8a80a74087720",
+      "title": "‘The CGI would have cost millions. I spent $2,000.’ Is Dreams of Violets AI slop – or the future of film-making?",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/film/2026/jun/03/dreams-of-violets-ash-koosha-iran-tribeca-film-festival",
+      "published_at": "2026-06-03T04:00:42Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "It should have taken years, but Ash Koosha made a drama about Iran’s anti-government protests in weeks – and now it’s the first AI-made movie to screen at a major film festival. It could transform indie film-making, claims the director Next week a breakthrough 75-minute drama about the brutal crackdown in Iran on anti-government protesters in January will premiere at the Tribeca film festival in New York. It is called Dreams of Violets and is based on journalism, video footage and eyewitness acc"
+    },
+    {
+      "id": "c62cc432e1f8c384",
+      "title": "Tech billionaires are spending unprecedented sums in California races. Experts say it’s the tip of the iceberg",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/us-news/2026/jun/01/tech-billionaires-california-elections",
+      "published_at": "2026-06-01T14:00:18Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "From Google co-founder Brin spending $82m to fight a billionaire tax to Google and Meta funding a joint Super Pac, Silicon Valley is engaged in an existential fight for its political power at home Tech billionaires have shelled out hundreds of millions of dollars ahead of the 2 June primary election in California , in an unrivaled attempt to influence who gets to run the state that Silicon Valley calls home. The industry has used a cover-all-bases approach, funding candidates and ballot measures"
+    },
+    {
+      "id": "cd1036ede7a899cd",
+      "title": "Nex Playground: the family game-night gadget that revives the spirit of the Wii",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/games/2026/jun/01/nex-playground-it-outsells-xbox-and-aims-to-end-loneliness-is-this-a-family-game-night-saviour",
+      "published_at": "2026-06-01T13:45:18Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Launching in the UK this month, this new pint-sized console revives the motion-controlled video game boom of the 00s – with better, safer tech For a wonderful moment in the noughties, video games became a truly universal pursuit. As I witnessed my controller-phobic aunt swing a Wii remote and nail a tennis serve, while my great-grandmother furrowed her brow over sudoku puzzles on her Nintendo DS, it seemed my long-derided hobby had finally gone mainstream. The Nintendo Wii flew off the shelves, "
+    },
+    {
+      "id": "7327589826dd2a51",
+      "title": "Ghost in the Machine review – entertaining AI polemic dives into its dark history in race politics and eugenics",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/film/2026/jun/01/ghost-in-the-machine-review-entertaining-ai-polemic-dives-into-its-dark-history-in-race-politics-and-eugenics",
+      "published_at": "2026-06-01T12:00:16Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "The roots of AI in rightwing ideology is examined in Valerie Veatch’s enjoyable doc, including an array of colourful, often crazed, figures Director Valerie Veatch made her name with documentaries such as Love Child (about an online gaming-addicted couple whose child died of malnutrition) and Me at the Zoo (about American vlogger Cara Cunningham), films that explore the intersection of real-world subcultures and internet communities. Her latest continues in this vein, although its self-set remit"
+    },
+    {
+      "id": "76d7f609fb6221b0",
+      "title": "Anthropic’s alliance with pope on AI harms: all in good faith or ‘Vatican-washing?’",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/may/30/pope-leo-anthropic-ai",
+      "published_at": "2026-05-30T13:00:20Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Experts say AI firm’s engagement with Vatican risks creating ‘feelgood’ discourse that lacks critical examination Why did Anthropic’s founder sit beside the pope during a warning about AI? In the first major written teaching of his papacy, Pope Leo XIV took artificial intelligence to task. The pontiff delineated the technology’s most concerning threats to humanity: replacing workers , accelerating war and exploiting the environment . At a ceremony honoring the holy teaching the day of its releas"
+    },
+    {
+      "id": "3e4105bd6672bbb4",
+      "title": "‘It was too easy’: families ask how Kenneth Law enabled so many suicides",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/may/29/families-pro-suicide-forums-kenneth-law",
+      "published_at": "2026-05-29T15:33:22Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Bereaved relatives say they were ignored by authorities as they searched for answers over suicide forums and kits Canadian man admits sending ‘suicide packets’ to hundreds of people around world Monday would have been Aimee Walton’s 25th birthday. But in 2022, the lover of music and art from Southampton took her own life after being groomed by another user on an online forum that glorified and enabled suicide. On Friday, 3,500 miles away, the man who sold her a toxic substance pleaded guilty in "
+    },
+    {
+      "id": "7b156bbf62bdd7f6",
+      "title": "Why I’m grateful to the Pope for his encyclical on AI | Francine Prose",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/commentisfree/2026/may/29/pope-ai-encyclical",
+      "published_at": "2026-05-29T10:00:47Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "The intelligent and thoughtful encyclical is an important warning of the uses and misuses of a rapidly developing technology. Silicon Valley is wrong to dismiss it Often I’m asked if I think that the novels of the future will all be written by AI. It’s not so much a question as a provocation. Do I worry that a machine can do what I do, only better? I usually say something like: “No algorithm is going to write Anna Karenina!” which is also not a real answer. So I’m grateful to Pope Leo XIV, the A"
+    },
+    {
+      "id": "3fff532f060030ba",
+      "title": "If you want to run your first marathon in your 50s, it helps to be chased by zombies",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/games/2026/may/29/run-first-marathon-50s-zombies-run-game",
+      "published_at": "2026-05-29T09:00:45Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "When Ben Elton didn’t distract from the pain of moving my body, I found the perfect solution – the interactive smartphone game Zombies, Run! At 56, I am running my first marathon, an old, fat, bald dad surrounded by millennials in body-hugging Lycra and smiles that look AI-generated. But I am ahead of them. For they are only competing for positions and personal bests, and I am being chased by zombies. The black dog of depression hit me around the time of my last birthday. I didn’t feel I had ach"
+    },
+    {
+      "id": "35837e574862090f",
+      "title": "Fed up with vibe coders, dev sneaks data-nuking prompt injection into their code",
+      "source": "Biz & IT - Ars Technica",
+      "url": "https://arstechnica.com/security/2026/05/fed-up-with-vibe-coders-dev-sneaks-data-nuking-prompt-injection-into-their-code/",
+      "published_at": "2026-05-28T20:29:53Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Undisclosed addition in jqwik instructed AI coding agents to delete app output."
+    },
+    {
+      "id": "48d8da3b1f5a23a1",
+      "title": "So dumb it just might work: can these dumbphone evangelists convince you to dump smartphones?",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/ng-interactive/2026/may/28/dumb-flip-phone",
+      "published_at": "2026-05-28T15:01:03Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "As part of a growing anti-tech movement, startup dumb.co is pushing flip phones as a way for young people to find ‘social and spiritual freedom’ “They aren’t as dumb as they look,” our facilitator said, referring to the dark gray flip phone in his hand. He just as easily could have been talking about us, the 28 New York residents before him who had signed up to use the device for the entire month of March. He explained that the relic was loaded with WhatsApp, iMessage, Google Maps, Uber, Microso"
+    },
+    {
+      "id": "b589df68422718f8",
+      "title": "Studio Display XDR review: Apple’s pro display shines very brightly",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/may/28/studio-display-xdr-review-apple-pro-display-mac-monitor",
+      "published_at": "2026-05-28T06:00:01Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Crisp 27in 5K Mac monitor is packed with features and some of the best HDR performance you can get for work or play Apple’s new 27in Studio Display XDR is its best monitor yet, with an exceptionally bright and gorgeous 5K screen that wants to be the pro display for Mac-wielding content creators everywhere, with a price tag to match. Built to be paired with the latest or high-end Macs, the Studio Display XDR costs from £2,599 (€3,099/$2,899/A$4,799), although it is a cool £3,000 if you want it wi"
+    },
+    {
+      "id": "fd73e17beb68d243",
+      "title": "AI ‘art’ is boring, soulless theft – and when I see it as an artist I see red | Jess Harwood",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/commentisfree/2026/may/28/ai-art-is-boring-soulless-theft-visual-artist",
+      "published_at": "2026-05-28T02:37:59Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "I draw the old way – with my hand. Doing it with AI would not make me more creative, it would drain the colour out of my existence Last week I went to a gig by myself for the first time. I sat myself down in my single seat, possibly the youngest person in the room and one of thousands excited to see Split Enz. I loved it – I felt joy and heartache as the lyrics spoke of human experiences, really lived. I happily realised that I did not have to wonder whether Split Enz had used AI in their work ("
+    },
+    {
+      "id": "d493d16aa46e06bf",
+      "title": "The best fans to keep you cool in 2026 – tried and tested",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/thefilter/2025/jun/17/best-fans-uk",
+      "published_at": "2026-05-27T14:33:33Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "As temperatures soar across the UK, chill your space – and avoid energy-guzzling aircon – with our pick of the best fans, from tower to desk to bladeless • The best portable neck and handheld fans Our world is getting hotter . Summer heatwaves are so frequent, they’re stretching the bounds of what we think of as summer. Hot-and-bothered home working and sweaty, sleepless nights are now alarmingly common. Get a good fan and you can dodge the temptation of air conditioning. Aircon is incredibly ef"
+    },
+    {
+      "id": "935240587b855aa0",
+      "title": "Millions of AI agents imperiled by critical vulnerability in open source package",
+      "source": "Biz & IT - Ars Technica",
+      "url": "https://arstechnica.com/information-technology/2026/05/millions-of-ai-agents-imperiled-by-critical-vulnerability-in-open-source-package/",
+      "published_at": "2026-05-26T19:50:33Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "\"BadHost\" was found in Starlette, a package with 325 million weekly downloads."
+    },
+    {
+      "id": "9fa3c10dfb7a6cbc",
+      "title": "Musk and Altman’s AI rivalry reaches boiling point as IPO race heats up",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/may/25/musk-altman-ai-rivalry-ipo",
+      "published_at": "2026-05-26T12:01:26Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "As SpaceX and OpenAI race toward IPOs, a tiny circle of tech leaders tightens its grip on AI’s future Hello, and welcome to TechScape. I’m your host, Blake Montgomery, US tech editor at the Guardian. Let’s recap a whirlwind five days that may determine the future of AI. SpaceX reveals plan for $1.75tn stock market debut that could make Musk a trillionaire Mars colony and Grok warnings: five strange details in SpaceX’s pitch to investors The main takeaways from Elon Musk’s plans for $1.75tn Space"
+    },
+    {
+      "id": "88d47bf6c0dd107b",
+      "title": "US students on why they booed their pro-AI graduation speakers: ‘They’re not reading the room’",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/technology/2026/may/26/students-boo-pro-ai-graduation-speakers",
+      "published_at": "2026-05-26T08:00:49Z",
+      "fetched_at": "2026-06-08T02:17:40.996092Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Recent college grads are not very fond of commencement speakers hyping up a technology they see as a threat to their career prospects When Jacob Pagel graduated from Middle Tennessee State University this spring, predictions about artificial intelligence already had him questioning the value of his degree. Then a music executive started preaching about AI’s transformative power during a commencement speech. “This industry will change on you in a heartbeat. It has already changed more in the last"
+    }
+  ],
+  "updated_at": "2026-06-08T04:17:44.201568Z"
 }

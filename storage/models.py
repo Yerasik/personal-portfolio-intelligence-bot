@@ -22,6 +22,12 @@ class Portfolio(BaseModel):
     notes: str = ""
 
 
+class TickerIndustryMap(BaseModel):
+    """Static mapping from ticker symbols to industry labels."""
+
+    ticker_to_industry: dict[str, str] = Field(default_factory=dict)
+
+
 class AppConfig(BaseModel):
     """Bot behavior and watch settings persisted in config.json."""
 
