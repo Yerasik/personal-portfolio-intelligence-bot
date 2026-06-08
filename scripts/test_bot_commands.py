@@ -15,10 +15,20 @@ if str(ROOT) not in sys.path:
 
 from analysis.llm import LlmClient
 from bot.commands import BotCommands
-from bot.formatter import format_help, format_portfolio, format_start
+from bot.formatter import format_alert, format_help, format_portfolio, format_start
 from bot.handlers import is_authorized
 from config.settings import RuntimeSettings
-from storage.models import AppConfig, BotState, MarketQuote, NewsCache, NewsItem, Portfolio, Position
+from storage.models import (
+    AppConfig,
+    BotState,
+    MarketQuote,
+    NewsCache,
+    NewsItem,
+    PendingAlert,
+    Portfolio,
+    Position,
+    TickerIndustryMap,
+)
 from storage.paths import resolve_data_paths
 from storage.repository import DataRepository
 
@@ -37,7 +47,10 @@ def run_test() -> None:
     try:
         paths = resolve_data_paths(temp_dir)
         repository = DataRepository(paths)
-        repository.save_config(AppConfig(focus_industries=["Consumer Electronics"]))
+        repository.save_config(AppConfig(focus_industries=["AI"]))
+        repository.save_ticker_industries(
+            TickerIndustryMap(ticker_to_industry={"AAPL": "Consumer Electronics"})
+        )
         repository.save_portfolio(
             Portfolio(positions=[Position(ticker="AAPL", shares=10, cost_basis=150.0)])
         )
@@ -86,6 +99,24 @@ def run_test() -> None:
         industries_text = commands.industries_message()
         if "Consumer Electronics" not in industries_text or "1 cached" not in industries_text:
             raise AssertionError("industries message missing expected content")
+
+        sector_alert_text = format_alert(
+            PendingAlert(
+                id="sector-1",
+                type="sector_attention",
+                severity="urgent",
+                message=(
+                    "Sector attention: Consumer Electronics: "
+                    "4 articles tagged to Consumer Electronics were found."
+                ),
+                created_at=NOW,
+                industry="Consumer Electronics",
+            )
+        )
+        if "Investigate Consumer Electronics" not in sector_alert_text:
+            raise AssertionError(
+                f"sector alert formatted incorrectly: {sector_alert_text}"
+            )
 
         analyze_text = commands.analyze_message()
         if "Portfolio analysis" not in analyze_text:

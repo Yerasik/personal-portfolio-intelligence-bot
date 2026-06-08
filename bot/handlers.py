@@ -90,10 +90,21 @@ async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /analyze — run rules (+ optional LLM) and return advisory text."""
+    """Handle /analyze [ticker].
+
+    With no argument, return the portfolio-wide advisory. With a ticker
+    (e.g. /analyze AAPL), explain that ticker's recent price move.
+    """
     if not await _guard(update, context):
         return
-    await update.message.reply_text(_commands(context).analyze_message())
+
+    commands = _commands(context)
+    args = context.args or []
+    if args:
+        message = commands.analyze_ticker_message(args[0])
+    else:
+        message = commands.analyze_message()
+    await update.message.reply_text(message)
 
 
 def register_handlers(

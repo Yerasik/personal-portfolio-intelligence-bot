@@ -17,7 +17,7 @@ from config.loader import ConfigurationBundle
 from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.json_store import JsonStorageError, JsonStore
-from storage.models import AppConfig, BotState, NewsCache, Portfolio
+from storage.models import AppConfig, BotState, NewsCache, Portfolio, TickerIndustryMap
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -117,6 +117,7 @@ def validate_json_documents(repository: DataRepository) -> StartupReport:
     documents = (
         ("config", paths.config, AppConfig),
         ("portfolio", paths.portfolio, Portfolio),
+        ("ticker_industries", paths.ticker_industries, TickerIndustryMap),
         ("state", paths.state, BotState),
         ("news_cache", paths.news_cache, NewsCache),
     )

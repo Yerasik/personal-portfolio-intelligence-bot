@@ -3,8 +3,9 @@
 from __future__ import annotations
 
 from analysis.llm import LlmAdvisoryResult
+from analysis.move_explainer import PriceMoveExplanation
 from analysis.rules import AlertCandidate
-from storage.models import AppConfig, BotState, NewsCache, PendingAlert, Portfolio
+from storage.models import AppConfig, BotState, MarketQuote, NewsCache, PendingAlert, Portfolio
 
 TELEGRAM_MESSAGE_LIMIT = 4096
 
@@ -30,32 +31,30 @@ def _suggested_action(alert: AlertCandidate) -> str:
 def format_urgent_alert(alert: AlertCandidate) -> str:
     """Format an urgent alert for Telegram delivery."""
     target = alert.ticker or alert.industry or "portfolio"
-    return truncate_message(
-        "\n".join(
-            [
-                "URGENT ALERT",
-                alert.title,
-                f"Target: {target}",
-                alert.explanation,
-                f"Suggested: {_suggested_action(alert)}.",
-            ]
-        )
-    )
+    lines = [
+        "URGENT ALERT",
+        alert.title,
+        f"Target: {target}",
+        alert.explanation,
+    ]
+    if alert.llm_explanation:
+        lines.extend(["", alert.llm_explanation])
+    lines.append(f"Suggested: {_suggested_action(alert)}.")
+    return truncate_message("\n".join(lines))
 
 
 def format_informational_alert(alert: AlertCandidate) -> str:
     """Format a non-urgent alert for Telegram delivery."""
     target = alert.ticker or alert.industry or "portfolio"
-    return truncate_message(
-        "\n".join(
-            [
-                f"{alert.urgency.upper()} update",
-                alert.title,
-                f"Target: {target}",
-                alert.explanation,
-            ]
-        )
-    )
+    lines = [
+        f"{alert.urgency.upper()} update",
+        alert.title,
+        f"Target: {target}",
+        alert.explanation,
+    ]
+    if alert.llm_explanation:
+        lines.extend(["", alert.llm_explanation])
+    return truncate_message("\n".join(lines))
 
 
 def format_daily_summary(
@@ -109,7 +108,8 @@ def format_help() -> str:
         "/help — show this help\n"
         "/portfolio — holdings and latest prices\n"
         "/industries — focus industries and recent news counts\n"
-        "/analyze — run rules and optional LLM advisory summary"
+        "/analyze — run rules and optional LLM advisory summary\n"
+        "/analyze <ticker> — explain a ticker's recent price move"
     )
 
 
@@ -152,16 +152,17 @@ def format_portfolio(portfolio: Portfolio, state: BotState) -> str:
     return truncate_message("\n".join(lines).strip())
 
 
-def format_industries(app_config: AppConfig, news_cache: NewsCache) -> str:
+def format_industries(focus_industries: list[str], news_cache: NewsCache) -> str:
     """Render focus industries with recent tagged news counts."""
-    if not app_config.focus_industries:
+    if not focus_industries:
         return (
             "No focus industries configured.\n"
-            "Add entries to focus_industries in config.json."
+            "Add entries to focus_industries in config.json or map tickers in "
+            "ticker_industries.json."
         )
 
     lines = ["Focus industries", ""]
-    for industry in app_config.focus_industries:
+    for industry in focus_industries:
         label = industry.strip()
         if not label:
             continue
@@ -221,17 +222,83 @@ def format_analyze(
     return truncate_message("\n".join(lines))
 
 
+def format_ticker_analysis(
+    ticker: str,
+    quote: MarketQuote | None,
+    window: str,
+    explanation: PriceMoveExplanation | None,
+    app_config: AppConfig,
+) -> str:
+    """Render on-demand /analyze output for a single ticker."""
+    symbol = ticker.strip().upper()
+    lines = [f"Analysis: {symbol}", ""]
+
+    if quote is None or quote.price is None:
+        lines.append(
+            "No cached price available. Run a market fetch first, then retry."
+        )
+        return truncate_message("\n".join(lines))
+
+    change = (
+        f"{quote.change_pct:+.2f}%"
+        if quote.change_pct is not None
+        else "change n/a"
+    )
+    label = quote.company_name or symbol
+    lines.append(f"Company: {label}")
+    lines.append(f"Last price: {quote.price:.2f} ({change}) over {window}")
+    if quote.sector:
+        lines.append(f"Sector: {quote.sector}")
+    lines.append("")
+
+    if not app_config.enable_llm_summaries:
+        lines.append(
+            "LLM explanation: disabled (set enable_llm_summaries in config.json)."
+        )
+    elif explanation is None:
+        lines.append("LLM explanation: unavailable.")
+    else:
+        lines.append(explanation.to_message())
+
+    return truncate_message("\n".join(lines))
+
+
+def _pending_alert_type(alert: PendingAlert) -> str:
+    """Resolve alert type for legacy pending alerts missing the type field."""
+    if alert.type in {
+        "price_drop",
+        "price_rise",
+        "repeated_negative_news",
+        "sector_attention",
+    }:
+        return alert.type
+    if alert.industry:
+        return "sector_attention"
+    if alert.related_tickers:
+        return "price_drop"
+    return "sector_attention"
+
+
 def format_alert(alert: PendingAlert) -> str:
     """Render a pending alert using the appropriate Telegram template."""
+    if ":" in alert.message:
+        title, explanation = alert.message.split(":", 1)
+        title = title.strip()
+        explanation = explanation.strip()
+    else:
+        title = alert.message.strip()
+        explanation = ""
+
     candidate = AlertCandidate(
         id=alert.id,
-        type="price_drop",
+        type=_pending_alert_type(alert),  # type: ignore[arg-type]
         ticker=alert.related_tickers[0] if alert.related_tickers else None,
-        industry=None,
+        industry=alert.industry,
         urgency=alert.severity,
-        title=alert.message.split(":", 1)[0],
-        explanation=alert.message.split(":", 1)[-1].strip(),
+        title=title,
+        explanation=explanation,
         created_at=alert.created_at,
+        llm_explanation=alert.llm_explanation,
     )
     if alert.severity == "urgent":
         return format_urgent_alert(candidate)

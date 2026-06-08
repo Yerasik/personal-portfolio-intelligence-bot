@@ -41,10 +41,11 @@ from __future__ import annotations
 import hashlib
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Literal
 
+from analysis.industries import build_news_focus_industries
 from collectors.market_data import portfolio_tickers
 from storage.models import AppConfig, BotState, MarketQuote, NewsCache, NewsItem, Portfolio
 
@@ -88,6 +89,7 @@ class AlertCandidate:
     title: str
     explanation: str
     created_at: datetime
+    llm_explanation: str | None = None
 
     @property
     def alert_key(self) -> str:
@@ -102,6 +104,7 @@ class RulesEngine:
     """Evaluate portfolio and market changes without LLM inference."""
 
     app_config: AppConfig
+    ticker_to_industry: dict[str, str] = field(default_factory=dict)
 
     def evaluate(
         self,
@@ -113,12 +116,19 @@ class RulesEngine:
         """Return alert candidates after applying duplicate suppression."""
         evaluated_at = now or datetime.now(tz=UTC)
         candidates: list[AlertCandidate] = []
-        candidates.extend(self._price_drop_alerts(state, evaluated_at))
-        candidates.extend(self._price_rise_alerts(state, evaluated_at))
+        candidates.extend(self._price_drop_alerts(portfolio, state, evaluated_at))
+        candidates.extend(self._price_rise_alerts(portfolio, state, evaluated_at))
         candidates.extend(
             self._repeated_negative_news_alerts(portfolio, news_cache, evaluated_at)
         )
-        candidates.extend(self._sector_attention_alerts(news_cache, evaluated_at))
+        focus_industries = build_news_focus_industries(
+            self.app_config.focus_industries,
+            portfolio,
+            self.ticker_to_industry,
+        )
+        candidates.extend(
+            self._sector_attention_alerts(news_cache, evaluated_at, focus_industries)
+        )
 
         suppressed = self._suppress_duplicates(candidates, state, evaluated_at)
         logger.info(
@@ -139,6 +149,7 @@ class RulesEngine:
 
     def _price_drop_alerts(
         self,
+        portfolio: Portfolio,
         state: BotState,
         evaluated_at: datetime,
     ) -> list[AlertCandidate]:
@@ -146,7 +157,10 @@ class RulesEngine:
         threshold = self.app_config.alert_price_change_pct
         alerts: list[AlertCandidate] = []
 
-        for symbol, quote in state.latest_prices.items():
+        for symbol in self._tracked_tickers(portfolio):
+            quote = state.latest_prices.get(symbol)
+            if quote is None:
+                continue
             if quote.change_pct is None or quote.change_pct > -threshold:
                 continue
 
@@ -173,6 +187,7 @@ class RulesEngine:
 
     def _price_rise_alerts(
         self,
+        portfolio: Portfolio,
         state: BotState,
         evaluated_at: datetime,
     ) -> list[AlertCandidate]:
@@ -180,7 +195,10 @@ class RulesEngine:
         threshold = self.app_config.alert_price_change_pct
         alerts: list[AlertCandidate] = []
 
-        for symbol, quote in state.latest_prices.items():
+        for symbol in self._tracked_tickers(portfolio):
+            quote = state.latest_prices.get(symbol)
+            if quote is None:
+                continue
             if quote.change_pct is None or quote.change_pct < threshold:
                 continue
 
@@ -252,13 +270,14 @@ class RulesEngine:
         self,
         news_cache: NewsCache,
         evaluated_at: datetime,
+        focus_industries: list[str],
     ) -> list[AlertCandidate]:
         """Alert when a focus industry gets unusually many news articles."""
         window = timedelta(hours=self.app_config.alert_sector_window_hours)
         minimum = self.app_config.alert_sector_article_count
         alerts: list[AlertCandidate] = []
 
-        for industry in self.app_config.focus_industries:
+        for industry in focus_industries:
             label = industry.strip()
             if not label:
                 continue

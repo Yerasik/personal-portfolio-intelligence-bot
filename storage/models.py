@@ -58,10 +58,13 @@ class PendingAlert(BaseModel):
     """An alert queued for Telegram delivery."""
 
     id: str
+    type: str = ""
     severity: Literal["info", "warning", "urgent"]
     message: str
     created_at: datetime
     related_tickers: list[str] = Field(default_factory=list)
+    industry: str | None = None
+    llm_explanation: str | None = None
 
 
 class MarketQuote(BaseModel):

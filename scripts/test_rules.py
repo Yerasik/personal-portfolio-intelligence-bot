@@ -68,8 +68,16 @@ def run_test() -> None:
         focus_industries=["Consumer Electronics"],
         alert_suppression_hours=12,
     )
-    engine = RulesEngine(app_config=config)
-    portfolio = Portfolio(positions=[Position(ticker="AAPL", shares=10)])
+    engine = RulesEngine(
+        app_config=config,
+        ticker_to_industry={"AAPL": "Consumer Electronics"},
+    )
+    portfolio = Portfolio(
+        positions=[
+            Position(ticker="AAPL", shares=10),
+            Position(ticker="MSFT", shares=5),
+        ]
+    )
 
     state = BotState(
         latest_prices={
@@ -87,6 +95,14 @@ def run_test() -> None:
                 change_pct=7.2,
                 volume=1000,
                 company_name="Microsoft Corp.",
+                fetched_at=NOW,
+            ),
+            "OLD": MarketQuote(
+                ticker="OLD",
+                price=10.0,
+                change_pct=-20.0,
+                volume=100,
+                company_name="Removed Holding Inc.",
                 fetched_at=NOW,
             ),
         }
@@ -139,6 +155,8 @@ def run_test() -> None:
         {"price_drop", "price_rise", "repeated_negative_news", "sector_attention"},
         "combined rules",
     )
+    if any(alert.ticker == "OLD" for alert in alerts):
+        raise AssertionError("stale latest_prices entry OLD should not trigger alerts")
 
     suppressed_state = state.model_copy(
         update={
@@ -154,6 +172,26 @@ def run_test() -> None:
     suppressed = engine.evaluate(portfolio, suppressed_state, news_cache, now=NOW)
     if any(alert.type == "price_drop" and alert.ticker == "AAPL" for alert in suppressed):
         raise AssertionError("duplicate price_drop alert for AAPL should be suppressed")
+
+    portfolio_only_config = AppConfig(
+        alert_sector_article_count=3,
+        focus_industries=["AI"],
+    )
+    portfolio_only_engine = RulesEngine(
+        app_config=portfolio_only_config,
+        ticker_to_industry={"AAPL": "Consumer Electronics"},
+    )
+    portfolio_only_alerts = portfolio_only_engine.evaluate(
+        portfolio, state, news_cache, now=NOW
+    )
+    if not any(
+        alert.type == "sector_attention"
+        and alert.industry == "Consumer Electronics"
+        for alert in portfolio_only_alerts
+    ):
+        raise AssertionError(
+            "portfolio-derived Consumer Electronics should trigger sector alerts"
+        )
 
     print("Example alert objects:")
     print(json.dumps([asdict(alert) for alert in alerts], indent=2, default=str))

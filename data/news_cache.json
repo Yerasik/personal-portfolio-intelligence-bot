@@ -1,6 +1,244 @@
 {
   "items": [
     {
+      "id": "3c335cf7c66e0d77",
+      "title": "Aviva detects record £230m in bogus insurance claims as use of AI rises",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/business/2026/jun/08/aviva-ai-bogus-insurance-claims-rocket",
+      "published_at": "2026-06-08T05:00:17Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Insurer found 18,400 suspect claims last year with some scammers using AI to fake accident scenes and documents Bogus insurance claims worth more than £230m were detected by the insurance firm Aviva last year as scammers tried new tricks including using artificial intelligence to fake car accident scenes, documents and to exaggerate damage. The insurer identified more than 18,400 suspect claims across its brands in 2025, with a combined value of £233m. The fraud claims level was a record for the"
+    },
+    {
+      "id": "8ee46469d4b37447",
+      "title": "UK AI start-up PhysicsX hits $2.4bn valuation following Temasek-led deal",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/b2d891c9-3715-484f-9417-f9d4574e1c29",
+      "published_at": "2026-06-08T05:00:02Z",
+      "fetched_at": "2026-06-08T06:17:43.726491Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "London-based group raises $300mn to become one of the UK’s most valuable AI groups"
+    },
+    {
+      "id": "ad5a2e01ae3a3fcd",
+      "title": "Morning Bid: Blistering AI rally turns ugly - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE1icDZwNHN1NGwtTk5fSnhfU3h2cmJ3Ym14M2h1U0t2bFREdGFmOXN5LU1BMlVNMExuWWJqVTlaYU5Oa3l6ZDBSNFNMQUN3bWExdGxDbWg2NnhlanNjU0lyUDlPWVlVTTcwc3FrcXNrNjVHVTg0OUpyRFJmalhrSFk?oc=5",
+      "published_at": "2026-06-08T04:32:00Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Morning Bid: Blistering AI rally turns ugly    Reuters"
+    },
+    {
+      "id": "792a5a1d229a88cf",
+      "title": "Hormuz strait will be open but with transit fees, Iran envoy to Moscow quoted - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNZjVSOTNvREwzVnhncmx3eVFGWTFBNU1ocGtIbmhOSXhDdTVqNVNLek0xaS1EWVhfNURyU0lXSWRUV0ZfZ0RJSVhNaTdOc2V6SlNrQll2SkpNZHBGYWtObkdTOHdpRmRhMGVXdmdGejZ4clNoQlBYbVJqbTBsTGMwNFhwMTlpZ1ZSZ2ZIdm5hQ0t1VUo1cWxSeFdITU9lV1ZXLS10SEh2elREdDNTUkMwTTBMdDdMR0hqVlNYVDhn?oc=5",
+      "published_at": "2026-06-08T04:30:00Z",
+      "fetched_at": "2026-06-08T06:17:43.726491Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Hormuz strait will be open but with transit fees, Iran envoy to Moscow quoted    Reuters"
+    },
+    {
+      "id": "e39841d880c06f60",
+      "title": "How a few AI chip giants warped Asia's stock picking game - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNYmNiMTlqYkhPWFM0SnV6Wkd3d3l5cmJfU19MeVUtNUJQdmFHd052SEF2eGZvdXpoME14dmhFRUU0eXdYbWMzRHB6RXBFNVdVYlMyUXpPdW5YUHZWWmxRck9lcUhGQW5vSnJzanMzOE5rb3Mwak5zTFltLUZXMjBwazJvd0dBc3dFR3p4UmV0cEV6b3RId1kyOURrZWFnandoTEtJTnFhdjVRdkE?oc=5",
+      "published_at": "2026-06-08T04:27:00Z",
+      "fetched_at": "2026-06-08T06:37:12.220845Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "How a few AI chip giants warped Asia's stock picking game    Reuters"
+    },
+    {
+      "id": "bce4b3c039d1aa8e",
+      "title": "Asia tech stocks extend sell-off with SoftBank down over 7% as investors sour on AI-linked names",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzx55d/asia_tech_stocks_extend_selloff_with_softbank/",
+      "published_at": "2026-06-08T04:01:23Z",
+      "fetched_at": "2026-06-08T06:17:43.726491Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Logical_Welder3467 [link]   [comments]"
+    },
+    {
+      "id": "ad1db4af03ffbf94",
+      "title": "We must not grant AI agents legal personhood",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/b8cc4bf4-6d3c-4974-8428-9a091983c473",
+      "published_at": "2026-06-08T04:00:25Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "What kind of sanctions could keep a non-human corporation in check?"
+    },
+    {
+      "id": "8b3d5413c5a8a1c4",
+      "title": "Silicon Valley including Meta has embraced Maga politics, says Nick Clegg",
+      "source": "Technology | The Guardian",
+      "url": "https://www.theguardian.com/politics/2026/jun/08/silicon-valley-meta-maga-politics-nick-clegg",
+      "published_at": "2026-06-08T04:00:17Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Meta’s former head of global affairs says executives pivoted right in some cases for ‘rather more self-interested’ reasons Silicon Valley companies including Meta have decided to embrace Maga politics, some for “rather more self-interested” reasons, the former UK deputy prime minister Nick Clegg has said. Clegg, who spent nearly seven years at Meta as the head of global affairs, told The Rest is Money podcast that it felt like “a very good time for me to move on” when he left the company in Marc"
+    },
+    {
+      "id": "a6c4a71aa451c85a",
+      "title": "OECD chief urges governments not to go it alone on digital taxation",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/3bd21dcb-d291-4e8c-8038-27874ad56a04",
+      "published_at": "2026-06-08T04:00:14Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Mathias Cormann warns against fragmented approach as more countries consider duties on tech giants"
+    },
+    {
+      "id": "c9f2db4eab06ae10",
+      "title": "New AI espionage powers trigger Putin camera scare",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/6f4d806c-eb22-4c32-8352-b82692d30e9f",
+      "published_at": "2026-06-08T04:00:14Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Russia paused surveillance system after killing of Iran’s Supreme Leader exposed how AI can be used on CCTV data to target enemies"
+    },
+    {
+      "id": "46887416730ebf15",
+      "title": "Software buyout deals collapse to lowest level since pandemic after AI rout",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/c7db2d6e-8dec-4de0-9f1c-f73f7e905387",
+      "published_at": "2026-06-08T04:00:05Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Value of private equity software acquisitions struck in the first five months of the year tumbles to $50bn"
+    },
+    {
+      "id": "47e4cc24c9e7e584",
+      "title": "Taiwan says China Coast Guard patrols to its east are 'provocative act' - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOVE9WM1dUbG43RFhWQzN2ZFNCcXpsOTJwZmdPcld5WWRwV3lvVDBWNnV2cnlCSVQ0SUx3blRieWlueGpCbU56S0RJVHNRelNRdFl5WHlvTDl5ZndHTFhLaEdyXzNkR3NUcmtlNkFkQk1OdExfWGFJRW45OXRjYUUwN095REx1aHhmb2k5OUh2cEp0OW9zOXZOMlFjaTY0RjZBSW1GcnQzOUFxRExMUHBPeU1pd3g?oc=5",
+      "published_at": "2026-06-08T03:25:41Z",
+      "fetched_at": "2026-06-08T06:17:43.726491Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Taiwan says China Coast Guard patrols to its east are 'provocative act'    Reuters"
+    },
+    {
+      "id": "7b6ae839051a5f64",
+      "title": "SDSU Wired Its Dorms with 1,300 AI Cameras Without Telling Students",
+      "source": "Hacker News",
+      "url": "https://reclaimthenet.org/sdsu-adds-1300-ai-cameras-330-in-student-dorms",
+      "published_at": "2026-06-08T03:24:44Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Comments"
+    },
+    {
+      "id": "43b8dc9dcd7f47bd",
+      "title": "Why Anthropic's bizarre call for everyone to slow down on AI will never work",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzvm5k/why_anthropics_bizarre_call_for_everyone_to_slow/",
+      "published_at": "2026-06-08T02:45:19Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/IKeepItLayingAround [link]   [comments]"
+    },
+    {
       "id": "57d8c879f085ae23",
       "title": "Texas grid flags risks as data centers, crypto sites fail voltage tests",
       "source": "Hacker News",
@@ -172,6 +410,23 @@
       "summary": "South Korea's Naver to build gigawatt-scale AI factories using Nvidia technology    Reuters"
     },
     {
+      "id": "08af54dfd9c56ce5",
+      "title": "China's Xi hails 'new start' in North Korea ties ahead of summit - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQRWY1bGhhZXQ0TlBOOTFKWFpCN3dBdkUzNWctcFE5cXh6UXljOWhwQ3g4cFhpYVNVRmZXSXJ6ZVVNeFgyaDZPX3Ata3BJQ3lTYng0RkZqQUFmemF4eGxzSzNWemhIYmVTRHdpODJhXzRSbVJtd05RbTRqQlVrdVd6OG8yUWhJdVZjYVpONkYwNnZpYjV0VEhtbG5lZy1HbUpNaC1UYkVzUnluM25icm11SmJoc3NrRDNjeG5LN1lQZnMzaXMy?oc=5",
+      "published_at": "2026-06-07T22:17:00Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "China's Xi hails 'new start' in North Korea ties ahead of summit    Reuters"
+    },
+    {
       "id": "aea55f22ae82ecd8",
       "title": "Ukraine's Zelenskiy says Russian magnate Abramovich came to Kyiv with offer of help - Reuters",
       "source": "\"site:reuters.com\" - Google News",
@@ -221,6 +476,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Airbus notifies A320neo series customers of delays on jets due in 2027 and 2028, Bloomberg News reports    Reuters"
+    },
+    {
+      "id": "bc00e3e66282b277",
+      "title": "Billions spent and hypothetical returns: the AI boom explained with six charts",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tzn5t7/billions_spent_and_hypothetical_returns_the_ai/",
+      "published_at": "2026-06-07T20:30:41Z",
+      "fetched_at": "2026-06-08T06:37:12.220845Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Plastic_Ninja_9014 [link]   [comments]"
     },
     {
       "id": "d4dd11c89e825458",
@@ -835,6 +1107,23 @@
       "summary": "submitted by   /u/Just-Grocery-2229 [link]   [comments]"
     },
     {
+      "id": "3a5f04b1dacaeca6",
+      "title": "Sam Altman, Dario Amodei urge Congress to guard against AI-enabled bioweapons | Fortune",
+      "source": "top scoring links : technology",
+      "url": "https://www.reddit.com/r/technology/comments/1tz50t0/sam_altman_dario_amodei_urge_congress_to_guard/",
+      "published_at": "2026-06-07T07:00:45Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "submitted by   /u/Blueberry_Winter [link]   [comments]"
+    },
+    {
       "id": "6478a83da3e4f022",
       "title": "‘Poisoned’ AI: the ChatGPT shopping scams that lead to fake websites",
       "source": "Technology | The Guardian",
@@ -1005,6 +1294,23 @@
       "summary": "Even with Lockdown Mode, ChatGPT could be still vulnerable to prompt injections, but the goal is to reduce the likelihood that sensitive data gets shared in the process."
     },
     {
+      "id": "1bfd8be73ea68021",
+      "title": "Brazilian airline Azul plans further frequency cuts as fuel shock bites - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQT1luZWNrNTg3MDlyUFpxeHBZSkpZbklRQ1JMVHhjR1hBNzZQWUJTeFJrcnhiWFN2TFFPLUcyUHdBYUJDTmVLNHNXSnJvZEtpWHBFQjBRbUdpQXVidTZRVC1MWWpzMzZ2QWRSSXdzLVJycWw0WDVCUTlKeXpXYWV2NGJrd1k2YTNsZnJhZFdoV0ZfTi1hRG9oZ0FLZEVJY3lyNzhQel9OdkFvdW56Q3FUMWhUWDVtZEJ4VGE4?oc=5",
+      "published_at": "2026-06-06T20:12:09Z",
+      "fetched_at": "2026-06-08T06:37:12.220845Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Brazilian airline Azul plans further frequency cuts as fuel shock bites    Reuters"
+    },
+    {
       "id": "761065f23a58009e",
       "title": "Suit filed against controversial planned Stratos datacenter project in Utah",
       "source": "Technology | The Guardian",
@@ -1122,6 +1428,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Seven-month-old Palestinian killed by Israeli military laid to rest    Reuters"
+    },
+    {
+      "id": "44700872c98bbff2",
+      "title": "Airbus closing in on widebody order from Scandinavian airline, Bloomberg News reports - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxQMFQxdTRDTU9rSHFBRTlyRmt4aWY0VVN5UU15SEdGRTRfSjlNdld6d2REU19fVUdRV29UclBZN3hmVUdsX3d4YThhdlNKc25WQTFwbW5lR3lKX1FJYXdrQW9wcjB1UWR0ZGlMaDFkQWhRNlN2cXJYeUJyMzFFbmZNSkNnVmJ0Vml6Z3ZZSzh4eFNjVzRWUm43bVBCRk94dFZuMGpmOTFmdndQVnRXRDBSOElhT3doOWs4LW5uRkhjY1Q1eG5sTF91V3lHd1BrNUxZMFE?oc=5",
+      "published_at": "2026-06-06T13:52:19Z",
+      "fetched_at": "2026-06-08T05:17:43.577206Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Airbus closing in on widebody order from Scandinavian airline, Bloomberg News reports    Reuters"
     },
     {
       "id": "efe5e0bef2bc17e2",
@@ -2110,5 +2433,5 @@
       "summary": "Recent college grads are not very fond of commencement speakers hyping up a technology they see as a threat to their career prospects When Jacob Pagel graduated from Middle Tennessee State University this spring, predictions about artificial intelligence already had him questioning the value of his degree. Then a music executive started preaching about AI’s transformative power during a commencement speech. “This industry will change on you in a heartbeat. It has already changed more in the last"
     }
   ],
-  "updated_at": "2026-06-08T04:17:44.201568Z"
+  "updated_at": "2026-06-08T07:10:22.162924Z"
 }

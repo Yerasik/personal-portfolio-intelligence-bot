@@ -116,7 +116,7 @@ def tag_sectors(text: str, focus_industries: list[str]) -> list[str]:
     matched: list[str] = []
     for industry in focus_industries:
         label = industry.strip()
-        if label and label.lower() in text.lower():
+        if label and _contains_ticker_keyword(text, label):
             matched.append(label)
     return sorted(set(matched))
 

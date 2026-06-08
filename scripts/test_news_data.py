@@ -17,7 +17,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from collectors import news_data as news_data_module
-from collectors.news_data import NewsDataService, make_article_id
+from collectors.news_data import NewsDataService, make_article_id, tag_sectors
 from storage.models import AppConfig, MarketQuote, Portfolio, Position
 from storage.paths import resolve_data_paths
 from storage.repository import DataRepository
@@ -59,6 +59,11 @@ def _mock_fetch_feed(url: str, timeout: float = 30.0):
 
 
 def run_test() -> None:
+    if tag_sectors("Analysts said earnings would improve", ["AI"]):
+        raise AssertionError("AI should not match inside unrelated words like 'said'")
+    if "AI" not in tag_sectors("New AI chip demand lifts sector", ["AI"]):
+        raise AssertionError("AI should match as a standalone industry keyword")
+
     temp_dir = Path(tempfile.mkdtemp(prefix="news-data-test-"))
     print(f"Using temp data dir: {temp_dir}")
 

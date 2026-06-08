@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING
+
+logger = logging.getLogger(__name__)
 
 from collectors.market_data import portfolio_tickers
 from storage.models import Portfolio
@@ -78,7 +81,11 @@ def guess_industry_with_llm(
         f"Company name: {company_name.strip() or 'unknown'}\n"
         "If unsure, return UNKNOWN."
     )
-    response = llm.generate(prompt).strip()
+    try:
+        response = llm.generate(prompt).strip()
+    except Exception as exc:
+        logger.warning("Industry guess failed for %s: %s", ticker, exc)
+        return None
     if not response or response.upper() == "UNKNOWN":
         return None
     return _normalize_industry(response)

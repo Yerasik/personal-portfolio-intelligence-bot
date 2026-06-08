@@ -71,6 +71,14 @@ def run_test() -> None:
     if unknown_guess is not None:
         raise AssertionError(f"UNKNOWN response should return None: {unknown_guess}")
 
+    class FailingLlm:
+        def generate(self, prompt: str) -> str:
+            raise RuntimeError("ollama unavailable")
+
+    failed_guess = guess_industry_with_llm(FailingLlm(), "AAPL")
+    if failed_guess is not None:
+        raise AssertionError(f"LLM failure should return None: {failed_guess}")
+
     print("Industry inference checks passed.")
 
 

@@ -11,11 +11,13 @@ import json
 import logging
 import re
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any, Literal
 
 import httpx
 from pydantic import BaseModel, Field, ValidationError
 
+from analysis.industries import build_news_focus_industries
 from analysis.rules import AlertCandidate
 from collectors.market_data import portfolio_tickers
 from config.ollama import resolve_ollama_settings
@@ -24,7 +26,9 @@ from storage.models import AppConfig, BotState, NewsCache, NewsItem, Portfolio
 
 logger = logging.getLogger(__name__)
 
-DEFAULT_REQUEST_TIMEOUT_SECONDS = 90.0
+# CPU-only inference of large/"thinking" models (e.g. qwen3:30b) can take
+# several minutes per request, so allow a generous ceiling before timing out.
+DEFAULT_REQUEST_TIMEOUT_SECONDS = 300.0
 MAX_NEWS_IN_PROMPT = 6
 
 AdvisoryUrgency = Literal["info", "warning", "urgent"]
@@ -100,12 +104,19 @@ def select_relevant_news(
     app_config: AppConfig,
     news_cache: NewsCache,
     *,
+    ticker_to_industry: dict[str, str] | None = None,
     limit: int = MAX_NEWS_IN_PROMPT,
 ) -> list[NewsItem]:
     """Pick the most relevant recent tagged news for the prompt."""
     tickers = set(portfolio_tickers(portfolio))
     tickers.update(symbol.strip().upper() for symbol in app_config.extra_watchlist if symbol.strip())
-    industries = {label.strip() for label in app_config.focus_industries if label.strip()}
+    industries = set(
+        build_news_focus_industries(
+            app_config.focus_industries,
+            portfolio,
+            ticker_to_industry or {},
+        )
+    )
 
     relevant = [
         item
@@ -143,10 +154,22 @@ def build_advisory_prompt(
     state: BotState,
     news_cache: NewsCache,
     alerts: list[AlertCandidate],
+    *,
+    ticker_to_industry: dict[str, str] | None = None,
 ) -> str:
     """Build a deterministic concise prompt for Ollama."""
-    industries = ", ".join(app_config.focus_industries) or "None"
-    news_items = select_relevant_news(portfolio, app_config, news_cache)
+    focus_industries = build_news_focus_industries(
+        app_config.focus_industries,
+        portfolio,
+        ticker_to_industry or {},
+    )
+    industries = ", ".join(focus_industries) or "None"
+    news_items = select_relevant_news(
+        portfolio,
+        app_config,
+        news_cache,
+        ticker_to_industry=ticker_to_industry,
+    )
 
     return (
         f"{_SYSTEM_INSTRUCTIONS}\n\n"
@@ -290,6 +313,8 @@ class LlmClient:
         state: BotState,
         news_cache: NewsCache,
         alerts: list[AlertCandidate],
+        *,
+        ticker_to_industry: dict[str, str] | None = None,
     ) -> LlmAdvisoryResult:
         """Build a prompt, call Ollama, and return structured advisory output."""
         if not self.is_configured:
@@ -305,6 +330,7 @@ class LlmClient:
             state,
             news_cache,
             alerts,
+            ticker_to_industry=ticker_to_industry,
         )
 
         try:

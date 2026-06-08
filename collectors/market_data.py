@@ -219,12 +219,28 @@ class MarketDataService:
         )
         return result
 
-    def run(self, repository: DataRepository, portfolio: Portfolio) -> MarketDataBatchResult:
+    def run(
+        self,
+        repository: DataRepository,
+        portfolio: Portfolio,
+        extra_watchlist: list[str] | None = None,
+    ) -> MarketDataBatchResult:
         """Fetch portfolio quotes and update state.json."""
         tickers = portfolio_tickers(portfolio)
+        for symbol in extra_watchlist or []:
+            normalized = symbol.strip().upper()
+            if normalized and normalized not in tickers:
+                tickers.append(normalized)
+
         batch = self.fetch_batch(tickers)
 
         state = repository.load_state()
+        tracked = set(tickers)
+        state.latest_prices = {
+            symbol: quote
+            for symbol, quote in state.latest_prices.items()
+            if symbol in tracked
+        }
         state.latest_prices.update(batch.quotes)
         state.last_market_fetch_at = batch.fetched_at
         repository.save_state(state)
@@ -258,7 +274,11 @@ class MarketDataCollector(BaseCollector):
                 message="no portfolio tickers to fetch",
             )
 
-        batch = self._service.run(context.repository, portfolio)
+        batch = self._service.run(
+            context.repository,
+            portfolio,
+            extra_watchlist=context.app_config.extra_watchlist,
+        )
         success = batch.success_count > 0 or batch.failure_count == 0
 
         if batch.failure_count and batch.success_count:

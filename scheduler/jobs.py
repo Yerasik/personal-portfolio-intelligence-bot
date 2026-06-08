@@ -9,7 +9,7 @@ from __future__ import annotations
 import logging
 import threading
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import UTC, datetime
 from typing import Final
 
@@ -20,6 +20,7 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 from analysis.industries import build_news_focus_industries
 from analysis.llm import LlmClient
+from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
 from analysis.rules import AlertCandidate, RulesEngine
 from analysis.summarizer import Summarizer
 from collectors.base import CollectorContext
@@ -27,7 +28,7 @@ from collectors.market_data import MarketDataCollector
 from collectors.news_data import NewsDataCollector
 from config.loader import ConfigurationBundle
 from config.settings import RuntimeSettings
-from storage.models import AppConfig, PendingAlert
+from storage.models import AppConfig, BotState, NewsCache, PendingAlert
 from storage.repository import DataRepository
 
 from bot.notifier import TelegramNotifier
@@ -65,7 +66,11 @@ class SchedulerServices:
     def build_summarizer(self) -> Summarizer:
         """Construct rules + LLM stack for the daily summary job."""
         app_config = self.load_app_config()
-        rules = RulesEngine(app_config=app_config)
+        ticker_industries = self.repository.load_ticker_industries()
+        rules = RulesEngine(
+            app_config=app_config,
+            ticker_to_industry=ticker_industries.ticker_to_industry,
+        )
         llm = LlmClient(settings=self.runtime, app_config=app_config)
         return Summarizer(app_config=app_config, rules=rules, llm=llm)
 
@@ -112,11 +117,53 @@ def _alert_to_pending(alert: AlertCandidate) -> PendingAlert:
     """Convert a rules-engine candidate into the JSON shape stored in state.json."""
     return PendingAlert(
         id=alert.id,
+        type=alert.type,
         severity=alert.urgency,
         message=f"{alert.title}: {alert.explanation}",
         created_at=alert.created_at,
         related_tickers=[alert.ticker] if alert.ticker else [],
+        industry=alert.industry,
+        llm_explanation=alert.llm_explanation,
     )
+
+
+_PRICE_MOVE_ALERT_TYPES: Final = ("price_drop", "price_rise")
+
+
+def _enrich_price_move_alerts(
+    services: SchedulerServices,
+    alerts: list[AlertCandidate],
+    state: BotState,
+    news_cache: NewsCache,
+    app_config: AppConfig,
+) -> list[AlertCandidate]:
+    """Attach best-effort LLM explanations to price-move alerts."""
+    if not app_config.enable_llm_summaries:
+        return alerts
+
+    llm = LlmClient(settings=services.runtime, app_config=app_config)
+    enriched: list[AlertCandidate] = []
+    for alert in alerts:
+        quote = state.latest_prices.get(alert.ticker) if alert.ticker else None
+        if (
+            alert.type in _PRICE_MOVE_ALERT_TYPES
+            and alert.ticker
+            and quote is not None
+            and quote.change_pct is not None
+        ):
+            news = recent_news_titles_for_ticker(news_cache, alert.ticker)
+            explanation = explain_price_move(
+                llm,
+                alert.ticker,
+                quote.change_pct,
+                "today",
+                news,
+                company_name=quote.company_name,
+                sector=quote.sector,
+            )
+            alert = replace(alert, llm_explanation=explanation.to_message())
+        enriched.append(alert)
+    return enriched
 
 
 def run_market_data_job(services: SchedulerServices) -> None:
@@ -175,8 +222,13 @@ def run_rule_evaluation_job(services: SchedulerServices) -> None:
     state = services.repository.load_state()
     news_cache = services.repository.load_news_cache()
 
-    rules = RulesEngine(app_config=app_config)
+    ticker_industries = services.repository.load_ticker_industries()
+    rules = RulesEngine(
+        app_config=app_config,
+        ticker_to_industry=ticker_industries.ticker_to_industry,
+    )
     alerts = rules.evaluate(portfolio, state, news_cache)
+    alerts = _enrich_price_move_alerts(services, alerts, state, news_cache, app_config)
 
     state.pending_alerts = [_alert_to_pending(alert) for alert in alerts]
     services.repository.save_state(state)
@@ -204,6 +256,7 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
         return
 
     portfolio = services.repository.load_portfolio()
+    ticker_industries = services.repository.load_ticker_industries()
     state = services.repository.load_state()
     news_cache = services.repository.load_news_cache()
     summarizer = services.build_summarizer()
@@ -217,6 +270,7 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
             state,
             news_cache,
             alerts,
+            ticker_to_industry=ticker_industries.ticker_to_industry,
         )
 
     logger.info("Daily summary generated with %d alert(s)", len(alerts))
