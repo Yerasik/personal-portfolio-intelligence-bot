@@ -1,8 +1,29 @@
 {
   "positions": [
-    { "ticker": "1810.HK", "shares": 10, "cost_basis": 31.0 },
-    { "ticker": "AAPL", "shares": 10 },
-    { "ticker": "NVDA", "shares": 5 }
+    {
+      "ticker": "1810.HK",
+      "shares": 10.0,
+      "cost_basis": 31.0,
+      "notes": ""
+    },
+    {
+      "ticker": "AAPL",
+      "shares": 11.0,
+      "cost_basis": null,
+      "notes": ""
+    },
+    {
+      "ticker": "NVDA",
+      "shares": 5.0,
+      "cost_basis": null,
+      "notes": ""
+    },
+    {
+      "ticker": "MSFT",
+      "shares": 1.0,
+      "cost_basis": null,
+      "notes": ""
+    }
   ],
   "notes": ""
 }

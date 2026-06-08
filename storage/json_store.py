@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import tempfile
+from collections.abc import Callable
 from pathlib import Path
 from typing import TypeVar
 
@@ -54,6 +55,42 @@ class JsonStore:
             raise JsonStorageError(
                 f"Invalid schema in {path} for {model_type.__name__}:\n{exc}"
             ) from exc
+
+    def mutate_model(
+        self,
+        path: Path,
+        model_type: type[TModel],
+        mutator: Callable[[TModel], TModel],
+    ) -> TModel:
+        """Load, mutate, and save a model under a single exclusive file lock."""
+        path.parent.mkdir(parents=True, exist_ok=True)
+
+        with locked_json_file(path):
+            if not path.exists():
+                model = model_type()
+            else:
+                raw = path.read_text(encoding="utf-8")
+                try:
+                    payload = json.loads(raw) if raw.strip() else {}
+                except json.JSONDecodeError as exc:
+                    raise JsonStorageError(
+                        f"Malformed JSON in {path}: {exc.msg} "
+                        f"(line {exc.lineno}, column {exc.colno})"
+                    ) from exc
+                if not isinstance(payload, dict):
+                    raise JsonStorageError(
+                        f"Expected a JSON object at {path}, got {type(payload).__name__}"
+                    )
+                try:
+                    model = model_type.model_validate(payload)
+                except ValidationError as exc:
+                    raise JsonStorageError(
+                        f"Invalid schema in {path} for {model_type.__name__}:\n{exc}"
+                    ) from exc
+
+            updated = mutator(model)
+            self._atomic_write_json(path, updated.model_dump(mode="json"))
+            return updated
 
     def write_model(self, path: Path, model: BaseModel) -> None:
         """Persist a model using an atomic replace and an exclusive file lock."""

@@ -184,6 +184,8 @@ Message your bot in Telegram (from the configured chat id only):
 - `/portfolio` — holdings and latest prices
 - `/industries` — tracked industries (config + portfolio map) and cached news counts per industry
 - `/news_summary` — LLM summaries of cached news by sector and by portfolio ticker
+- `/add_ticker <SYMBOL> [shares]` — add a holding (format + market validation)
+- `/remove_ticker <SYMBOL>` — remove a holding
 - `/analyze` — rules + optional LLM portfolio advisory
 - `/analyze <ticker>` — explain a ticker's recent price move using ticker-tagged news (e.g. `/analyze AAPL`)
 
@@ -226,6 +228,7 @@ docker compose run --rm --no-deps portfolio-bot python scripts/test_storage.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_market_data.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_news_data.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_industries.py
+docker compose run --rm --no-deps portfolio-bot python scripts/test_portfolio_edits.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_news_summarizer.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_rules.py
 docker compose run --rm --no-deps portfolio-bot python scripts/test_llm.py

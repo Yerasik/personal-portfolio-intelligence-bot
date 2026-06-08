@@ -7,6 +7,15 @@ JsonStore directly — it keeps path handling consistent.
 from storage.json_store import JsonStore
 from storage.models import AppConfig, BotState, NewsCache, Portfolio, TickerIndustryMap
 from storage.paths import DataPaths
+from storage.portfolio_ops import (
+    PortfolioTickerResult,
+    add_ticker_to_portfolio,
+    normalize_ticker,
+    portfolio_has_ticker,
+    remove_ticker_from_portfolio,
+    validate_ticker_format,
+    verify_ticker_exists,
+)
 
 
 class DataRepository:
@@ -37,6 +46,57 @@ class DataRepository:
     def save_portfolio(self, portfolio: Portfolio) -> None:
         """Write data/portfolio.json atomically."""
         self._store.write_model(self._paths.portfolio, portfolio)
+
+    def add_ticker_to_portfolio(
+        self,
+        ticker: str,
+        *,
+        shares: float = 1.0,
+        verify_market: bool = True,
+    ) -> PortfolioTickerResult:
+        """Add a validated ticker to portfolio.json under a single file lock."""
+        normalized = normalize_ticker(ticker)
+        format_error = validate_ticker_format(normalized)
+        if format_error:
+            return PortfolioTickerResult(False, format_error, normalized)
+
+        if verify_market:
+            current = self.load_portfolio()
+            if not portfolio_has_ticker(current, normalized):
+                market_error = verify_ticker_exists(normalized)
+                if market_error:
+                    return PortfolioTickerResult(False, market_error, normalized)
+
+        result_holder: list[PortfolioTickerResult] = []
+
+        def _mutate(portfolio: Portfolio) -> Portfolio:
+            updated, result = add_ticker_to_portfolio(
+                portfolio,
+                normalized,
+                shares=shares,
+            )
+            result_holder.append(result)
+            return updated
+
+        self._store.mutate_model(self._paths.portfolio, Portfolio, _mutate)
+        return result_holder[0]
+
+    def remove_ticker_from_portfolio(self, ticker: str) -> PortfolioTickerResult:
+        """Remove a ticker from portfolio.json under a single file lock."""
+        normalized = normalize_ticker(ticker)
+        format_error = validate_ticker_format(normalized)
+        if format_error:
+            return PortfolioTickerResult(False, format_error, normalized)
+
+        result_holder: list[PortfolioTickerResult] = []
+
+        def _mutate(portfolio: Portfolio) -> Portfolio:
+            updated, result = remove_ticker_from_portfolio(portfolio, normalized)
+            result_holder.append(result)
+            return updated
+
+        self._store.mutate_model(self._paths.portfolio, Portfolio, _mutate)
+        return result_holder[0]
 
     def load_state(self) -> BotState:
         """Read runtime state: latest prices, alerts, last fetch timestamps."""

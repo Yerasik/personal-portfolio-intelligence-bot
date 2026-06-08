@@ -16,6 +16,8 @@ TELEGRAM_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("portfolio", "Holdings and latest prices"),
     BotCommand("industries", "Focus industries and news counts"),
     BotCommand("news_summary", "LLM news by sector and ticker"),
+    BotCommand("add_ticker", "Add shares (new or existing holding)"),
+    BotCommand("remove_ticker", "Remove a holding from the portfolio"),
     BotCommand("analyze", "Portfolio advisory or /analyze AAPL"),
 )
 
@@ -26,6 +28,7 @@ def main_menu_keyboard() -> ReplyKeyboardMarkup:
         [
             [KeyboardButton("/portfolio"), KeyboardButton("/industries")],
             [KeyboardButton("/news_summary"), KeyboardButton("/analyze")],
+            [KeyboardButton("/add_ticker"), KeyboardButton("/remove_ticker")],
             [KeyboardButton("/help"), KeyboardButton("/menu")],
         ],
         resize_keyboard=True,

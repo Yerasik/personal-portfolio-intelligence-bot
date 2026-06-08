@@ -14,7 +14,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 from bot.commands import BotCommands
-from bot.menu import main_menu_keyboard
+from bot.menu import main_menu_keyboard, setup_telegram_menu
 from config.settings import RuntimeSettings
 
 logger = logging.getLogger(__name__)
@@ -81,6 +81,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
     """Handle /start — send the welcome message."""
     if not await _guard(update, context):
         return
+    await setup_telegram_menu(context.application)
     await _reply_with_menu(update, _commands(context).start_message())
 
 
@@ -88,9 +89,13 @@ async def menu_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     """Handle /menu — show the tap-to-run reply keyboard."""
     if not await _guard(update, context):
         return
+    await setup_telegram_menu(context.application)
     await _reply_with_menu(
         update,
-        "Choose an action from the menu below, or type a command (e.g. /analyze AAPL).",
+        "Choose an action from the menu below.\n\n"
+        "Portfolio edits need a symbol, e.g.:\n"
+        "/add_ticker AAPL 5\n"
+        "/remove_ticker MSFT",
     )
 
 
@@ -120,6 +125,57 @@ async def news_summary_command(update: Update, context: ContextTypes.DEFAULT_TYP
     if not await _guard(update, context):
         return
     await update.message.reply_text(_commands(context).news_summary_message())
+
+
+_ADD_TICKER_USAGE = (
+    "Usage: /add_ticker <SYMBOL> [shares]\n"
+    "Adds shares to an existing holding or creates a new one.\n"
+    "Example: /add_ticker AAPL\n"
+    "Example: /add_ticker AAPL 5"
+)
+_REMOVE_TICKER_USAGE = (
+    "Usage: /remove_ticker <SYMBOL>\n"
+    "Example: /remove_ticker TSLA"
+)
+
+
+async def add_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /add_ticker — add a validated holding to portfolio.json."""
+    if not await _guard(update, context):
+        return
+
+    args = context.args or []
+    if not args:
+        await _reply_with_menu(update, _ADD_TICKER_USAGE)
+        return
+
+    shares = 1.0
+    if len(args) >= 2:
+        try:
+            shares = float(args[1])
+        except ValueError:
+            await _reply_with_menu(
+                update,
+                f"Invalid share count: {args[1]!r}\n\n{_ADD_TICKER_USAGE}",
+            )
+            return
+
+    message = _commands(context).add_ticker_message(args[0], shares=shares)
+    await _reply_with_menu(update, message)
+
+
+async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /remove_ticker — remove a holding from portfolio.json."""
+    if not await _guard(update, context):
+        return
+
+    args = context.args or []
+    if not args:
+        await _reply_with_menu(update, _REMOVE_TICKER_USAGE)
+        return
+
+    message = _commands(context).remove_ticker_message(args[0])
+    await _reply_with_menu(update, message)
 
 
 async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -156,6 +212,8 @@ def register_handlers(
         ("portfolio", portfolio_command),
         ("industries", industries_command),
         ("news_summary", news_summary_command),
+        ("add_ticker", add_ticker_command),
+        ("remove_ticker", remove_ticker_command),
         ("analyze", analyze_command),
     )
     for name, handler in command_handlers:

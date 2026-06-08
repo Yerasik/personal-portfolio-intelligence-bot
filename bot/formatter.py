@@ -126,7 +126,8 @@ def format_start() -> str:
         "Portfolio Intelligence Bot\n\n"
         "This bot monitors your portfolio, news, and rule-based alerts. "
         "It provides advisory guidance only and does not execute trades.\n\n"
-        "Use the menu below or /help to see available commands."
+        "Use the menu below or /help to see available commands.\n\n"
+        "Edit holdings: /add_ticker AAPL 5 · /remove_ticker MSFT"
     )
 
 
@@ -140,6 +141,8 @@ def format_help() -> str:
         "/portfolio — holdings and latest prices\n"
         "/industries — focus industries and recent news counts\n"
         "/news_summary — LLM summaries of cached news by sector and ticker\n"
+        "/add_ticker <SYMBOL> [shares] — add shares (new position or increase existing)\n"
+        "/remove_ticker <SYMBOL> — remove a holding\n"
         "/analyze — run rules and optional LLM advisory summary\n"
         "/analyze <ticker> — explain a ticker's recent price move"
     )

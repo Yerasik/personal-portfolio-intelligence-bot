@@ -141,3 +141,15 @@ class BotCommands:
             )
 
         return format_ticker_analysis(symbol, quote, window, explanation, app_config)
+
+    def add_ticker_message(self, ticker: str, shares: float = 1.0) -> str:
+        """Validate and add a ticker to portfolio.json."""
+        result = self.repository.add_ticker_to_portfolio(ticker, shares=shares)
+        prefix = "Added" if result.success else "Could not add ticker"
+        return f"{prefix}: {result.message}"
+
+    def remove_ticker_message(self, ticker: str) -> str:
+        """Remove a ticker from portfolio.json."""
+        result = self.repository.remove_ticker_from_portfolio(ticker)
+        prefix = "Removed" if result.success else "Could not remove ticker"
+        return f"{prefix}: {result.message}"
