@@ -22,8 +22,8 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     restart: unless-stopped
-    ports:
-      - "11434:11434"
+    # No host port publish — avoids conflict with other Ollama on :11434.
+    # portfolio-bot reaches this at http://ollama:11434 on the compose network.
     volumes:
       - ollama_data:/root/.ollama
 

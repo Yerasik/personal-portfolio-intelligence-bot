@@ -3,11 +3,16 @@
     {
       "chat_id": 1303775573,
       "language": "ru",
-      "role": "ordinary"
+      "role": "developer"
     },
     {
       "chat_id": 589115817,
-      "language": "en",
+      "language": "ru",
+      "role": "ordinary"
+    },
+    {
+      "chat_id": 5012603681,
+      "language": "ru",
       "role": "ordinary"
     }
   ]
