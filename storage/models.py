@@ -66,6 +66,7 @@ class AppConfig(BaseModel):
     digest_hour: int = Field(default=8, ge=0, le=23)
     digest_minute: int = Field(default=0, ge=0, le=59)
     focus_industries: list[str] = Field(default_factory=list)
+    sector_keywords: dict[str, list[str]] = Field(default_factory=dict)
     extra_watchlist: list[str] = Field(default_factory=list)
     rss_feed_urls: list[str] = Field(default_factory=list)
     news_max_items: int = Field(default=500, ge=50, le=5000)

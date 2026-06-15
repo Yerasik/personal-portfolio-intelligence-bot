@@ -1,6 +1,23 @@
 {
   "items": [
     {
+      "id": "98728a7f845048a3",
+      "title": "Ex-Hong Kong police deputy commissioner Albert Yuen set for hygiene chief role",
+      "source": "News - South China Morning Post",
+      "url": "https://www.scmp.com/news/hong-kong/politics/article/3357175/ex-hong-kong-police-deputy-commissioner-albert-yuen-set-hygiene-chief-role?utm_source=rss_feed",
+      "published_at": "2026-06-15T09:54:49Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Hong Kong"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "The Hong Kong government has appointed a former deputy commissioner of the city’s police force to lead the Food and Environmental Hygiene Department (FEHD). Albert Yuen Yuk-kin, a former deputy commissioner of operations with the Hong Kong police, will lead the FEHD after retiring from his 37-year police career, the government said on Monday. The post is among two high-level official positions filled through open recruitment. Along with the director of information services role, both..."
+    },
+    {
       "id": "8700f76d33214f30",
       "title": "Microsoft (MSFT) Stock Drops 17% as CMO Sells $1.81M—Yet Models Show 30% Upside - Blockonomi",
       "source": "Google News",
@@ -16,6 +33,42 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Microsoft (MSFT) Stock Drops 17% as CMO Sells $1.81M—Yet Models Show 30% Upside    Blockonomi"
+    },
+    {
+      "id": "0e3c41e3420a0fce",
+      "title": "Schneider Electric, Foxconn partner on AI data center infra - Communications Today",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPTG5MTWg3QzlabmVLYjdkZWlBSFIxQ2xydWRYU2NBSFhxdE10TWpZMUNqbUxYTkh6Yk1KUXZ4R01oLThkYWRJTk01SGF4RVE1bTZHcC1EOWFtRkZUX09DSWxDZ3YyOUtDSDFFV2JYczh2cWVmUWN2cFRtSDJ0T2JuT1lwY2xrcmRCREphV0lneW9GS2xHSTFFcXpZWmUtUQ?oc=5",
+      "published_at": "2026-06-15T09:21:03Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric, Foxconn partner on AI data center infra    Communications Today"
+    },
+    {
+      "id": "3173ea0e25999c30",
+      "title": "Foxconn, Schneider Electric partner to develop next-generation AI data center infrastructure - TNGlobal",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQclVQa2JySTRSWTVpQTd1Umk4SjZEbzJXOV9fUUNBVXhndTNKUng2dnNpUzR0OHJMVzUwcmRfNnhacTcweGhvemxULXk1TEM3Q2h6N1phQTJ6TGVOLXBGdVBOY0JhQlZBelhXODg3dlpXRmo2c1lsOTFtVlhkV1lUVFVEMDYwZ196ZFk2Y09aUFhmamxRTWwtT0JkeldTeXhTdEVFcUcxalVScnRSb0VVNEtrZXF4NW5pdGxjMG95NmM1M3FyZHc?oc=5",
+      "published_at": "2026-06-15T09:18:21Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Foxconn, Schneider Electric partner to develop next-generation AI data center infrastructure    TNGlobal"
     },
     {
       "id": "0f5242e9d3fba8ff",
@@ -52,6 +105,24 @@
       "summary": "Microsoft (MSFT) Is A Value Stock To Benefit From The New Cloud Boom    Insider Monkey"
     },
     {
+      "id": "ffbe266f5575165c",
+      "title": "Schneider Electric and Foxconn partner on AI data centers - Techzine Global",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPOXVUb0RjcmJpREhBTUdwMWhLX1g5MkZ5b0JtVl9qZzRBNHVkaG9mWExMczFVSWoxTkFyR0F4cFRYNWQtU1dkUDZKOE9MeVZ1cTdXUmtSd1ZYT1p3U0xlcnJYeWJIbTNFb1IwVjUwYmRYbnhUNmVwMlBuV3JoR3lWLWw4ZFdoazk5ZDVtTVhjYTc1VHRzVTVhMnBBV2Qzb3ZtdTVKc3dvQUp0R1pKNWc?oc=5",
+      "published_at": "2026-06-15T08:56:07Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric and Foxconn partner on AI data centers    Techzine Global"
+    },
+    {
       "id": "f5e1265bf9e691f9",
       "title": "British tourist wanted after jumping bail over Hong Kong airport vandalism",
       "source": "News - South China Morning Post",
@@ -67,6 +138,24 @@
       "processed": false,
       "alert_sent": false,
       "summary": "A Hong Kong court has issued an arrest warrant for a British tourist who allegedly jumped bail after being charged with vandalising self-check-in kiosks at the city’s airport earlier this year. Youcef Bennoui, 35, failed to appear at West Kowloon Court on Monday to answer charges of criminal damage and possession of a Part 1 poison in connection with the ruckus that he allegedly caused at Hong Kong International Airport in the early hours of February 16. Prosecutors told the court that Bennoui,."
+    },
+    {
+      "id": "d43f1889e46bbd4f",
+      "title": "Schneider Electric, Foxconn team up on next-gen AI data centers (FXCOF:OTCMKTS) - Seeking Alpha",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxQZHB6Y3B4aXB2VGxjRFJoaGtjSFVyenNaN0tZRFdBY25UWERmU001MENsUlhTSTE5R2lDdnpTZWdnUWl1Wml6c3E1UUk0eWdqOVMyakNTNWlRanVOX09Dd0RUd3lqSjR5RDNhOVhPOWNrLXZUcm81eWZ0WGE3dF9lZkNQZ0t4dkk5S1JaZFBXYkJNTXo3MFZ2VVRWZXl6UVBxTEE?oc=5",
+      "published_at": "2026-06-15T08:33:43Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric, Foxconn team up on next-gen AI data centers (FXCOF:OTCMKTS)    Seeking Alpha"
     },
     {
       "id": "bc130d0cb62c0125",
@@ -137,6 +226,24 @@
       "summary": "NVIDIA Corporation $NVDA is KCM Investment Advisors LLC's 8th Largest Position    MarketBeat"
     },
     {
+      "id": "308465aab1fad67d",
+      "title": "Foxconn and Schneider Electric Collaborate on Next-Gen AI Data Centres - Electronics For You BUSINESS",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNdmdENDFGMGJ4WU9yMHlJLVVjbk5pT3lKVUFGbUp4NUdiVVBtRXRyZmhYeFU5OVg2MGN3VTZxaFNpdVBFZFlGNHFoR3NrS1pVQ05Pb0c0YllVb1F1M1JOODhoNWRpZE1Xa1BQZEVOeW5teU96VnNSVDFoNEduV1AybjhRTHRVQXhMeDVmQmZwQ3N5eHgweWhyejZ1WWJZeWxiOERjR0N0bVQ1UlZoOHhxaEJMOVZjcFVQV2xr?oc=5",
+      "published_at": "2026-06-15T07:56:36Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Foxconn and Schneider Electric Collaborate on Next-Gen AI Data Centres    Electronics For You BUSINESS"
+    },
+    {
       "id": "60ff01176db42b2d",
       "title": "Hotels, online platforms urged to clearly outline refund, booking change policies",
       "source": "News - South China Morning Post",
@@ -205,6 +312,60 @@
       "summary": "What makes this combustible: at the very moment that tens of thousands of workers are being shown the door, a small cohort of AI insiders is becoming wealthy on a scale that's hard to comprehend."
     },
     {
+      "id": "7baf86a6405f50dc",
+      "title": "Schneider Electric and Foxconn to Partner on AI Data Centres - Data Centre Magazine",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQME1QajF3OFZsRVM1d25VbWVyUVEydm1FWFFiRmNoYkJmZm9welFvSmhCTEowams1dUt1Wmx3OGJqTVJSZGU0bUg4YndUM1dIRlkwWWt0SG1sdDZ0dmtJY1huLXM0ZUhhRXZiXy1hLTBVVXlqejlZYUpFQzI2NUNIQm5iVU5hNE9RZG9kWGdES0NKLUo4dXlqWDQzWlU?oc=5",
+      "published_at": "2026-06-15T07:23:03Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric and Foxconn to Partner on AI Data Centres    Data Centre Magazine"
+    },
+    {
+      "id": "87bc8f9730c4e42a",
+      "title": "Schneider Electric Infra hits 10% upper circuit as parent ties up with Foxconn for AI data centres - TradingView",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi8gFBVV95cUxOU3hURUZqRFk4V2cyWWhxSWd6a1JXcU1FTUxVLW5rOTVWZHVIVk1IRWhDRnFNck5CdWRTek9TVTloTmNsQnFkQzVOSmowWnRrMWZQYkx2U25vVjdxUDBnQkZFbTloTHNnWXRHaUYwd1ktVjRRbkRsOFBzRGNhLWdTQlgyeExiamdHY19ZWE1sQTdJTkVqSS1QcTIydC1VcE92WWdOYXhyM3dwbXY0djVfMU5WZUktTko2MUp5c1lLUVBKdFdGZ2lOTng3TVgwSEFsemg2OE9SUGxheXNGcmQ0cFZ5cUZaSlR3MG9pTjZYN0J5dw?oc=5",
+      "published_at": "2026-06-15T07:22:04Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric Infra hits 10% upper circuit as parent ties up with Foxconn for AI data centres    TradingView"
+    },
+    {
+      "id": "8df082b1a6f03ade",
+      "title": "Schneider Electric shares soar 10% after announcing Foxconn partnership for AI data centres - CNBC TV18",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNd05DSG1WZlVWTzA0MEdzMTVNOV9xd3RXd2NSVUo2MmIwN2huaG1STFZuR3hiSHZDUlRaNUhOYTBGaV9acFNPZGIwQk1XZk1YdVlZcWQtelVFVHJyd1JHY0J4d3pCNDctTzRGQXhMdi1Pd3J6ZzBWNVBrc1FSTmluSnZ4YUtOcmZiNFFGQVpVVFRKUFlzVzBHSE5FWndNREp2WXdHVHlvdUFFbUlWSHoweVJvM1R3VGJJblp1b0kzR1hMZnNZRFY2QkpCRm1PQm9mWTBfWtIB2gFBVV95cUxNXzdySFFWNXNSMGNPaXZsU2ZPbU1rTHhCckN4ZnlNcHJaR2xzTEJ2LVhNR3VQZ3VkVWhOMW9BYXh3ZkQ3d3ozWnZZbmhVZ0tfcll6V2NOMHNUUnVMVV9ZYk1PYWhFZWwydmc2RkdNbDhoTEtQN0FSRmtxWTFlOU1oZlNmaGd4XzZzUkJnb3g1WUtqZlQ0Qm5PMEN2bUZQUFhtMWpRbkttWWFQSElCMEl1eERIR2xjUWZyTFdKV1pnSVV5WWlEX3BLOGJNWEJCbnJ5UWVKS3pfcnhNQQ?oc=5",
+      "published_at": "2026-06-15T07:19:38Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric shares soar 10% after announcing Foxconn partnership for AI data centres    CNBC TV18"
+    },
+    {
       "id": "13acbe73d06a1915",
       "title": "Gina Rinehart makes ‘significant investment’ in Elon Musk’s SpaceX",
       "source": "World news | The Guardian",
@@ -222,6 +383,40 @@
       "summary": "Australian billionaire says investment reflects her confidence in world’s first trillionaire after his record-breaking IPO Follow our Australia news live blog for latest updates Get our breaking news email , free app or daily news podcast Gina Rinehart’s company has made a “significant investment” in Elon Musk’s SpaceX and said it hopes to collaborate on AI infrastructure. Hancock Prospecting secured shares as SpaceX began trading on sharemarkets on Friday, Rinehart said in a statement today. Th"
     },
     {
+      "id": "ecf82e6df1797b35",
+      "title": "Foxconn and Schneider plan AI factories for next-gen data centers - Stock Titan",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPQlRoR0YxUkx6UHhhNzllZjZwcUQ3bG5LdXRBX1ZEakZRU0FfSUhqTlZpc2gzLWtLcVVyYnRXYk9XUVFJMmVILUFvMTgwcjJUM0UtNl9qWFRVby1wWVFUZmpVWEVLWjM4M2xrXzhDOXVjWlVVUURtX3hnSlJzY1VPbFRMQXdNQmsxQVNqczBkakkwQzF2Y09xNk1OZEJ1T2hTOUFzcmUza2d2dWgyblZ2bVI1WEpIcVh2dU5KLQ?oc=5",
+      "published_at": "2026-06-15T06:59:42Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Foxconn and Schneider plan AI factories for next-gen data centers    Stock Titan"
+    },
+    {
+      "id": "f395dc2973af7a27",
+      "title": "Nifty Bank rallies 1,000 points; HDFC Bank, IndusInd, Yes Bank, and other stocks jump up to 3%. What lies ahead?",
+      "source": "Stocks-Markets-Economic Times",
+      "url": "https://economictimes.indiatimes.com/markets/stocks/news/nifty-bank-rallies-1000-points-hdfc-bank-indusind-yes-bank-and-other-stocks-jump-up-to-3-what-lies-ahead/articleshow/131735515.cms",
+      "published_at": "2026-06-15T06:36:40Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Banking stocks rallied sharply on Monday, pushing the Nifty Bank index nearly 1,000 points higher as easing geopolitical tensions and falling oil prices boosted sentiment. Analysts expect lenders to lead the market rally, citing attractive valuations, RBI support measures, improving technical indicators and favourable risk-reward in major private banks."
+    },
+    {
       "id": "4b82fd3870282537",
       "title": "Hong Kong developer Lai Sun seeks note swap in bid to ease liquidity pressure",
       "source": "Business - South China Morning Post",
@@ -237,6 +432,24 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong developer Lai Sun Development, chaired by businessman Peter Lam Kin-ngok, who also chairs the city’s Tourism Board, has launched an exchange offer for its outstanding US$493 million worth of 5 per cent guaranteed notes due July 2026, in an effort to relieve short-term liquidity pressures, the company said Monday in a filing to the Hong Kong stock exchange. Eligible noteholders can swap their existing holdings for new, US dollar-denominated senior guaranteed notes carrying an 8 per cent"
+    },
+    {
+      "id": "7554cca8297ec90f",
+      "title": "Schneider Electric, Foxconn to co-develop AI data centre architectures and energy systems - ET Infra",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxQNzZoOUNUekF0amF3RkpIcGd6dGp1WHd0RWlWYnNoSnNSYTNXV0ZtbjNFR1J0UTlVSEtBNW9famxzS0lCbWtUY3ptYldacURqZmxRV1ZiMkVaR1l4OEppTVRoc2NxU0ZWS1N4M1B1aHB0UHpaaUJxaFhrY2xBX25OamJGR2dNTEl0M0xrd2VpaDRES1R2N1JYOXJ4Yjd6dnAxYml1NDZLYUJFRG5wSFFud3NvaGpsMkt0V0tmTzhwTF9wUi0xdFdRdENGWUtVbkFNN3MwNXg1NzhUeE9LYlNvSEFsMlRNbUF6cm9qZtIB8gFBVV95cUxOcl9iOUI3dWNTM1NqLWEwU1JiY1VmX0ZmVHRoQ2RCaVVlRXBvbTUyUG5OSHFVeU5sV3g3YlM5eXJybW1pTkdsSmJDQkNWVUNMUThEekVUeTg3SURPc2pHNDZJSkFEQTFBZ1NXLXIwUFpiUlJIQ3l4d25kV0l0YWtNVGFLUEYwTWxvMlFxVWxKeGRmaDUtMm9VZ2xzYVl5NW8wOGFqQURXeVlrdVVxZ0lIRXdQOXBzUUZ6SWxMcmJ0UVpwRnZTTGtxWkM1WXhGSHktZzVBTVN5d1ZhaU02ZEtJUm5wZGpMaXFsSTR5Z29nbmhldw?oc=5",
+      "published_at": "2026-06-15T06:09:37Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric, Foxconn to co-develop AI data centre architectures and energy systems    ET Infra"
     },
     {
       "id": "799b561f61a12923",
@@ -273,6 +486,24 @@
       "summary": "Hong Kong leader uncertain on second term in office    Reuters"
     },
     {
+      "id": "b5958fc6123e024c",
+      "title": "Schneider Electric and Foxconn partner to scale next-gen AI data centers - scanx.trade",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMimwJBVV95cUxPR3NZZXhsb1FLbmZraFBYclh4ckkxazZ0UUpHNnJ6WmpNMHhzM0pIcnY4ZXJRdF9YVVhNZDRiZkRBNFMyMXYza29CdXcwNExELWRXcEluYzVVSG15SDNZazU5YnFkcWFxVWd4c1pVN2tRUkhlSFNFTE1TUGdqaHlOeWlyeE54RVJJZHJNakNaQVNlQ3FPZTVyTmhtNEp0RkZSREZWRF9ZcmFfNkJZNXZzQnY1dkdkWlhDZlNMam1vNHA3R1l6UXdsQlMtMnpSNUxybGdwWlVmWFR4SWY5MFN1R014bHZzX2dIVnd4ZFdnbm1RWjhOY0VMcFdMRnZOVDB3cVhIWXZhRWlXcV9ySy1VbVZaVTV4NGcwRFdJ?oc=5",
+      "published_at": "2026-06-15T05:41:12Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric and Foxconn partner to scale next-gen AI data centers    scanx.trade"
+    },
+    {
       "id": "74cb1536a08b7e4e",
       "title": "Government aims to publish Hong Kong’s first 5-year plan in third quarter: minister",
       "source": "News - South China Morning Post",
@@ -307,6 +538,42 @@
       "summary": "Schneider Electric, Foxconn partner on AI data center infrastructure    Reuters"
     },
     {
+      "id": "d01d80c9b2e975e3",
+      "title": "Schneider Electric & Foxconn Partner on AI Data Center Infrastructure - Global Banking & Finance Review",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxPYTJ6eEVwa25jdUxTVjctUzJwVEFEckhxVVRJMWc1elRaVktfbHpxSWE3UjgzLTdfRVZYMW9ONFlfZGE5SFdhQzJrV0x4NWh0aDVVSjM3UUlSb0JpLTNKVDNUY1A5Rm5PblFMRHV3R3BQaHRQVTVHNGlCeFlKMm85MVZrb0xURjlqS3BqVGthdm9HQ2tE?oc=5",
+      "published_at": "2026-06-15T05:11:56Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric & Foxconn Partner on AI Data Center Infrastructure    Global Banking & Finance Review"
+    },
+    {
+      "id": "05cf486fe2b39d83",
+      "title": "Schneider Electric, Foxconn partner on AI data center infrastructure - ET Telecom",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxQYWJqVVZUbjNTUENlOUdBWnNkQ05UOUxYVHM3cGthdDE3VnhpaWF0RVRhbUlHR0NqbG42UC1sbFdkUEdlcnkxSkM3aGlVTkdqMnZKRnJwR0RFNFRXSGQ3MTR5OERLaDRjaE51Z1doMEFNd0RaaUo2VWpYWVd0UFV5NWpnRm1UekFhQ2ozY0RVdnpVZG1GSTlrMVBsb3k1S3V0ZTNXdHFmZ0RkYjV4VzJwRUF5RU1VcFJ3dFN6MnJpeDNjOWhlV2xOZ2RWRzNid1lNang1NE8tdw?oc=5",
+      "published_at": "2026-06-15T05:11:22Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric, Foxconn partner on AI data center infrastructure    ET Telecom"
+    },
+    {
       "id": "bb484d40afb6b895",
       "title": "Watchdog gets to grips with Hong Kong claw machines after 760% rise in complaints",
       "source": "News - South China Morning Post",
@@ -322,6 +589,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Complaints against Hong Kong claw machine operators have skyrocketed by more than 760 per cent over the past three years, driven by anger over misleading displays, rigged settings and poor-quality prizes, the city’s consumer watchdog has said. Figures shared by the Consumer Council on Monday showed that the number of reported grievances involving claw machines had gone from 16 in 2023 to 49 in 2024, before surging to 138 last year. The watchdog also highlighted a case involving a complainant who"
+    },
+    {
+      "id": "6fc961f1f4506ba5",
+      "title": "Will SpaceX's $75 billion IPO set the ball rolling for Reliance Jio and NSE listings in India?",
+      "source": "Stocks-Markets-Economic Times",
+      "url": "https://economictimes.indiatimes.com/markets/stocks/news/will-spacexs-75-billion-ipo-set-the-ball-rolling-for-reliance-jio-and-nse-listings-in-india/articleshow/131733256.cms",
+      "published_at": "2026-06-15T04:25:06Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "SpaceX's massive IPO is making waves globally. However, Indian market experts believe this will not directly impact upcoming listings of Jio Platforms and NSE. The timing for these Indian mega IPOs will depend on domestic market sentiment and conditions. Geopolitical easing could also play a role."
     },
     {
       "id": "bf0027653ef177da",
@@ -393,6 +677,40 @@
       "summary": "Opportunity to transform materials discovery could outweigh risks of high energy consumption"
     },
     {
+      "id": "bff660b45f958158",
+      "title": "The False Promise of U.S.-China Stability - Foreign Affairs",
+      "source": "\"China US tariffs OR China US trade\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNZDg4NjBXQ0RFM0RadFhKMFlJa1d3MHREaW1BZTR2a2NkVm5XUzY1OVI2djdFVWp6cjEzU3d2ZEZlM2ptZmVyV3V5c2twLWNjYkR3a3ZUWld2R0FIa2JVOFQ4bndEeEk4dlJvTjdsNnMxV21nYlc1aGxSWDlHTTVQek5zbw?oc=5",
+      "published_at": "2026-06-15T04:00:00Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "The False Promise of U.S.-China Stability    Foreign Affairs"
+    },
+    {
+      "id": "0efce843a5da5ac7",
+      "title": "IndiGo, SpiceJet and other tourism stocks surge up to 7% as US-Iran deal lifts sentiment",
+      "source": "Stocks-Markets-Economic Times",
+      "url": "https://economictimes.indiatimes.com/markets/stocks/news/indigo-spicejet-other-tourism-stocks-in-focus-after-us-iran-agree-to-peace-deal-after-long-negotiations/articleshow/131732409.cms",
+      "published_at": "2026-06-15T03:38:35Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Indian airline and travel stocks up to 7% surged as U.S. President Trump announced an initial agreement to end the war and reopen the Strait of Hormuz. This development is expected to ease geopolitical tensions, potentially reducing operating costs for airlines and restoring travel sentiment. Investors anticipate a normalization in global travel and aviation as shipping routes reopen."
+    },
+    {
       "id": "e73f33c55ef6a188",
       "title": "The skills young financiers will need to thrive in the age of AI",
       "source": "Technology",
@@ -408,6 +726,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Mastering finance at a time of technological disruption will rely on human abilities"
+    },
+    {
+      "id": "4212969fe1e3ca0b",
+      "title": "Kospi jumps 6% as US-Iran peace deal triggers super surge; index up over 100% YTD",
+      "source": "Stocks-Markets-Economic Times",
+      "url": "https://economictimes.indiatimes.com/markets/stocks/news/kospi-jumps-6-as-us-iran-peace-deal-triggers-super-surge-index-up-over-100-ytd/articleshow/131732333.cms",
+      "published_at": "2026-06-15T03:24:39Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "South Korean stocks jumped 6% on Monday as easing geopolitical tensions lifted global risk sentiment after the US and Iran reached an initial agreement to end their nearly four-month conflict and restore shipping through the Strait of Hormuz. The KOSPI is now up more than 100% in 2026, led by chip giants Samsung and SK Hynix, which extended their stellar rally."
     },
     {
       "id": "9591bfd80cdc679a",
@@ -442,6 +777,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Exclusive: ByteDance in talks with China's Iluvatar CoreX to purchase AI chips, sources say    Reuters"
+    },
+    {
+      "id": "b4de3e13ae04dd05",
+      "title": "India, East Asia move beyond trade rivalry towards strategic alignment as US-China contest escalates - ThePrint",
+      "source": "\"China US tariffs OR China US trade\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxNS0FkZ0RucHBCdGVyaU9ZVlR2M0Rnem5vUzlVbUJsWHhaQzZzT2V2VkFhdUREWkhQRE9CdXd4OUtNSUhvMkFpU0N2UmlDZERQT1B6dXJrUGRDYW4ySVR6MW5ldnYyeXE0clJfMGlxVGxOQ3JoNmVIYVhmYUhHYVZ2QTJCWjluQVphZHQ4dW81cHJNX1pRelJEXzN5TldJT1k5TDI5My0zLTU3NHdqcVN0a0cwWkM3UGdDNThlOXdHLWtnal9UaV9idm11bnhQZzRJR3AyTdIB2gFBVV95cUxOSUVVT3RyQTh1SkZISzAtNWdTNVJEX3UwT2FIUHVoSEVlQW5Td2ROS0xtQ21oUGZ3SDJ0QkhZVzA4a1NLWWVadmFFTGtkamdmZ3ROT0hxdFhybkRDSlJHSGRZWGRqdmNnYkV1aGNpd09haW9JYUdZbExXRGxQODd2cFJiZ0x4MW1FaGE1UlQ0WHBfbE1meVkxc1E2UDE3UTFKWnl4THNQeFFrRkV0Tkw0Mm5LVER4SjRNdVZyRzdPQzhERUZjTlBpYTM4eW1uM2hyWHRkdHpDbFJjUQ?oc=5",
+      "published_at": "2026-06-15T03:05:42Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "India, East Asia move beyond trade rivalry towards strategic alignment as US-China contest escalates    ThePrint"
     },
     {
       "id": "89e1d70c0296d91d",
@@ -493,6 +845,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Beijing’s top official overseeing Hong Kong affairs will visit the city on Tuesday and Wednesday, with a check on the progress of the Northern Metropolis part of the itinerary, while sources say the chief executive will join him as he looks into a cross-border technology cooperation platform. The Hong Kong government announced on Monday morning that Xia Baolong, director of the Hong Kong and Macau Affairs Office, would be visiting the city for two days. “[Xia will] inspect Hong Kong’s alignment."
+    },
+    {
+      "id": "9469feb1bbcdc266",
+      "title": "GCM chases hyperscale AI market - The Australian",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi9gFBVV95cUxPSUJSdk5nQ3FJbDlCZUFMY3dHaDZZN2JyZXlDZ3Q1MEozVExrUWQ4aWswUlJNTHhQSlZlYlI1NzBLd0ZGaTI3NFpWUW9sUlB5Vkl4RjRtSWtlVkxHOGlUUFEwWndlWGQ1cm1raUZ4TkQwRUo0OG1MWmFiSHFCR3ZUNGhHTmtBTDFTYjVabkxtNkZnXy1XNkhZM204akRmR2I4dUlHWUJ3UWtLT1NfY0pxUlRfcEwyTFVCcFlFYmpYVk5zekpTOE5MeGcyZXRneGNDSm9fV2xnLTBXalN0Z1NjNDFadTBjbFpzXzBqYU5fcnJOQlNMRXfSAfsBQVVfeXFMUE1FVjNUTVZIMHFmVGFkbUpYSHhRUkU4QXkwRWFURVl0Tk5RM25xRXFmdEZwMkZ3dHkzRzY0b2R4Z3dMWlJzUEtMWUxfZnZmNWhBZDV2ek43eHVSVE90MGdXd1M5VWFvREJrWWRDempSZ3JWQThRdXpMazZHMHZMZ1dfd2JCWGI2WmNaaE1ETnZmSGUxNWw1cGd1MngtdXMyam4ySGVwT0M1Yll1Z3VTQnlMWTNJYU9LRGtFWmJnNjlwX1FWcnhtQUN0aGlvVzFfQjNfdlNDQS1LMkRUVk95RzFWTldMY3ZTLWp2a3JMU0ZqQ3hQMFlDeERLSkE?oc=5",
+      "published_at": "2026-06-15T02:57:44Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "GCM chases hyperscale AI market    The Australian"
     },
     {
       "id": "957f57fb17eb1097",
@@ -685,6 +1054,57 @@
       "summary": "The Astana International Financial Centre (AIFC) and Hong Kong’s bourse are actively engaging with mining companies in Kazakhstan to explore dual-listing opportunities in the city, following a groundbreaking case last year, the head of the Central Asian country’s special financial zone has said. AIFC governor Renat Bekturov also said several partnership agreements the body had signed with Hong Kong during Chief Executive John Lee Ka-chiu’s visit to Central Asia earlier this month marked an..."
     },
     {
+      "id": "e8eff678a68241ab",
+      "title": "UK, France, Germany and Italy ready to lift Iran sanctions after US-Iran deal - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQdl9QNzQwRkp1UnY0alA3UGVJUENYYm9zbDhFUUw4dUJud09TNVFfS1IyOS04YU9aR25qYlM4Ukx0YzkwRDdaam0zYVg2N1B3OHBuN0ZVc2tBQm1JN2dCQnplUWU2S0wtckItUzJWbXdQZkJMcVhtSlU2TFl3c0cwOERyRnhVc0pvajlQLTRLcXZqTG95LVlfZlZRaDE0eUZhSllRTjZHaV9IOG40dURvRU4zZHdTcUpx?oc=5",
+      "published_at": "2026-06-14T22:58:54Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "UK, France, Germany and Italy ready to lift Iran sanctions after US-Iran deal    Reuters"
+    },
+    {
+      "id": "18b583ef714aad74",
+      "title": "Anger among Iranian hardliners at terms of deal agreed with US",
+      "source": "World news | The Guardian",
+      "url": "https://www.theguardian.com/world/2026/jun/14/iranian-hardliners-in-vociferous-push-to-reject-proposed-peace-deal-with-us",
+      "published_at": "2026-06-14T22:34:54Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Those in favour forced to defend themselves against claims the terms amount to capitulation Middle East crisis – live updates Iranian hardliners have mounted a rearguard rejection of a deal with the US as as they say it does not guarantee sanctions relief, compensation or control of the strait of Hormuz. “The fact that they say we won and America has retreated is a blatant lie,” said the Iranian MP Kamran Ghazanfari. Meysam Nili, the managing director of Rajanews and brother-in-law of the hardli"
+    },
+    {
+      "id": "ff1afd4165d7a467",
+      "title": "Trump’s tariffs stoke global trade jitters as China, EU vow response - Gulf Business",
+      "source": "\"China US tariffs OR China US trade\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQTHNKb0o5UlRIS3pTcmh0Q3otTmFsd0RxWkE2UHRoQ2tVdnlvTFVXaEMtVnVUV1MyYTRkVGRUdGgyeWdVcENCZHpHOGFPUGpzS3ZiVXp2M0o4ZjVzZzJMODFsczl4YjZUWmFYc0xiX3I1ZkJoTVlsRkpNQVFESXkzN2RjQ2M0bHRyNmw0ZGM4MEVhV2FHRU9QSy1MQmhCMXRlbFp2ZkFWVQ?oc=5",
+      "published_at": "2026-06-14T21:06:23Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Trump’s tariffs stoke global trade jitters as China, EU vow response    Gulf Business"
+    },
+    {
       "id": "9fa50ea5f1b133a5",
       "title": "AI is code – and can't be prompted into being smarter",
       "source": "Hacker News",
@@ -857,6 +1277,23 @@
       "summary": "The Hong Kong Observatory issued an amber rainstorm warning on Sunday night and said that unsettled weather was expected to persist over the next few days. The warning was issued at 9.40pm, signalling that more than 30mm of rain had fallen or was expected to fall across the city within an hour. The alert also indicates that downpours are likely to continue. The Observatory said that under the influence of an active southwest monsoon and a trough of low pressure, unsettled weather were expected.."
     },
     {
+      "id": "06d6de2aaf082b40",
+      "title": "Me, worry? For US small businesses, Trump’s tariffs are now a non-issue - The Guardian",
+      "source": "\"China US tariffs OR China US trade\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxNeXZnZmh2RjNGa2xocVhlOUQ5VzVEQldKd2xhZzdXNFdjbF9JTGNMSkZFSG0zWE5pQVhXZWVCTVhkYTgwcXRReFR5Z0pWUENpdW9rREdNSGc2aDVxWmdNSXpCMWstLTAteEtnVXJWNGxSZTBSMmZ0TXJjVXMzNnpvUzRvMA?oc=5",
+      "published_at": "2026-06-14T14:02:00Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Me, worry? For US small businesses, Trump’s tariffs are now a non-issue    The Guardian"
+    },
+    {
       "id": "d5a71d336caf9a9c",
       "title": "KPMG pulls report on AI usage due to apparent hallucinations",
       "source": "Hacker News",
@@ -889,6 +1326,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "A year ago it was the hot topic, but business owners have seen there’s a limit to the president’s royal decrees In two weeks, I’m speaking to a group of companies in the packaging industry about issues affecting their businesses this year. I’m going to discuss the economy, navigating higher costs, leveraging new tax legislation, AI and what companies are doing to find and retain workers in a volatile job market. You know what I won’t be talking about? Tariffs. Continue reading..."
+    },
+    {
+      "id": "893e632b398bb24c",
+      "title": "Given the News Out of WWDC, Was Warren Buffett Right to Sell Apple Stock? - The Motley Fool",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxNc1RNYVN5N1czUU9uUUcxUnp5Y091Z21FbkNzdjFZbElVa0pJQ0NETk1hMkJhV0hxcHNkUGhqOS1CWDFJWnozWmxFdEJDSVE1dlVEbmRNcDEwcE9JSDVsaERnX2dpNjZFRFE3RnFpMGttcEl3YXBBUVh1alFlQVp0b3d6M2M0bUZDdmNMOTB0WEt2dzFuRGc?oc=5",
+      "published_at": "2026-06-14T13:45:00Z",
+      "fetched_at": "2026-06-15T09:58:47.157498Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "Consumer Electronics"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Given the News Out of WWDC, Was Warren Buffett Right to Sell Apple Stock?    The Motley Fool"
     },
     {
       "id": "a1d72568b1b12838",
@@ -1042,6 +1498,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Mainland Chinese students are increasingly paying a year’s rent – and sometimes much more – upfront to secure homes near Hong Kong’s universities, helping to push residential rents to record highs and drawing investors back to small flats once marketed for first-time buyers. The trend is becoming increasingly visible as the city’s summer student-leasing season gets under way. A mainland Chinese PhD student recently agreed to pay nearly HK$700,000 (US$89,332) upfront to rent a two-bedroom flat at"
+    },
+    {
+      "id": "51a3562e2b8b2aa9",
+      "title": "Iran says draft US deal includes oil sanctions waiver, nuclear limits and asset release - Reuters",
+      "source": "\"site:reuters.com\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQTHJ5S3lQbnk2ck1TeGlCeGh2V0k3cXJQSnVwLVNSUEM3cDNIcUVFazFZazBSLW1oQzJQWHJldGo4RHp3b2NaQXQ2OUxJTjdPTVNjZEZQdUxPT1ZfaGVLWWt1MmtQa0taaUNfZnIzUVRqS3R4WFp2UUM1dFFUZlNkY3ZtZ2xOaDE3UW1uQVpFcGQ4MThHUGs4X3JETmg3SWRWdmEwa28zazRGR0dJX0VWMDBJWXd3Z2Izd19OLUNDb01OejE2?oc=5",
+      "published_at": "2026-06-14T10:24:00Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Iran says draft US deal includes oil sanctions waiver, nuclear limits and asset release    Reuters"
     },
     {
       "id": "1481bebc5c4a7732",
@@ -1538,6 +2011,23 @@
       "summary": "The drive for AI monetisation among Chinese tech companies has become a battle over “delivering measurable business value” rather than raw technical performance, according to Alex Yao, head of China equity research at JPMorgan. China’s AI landscape was rapidly consolidating from a fragmented “hundred-model” battle down to a smaller group of globally competitive leading players, particularly those that could transform consumer-facing features into reliable enterprise-grade infrastructure, Yao..."
     },
     {
+      "id": "018855777625c6f1",
+      "title": "Defence tech start-up Anduril calls for reset of US arms export controls",
+      "source": "Technology",
+      "url": "https://www.ft.com/content/74e29a55-8f76-47e2-a039-52fb10beaaec",
+      "published_at": "2026-06-14T04:00:17Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "CEO of California-based group wants to enlist allies in helping with production of lower-cost weapons"
+    },
+    {
       "id": "f357ef485729aedf",
       "title": "Surge in AI-related court cases fuels calls for China to clarify its laws",
       "source": "News - South China Morning Post",
@@ -1723,6 +2213,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Comments"
+    },
+    {
+      "id": "3ed7bd9f5a2993ef",
+      "title": "How Investors May Respond To Vertiv (VRT) Expanding AI Data Center Cooling And Declaring A Dividend - simplywall.st",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxQOHpYcTR1OFVDNVVDOGNyU1J4cy1DZ1lzdXJ6ZXd1Sjh3dERqOTh6a05lUTJBWnUweUtoQ0lFMTNoT3U3QTQ1MHRqZWVCOWpTbkhoX3FOUEd4RXNFRzVxaURfTk9kQ2JRemFQUE1FY0ZBWEd1Qk5yUzd1bXFkUU5lcURibldjSHpLRnRyOXBNcVVlMVBpVVR3TDA3UFdJZ2pFVGEyNFVJbWNodVhPNWc4aVFoQkxSN2FoN1hvSk1ycTRBZWtvTW03eXRyVnMtVnpOTzBOR2Zn0gHbAUFVX3lxTE4yRy1MNG92Q2NXbnU4MnJCNXVLdzk5QllKaW93QTBrUlRNRmQ0OThWNm9rM202T1NTZEt4MFkyUUxyWWFUWFNLbkhXeVJOUWxuZm5FOUotZXNYRWJYZ3B3NEpiS2dzeDQ2S3dyMWI4ZjZCblo3ajNRajdIZUNtejFLV3A4NFRjdlVGRzhfb0w0X0RrMFM3MW51ck4wMmpLVmhQS2JRWWMxdVd1NkxOSjhCdXpJdTRGS2FEQlJaX2FsY2tMNU43cTZoXzl3R1dZem9zaFZXaFZYS0dMcw?oc=5",
+      "published_at": "2026-06-13T22:28:21Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure",
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "How Investors May Respond To Vertiv (VRT) Expanding AI Data Center Cooling And Declaring A Dividend    simplywall.st"
     },
     {
       "id": "346cc9a0f4959518",
@@ -1929,6 +2438,45 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Comments"
+    },
+    {
+      "id": "1b41fabf2a391dbc",
+      "title": "Wall Street’s Top Billionaires Are Changing Their Mind About Apple (AAPL) - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQZnNHaGZrcTJ3YThZLTZmZ2V3UlRvSWVhWGN6Rk01T20wUF9Da1V6TnVPdnJ3czJqYVZPbVNYUTVJWThBeGMzc0tIVHZ1X1M5QmN5UmFTSnhrcktIcVR6TEtXRlhMeVRCOTJwZ0lqcUh1RmlQYXN0RDRCVU9EaUFqSlVIRVI4N0gwcEhiQi00RDZWaG1BaUloVXVnLWtRMEdIcG1MZw?oc=5",
+      "published_at": "2026-06-13T15:42:40Z",
+      "fetched_at": "2026-06-15T09:58:47.157498Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "Consumer Electronics"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Wall Street’s Top Billionaires Are Changing Their Mind About Apple (AAPL)    Yahoo Finance"
+    },
+    {
+      "id": "210e69b520970965",
+      "title": "Apple Is Mostly Sitting Out the AI Spending Arms Race. With AI Stocks Selling Off, That Suddenly Looks Smart. - The Motley Fool",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPaUQwSlEwY00xQ3R4YmprcmpDTG9Ha3ZNZldQVG5PRFV3azQ2RGx3cTVFSjFtek9HZDJsZmpmSVh1TEpXVEdvWXpYcEZIWkF4dWVPNUJ0NXZ1M0JBNmpjMzg3cmlJUEZXQnNMeXFSUmFJd21TS2NseUZIVUFyVFBOOXF1V0xyT2NFQVNIbTJvNEJrU0o5QmVlYQ?oc=5",
+      "published_at": "2026-06-13T15:07:00Z",
+      "fetched_at": "2026-06-15T09:58:47.157498Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI",
+        "Consumer Electronics"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Is Mostly Sitting Out the AI Spending Arms Race. With AI Stocks Selling Off, That Suddenly Looks Smart.    The Motley Fool"
     },
     {
       "id": "08a0d602ad60a7c1",
@@ -2305,6 +2853,23 @@
       "summary": "A pair of rare brown wood owls have been bred at a botanic garden in Hong Kong, with two chicks fledging last month. Kadoorie Farm and Botanic Garden in Tai Po kept the breeding programme under wraps for weeks, allowing the chicks to grow undisturbed before announcing it. The chicks, still downy white, were seen peering curiously from their nest among ferns in the farm’s mature forest. Their mother kept watch from a nearby tree during the day and foraged for food at night, the farm said in a..."
     },
     {
+      "id": "1d6cdd6eaeae1aeb",
+      "title": "Vertiv's acquisition of ThermoKey closes - Data Center Dynamics",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNdHFJdlczbkpqWUwyaXBwbVN2em5yX2U5Q1BMaVVYa2tyZE1kdDhZalBlSjBnRjcwU1U2bGpJcXJPV2FleENwNUZLWUE3TVNXR3paQkh3UnRDOEhVRWFXbE5MOWpFMlNvVExCY2RvcVBmWm1KRUxlODNCNUV0Rk85c0JaSWxCVUkxcmkw?oc=5",
+      "published_at": "2026-06-13T09:01:59Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Vertiv's acquisition of ThermoKey closes    Data Center Dynamics"
+    },
+    {
       "id": "01f2967db0b750c4",
       "title": "Quadrant Capital Group LLC Has $132.06 Million Stake in Apple Inc. $AAPL - MarketBeat",
       "source": "Google News",
@@ -2388,6 +2953,24 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Gerber Kawasaki Wealth & Investment Management Grows Stock Position in Apple Inc. $AAPL    MarketBeat"
+    },
+    {
+      "id": "102579f7feb0aa8a",
+      "title": "Rethinking data center cooling for AI: The rise of direct-to-chip liquid cooling - Data Center Dynamics",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQYXdzZkVpbFYtWmJfLVRodjBFZVdkTlEwa3NRa01LSzk0NXRsR1RmNEFRY3NKX1NzWXU2a3AtWFVpaFpBTFBPSnh4M240YTc5QlZUQV9SRVlfRk5BVWQxeXljdEVFZm5vMGlZRXhEcEJRLXd5UXduaDNWY0VNUjMxVloxdzhVdEJHV3ltX1RncFJDc2hjd2ZaTERiNjBvOS03dklRbVVDdlJpMU8xTmhBN0I5amV4RmpWNXQwRlA1cHFLMXZyM1E?oc=5",
+      "published_at": "2026-06-13T07:01:57Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Rethinking data center cooling for AI: The rise of direct-to-chip liquid cooling    Data Center Dynamics"
     },
     {
       "id": "8c19231cd4a31cca",
@@ -2679,6 +3262,40 @@
       "summary": "A new report suggests the unit, which employs 6,500 people, is on the verge of revolt."
     },
     {
+      "id": "6dcbefb1d71e549b",
+      "title": "How AI Infrastructure Is Driving Data Center Expansion? - vocal.media",
+      "source": "\"data center infrastructure hyperscale power cooling\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNLUdIejNXNTF5SklCOHllTEdMZEpnajBIcGJ5ZFUya2xQNHJMWDFxZjR3YmNTZExvbWtCRUNYd2NjQno4QmoxRkpEcmpZZy1falhyWk53X2FKWS01bkNrOGNZVm9ULUlRLVJoVi1HVkxfQ2tsYU9ENF9mMGt6QnlOWkNHYU4?oc=5",
+      "published_at": "2026-06-12T22:58:19Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "How AI Infrastructure Is Driving Data Center Expansion?    vocal.media"
+    },
+    {
+      "id": "7a7b53756d8e1eb5",
+      "title": "Cold Plate Assemblies Market Forecast Points Higher Toward 2035, Driven by Hyperscale Liquid Cooling Adoption - IndexBox",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxPdHNDbGlwenlxWjRuYnc5VU9vYUZCeUFaLWsxeXhpcTFTU0tjLW1Cb0V1dEJmdDRjNF9sUmttQ1dXaS1naFlGd05OcGJSWm1jOTRVZGJ0NFZUVXpqcFA4TGtYTFF0RDFfN0hIU0JSMC1KdWZER3pLWDNZYm9RejNHMDFtM3JQRndWWUtKaHNoZEtiNEpLRkt3eEt3TnUzT3I5QVhXbS12ZUxVNkZ3SlMtcURDOUxDQl9EZUgzUkczQVJzVUo4VV9wTWV6RmRxdTVpS2JESQ?oc=5",
+      "published_at": "2026-06-12T22:46:18Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Cold Plate Assemblies Market Forecast Points Higher Toward 2035, Driven by Hyperscale Liquid Cooling Adoption    IndexBox"
+    },
+    {
       "id": "79be3c6b55c2740e",
       "title": "Apple (NASDAQ: AAPL) Stock Price Slides 8% After WWDC 2026 Despite AI Progress And Raised Price Target - foreignpolicyjournal.com",
       "source": "Google News",
@@ -2764,6 +3381,42 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Rocket and AI group’s shares jumped by nearly a fifth after raising $75bn in record initial public offering"
+    },
+    {
+      "id": "384e5791c6031370",
+      "title": "Chinese cybercrime operation that used AI to scam ‘hundreds of thousands of victims’ sued by Google",
+      "source": "TechCrunch",
+      "url": "https://techcrunch.com/2026/06/12/chinese-cybercrime-operation-that-used-ai-to-scam-hundreds-of-thousands-of-victims-sued-by-google/",
+      "published_at": "2026-06-12T20:38:09Z",
+      "fetched_at": "2026-06-15T09:54:47.854758Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "The tech giant said a group called \"Outsider Enterprise\" used AI to scam hundreds of thousands of victims, sending 2.5 million text messages over a span of two weeks."
+    },
+    {
+      "id": "4f484e4d47c5cc83",
+      "title": "NVDA Stock Quote Price and Forecast - CNN",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiUEFVX3lxTE5oakpQaVAtWVg3Rjh6M2FFaExEa1JVeThKN1FIX1p2OG1lWmVaVnhlU3Zsek42ZlRyd055aXc2dGNHa0NxV2RfU1I1dUoweXNi?oc=5",
+      "published_at": "2026-06-12T20:15:20Z",
+      "fetched_at": "2026-06-15T09:58:47.157498Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [
+        "US Semiconductors"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVDA Stock Quote Price and Forecast    CNN"
     },
     {
       "id": "a974b7958d87af8d",
@@ -3089,6 +3742,25 @@
       "summary": "Huawei Technologies is studying whether to run its newest Ascend artificial intelligence chips inside its cloud and AI services in Latin America, a senior executive has confirmed, in a move that would push Chinese-designed hardware deeper into a region long courted by US suppliers. Mark Chen, president of Huawei Cloud Latin America, gave the confirmation in an exclusive interview with the South China Morning Post after his presentation at the Rio Web Summit, the technology and innovation..."
     },
     {
+      "id": "699f4b6f677d5dd7",
+      "title": "The Tariff Threat To Apple Stock Vanished. Its Replacement Is A Bigger Worry. - Trefis",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPOWF1dlhOUFlqWElRc1FfaXJxSjREeGxBNWdxamMzNTZ3X1FoaHZkdE1VSGRuemNkbjNtNFU1NUl3dWxpY0duWVlJUmh4OEZXdWM1T0ZreG15bW1leUJfVGllMHpFNHRKNU5RM0ZtNXBEdklUU2NSUHJYVmhoMHZKS1djUzhJdmJPM1lXdXVDdEphNTNtaGpGRWVrTTRBUHRaUVBsVmhnX1Rha0ttWUpzRXlZekRMOUg5SXJCV2hoRUx2dUZ6ZDUwNGxiMjYxaEQ5aXc?oc=5",
+      "published_at": "2026-06-12T15:08:04Z",
+      "fetched_at": "2026-06-15T09:58:47.157498Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "Consumer Electronics"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "The Tariff Threat To Apple Stock Vanished. Its Replacement Is A Bigger Worry.    Trefis"
+    },
+    {
       "id": "c4e5e0494e8b3c50",
       "title": "Google targets AI-powered phishing in New York lawsuit - Reuters",
       "source": "\"site:reuters.com\" - Google News",
@@ -3121,6 +3793,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Comments"
+    },
+    {
+      "id": "d6d57d9e0139926a",
+      "title": "Jim Cramer on Apple: “It Still Has Products We All Love” - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNYkpxdEFzbWp2WlZreGpLVDUxTTU4S0ZJcW9uUHdhelpKZ1MzN0ppTGw4YTRITGNxSFR1NGY3b3l2MUJ0MkVFT0R5ZmE4QlNBdzdqbmNhSHVBQTdXRTFfRVRjV0s0b1RKby1oUzZNYm1rTWpfNVlyTkJYUHROVXNqX0NFREhUNXRiblRXTGFnX0NOYTZUUW0xVmIzTkg?oc=5",
+      "published_at": "2026-06-12T14:45:11Z",
+      "fetched_at": "2026-06-15T09:58:47.157498Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "Consumer Electronics"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Jim Cramer on Apple: “It Still Has Products We All Love”    Yahoo Finance"
     },
     {
       "id": "720b0bf0a16015ab",
@@ -3242,6 +3933,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong’s Hospital Authority has fired an intern doctor for serious misconduct including breaching patient privacy and professional confidentiality. The authority said on Friday that it maintained a high standard of ethics, integrity and discipline, adding that the dismissal followed an investigation by an independent committee. The intern had violated medical ethics and integrity, infringed upon patient privacy and professional confidentiality, and failed to adhere to instructions when..."
+    },
+    {
+      "id": "7d496f28f1b2eb4d",
+      "title": "Liquid Cooled Data Center vs. Traditional Data Center: A Full Infrastructure Comparison for AI Workloads - Nasscom",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQU182UkJJc3BrbElpZmtsWTNWUWxxZmJDQktWbjlXaUljNXNWOXhBazE3N1ptMzcxaDRKSmZiS2toclJKTGV0N0h5Q0ZfMFppRU9leE9WdFN6V1R5V3BicE5pMk9DOHRYaVRwRHo5Y09wb1FFWFB0UEdmbHQ2c1ppSHJIeUVGdnBHeTd2MVJKWE05VWNxWFY5UUYwd2RucUVHZnA2NDFMTmE4WEV3Zk5ZOWZEUU1qa21WaWl2eHZqb05LUQ?oc=5",
+      "published_at": "2026-06-12T13:13:58Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Liquid Cooled Data Center vs. Traditional Data Center: A Full Infrastructure Comparison for AI Workloads    Nasscom"
     },
     {
       "id": "ed51cdbfb82216c5",
@@ -3431,6 +4139,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "China invests $295B in AI backbone amid US data center boom    Crypto Briefing"
+    },
+    {
+      "id": "810b5cef8b5e9d7d",
+      "title": "Liquid Cooled Data Center vs. Traditional Data Center: A Full Infrastructure Comparison for AI Workloads - Nasscom",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNcWhnNkh2VGdObkl6SDhiN2dfaUQ3cWtEU09Ra1Q2N0otS3NEU1psMWl3ZFhRTzRCbkhaNUFPaE5ObUdYRkJCdkN1eFEtbzBkY1NSVUplZUV4ajVXQkowMjh0S3A2Ykp0OXRSbU9lTFQwU2ZiU2E4Ri1VbnphYXFVM3hQNVVkYjFiMmpybEZ3NUNqalIybE90NUpCTWViWl82UzlGSVZRMzJ6djgtY0JienI5SW9ra1BKSDRRaW1leGZLUms?oc=5",
+      "published_at": "2026-06-12T11:26:12Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Liquid Cooled Data Center vs. Traditional Data Center: A Full Infrastructure Comparison for AI Workloads    Nasscom"
     },
     {
       "id": "a46bc8ef4fa2c95e",
@@ -3654,6 +4379,23 @@
       "summary": "The Hong Kong government gazetted a bill on Friday that, if passed, would waive salary tax on fund managers’ performance-linked bonuses, so long as they meet certain requirements, in a move to introduce further tax reform to strengthen the city as a wealth management centre. The bill, which will be first read by lawmakers on June 24, may attract more fund managers and family offices to operate in the city, the government said. The measure would make Hong Kong the first major Asian financial..."
     },
     {
+      "id": "2ec696d24074e09e",
+      "title": "China, Europe at a Tipping Point? - China-US Focus",
+      "source": "\"China US tariffs OR China US trade\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiggFBVV95cUxORnN5M0xhTFZadDdPSGdHUzlTQTdKODBBZWdsQllGTjRVWThHTjFCR2xRV3VuZTFVTFVBTEVQeG9zR2xxWkFFUTFEQjAxa1p1MGlnMGExZFZITXFaQ2hmZy1CMjk1SmFJcC1VY0JSNlNrN0x6ZDRGTnpfa3dRd0dCQWx3?oc=5",
+      "published_at": "2026-06-12T09:31:52Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "China, Europe at a Tipping Point?    China-US Focus"
+    },
+    {
       "id": "533d12225cab2656",
       "title": "Hong Kong regulators vow strict compliance as Beijing tightens capital controls",
       "source": "Business - South China Morning Post",
@@ -3703,6 +4445,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Exclusive: U.S. bank regulators ramp up scrutiny of AI use at financial companies    Reuters"
+    },
+    {
+      "id": "133789d24a868f7e",
+      "title": "Scaling at speed: How AI is rewriting the blueprint for the modern data center - Techzine Global",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQSXNMSmpXTHN6VmtWU0tsZ3pUejJwT3d1cHdmRGJRcUo4TGg2d1VJVUdsVkV5b1RMRzVlTTQ3T3VzVk5JcUtDdWF2UEUxVS1pN3J0LTh4OHc1alhZcjNyb1Q4bXB6MFZaUnpSX0xyMTJPZWNZTzUtUGRVMnJldk90Zm0zcFBpMDlSUTZtU3IxMzVBanVIN0wzVXdGSlZfbmpXWDdPeldCNVVpT1Ria09QZ0FweXcySTktbnNjc0V4UWZCeGI3aGZaUXZR?oc=5",
+      "published_at": "2026-06-12T09:01:47Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Scaling at speed: How AI is rewriting the blueprint for the modern data center    Techzine Global"
     },
     {
       "id": "a30996e18557577f",
@@ -4010,6 +4769,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "China plans $295B investment in data center network to enhance AI capabilities    Crypto Briefing"
+    },
+    {
+      "id": "6a0a24d28af2467c",
+      "title": "Taiwan AI infrastructure suppliers see broad sales gains in May - digitimes",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxQSjlvSnNrZ011cVBSOVJoVWV3WGZJQ1V5Z2lnNjRONWFMNEdEeXN5YUQyTjBOMmNDRk82OVl3ZXlSM2dsc3dOZkhuXzRRenM0N0dfMXdIS0EweV9hWkxaSHFfWGxWS25mUTlydXBtVXB5NEE1TjhpSHo1OG1PNzRicnp2SDQtaFFkVVU2V1ZNZFk4U2dkWVRF?oc=5",
+      "published_at": "2026-06-12T04:38:05Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Taiwan AI infrastructure suppliers see broad sales gains in May    digitimes"
     },
     {
       "id": "29ae1f5885478ff3",
@@ -4576,6 +5352,25 @@
       "summary": "Rockets-to-AI group priced its 555.6mn shares at $135 a piece ahead of highly anticipated Wall Street debut"
     },
     {
+      "id": "e7ae1aa6d89bfd6b",
+      "title": "Scaling AI data center cooling for high-density servers - TechTarget",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQdXRacUMwdjdMeHRYaVFCa3Uxclg1NnN2eUkwWnBfYTBOMk1DckxJUGRYaWJhVFF3bGFtMGh0VlRrN01FSldUZlZaR3VxUDVPdFpQZ09fa01HU2VRdk9JbFFXMWJJamRqQ0pTa3NwWTZFVHdXemFUTEtDYTRyOGxuRDg4VFZGMHlYWUUzd0lBRjQzQmM4TC1KN21rMXNfNS1IekN2TnJB?oc=5",
+      "published_at": "2026-06-11T19:10:05Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure",
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Scaling AI data center cooling for high-density servers    TechTarget"
+    },
+    {
       "id": "a215d14e67d264d1",
       "title": "Nvidia denies Latin America role in chip smuggling as US-China AI rivalry reaches Brazil",
       "source": "News - South China Morning Post",
@@ -4801,6 +5596,23 @@
       "summary": "While Oracle’s cloud-infrastructure business is growing rapidly, a massive $95 billion spending plan and a physical bottleneck in data-center deliveries are giving investors pause."
     },
     {
+      "id": "2a1ae2ed7df59ac5",
+      "title": "Innovation and integration are evolving the GBA from a safe harbour to a global contender",
+      "source": "Business - South China Morning Post",
+      "url": "https://www.scmp.com/presented/business/topics/greater-bay-area-ceo-forum/article/3356449/innovation-and-integration-are-evolving-gba-safe-harbour-global-contender?utm_source=rss_feed",
+      "published_at": "2026-06-11T16:00:09Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China-US Relations"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "[The content of this article has been produced by our advertising partner.] Over the last decade, worldwide markets have faced multiple sources of intense and sustained geopolitical risk. Trade wars and tariff skirmishes have coincided with military conflicts in both Europe and the Middle East. Throughout this extended period of volatility and uncertainty, China’s Greater Bay Area (GBA) has remained a reliable port in the storm for investors and innovators alike. But with the launch of the..."
+    },
+    {
       "id": "b565f1ff92d54418",
       "title": "Unlocking Curiosity: Introducing Hong Kong Academy’s Maker’s Atelier for Pre-K Learners",
       "source": "News - South China Morning Post",
@@ -4952,6 +5764,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Even some of the tech labs seem to agree that society as a whole should benefit from advances"
+    },
+    {
+      "id": "b238f940ccf8fd09",
+      "title": "7 Sectors Powering the AI Boom Behind the Scenes - Schaeffer's Investment Research",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNWnRPT3JTSUo4ZEFpMUsxaWlXcVQwSS02TmZSMFhTNUcyaHM3aVZVLUNkSGFlZF9hdlhWY1JJM3gyTkxtWmZMaFk4bGc0LUVaYUZaa3BfNGZOV19CdE9vdG1CZXZaY2xaSEhlZi1YbnpXeFVBam9qUHZSY0h1Y0s2anB2YWtjTTFfb2IyV1VBeENvc1Z6NkZuSVlXQmxwMGJIN3MyUllQUzJLOUo3TnJZMlRn?oc=5",
+      "published_at": "2026-06-11T14:43:50Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "7 Sectors Powering the AI Boom Behind the Scenes    Schaeffer's Investment Research"
     },
     {
       "id": "53dc9c3475505093",
@@ -5549,6 +6378,23 @@
       "summary": "After many high-profile corporate customers complained about the high fees attached to AI models and the practice of ‘tokenmaxxing’, OpenAI is considering discounting its services as competition with Anthropic gets cut-throat"
     },
     {
+      "id": "9ec66d9cf451f890",
+      "title": "AI’s water problem is getting harder to ignore - CTech",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTE13RXJHN2hKMWJnSWJvV1ZBdHBSRTN3WFBIelFQM0QzVlllckVmR0Uzai1hNlpidlNCc3U1Z0JUY3ByR09LU3BtSlA2MFVsTmIyNUlWenRVOEkxQVRvVFBNcmh5bTgwVkE?oc=5",
+      "published_at": "2026-06-11T09:23:00Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "AI’s water problem is getting harder to ignore    CTech"
+    },
+    {
       "id": "51f5d1a4038b9a66",
       "title": "China, Hong Kong stocks fall as AI bubble fears build up",
       "source": "Business - South China Morning Post",
@@ -5769,6 +6615,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong Stock Ratings Summary: China Galaxy Securities has assigned Alibaba a 'Recommended' rating.    富途牛牛"
+    },
+    {
+      "id": "3b63a856b31caed1",
+      "title": "BNP Paribas mines the liquid cooling sector: AI cooling demand will continue to surge, with Eaton (ETN.US) and Vertiv (VRT.US) set to emerge as winners - 富途牛牛",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPRm5TOXVjejVyX0I2Wm96OXVyelZyU1Bscl9kdVY4VTV4RHR2SWRKRy00LVk3UDVfSm12UjQ5RnRST2NUcHJDXzR5YUNhcE82N3ZlcW1nOU5odkJ0MzIyNm80TXZTdkpKcFI1MkZzTzlJd3pxeVdsN1M3bXJyRmRvSXcta21kQlRtRE9LdW5TeWJrRHoxdGkzUkEwdnpHQUdueVZ5Nw?oc=5",
+      "published_at": "2026-06-11T06:55:29Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure",
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "BNP Paribas mines the liquid cooling sector: AI cooling demand will continue to surge, with Eaton (ETN.US) and Vertiv (VRT.US) set to emerge as winners    富途牛牛"
     },
     {
       "id": "f23cf28a89c8846a",
@@ -6024,6 +6889,24 @@
       "processed": false,
       "alert_sent": false,
       "summary": "The Hong Kong government should expand its planned mandate for driver-monitoring systems on public buses to other modes of transport and upgrade road infrastructure as part of a multipronged strategy to cut down on traffic accidents, industry leaders have said. The remarks on Thursday followed authorities’ revelation a day earlier of a plan submitted to the Legislative Council to leverage technology to boost road safety. The Transport Department is set to conduct an in-depth study on the..."
+    },
+    {
+      "id": "10aee2c8d300f698",
+      "title": "Reliance and Meta partner to build 168 MW hyperscale data center in Gujarat for AI and cloud infrastructure - MobiGyaan",
+      "source": "\"data center infrastructure hyperscale power cooling\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNV2FKUlhKdlYzdWxMbEgwa0VNTEltZEtlNUwzSFV4ZG50Z00xSV81c2xKNnFTeGRzcUZrODVRejRnYV8tV0pfdlluaFVZTkJRYXhqbjA4MHpDTy16SDNLSktTc3FGeWdSVThQTkRveEdJX2VsUTRhN0wtX0pva0FuSw?oc=5",
+      "published_at": "2026-06-11T03:31:40Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Reliance and Meta partner to build 168 MW hyperscale data center in Gujarat for AI and cloud infrastructure    MobiGyaan"
     },
     {
       "id": "0c6ef2ed76e270df",
@@ -6585,6 +7468,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Is SpaceX a rocket company, satellite communications business or AI powerhouse? That’s a key question for investors to assess heading into the IPO."
+    },
+    {
+      "id": "2251a49ae53ae4a3",
+      "title": "Vertiv, Eaton seen as top AI data center cooling winners: BNP Paribas - MSN",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNb05qVHgxc1Q2ZndpWUxNVmVGdVlUbl9aZmFSWk1aT1NrRndMMExISnM2QXNUenVUWU51X0tUaVl1LV9NMDlJM3I3TlZQUVhPS2dRRHdzUGVMN1dZdm5rdC1rUWJhTWlOWE9vbDl3UllZVGljd016S2NDVVRvZExpTGg4SWV5QVJLZ0NMMHVxQzNCYlV3NTJnRnJUWDV3S1RSVmYtV3dUN0JkZmxWQ3NyUDN0Um42YUdwWUZPNE5R?oc=5",
+      "published_at": "2026-06-10T19:17:20Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure",
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Vertiv, Eaton seen as top AI data center cooling winners: BNP Paribas    MSN"
     },
     {
       "id": "2724319e2b299263",
@@ -7611,6 +8513,23 @@
       "summary": "Rolling coverage of the latest economic and financial news AI companies are on track to borrow $570bn in 2026, according to estimates by the bank Morgan Stanley . Big tech companies are increasingly taking out more debt to fund their huge investment needs – and the US bank has found that AI-related debt issuance stood at almost $236bn as of the end of May. That is four times higher than the same point last year, according to a report by Reuters . Continue reading..."
     },
     {
+      "id": "d084a3f2f1c00236",
+      "title": "UniIC, a smaller rival to CXMT, pushes for mainland China IPO amid memory supercycle",
+      "source": "Business - South China Morning Post",
+      "url": "https://www.scmp.com/tech/tech-trends/article/3356621/uniic-smaller-rival-cxmt-pushes-mainland-china-ipo-amid-memory-supercycle?utm_source=rss_feed",
+      "published_at": "2026-06-10T09:00:11Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "China Semiconductors"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Xi’an UniIC, a dynamic random-access memory (DRAM) manufacturer backed by China’s technology conglomerate Tsinghua UniGroup, is accelerating its push for a public listing in Beijing, joining its larger rival ChangXin Memory Technologies (CXMT) in seeking to ride the current memory supercycle. UniIC recently completed its initial public offering (IPO) tutoring phase, a step that is mandatory for public listings in mainland China, five months after the company initiated the process, according to.."
+    },
+    {
       "id": "8adeaa2f70c518c3",
       "title": "Hong Kong authorities propose doubling size of planned Lau Fau Shan tech hub",
       "source": "News - South China Morning Post",
@@ -8157,6 +9076,23 @@
       "summary": "[The content of this article has been produced by our advertising partner.] Hong Kong has one of the world’s longest life expectancies, a distinction it has maintained for much of the past decade according to data from the city’s Centre for Health Protection. But longevity alone does not guarantee a healthier, more fulfilling or financially secure life. That reality is becoming increasingly apparent across ageing societies, where longer lives are bringing fresh questions about healthcare,..."
     },
     {
+      "id": "cda6172b0b083411",
+      "title": "Reliance becomes Meta's AI infrastructure partner in India with first data centre build - CRN Asia",
+      "source": "\"data center infrastructure hyperscale power cooling\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOOTgzR2dhSnhnODRSZjdVWUpkUUVhSlRWaWRmcWFYQ3FYdTR4SnJmWXhtY2QxVWlaYVpucXBIMnFKVEdoS21aVnpfV2pSYWNjT2h2Q2g3em5ka1p6VEZabDB4Ym8zeHJhMkdwbHM3N0t2VkdZZ1BDSFEwTUplMW8xTWZDNzFmQ1UxQ3hFbElBU25WaUlFdlJtR182Sm1aSl9kQkJ0eW9LRkdzV01vdTY4MHdYeEJhQnJRQjJpMTJDbm4xekNGSVE?oc=5",
+      "published_at": "2026-06-10T03:49:58Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Reliance becomes Meta's AI infrastructure partner in India with first data centre build    CRN Asia"
+    },
+    {
       "id": "dee80e0293be5a42",
       "title": "Are Hong Kong civil servants being punished for Tai Po fire with flat 2% pay rise?",
       "source": "News - South China Morning Post",
@@ -8308,6 +9244,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong’s first astronaut may have travelled into space, but the significance of the moment extends far beyond the mission itself. Lai Ka-ying became our first home-grown astronaut to reach space, as part of China’s Shenzhou-23 mission to the Tiangong space station, marking a historic milestone for the city and its role within the country’s scientific ambitions. For many, the moment naturally evokes pride and excitement. Yet, beyond science and national achievement, this milestone may also..."
+    },
+    {
+      "id": "b082bc16caefe960",
+      "title": "Data Center Cooling Market Trends: Liquid Cooling Adoption, Energy Efficiency & Forecast to 2034 - vocal.media",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOSkt5ZFVYcUg5OGY1azlVRDVlUlgyZHllRk41c0UxY005UWpOc2ZfVDhPT1pZakRnZlZLWWFrZjFHV3NjdkN4Wm9Cb0NlQThtRlF4Qkg3am5QRTMxWEd5a2ptdGxYUGZrT0dIVng5RjFiWjI4Rl9rc1hidURVSGxqeWtwenlaOHRoejdNTV8xU0JDV0c4UFlnU2oyTlA4X0FPS0VHa2NKUTBvLWxrbjN4OENHc19jdDdrd2JPcUlNYkJSalE?oc=5",
+      "published_at": "2026-06-10T01:18:51Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Data Center Cooling Market Trends: Liquid Cooling Adoption, Energy Efficiency & Forecast to 2034    vocal.media"
     },
     {
       "id": "4bd74b6025c41ec8",
@@ -8496,6 +9449,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Super Micro Computer to raise $7 billion in equity offerings to meet AI server demand    Reuters"
+    },
+    {
+      "id": "19a2c80a60c0d117",
+      "title": "SpaceX's Orbiting Data Centers Will Use Liquid Cooling, But Don't Expect Water - PCMag",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxObWdoSDI2N0FRM0hKMkp6RUQwc21NaWhieXRfOXB6SE9iaUw0eG1oZlloNWtxemdnMndsYThONjU4VG1UcXRZZ3ZCeWJ1VV9IaXpHZmJFbThzcGQ5aE0wdmR0VVcxTXNiUzdDVHNPTWdHTFRDUW1DS3ZSMGZQSTYyTFlCN1pLLUh5aVE2ZGo0S253WTVXcTIxbVVBY1BieTJvWkVYZQ?oc=5",
+      "published_at": "2026-06-09T22:02:04Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "SpaceX's Orbiting Data Centers Will Use Liquid Cooling, But Don't Expect Water    PCMag"
     },
     {
       "id": "1882ac40d857c437",
@@ -9197,6 +10167,24 @@
       "summary": "Apple kicked off its annual developer conference with bold promises about AI. The company, CEO Tim Cook said, would be \"introducing new technologies and innovations that push the limits on what's possible.\" But its slew of announcements - centered on a brand-new \"Siri AI\" - had more to do with catching up. After almost entirely […]"
     },
     {
+      "id": "3591180786eeae46",
+      "title": "Data Center Liquid Cooling Market to Reach US$29.2 Bn by 2033 as AI and High-Density Computing Accelerate Adoption | Persistence Market Research - Yahoo Finance",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxQNDRHYkU2SWw2c2EtT1pPaXotTWwwcmF0QkZ5emd4RnpYcUZXX25NazcwanJSVkRUMXN6aExVaERRb1drUmEzakZiVnBzSXNFWUZuMkhhLXpzR0ZpN0R2OF9VaVYyOXpuY2M2UlZrWFZNRkoxUmYtc2xQU2s5REhpdmpEUkNDcjVpT3h5LWllNVVfdlZEWXYtQW5iTWRFVHR0WVp5Mg?oc=5",
+      "published_at": "2026-06-09T14:15:00Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Data Center Liquid Cooling Market to Reach US$29.2 Bn by 2033 as AI and High-Density Computing Accelerate Adoption | Persistence Market Research    Yahoo Finance"
+    },
+    {
       "id": "9246e567061b8fe8",
       "title": "XIAOMI-W Stock Quote, Share Price, News and Analysis - Longbridge",
       "source": "\"Xiaomi stock OR 1810.HK\" - Google News",
@@ -9212,6 +10200,24 @@
       "processed": false,
       "alert_sent": false,
       "summary": "XIAOMI-W Stock Quote, Share Price, News and Analysis    Longbridge"
+    },
+    {
+      "id": "da824f9c5c52c8f9",
+      "title": "Data Center Liquid Cooling Market to Reach USD 29.5 Billion by 2033 as AI Revolution Reshapes Global Infrastructure - PR Newswire",
+      "source": "\"liquid cooling OR immersion cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMigAJBVV95cUxPT2hiUnZ0SnNRNjFSWGhNYkJBRlhwZkNmZkp5ejdZWm1KMG82Y0oyQW5fbmZoWGItcHpiMHlNVV9tUHAxVFZuYzFsR0QyNEl0NzNWSkNYV0czeG1rN2RUVTdQbTFXQkFCNWsyUFdfUE9qSFBDcGg5eS10SWFZNUNNNGhqQzhENlBjblFkdjVoWVZLVFBSTGFKVVM5Vjlkam9pOXNDWXBnY3lLNEZaZHhXdUs3NEo0WTVJYk5RUFNodkJhZXU4dXJzelFkbF93TjA2WG5aM3JfeDVVSV9aN1hYT1ZMUzZxeFlBaWJkUjQxenk4cmJzNnJRZFVTRTZ5UGtJ?oc=5",
+      "published_at": "2026-06-09T14:01:00Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Liquid Cooling"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Data Center Liquid Cooling Market to Reach USD 29.5 Billion by 2033 as AI Revolution Reshapes Global Infrastructure    PR Newswire"
     },
     {
       "id": "0a52ec1d0a94b547",
@@ -9590,6 +10596,23 @@
       "summary": "Singapore-listed developer Wee Hur Holdings is expanding its Hong Kong student accommodation platform with the acquisition of One Bedford Place, a lender-controlled office tower that it plans to convert into a 500-bed student housing project. The company said in a filing to the Singapore Exchange on Tuesday evening that it had acquired One Bedford Place for an undisclosed sum, deepening its push into Hong Kong’s fast-growing student accommodation market. “This investment reflects our conviction."
     },
     {
+      "id": "05f0b2b645316e39",
+      "title": "Accelerating AI: Advanced CDU cooling for high-density data centers - Data Center Dynamics",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQUW9EYU55LWp6VEtJY1dNNWRvTEdTTkxBWTFaSTJIcXZ0UHhvT0p4eUNMQWFPektHX1c0TjZBUnlvQmFfWUZxMkhBU0VpZmNnSFhaWkg4eF8tUnBMUldBNkhoZDNRWGN3NFIyeDN2dU5RNzVZdkVWdGt5MnVGamNBYS1VbndjQnNXdTcyX0pSU3JvQkJWWHE3blRnZG9xSDNhTHhrQmlPWkVaWTJZMkVJb0FLUnI?oc=5",
+      "published_at": "2026-06-09T11:28:58Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Accelerating AI: Advanced CDU cooling for high-density data centers    Data Center Dynamics"
+    },
+    {
       "id": "5b8464ef6940894f",
       "title": "Human activity linked to 4 of 29 cetacean deaths in Hong Kong waters: report",
       "source": "News - South China Morning Post",
@@ -9898,6 +10921,24 @@
       "summary": "India’s TCS chair says AI agents may equal headcount, dampen hiring    Reuters"
     },
     {
+      "id": "20cf5044d9096590",
+      "title": "Schneider Electric, TeraWulf strike $290m deal to power AI arms race in New York - Business News Nigeria",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQbk4tOXotbThsYzVyZWlqYjZRTDhld2dtZHZDYzVHMUdzaHZrSlR0RUtINi1hQ0ZWY3BIWUY0dE9WU2hTQUdkUzFmWUEwYTBCM0xHS0NMRmFUMEx1TXpUZU15eG92R0tfQzZTTTBMb2lGLUdYQ3NqWDJTaFhyblBwb3VRYjZoTW44VGo4ODhRcXdCalBXRVp2OWRUemx5RmJpX25uMGJhSnFaV0FpMW1mOFFYZVlrdTRO?oc=5",
+      "published_at": "2026-06-09T09:53:14Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric, TeraWulf strike $290m deal to power AI arms race in New York    Business News Nigeria"
+    },
+    {
       "id": "230a153b7102a540",
       "title": "China prepares US$295 billion plan to fund nationwide AI buildout, Bloomberg News reports - The Standard (HK)",
       "source": "\"China 295 billion AI data center plan 2028\" - Google News",
@@ -9913,6 +10954,24 @@
       "processed": false,
       "alert_sent": false,
       "summary": "China prepares US$295 billion plan to fund nationwide AI buildout, Bloomberg News reports    The Standard (HK)"
+    },
+    {
+      "id": "eda418be4b024a71",
+      "title": "Schneider Electric Introduces New Uniflair XCA Chiller Line, Designed to Enhance Energy Performance and Operational Stability in High-Density AI Data Centers - Engineering News",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMisAJBVV95cUxNZWc3WEVKZzB6ZjJDdGliTm1oeHJuMWs3WDExczI3TzIyTndBZ214MVl5Z1BMWHpLVXUwU2wzenZTd0J4OWotNHFIZk1xSjRYNVhZUWxXcXNfZkxGODluX1V2cFpOSTd4NmxXXzZITmFCdFFmS3ZMSXk2TzM5UGhRamFKQlhoYUJGZ0JQaW4ybnBBRzFzMkd1LXY2TVdJU0F1RzlobjRLTDNYVzBLQjVhcjBsTUNQUlg0X1pzVFI1bUFkb0haLU5QOTZmN0NFaGpJZi1HZWtyT2pySWhoN3JrcHdoSGsxUTBDRG1MQUJuRmwwaDNXaWZ2ZlZFT0puS29mYURBNU9xMzUwOVAwMXhkR0RCUjM2WHI3TlJJbU11UmxULXQzb3hUNXVaN1hDczRU?oc=5",
+      "published_at": "2026-06-09T09:26:58Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric Introduces New Uniflair XCA Chiller Line, Designed to Enhance Energy Performance and Operational Stability in High-Density AI Data Centers    Engineering News"
     },
     {
       "id": "65422e5ae803a9d0",
@@ -10904,6 +11963,24 @@
       "summary": "Is Apple Inc. (AAPL) A Good Stock To Buy Now?    Yahoo Finance"
     },
     {
+      "id": "fb58b47b4dd2e2d1",
+      "title": "Schneider Electric progresses phased-delivery of over $290M in AI Infrastructure Solutions, including Motivair technologies, at TeraWulf’s Google-Backed Lake Mariner Campus - Techpoint Africa",
+      "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPejM2eUg2T2Y1VEJVZTNzMU9hTXEzWklHdGc3OTFwd2ZleVJMSGs0QnNTeW1XbG8xNlZ2dTl6RHFGM0JHTmpaVXIwT1VqbjdDaEtQdkl1N0VIeTl0dENqdEVBUTZKQ2NGdVBJSUQ0eVlvUGJCU0czU2c3eFhORzd6RnY2eTdtUjRRY21JSkZfTElQcWhLVWhGdFFNYWJmNVZwTkowRUdsQm5mQ2wwTmF6bzJ6dEk1ckU?oc=5",
+      "published_at": "2026-06-08T13:24:19Z",
+      "fetched_at": "2026-06-15T09:58:51.284693Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI",
+        "Data Center Infrastructure"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Schneider Electric progresses phased-delivery of over $290M in AI Infrastructure Solutions, including Motivair technologies, at TeraWulf’s Google-Backed Lake Mariner Campus    Techpoint Africa"
+    },
+    {
       "id": "78b53c97d3f04622",
       "title": "Apple Inc (NASDAQ:AAPL) Meets All Quality Criteria of the Caviar Cruise Stock Screener - ChartMill",
       "source": "Google News",
@@ -10972,5 +12049,5 @@
       "summary": "Apple (AAPL) Is A Top Stock In Billionaire Ken Fisher’s Portfolio    Yahoo Finance"
     }
   ],
-  "updated_at": "2026-06-15T09:54:43.697185Z"
+  "updated_at": "2026-06-15T09:58:51.284693Z"
 }

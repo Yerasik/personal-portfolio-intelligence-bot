@@ -1,7 +1,7 @@
 {
   "last_digest_at": "2026-06-15T00:07:36.468796Z",
-  "last_market_fetch_at": "2026-06-15T09:54:46.706768Z",
-  "last_news_fetch_at": "2026-06-15T09:54:43.697185Z",
+  "last_market_fetch_at": "2026-06-15T09:58:49.910189Z",
+  "last_news_fetch_at": "2026-06-15T09:58:51.284693Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
@@ -12,7 +12,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-15T09:54:46.706768Z"
+      "fetched_at": "2026-06-15T09:58:49.910189Z"
     },
     "AAPL": {
       "ticker": "AAPL",
@@ -23,7 +23,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:54:46.706768Z"
+      "fetched_at": "2026-06-15T09:58:49.910189Z"
     },
     "NVDA": {
       "ticker": "NVDA",
@@ -34,7 +34,7 @@
       "sector": "Technology",
       "industry": "Semiconductors",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:54:46.706768Z"
+      "fetched_at": "2026-06-15T09:58:49.910189Z"
     },
     "MSFT": {
       "ticker": "MSFT",
@@ -45,7 +45,7 @@
       "sector": "Technology",
       "industry": "Software - Infrastructure",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:54:46.706768Z"
+      "fetched_at": "2026-06-15T09:58:49.910189Z"
     }
   },
   "last_sent_alerts": [
@@ -70,33 +70,50 @@
       "sent_at": "2026-06-10T03:03:18.248828Z"
     }
   ],
-  "last_evaluated_alerts": [],
+  "last_evaluated_alerts": [
+    {
+      "alert_key": "sector_attention::AI",
+      "evaluated_at": "2026-06-15T09:55:11.686097Z"
+    },
+    {
+      "alert_key": "sector_attention::Hong Kong",
+      "evaluated_at": "2026-06-15T09:55:11.686097Z"
+    },
+    {
+      "alert_key": "sector_attention::China-US Relations",
+      "evaluated_at": "2026-06-15T09:59:12.058214Z"
+    },
+    {
+      "alert_key": "sector_attention::Data Center Infrastructure",
+      "evaluated_at": "2026-06-15T09:59:12.058214Z"
+    }
+  ],
   "pending_alerts": [
     {
-      "id": "8218b2ff6d58a65d",
+      "id": "3d16c519a8b5f41c",
       "type": "sector_attention",
       "severity": "warning",
-      "message": "Sector attention: AI: 28 articles tagged to AI were found in the last 24 hour(s).",
-      "created_at": "2026-06-15T09:38:05.621902Z",
+      "message": "Sector attention: China-US Relations: 11 articles tagged to China-US Relations were found in the last 24 hour(s).",
+      "created_at": "2026-06-15T09:59:12.054833Z",
       "related_tickers": [],
-      "industry": "AI",
+      "industry": "China-US Relations",
       "llm_explanation": null,
       "details": {
-        "count": 28,
+        "count": 11,
         "hours": 24
       }
     },
     {
-      "id": "aff61df879cd0dda",
+      "id": "9c8e71d06b360431",
       "type": "sector_attention",
       "severity": "warning",
-      "message": "Sector attention: Hong Kong: 26 articles tagged to Hong Kong were found in the last 24 hour(s).",
-      "created_at": "2026-06-15T09:38:05.621902Z",
+      "message": "Sector attention: Data Center Infrastructure: 12 articles tagged to Data Center Infrastructure were found in the last 24 hour(s).",
+      "created_at": "2026-06-15T09:59:12.054833Z",
       "related_tickers": [],
-      "industry": "Hong Kong",
+      "industry": "Data Center Infrastructure",
       "llm_explanation": null,
       "details": {
-        "count": 26,
+        "count": 12,
         "hours": 24
       }
     }

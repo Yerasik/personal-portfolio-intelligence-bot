@@ -4,9 +4,77 @@
   "digest_minute": 0,
   "focus_industries": [
     "AI",
-    "Semiconductor Manufacturing",
-    "Hong Kong"
+    "Hong Kong",
+    "China-US Relations",
+    "US Semiconductors",
+    "China Semiconductors",
+    "Liquid Cooling",
+    "Data Center Infrastructure"
   ],
+  "sector_keywords": {
+    "China-US Relations": [
+      "US-China",
+      "China-US",
+      "U.S.-China",
+      "China and the US",
+      "Washington and Beijing",
+      "tariffs",
+      "trade war",
+      "sanctions",
+      "export controls",
+      "geopolitical",
+      "bilateral relations",
+      "strategic rivalry"
+    ],
+    "US Semiconductors": [
+      "CHIPS Act",
+      "NVIDIA",
+      "AMD",
+      "Intel",
+      "Micron",
+      "Applied Materials",
+      "Lam Research",
+      "KLA",
+      "semiconductor equipment",
+      "fab construction",
+      "H100",
+      "GPU export"
+    ],
+    "China Semiconductors": [
+      "SMIC",
+      "Huawei Ascend",
+      "Chinese semiconductor",
+      "domestic chip",
+      "YMTC",
+      "CXMT",
+      "advanced packaging",
+      "semiconductor self-sufficiency",
+      "Chinese AI chip",
+      "Iluvatar"
+    ],
+    "Liquid Cooling": [
+      "liquid cooling",
+      "immersion cooling",
+      "direct-to-chip cooling",
+      "cold plate",
+      "coolant distribution",
+      "rear door heat exchanger",
+      "water cooling",
+      "data center cooling"
+    ],
+    "Data Center Infrastructure": [
+      "data center infrastructure",
+      "hyperscale data center",
+      "colocation",
+      "power distribution",
+      "UPS",
+      "PDU",
+      "Schneider Electric",
+      "Vertiv",
+      "AI data center",
+      "data center buildout"
+    ]
+  },
   "extra_watchlist": [],
   "rss_feed_urls": [
     "https://feeds.reuters.com/reuters/businessNews",
@@ -63,7 +131,13 @@
     "https://news.google.com/rss/search?q=Greater+Bay+Area+semiconductor+innovation+center&hl=en-US&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=China+295+billion+AI+data+center+plan+2028&hl=en-US&gl=US&ceid=US:en",
     "https://news.google.com/rss/search?q=SMIC+Huawei+AI+GPU+domestic+substitution&hl=en-US&gl=US&ceid=US:en",
-    "https://news.google.com/rss/search?q=US+China+AI+race+semiconductor+2026&hl=en-US&gl=US&ceid=US:en"
+    "https://news.google.com/rss/search?q=US+China+AI+race+semiconductor+2026&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=US+China+relations+sanctions+diplomacy+trade&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=TSMC+Intel+Micron+US+semiconductor+fabrication&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=SMIC+YMTC+Chinese+semiconductor+self-sufficiency&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=liquid+cooling+OR+immersion+cooling+data+center&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=data+center+infrastructure+hyperscale+power+cooling&hl=en-US&gl=US&ceid=US:en",
+    "https://news.google.com/rss/search?q=Vertiv+OR+Schneider+Electric+cooling+data+center&hl=en-US&gl=US&ceid=US:en"
   ],
   "news_max_items": 2000,
   "news_retention_days": 7,

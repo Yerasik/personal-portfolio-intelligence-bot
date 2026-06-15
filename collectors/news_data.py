@@ -123,13 +123,30 @@ def tag_tickers(text: str, ticker_keywords: dict[str, list[str]]) -> list[str]:
     return sorted(set(matched))
 
 
-def tag_sectors(text: str, focus_industries: list[str]) -> list[str]:
-    """Return focus industries mentioned in the article text."""
+def tag_sectors(
+    text: str,
+    focus_industries: list[str],
+    sector_keywords: dict[str, list[str]] | None = None,
+) -> list[str]:
+    """Return focus industries mentioned in the article text.
+
+    Each industry label is matched directly. Optional ``sector_keywords`` maps
+    a label to extra phrases (e.g. "US-China" → China-US Relations).
+    """
     matched: list[str] = []
+    aliases = sector_keywords or {}
     for industry in focus_industries:
         label = industry.strip()
-        if label and _contains_ticker_keyword(text, label):
+        if not label:
+            continue
+        if _contains_ticker_keyword(text, label):
             matched.append(label)
+            continue
+        for keyword in aliases.get(label, []):
+            term = keyword.strip()
+            if term and _contains_ticker_keyword(text, term):
+                matched.append(label)
+                break
     return sorted(set(matched))
 
 
@@ -141,6 +158,7 @@ def normalize_entry(
     fetched_at: datetime,
     ticker_keywords: dict[str, list[str]],
     focus_industries: list[str],
+    sector_keywords: dict[str, list[str]] | None = None,
 ) -> NewsItem | None:
     """Convert one RSS entry into a normalized NewsItem when it matches tags."""
     url = str(getattr(entry, "link", "") or getattr(entry, "id", "")).strip()
@@ -157,7 +175,7 @@ def normalize_entry(
     )
     tag_text = " ".join(part for part in (title, summary) if part)
     ticker_tags = tag_tickers(tag_text, ticker_keywords)
-    sector_tags = tag_sectors(tag_text, focus_industries)
+    sector_tags = tag_sectors(tag_text, focus_industries, sector_keywords)
     if not ticker_tags and not sector_tags:
         return None
 
@@ -294,6 +312,7 @@ class NewsDataService:
                     fetched_at=fetched_at,
                     ticker_keywords=ticker_keywords,
                     focus_industries=industry_keywords,
+                    sector_keywords=app_config.sector_keywords,
                 )
                 if item is None:
                     result.entries_skipped_untagged += 1

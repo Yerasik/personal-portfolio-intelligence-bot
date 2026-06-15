@@ -63,6 +63,12 @@ def run_test() -> None:
         raise AssertionError("AI should not match inside unrelated words like 'said'")
     if "AI" not in tag_sectors("New AI chip demand lifts sector", ["AI"]):
         raise AssertionError("AI should match as a standalone industry keyword")
+    if "China-US Relations" not in tag_sectors(
+        "US-China tariffs escalate amid trade talks",
+        ["China-US Relations"],
+        {"China-US Relations": ["US-China", "tariffs"]},
+    ):
+        raise AssertionError("sector_keywords should tag articles via aliases")
 
     temp_dir = Path(tempfile.mkdtemp(prefix="news-data-test-"))
     print(f"Using temp data dir: {temp_dir}")

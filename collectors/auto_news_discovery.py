@@ -227,6 +227,7 @@ class AutoNewsDiscovery:
             ticker_industries.ticker_to_industry,
         )
         industry_map = ticker_industries.ticker_to_industry
+        sector_keywords = app_config.sector_keywords
         existing = self._repository.load_news_cache()
         existing_ids = {item.id for item in existing.items}
         news_items = [
@@ -235,6 +236,7 @@ class AutoNewsDiscovery:
                 fetched_at=fetched_at,
                 focus_industries=focus_industries,
                 ticker_to_industry=industry_map,
+                sector_keywords=sector_keywords,
             )
             for item in discovered
         ]
@@ -417,6 +419,7 @@ class AutoNewsDiscovery:
         fetched_at: datetime,
         focus_industries: list[str],
         ticker_to_industry: dict[str, str],
+        sector_keywords: dict[str, list[str]] | None = None,
     ) -> NewsItem:
         ticker = item["ticker"].strip().upper()
         title = item["title"].strip()
@@ -431,7 +434,7 @@ class AutoNewsDiscovery:
                 published_at = None
 
         tag_text = " ".join(part for part in (title, summary) if part)
-        sector_tags = tag_sectors(tag_text, focus_industries)
+        sector_tags = tag_sectors(tag_text, focus_industries, sector_keywords)
         mapped_industry = ticker_to_industry.get(ticker, "").strip()
         if mapped_industry and mapped_industry not in sector_tags:
             sector_tags = sorted({*sector_tags, mapped_industry})
@@ -443,6 +446,6 @@ class AutoNewsDiscovery:
             published_at=published_at,
             fetched_at=fetched_at,
             ticker_tags=[ticker],
-            sector_tags=tag_sectors(tag_text, focus_industries),
+            sector_tags=sector_tags,
             summary=summary[:500],
         )
