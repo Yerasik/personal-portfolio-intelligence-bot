@@ -126,17 +126,23 @@ def _localized_alert_line(alert: AlertCandidate, lang: str) -> str:
     )
 
 
-def format_urgent_alert(alert: AlertCandidate, *, lang: str = "en") -> str:
+def format_urgent_alert(
+    alert: AlertCandidate,
+    *,
+    lang: str = "en",
+    llm_explanation: str | None = None,
+) -> str:
     """Format an urgent alert for Telegram delivery."""
     target = alert.ticker or alert.industry or "portfolio"
+    explanation_text = llm_explanation if llm_explanation is not None else alert.llm_explanation
     lines = [
         t("urgent_alert", lang),
         _localized_alert_title(alert, lang),
         f"{t('target', lang)}: {target}",
         _localized_alert_explanation(alert, lang),
     ]
-    if alert.llm_explanation:
-        lines.extend(["", alert.llm_explanation])
+    if explanation_text:
+        lines.extend(["", explanation_text])
     lines.append(f"{t('suggested', lang)}: {_suggested_action(alert, lang)}.")
     return truncate_message("\n".join(lines))
 
@@ -501,7 +507,7 @@ def format_ticker_analysis(
         key = "ticker_llm_empty" if is_developer else "ticker_llm_empty_user"
         lines.append(t(key, lang))
     else:
-        lines.append(explanation.to_message())
+        lines.append(explanation.to_message(lang))
 
     return truncate_message("\n".join(lines))
 

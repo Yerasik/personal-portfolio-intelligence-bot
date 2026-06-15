@@ -90,7 +90,13 @@ def test_helper_success_and_fallback() -> None:
         raise AssertionError("unconfigured LLM should not be called")
 
 
-def test_alert_pipeline_attaches_explanation() -> None:
+def test_alert_pipeline_and_delivery_explanation() -> None:
+    """Rule evaluation persists alerts without LLM text; delivery adds explanations."""
+    from unittest.mock import patch
+
+    from analysis.rules import AlertCandidate
+    from storage.models import BotUser, BotUsers
+
     temp_dir = Path(tempfile.mkdtemp(prefix="move-explainer-test-"))
     try:
         paths = resolve_data_paths(temp_dir)
@@ -99,13 +105,16 @@ def test_alert_pipeline_attaches_explanation() -> None:
             AppConfig(alert_price_change_pct=5.0, enable_llm_summaries=True)
         )
         repository.save_portfolio(Portfolio(positions=[Position(ticker="AAPL", shares=1)]))
+        repository.save_users(
+            BotUsers(users=[BotUser(chat_id=111, language="en", role="developer")])
+        )
         repository.save_state(
             BotState(
                 latest_prices={
                     "AAPL": MarketQuote(
                         ticker="AAPL",
                         price=160.0,
-                        change_pct=-6.5,
+                        change_pct=-11.0,
                         volume=1000,
                         company_name="Apple Inc.",
                         sector="Technology",
@@ -136,9 +145,10 @@ def test_alert_pipeline_attaches_explanation() -> None:
             '{"drivers":["Demand worries","Analyst target cuts"],'
             '"sentiment":"negative","assessment":"Near-term pressure persists."}'
         )
+        fake_llm = FakeLlm(canned)
 
         original_llm = jobs_module.LlmClient
-        jobs_module.LlmClient = lambda **_: FakeLlm(canned)  # type: ignore[assignment]
+        jobs_module.LlmClient = lambda **_: fake_llm  # type: ignore[assignment]
         try:
             services = SchedulerServices(
                 repository=repository,
@@ -146,7 +156,19 @@ def test_alert_pipeline_attaches_explanation() -> None:
                     telegram_bot_token="token", telegram_chat_id="123"
                 ),
             )
-            run_rule_evaluation_job(services)
+            with patch("bot.notifier.httpx.Client") as mock_client_cls:
+                mock_client = mock_client_cls.return_value
+                mock_client.__enter__.return_value = mock_client
+
+                class Response:
+                    def raise_for_status(self) -> None:
+                        return None
+
+                    def json(self) -> dict:
+                        return {"ok": True}
+
+                mock_client.post.return_value = Response()
+                run_rule_evaluation_job(services)
         finally:
             jobs_module.LlmClient = original_llm
 
@@ -154,27 +176,31 @@ def test_alert_pipeline_attaches_explanation() -> None:
         price_alerts = [a for a in state.pending_alerts if "AAPL" in a.related_tickers]
         if not price_alerts:
             raise AssertionError("expected a persisted AAPL price alert")
+        if price_alerts[0].llm_explanation:
+            raise AssertionError("LLM explanation should be generated at delivery, not evaluation")
+
+        if not fake_llm.prompts:
+            raise AssertionError("delivery should call the LLM for price-move alerts")
 
         alert = price_alerts[0]
-        if not alert.llm_explanation or "Demand worries" not in alert.llm_explanation:
-            raise AssertionError(f"explanation not attached: {alert.llm_explanation}")
-
-        from analysis.rules import AlertCandidate
-
         candidate = AlertCandidate(
             id=alert.id,
             type="price_drop",
             ticker="AAPL",
             industry=None,
             urgency="urgent",
-            title="AAPL down 6.5% today",
+            title="AAPL down 11.0% today",
             explanation="threshold breached",
             created_at=alert.created_at,
-            llm_explanation=alert.llm_explanation,
         )
-        message = format_urgent_alert(candidate)
+        explanation = explain_price_move(
+            fake_llm, "AAPL", -11.0, "today", ["Apple slides on demand worries"]
+        ).to_message("en")
+        message = format_urgent_alert(candidate, llm_explanation=explanation)
         if "Explanation (likely reasons)" not in message:
             raise AssertionError("alert message missing explanation block")
+        if "Demand worries" not in message:
+            raise AssertionError("alert message missing LLM drivers")
         if "not investment advice" not in message:
             raise AssertionError("alert message missing disclaimer")
     finally:
@@ -184,7 +210,7 @@ def test_alert_pipeline_attaches_explanation() -> None:
 def run_test() -> None:
     test_prompt_builder()
     test_helper_success_and_fallback()
-    test_alert_pipeline_attaches_explanation()
+    test_alert_pipeline_and_delivery_explanation()
     print("Price-move explainer checks passed.")
 
 

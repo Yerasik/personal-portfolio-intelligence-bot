@@ -1,6 +1,9 @@
 {
   "ticker_to_company_name": {
-    "1810.HK": "Xiaomi Corporation"
+    "1810.HK": "Xiaomi Corporation",
+    "AAPL": "Apple Inc.",
+    "NVDA": "NVIDIA Corporation",
+    "MSFT": "Microsoft Corporation"
   },
-  "updated_at": "2026-06-15T09:26:20.771379Z"
+  "updated_at": "2026-06-15T09:54:44.498425Z"
 }

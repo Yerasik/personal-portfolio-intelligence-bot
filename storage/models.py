@@ -122,6 +122,13 @@ class SentAlertRecord(BaseModel):
     sent_at: datetime
 
 
+class EvaluatedAlertRecord(BaseModel):
+    """Recently evaluated rule alert used for duplicate suppression."""
+
+    alert_key: str
+    evaluated_at: datetime
+
+
 class BotState(BaseModel):
     """Operational state persisted in state.json."""
 
@@ -130,6 +137,7 @@ class BotState(BaseModel):
     last_news_fetch_at: datetime | None = None
     latest_prices: dict[str, MarketQuote] = Field(default_factory=dict)
     last_sent_alerts: list[SentAlertRecord] = Field(default_factory=list)
+    last_evaluated_alerts: list[EvaluatedAlertRecord] = Field(default_factory=list)
     pending_alerts: list[PendingAlert] = Field(default_factory=list)
 
 

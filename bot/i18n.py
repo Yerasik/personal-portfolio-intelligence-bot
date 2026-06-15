@@ -191,10 +191,21 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "{count} articles tagged to {industry} were found in the "
             "last {hours} hour(s)."
         ),
+        "move_explanation_header": "Explanation (likely reasons):",
+        "move_explanation_fallback": "No explanation available; only raw price information is shown.",
+        "move_explanation_sentiment": "Sentiment: {sentiment} — {assessment}",
+        "move_explanation_uncertain_assessment": "Overall sentiment is uncertain.",
+        "move_explanation_note": "Note: {disclaimer}",
+        "move_explanation_disclaimer": (
+            "This is a hypothetical, best-effort explanation based only on the provided "
+            "price and news context. It may be incomplete or inaccurate and is not "
+            "investment advice."
+        ),
         "language_set": "Language updated to {language}.",
         "language_invalid": "Unsupported language. Use: en, de, zh, ru",
         "language_usage": "Usage: /set_language <code>\nExample: /set_language de",
         "reload_ok": "Configuration reloaded from disk.",
+        "reload_jobs_ok": "Scheduler jobs were refreshed from the updated config.",
         "debug_state": (
             "Debug state:\n"
             "- Positions: {positions}\n"
@@ -391,10 +402,21 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "alert_sector_explanation": (
             "{count} Artikel zu {industry} in den letzten {hours} Stunde(n) gefunden."
         ),
+        "move_explanation_header": "Erklärung (wahrscheinliche Gründe):",
+        "move_explanation_fallback": "Keine Erklärung verfügbar; nur Rohkursdaten werden angezeigt.",
+        "move_explanation_sentiment": "Stimmung: {sentiment} — {assessment}",
+        "move_explanation_uncertain_assessment": "Die Gesamtstimmung ist unsicher.",
+        "move_explanation_note": "Hinweis: {disclaimer}",
+        "move_explanation_disclaimer": (
+            "Dies ist eine hypothetische, bestmögliche Erklärung nur auf Basis der "
+            "bereitgestellten Kurs- und Nachrichtendaten. Sie kann unvollständig oder "
+            "ungenau sein und ist keine Anlageberatung."
+        ),
         "language_set": "Sprache auf {language} geändert.",
         "language_invalid": "Sprache nicht unterstützt. Verwenden: en, de, zh, ru",
         "language_usage": "Verwendung: /set_language <code>\nBeispiel: /set_language de",
         "reload_ok": "Konfiguration von der Festplatte neu geladen.",
+        "reload_jobs_ok": "Geplante Aufgaben wurden aus der aktualisierten Konfiguration neu geladen.",
         "debug_state": (
             "Debug-Status:\n"
             "- Positionen: {positions}\n"
@@ -587,10 +609,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "alert_sector_explanation": (
             "过去 {hours} 小时内发现 {count} 条与 {industry} 相关的新闻。"
         ),
+        "move_explanation_header": "解释（可能原因）：",
+        "move_explanation_fallback": "暂无解释；仅显示原始价格信息。",
+        "move_explanation_sentiment": "情绪：{sentiment} — {assessment}",
+        "move_explanation_uncertain_assessment": "整体情绪不确定。",
+        "move_explanation_note": "说明：{disclaimer}",
+        "move_explanation_disclaimer": (
+            "这是基于所提供价格和新闻背景的假设性、尽力而为的解释。"
+            "可能不完整或不准确，不构成投资建议。"
+        ),
         "language_set": "语言已更新为 {language}。",
         "language_invalid": "不支持的语言。请使用：en, de, zh, ru",
         "language_usage": "用法：/set_language <code>\n示例：/set_language zh",
         "reload_ok": "已从磁盘重新加载配置。",
+        "reload_jobs_ok": "已根据更新后的配置刷新计划任务。",
         "debug_state": (
             "调试状态：\n"
             "- 持仓数：{positions}\n"
@@ -787,10 +819,21 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "alert_sector_explanation": (
             "За последние {hours} ч. найдено {count} статей по сектору {industry}."
         ),
+        "move_explanation_header": "Объяснение (вероятные причины):",
+        "move_explanation_fallback": "Объяснение недоступно; показаны только данные о цене.",
+        "move_explanation_sentiment": "Настроение: {sentiment} — {assessment}",
+        "move_explanation_uncertain_assessment": "Общее настроение неопределённое.",
+        "move_explanation_note": "Примечание: {disclaimer}",
+        "move_explanation_disclaimer": (
+            "Это гипотетическое объяснение на основе предоставленных данных о цене "
+            "и новостях. Оно может быть неполным или неточным и не является "
+            "инвестиционной рекомендацией."
+        ),
         "language_set": "Язык изменён на {language}.",
         "language_invalid": "Язык не поддерживается. Используйте: en, de, zh, ru",
         "language_usage": "Использование: /set_language <code>\nПример: /set_language ru",
         "reload_ok": "Конфигурация перезагружена с диска.",
+        "reload_jobs_ok": "Запланированные задачи обновлены из новой конфигурации.",
         "debug_state": (
             "Отладочное состояние:\n"
             "- Позиции: {positions}\n"

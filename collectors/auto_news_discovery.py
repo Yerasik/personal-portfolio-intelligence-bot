@@ -18,8 +18,8 @@ import httpx
 import yfinance as yf
 
 from analysis.industries import build_news_focus_industries
-from collectors.market_data import _quiet_yfinance, portfolio_tickers
-from collectors.news_data import merge_news_cache, tag_sectors
+from collectors.market_data import _quiet_yfinance, tracked_tickers
+from collectors.news_data import make_article_id, merge_news_cache, tag_sectors
 from storage.models import NewsCache, NewsItem, TickerMetadata
 from storage.repository import DataRepository
 
@@ -60,12 +60,6 @@ class AutoNewsDiscoveryResult:
     total_cache_items: int = 0
     tickers_processed: int = 0
     fetched_at: datetime = field(default_factory=lambda: datetime.now(tz=UTC))
-
-
-def make_discovery_article_id(url: str, title: str) -> str:
-    """Stable article id from URL and title for cross-source deduplication."""
-    stable = f"{url.strip()}|{title.strip()}"
-    return hashlib.sha256(stable.encode("utf-8")).hexdigest()[:16]
 
 
 def _dedup_key(url: str, title: str) -> str:
@@ -186,11 +180,12 @@ class AutoNewsDiscovery:
         return [item.as_dict() for item in deduped.values()]
 
     def discover_all(self) -> list[dict[str, str]]:
-        """Fetch and deduplicate news for every portfolio ticker."""
+        """Fetch and deduplicate news for every tracked ticker."""
+        app_config = self._repository.load_config()
         portfolio = self._repository.load_portfolio()
-        tickers = portfolio_tickers(portfolio)
+        tickers = tracked_tickers(portfolio, app_config.extra_watchlist)
         if not tickers:
-            logger.info("Auto news discovery skipped: portfolio has no tickers")
+            logger.info("Auto news discovery skipped: no tickers to track")
             return []
 
         self.ensure_company_names(tickers)
@@ -231,10 +226,16 @@ class AutoNewsDiscovery:
             portfolio,
             ticker_industries.ticker_to_industry,
         )
+        industry_map = ticker_industries.ticker_to_industry
         existing = self._repository.load_news_cache()
         existing_ids = {item.id for item in existing.items}
         news_items = [
-            self._to_news_item(item, fetched_at=fetched_at, focus_industries=focus_industries)
+            self._to_news_item(
+                item,
+                fetched_at=fetched_at,
+                focus_industries=focus_industries,
+                ticker_to_industry=industry_map,
+            )
             for item in discovered
         ]
         updated_cache, duplicates, total_items = merge_news_cache(
@@ -258,10 +259,14 @@ class AutoNewsDiscovery:
     def run(self) -> AutoNewsDiscoveryResult:
         """Discover portfolio news and persist new articles to news_cache.json."""
         fetched_at = datetime.now(tz=UTC)
+        app_config = self._repository.load_config()
         portfolio = self._repository.load_portfolio()
-        tickers = portfolio_tickers(portfolio)
+        tickers = tracked_tickers(portfolio, app_config.extra_watchlist)
         discovered = self.discover_all()
         new_items, total_items = self.merge_into_cache(discovered, fetched_at=fetched_at)
+        state = self._repository.load_state()
+        state.last_news_fetch_at = fetched_at
+        self._repository.save_state(state)
         return AutoNewsDiscoveryResult(
             discovered=discovered,
             new_items_merged=new_items,
@@ -411,6 +416,7 @@ class AutoNewsDiscovery:
         *,
         fetched_at: datetime,
         focus_industries: list[str],
+        ticker_to_industry: dict[str, str],
     ) -> NewsItem:
         ticker = item["ticker"].strip().upper()
         title = item["title"].strip()
@@ -425,8 +431,12 @@ class AutoNewsDiscovery:
                 published_at = None
 
         tag_text = " ".join(part for part in (title, summary) if part)
+        sector_tags = tag_sectors(tag_text, focus_industries)
+        mapped_industry = ticker_to_industry.get(ticker, "").strip()
+        if mapped_industry and mapped_industry not in sector_tags:
+            sector_tags = sorted({*sector_tags, mapped_industry})
         return NewsItem(
-            id=make_discovery_article_id(url, title),
+            id=make_article_id(url),
             title=title,
             source=item.get("source", "").strip(),
             url=url,

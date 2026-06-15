@@ -17,6 +17,7 @@ from analysis.rules import AlertCandidate, RulesEngine
 from storage.models import (
     AppConfig,
     BotState,
+    EvaluatedAlertRecord,
     MarketQuote,
     NewsCache,
     NewsItem,
@@ -172,6 +173,27 @@ def run_test() -> None:
     suppressed = engine.evaluate(portfolio, suppressed_state, news_cache, now=NOW)
     if any(alert.type == "price_drop" and alert.ticker == "AAPL" for alert in suppressed):
         raise AssertionError("duplicate price_drop alert for AAPL should be suppressed")
+
+    evaluated_state = state.model_copy(
+        update={
+            "last_evaluated_alerts": [
+                EvaluatedAlertRecord(
+                    alert_key="price_rise:MSFT:",
+                    evaluated_at=NOW - timedelta(hours=1),
+                )
+            ]
+        }
+    )
+    evaluated_suppressed = engine.evaluate(
+        portfolio, evaluated_state, news_cache, now=NOW
+    )
+    if any(
+        alert.type == "price_rise" and alert.ticker == "MSFT"
+        for alert in evaluated_suppressed
+    ):
+        raise AssertionError(
+            "recently evaluated price_rise alert for MSFT should be suppressed"
+        )
 
     portfolio_only_config = AppConfig(
         alert_sector_article_count=3,

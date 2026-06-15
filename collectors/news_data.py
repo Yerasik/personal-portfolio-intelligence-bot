@@ -43,9 +43,21 @@ class NewsFetchBatchResult:
         return len(self.new_items)
 
 
+def normalize_article_url(url: str) -> str:
+    """Normalize a news URL for cross-source deduplication."""
+    cleaned = url.strip()
+    if not cleaned:
+        return ""
+    parsed = urlparse(cleaned)
+    if not parsed.netloc:
+        return cleaned.lower()
+    path = parsed.path.rstrip("/") or "/"
+    return f"{parsed.scheme.lower()}://{parsed.netloc.lower()}{path}"
+
+
 def make_article_id(url: str, entry_id: str | None = None) -> str:
-    """Build a stable article id from the feed entry id or canonical URL."""
-    stable = (entry_id or url).strip()
+    """Build a stable article id from the canonical URL (fallback: entry id)."""
+    stable = normalize_article_url(url) or (entry_id or "").strip() or url.strip()
     return hashlib.sha256(stable.encode("utf-8")).hexdigest()[:16]
 
 
@@ -204,13 +216,21 @@ def merge_news_cache(
 ) -> tuple[NewsCache, int, int]:
     """Merge new articles into the cache, skipping duplicates."""
     by_id = {item.id: item for item in existing.items}
+    by_url = {
+        normalize_article_url(item.url): item.id
+        for item in existing.items
+        if item.url.strip()
+    }
     duplicates = 0
 
     for item in new_items:
-        if item.id in by_id:
+        normalized_url = normalize_article_url(item.url)
+        if item.id in by_id or (normalized_url and normalized_url in by_url):
             duplicates += 1
             continue
         by_id[item.id] = item
+        if normalized_url:
+            by_url[normalized_url] = item.id
 
     merged_items = apply_retention(
         list(by_id.values()),

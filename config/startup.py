@@ -17,7 +17,15 @@ from config.loader import ConfigurationBundle
 from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.json_store import JsonStorageError, JsonStore
-from storage.models import AppConfig, BotState, BotUsers, NewsCache, Portfolio, TickerIndustryMap
+from storage.models import (
+    AppConfig,
+    BotState,
+    BotUsers,
+    NewsCache,
+    Portfolio,
+    TickerIndustryMap,
+    TickerMetadata,
+)
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -140,6 +148,7 @@ def validate_json_documents(repository: DataRepository) -> StartupReport:
         ("config", paths.config, AppConfig),
         ("portfolio", paths.portfolio, Portfolio),
         ("ticker_industries", paths.ticker_industries, TickerIndustryMap),
+        ("ticker_metadata", paths.ticker_metadata, TickerMetadata),
         ("state", paths.state, BotState),
         ("news_cache", paths.news_cache, NewsCache),
         ("users", paths.users, BotUsers),
@@ -231,9 +240,10 @@ def log_startup_summary(
     logger.info("Cached news items: %d", len(news_cache.items))
     logger.info("Pending alerts: %d", len(state.pending_alerts))
     logger.info(
-        "Scheduler intervals (minutes): market=%d news=%d rules=%d",
+        "Scheduler intervals (minutes): market=%d news=%d auto=%d rules=%d",
         app_config.market_fetch_interval_minutes,
         app_config.news_fetch_interval_minutes,
+        app_config.auto_news_interval_minutes,
         app_config.rule_evaluation_interval_minutes,
     )
     logger.info(

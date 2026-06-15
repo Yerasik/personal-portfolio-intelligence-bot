@@ -59,6 +59,19 @@ def portfolio_tickers(portfolio: Portfolio) -> list[str]:
     return tickers
 
 
+def tracked_tickers(
+    portfolio: Portfolio,
+    extra_watchlist: list[str] | None = None,
+) -> list[str]:
+    """Portfolio tickers plus any symbols from extra_watchlist in config."""
+    tickers = portfolio_tickers(portfolio)
+    for symbol in extra_watchlist or []:
+        normalized = symbol.strip().upper()
+        if normalized and normalized not in tickers:
+            tickers.append(normalized)
+    return tickers
+
+
 def _coerce_float(value: object | None) -> float | None:
     """Safely convert yfinance values to float; return None on bad data."""
     if value is None:

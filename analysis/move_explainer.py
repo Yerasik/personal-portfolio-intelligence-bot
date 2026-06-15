@@ -57,25 +57,40 @@ class PriceMoveExplanation:
     source: ExplanationSource = "fallback"
     error: str | None = None
 
-    @property
-    def reason_text(self) -> str:
+    def to_message(self, lang: str = "en") -> str:
+        """Telegram-ready block labelled as an LLM explanation with disclaimer."""
+        from bot.i18n import t
+
+        return (
+            f"{t('move_explanation_header', lang)}\n"
+            f"{self.reason_text(lang)}\n"
+            f"{t('move_explanation_note', lang, disclaimer=self.disclaimer_for(lang))}"
+        )
+
+    def disclaimer_for(self, lang: str) -> str:
+        from bot.i18n import t
+
+        return t("move_explanation_disclaimer", lang)
+
+    def reason_text(self, lang: str = "en") -> str:
         """Human-readable drivers + sentiment block (without the label/header)."""
+        from bot.i18n import t
+
         lines: list[str] = []
         if self.drivers:
             lines.extend(f"- {driver}" for driver in self.drivers)
         else:
-            lines.append(f"- {_FALLBACK_REASON}")
-        assessment = self.assessment or "Overall sentiment is uncertain."
-        lines.append(f"Sentiment: {self.sentiment} — {assessment}")
-        return "\n".join(lines)
-
-    def to_message(self) -> str:
-        """Telegram-ready block labelled as an LLM explanation with disclaimer."""
-        return (
-            "Explanation (likely reasons):\n"
-            f"{self.reason_text}\n"
-            f"Note: {self.disclaimer}"
+            lines.append(f"- {t('move_explanation_fallback', lang)}")
+        assessment = self.assessment or t("move_explanation_uncertain_assessment", lang)
+        lines.append(
+            t(
+                "move_explanation_sentiment",
+                lang,
+                sentiment=self.sentiment,
+                assessment=assessment,
+            )
         )
+        return "\n".join(lines)
 
 
 def direction_for_change(pct_change: float) -> str:

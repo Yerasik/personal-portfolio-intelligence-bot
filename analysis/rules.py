@@ -46,7 +46,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Literal
 
 from analysis.industries import build_news_focus_industries
-from collectors.market_data import portfolio_tickers
+from collectors.market_data import tracked_tickers
 from storage.models import AppConfig, BotState, MarketQuote, NewsCache, NewsItem, Portfolio
 
 logger = logging.getLogger(__name__)
@@ -58,6 +58,22 @@ AlertType = Literal[
     "sector_attention",
 ]
 AlertUrgency = Literal["info", "warning", "urgent"]
+
+
+def _recent_suppression_keys(
+    state: BotState,
+    evaluated_at: datetime,
+    suppression_window: timedelta,
+) -> set[str]:
+    """Collect alert keys recently sent or evaluated within the cooldown window."""
+    recent_keys: set[str] = set()
+    for record in state.last_sent_alerts:
+        if evaluated_at - record.sent_at <= suppression_window:
+            recent_keys.add(record.alert_key)
+    for record in state.last_evaluated_alerts:
+        if evaluated_at - record.evaluated_at <= suppression_window:
+            recent_keys.add(record.alert_key)
+    return recent_keys
 
 _NEGATIVE_NEWS_KEYWORDS = (
     "bankruptcy",
@@ -141,12 +157,7 @@ class RulesEngine:
 
     def _tracked_tickers(self, portfolio: Portfolio) -> list[str]:
         """Portfolio tickers plus any symbols from extra_watchlist in config."""
-        tickers = portfolio_tickers(portfolio)
-        for symbol in self.app_config.extra_watchlist:
-            normalized = symbol.strip().upper()
-            if normalized and normalized not in tickers:
-                tickers.append(normalized)
-        return tickers
+        return tracked_tickers(portfolio, self.app_config.extra_watchlist)
 
     def _price_drop_alerts(
         self,
@@ -334,11 +345,7 @@ class RulesEngine:
     ) -> list[AlertCandidate]:
         """Drop alerts whose alert_key was already sent within the cooldown window."""
         suppression_window = timedelta(hours=self.app_config.alert_suppression_hours)
-        recent_keys = {
-            record.alert_key
-            for record in state.last_sent_alerts
-            if evaluated_at - record.sent_at <= suppression_window
-        }
+        recent_keys = _recent_suppression_keys(state, evaluated_at, suppression_window)
 
         kept: list[AlertCandidate] = []
         for candidate in candidates:

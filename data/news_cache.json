@@ -1,6 +1,57 @@
 {
   "items": [
     {
+      "id": "8700f76d33214f30",
+      "title": "Microsoft (MSFT) Stock Drops 17% as CMO Sells $1.81M—Yet Models Show 30% Upside - Blockonomi",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQVmNic18tTlVBM2tmYUZnX0FBMVZVMHBxazB6NjBiUzBhQXZyWjFwQXo2NnJBenZSMXkyT3hLSjZnZ0FKV3pmZ2RrZkVPdkRhcDFHS04wUXJ1MG54cWhPa1N2SE1Sak9mZHJsNk5EM2NJNHBjMW9MQVZ5enhRdDVKdndKbWNfblFkTURmNlotMGR6M0xrS0lPWVUyUWJ2a3M?oc=5",
+      "published_at": "2026-06-15T09:23:22Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft (MSFT) Stock Drops 17% as CMO Sells $1.81M—Yet Models Show 30% Upside    Blockonomi"
+    },
+    {
+      "id": "0f5242e9d3fba8ff",
+      "title": "As Demand Continues To Grow, Nvidia (NVDA) Has 46% Upside According To Analysts - Insider Monkey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPTDBYLUJQeDNFSmw4LVNhRE5mQUM3c0xxWWFXVVpjT1V2Vml5dEFOX3JCTnBLaEs4cUNNZVNOM2gtQm1XUW1JU1FMTWtKMzFFRm1TYWcweEJjRS1KdXoyYmNXbHd3cjI3UGI1QWNFVXdkRHY3allJOFhZMnlfeUFwWGFNRENOd2lYanVRMUx5eEJ5ZU1DMUhPdklndml2STJ6WGVGc3Q3ajdaenI5WEVscF9VWUtuOXVGX2dV0gHDAUFVX3lxTE53WTFiQi05ZnFrTnhxRDVHbVB0R2Vpb3FxYUNjQmtNQ3JadWJvRDY2SnJoTE9VRVB4SlphaHAwdG5lQndqQXA2WFh0RVJRU1dqZ25HaGl2UDgtenBUODQzMUxmQ2FDX1hfbHlVMkpjbF96VUpJcklZMWVzQmJST0RxeDIzZWRKMXRTZ0ZtTm1BRUxzUm80NUUzUllzcm5ZQnVGMjJ0RnU4X1QwSXNBVTBkRjRYOHItVTh3d1RXZko4R0t3Zw?oc=5",
+      "published_at": "2026-06-15T08:57:41Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "As Demand Continues To Grow, Nvidia (NVDA) Has 46% Upside According To Analysts    Insider Monkey"
+    },
+    {
+      "id": "6a6c6895642e9617",
+      "title": "Microsoft (MSFT) Is A Value Stock To Benefit From The New Cloud Boom - Insider Monkey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNVEdVOEIyRTFESXhIYzZ5QTZwZ0NPdXhtTWIxVGMyRzlsRkxBSHdWSmJicGpTTXhGSnJWUmpMTDQ4dWJmNjZGRklSLU5ZS09tcERoMDJia1FlUlFnX2ZueWUyZXh3M2pWSzZySVZPcFBNai03WFZjSU5xU3ItclN5c3lPem1zUmhZZWJRVUhxQXB3UGhGdVJHY1FIR3Uxd0pxSUY2U19FdWVEaGZLNWVr0gG3AUFVX3lxTE5BYldMak81Sm5KWGZlV0NlTC1IeDFvQ1pPdHNXQzNyRVF0VTMzWkxaQkwzVjhCTkt6SGVWb0xHZm1XdFd1UlRKdlBhZmwxZ0ZkcldJd2dVWmRJazMyR09SblBSaFJ0YkxKVGVzUWU3OE1KMWVKOUFKVXM0Qk5DenhIYUR2Q3g0c29rLUdEVUxtVjdSNVVqNXVVelFTb0FkQjJqRk9ER3BHMWJzNWdIWnRUZXF4YzVIQQ?oc=5",
+      "published_at": "2026-06-15T08:57:41Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft (MSFT) Is A Value Stock To Benefit From The New Cloud Boom    Insider Monkey"
+    },
+    {
       "id": "f5e1265bf9e691f9",
       "title": "British tourist wanted after jumping bail over Hong Kong airport vandalism",
       "source": "News - South China Morning Post",
@@ -67,6 +118,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong authorities will tighten the regulations governing a labour importation scheme by introducing a two-tier vetting system and raising the maximum penalty for non-compliant employers, with the new arrangements taking effect on Tuesday. Following a review of the Enhanced Supplementary Labour Scheme (ESLS), the Labour Department announced on Monday that the system would distinguish between general applications and sectors with shortages. The long-awaited move to amend the legal regime..."
+    },
+    {
+      "id": "634ed9d1f6b1ec33",
+      "title": "NVIDIA Corporation $NVDA is KCM Investment Advisors LLC's 8th Largest Position - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxQZkc0OHR6X1lSd3BLeS1GbDZ6eGFzdE5zMjRBVEgwNXY0WWtTQzdXeWZmRXdmNVdXUkJEVGlieVRwQXBXamhKcTgyS3p2bFRhUXpvWkhCWkdnS1duMFNIM0puRHVYLWdlOEZUZDV3a0tzVTNiR3dMUE9kdjg0b0NvR3gtR2JKVkdrVFhWdk9adjY3YU5fNC1IQzdNMnlaZm9vRllQVHhyaFh5ZlZoNWlUVEcxOVVkUGJFeWt5cWRGRUxyS3Q2aFdIbVdHd201cnNJXzlB?oc=5",
+      "published_at": "2026-06-15T08:03:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA is KCM Investment Advisors LLC's 8th Largest Position    MarketBeat"
     },
     {
       "id": "60ff01176db42b2d",
@@ -496,6 +564,23 @@
       "summary": "I’m still reeling from last week’s tragedy in Hong Kong: a mother and her 12-year-old daughter lost their lives to suicide within hours of each other reportedly following an argument about “education problems”. While the causes of suicide are complex, the incident should prompt reflection within the education system. For years, many have tried to point out the impact academic pressure without adequate support has on students’ mental health. We have also noted the effect on teachers and parents.."
     },
     {
+      "id": "b8334c925d7ec30e",
+      "title": "Apple's (NASDAQ: AAPL) Weak WWDC Response Suggests Berkshire Hathaway (NYSE: BRK.B) Was Right To Trim Its Position - foreignpolicyjournal.com",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi7AFBVV95cUxOQ0JJeGdkMjBvZVBSM09CcTkzMTQyOTNXWWpJbUYzakFlcEwtbldxTkE0TV9hQ1Fka3JLdHd3SDk4N2szZ0pldklOeGI1cTlGZkZmWnpTNnpPRXM2SmlrQTQydXUyRVJLQlBRRmJvcEZ4RmxCbnF1cXE2VlJ6djNQRnZKZk5IM2wtYTkyWjNZSjRFUzg3NHJDRWdIa1ZadTdqdjI1RkpSLXNtZ002R3dIWHdjdnl3MUlkdEtrVjkxUjItUkNVTmxpVE9MbUV3ckM3bmlBVm1VX191VXIzSndidzd1TTlBdmFGeUtQVw?oc=5",
+      "published_at": "2026-06-15T00:40:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple's (NASDAQ: AAPL) Weak WWDC Response Suggests Berkshire Hathaway (NYSE: BRK.B) Was Right To Trim Its Position    foreignpolicyjournal.com"
+    },
+    {
       "id": "3aea0b261f90326b",
       "title": "Baby bonus to continue? We’ll consult widely, John Lee says",
       "source": "News - South China Morning Post",
@@ -547,6 +632,25 @@
       "summary": "Export controls on Fable and Mythos raise doubts over how US will police the most powerful AI systems"
     },
     {
+      "id": "beb49d796d787116",
+      "title": "Alphabet Ties Search AI And Mobility Closer To Revenue Potential",
+      "source": "Yahoo",
+      "url": "https://finnhub.io/api/news?id=87161b0aaebcb141349ac4d3629212a66727c6eb9f44e8f1411e4a748a182118",
+      "published_at": "2026-06-14T23:16:57Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Google is rolling out a national real estate search feature with HouseCanary, directly surfacing MLS broker listings in mobile search across the U.S. Apple is using Google's Gemini models to power its new Siri AI, while also tapping Google Cloud and Nvidia technology for AI infrastructure. Waymo, Alphabet's autonomous driving unit, has launched its first paid subscription for robotaxi services, moving its ride hailing business toward a membership model. For investors tracking Alphabet..."
+    },
+    {
       "id": "9624abcd8698795a",
       "title": "Lower bar to entry for innovative companies to list in Hong Kong, chamber says",
       "source": "Business - South China Morning Post",
@@ -596,6 +700,59 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Comments"
+    },
+    {
+      "id": "f10e5f6d88ee0d38",
+      "title": "NVIDIA (NVDA): AI Factory Demand Shows How Growth Can Stay High Without Balance Sheet Strain - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOYTl5Tmw4MThFQTdhcWFURVZ5TkFYSk5IYm5hTF80S0o1NkdFX1U0SjRTczdUdmFWRk5LWmZhWmNxYVdOOVlHaklRT3E1cmY3Y2VuM3RCMmNmZXJmaU9YMDQzZzFwYkYxRjd5el96ZEw5N2t6Zm1yelI2NHhKUXVCMng3N1ZkVy0tSDRlM0FsM1dXazZPdjNySE5R?oc=5",
+      "published_at": "2026-06-14T19:44:42Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA (NVDA): AI Factory Demand Shows How Growth Can Stay High Without Balance Sheet Strain    Yahoo Finance"
+    },
+    {
+      "id": "aa26f781f26b1a74",
+      "title": "Jim Cramer Thinks Microsoft (MSFT) Doesn’t Need $100 Billion - Insider Monkey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNQXZHR1FMQzkxNjExd3JyX1dxVkEzZTNreW5UXzhIQTF2bXpKQ1hjaEtndjh1aW5rM1gwUEhaZ0NTbGNvdzM4ejBhdXpnYzI5NDBmNmM0U3E5cWNzOWxKUUhjQnJlejFSaVpUcUVCaU93SGpNeXZmcEp0eFRuMGZERDBVZGJSR28yMWQ2STZUcUhTajBXeXJudEgxWl91RzlPRmfSAaoBQVVfeXFMT0ZHY2o2TnVKTnNJMkxUTHdjMElodi1oY1BYTmpwUl9fWWhrbTNkS3R0UTg3cEhuT2xsY0Jwdl9IcHdmLXJLOG5tak1YZTBybm95SnJiN1hrQnJXbkVsVS1aMGZxRU1uZURpNm5NRnFZLXJCUFoyZ1dOSGF3UDZ6NXVPTDFCSWw3S0RQNVppZjh5M3JXRnhDOVZSNmx4a01kT0lId2tXV0ptTnc?oc=5",
+      "published_at": "2026-06-14T19:17:23Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Jim Cramer Thinks Microsoft (MSFT) Doesn’t Need $100 Billion    Insider Monkey"
+    },
+    {
+      "id": "a34fd1007a65a28a",
+      "title": "Jim Cramer Asserts NVIDIA (NVDA), Not SpaceX, Is The “Key” To The Market - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOVmRhMHpiUXpLVENqMEs2c1NxdzNSdl9PY2J5eDNfQ2JkVFJibGlnOFhKT2ZGTmRKX3hYeEVfbm5SZ1hBTkZfMFJWSk9VcExfTDg5RW5LRmRBMXJJSHp5WU9OT2QwYXk2QTNoQVZ3MlE5SFl0NUJlcWdHb2dyYUJOYWthYzhNTjJwWUlHeFRvRGZpbVhIMmRuRkIzOA?oc=5",
+      "published_at": "2026-06-14T19:08:18Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Jim Cramer Asserts NVIDIA (NVDA), Not SpaceX, Is The “Key” To The Market    Yahoo Finance"
     },
     {
       "id": "87b372a38162701e",
@@ -887,6 +1044,40 @@
       "summary": "Mainland Chinese students are increasingly paying a year’s rent – and sometimes much more – upfront to secure homes near Hong Kong’s universities, helping to push residential rents to record highs and drawing investors back to small flats once marketed for first-time buyers. The trend is becoming increasingly visible as the city’s summer student-leasing season gets under way. A mainland Chinese PhD student recently agreed to pay nearly HK$700,000 (US$89,332) upfront to rent a two-bedroom flat at"
     },
     {
+      "id": "1481bebc5c4a7732",
+      "title": "Analog Century Management LP Cuts Position in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQeXprQmVuNmF0Sjc5OXc5NDd6UlhqR3dGZnRVbDU4c05nRzFERE5PYk95WVlOaWcxUlBKN3JvYl9odTh2bWpucnJCWVVWeFVmRGhpdEJ4ZlN4YW42OC00MXVyZVk2RGNfSTE1Z29PRXg1VkJJWlNROWdWcEVTUVlzY0VtUnhJTUt2QjJ2dUNSWEVnTF9RRG82Q3FtRFE1cVlSX1h2X1pKbmgwUDBLVnFHWWlFbHFNbG9xYXZVd3ZfZjhUWFY0UURiV0ZB?oc=5",
+      "published_at": "2026-06-14T09:14:32Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Analog Century Management LP Cuts Position in NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "fb22852cc0894c69",
+      "title": "NVIDIA Corporation $NVDA Stock Holdings Raised by Evelyn Partners Investment Management LLP - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi5gFBVV95cUxPbEFJV3JHb1lxU3h2eWRvS0hySklnNVNGRTFtQml4bGRvcC1CMVEySFkyUVUtVldHZ0hSQmF3XzQyUko2aE45OHhvQTBMd3ZidW0wZzM4ZkdXRXhmNVNCenFhWGUzbWtLLUhQb3MtQWdfWE1QWERwTkFyZzN1LUptNzRqTHJGT1ZBVWMwaThuTks3bnRuR2FYZlZqcUltTWFaZWpSc1VOaXdWV21aWEpnQ2Nrb1J4dWxGNmhkb0dVSUxtZ19xbHVCbEJZX3haYnAtY3ZoZm55dnRHTlViRGV3LTdjQi1WQQ?oc=5",
+      "published_at": "2026-06-14T09:12:09Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA Stock Holdings Raised by Evelyn Partners Investment Management LLP    MarketBeat"
+    },
+    {
       "id": "43a0e90144dfda6d",
       "title": "Initiative tackles insurance barriers for autistic children in Hong Kong",
       "source": "News - South China Morning Post",
@@ -902,6 +1093,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Securing health insurance for her autistic son in Hong Kong proved distressing for homemaker Sarah*. The 50-year-old said she approached several insurance companies over about three months, but none could assure her that her son, now 18, would be eligible for cover because of his condition. Sarah added that the uncertainty and frustration made her hesitant to apply, fearing a rejection by a major insurer could trigger blanket refusals from others. “There are so many families in Hong Kong with..."
+    },
+    {
+      "id": "dfdb6816c4dc7129",
+      "title": "Arkos Global Advisors Sells 6,987 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOMkw3Vi1tMWVsNFJEVzJjN01zTXE0VllpajFhVGgwb3ItSDJYT3V5OUZiUEh5QldNemZSMVNEeHFvVmZGRmlnX0dsT3E2TXkxRFB1S3BJdDJJREt4ajk0ci03elhvanZYcXdlejlpenhlZ2xUOEJzWllieTFjVFA2S3ZVelpQU3RPeklCdHd5aUowUEhZOUJWemlzM0NEeVgzNXE5U3BjMkVtb3N4SERsS1BMbkd0TnBwaW41eHdVejVNOXhGVlE?oc=5",
+      "published_at": "2026-06-14T08:44:43Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Arkos Global Advisors Sells 6,987 Shares of NVIDIA Corporation $NVDA    MarketBeat"
     },
     {
       "id": "cc9ce6cca681e436",
@@ -936,6 +1144,40 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Filipino domestic workers in Hong Kong have launched a month-long fundraising campaign to support families affected by the recent 7.8 magnitude earthquake in their home country’s south, with organisers saying food, drinking water and medicine are among the most urgent needs. Representatives from the Abra Tingguian Ilocano Society were collecting donations at various locations, including outside City Hall in Central on Sunday, aiming to raise at least HK$20,000 (US$2,550) for affected..."
+    },
+    {
+      "id": "a76bc468dd8746ca",
+      "title": "35,100 Shares in NVIDIA Corporation $NVDA Acquired by Arvin Capital Management LP - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxNN2wxbFZjME43X1BpOWdGa2lQLWN1a2ExZkppckhzaU4wWVNxN0R3TFR6bkxUUDh5RWZNZzRUNmhQMW4ySm5VamhrTEdtdDdxdWJrTmJHdzU1cHphYThCZ1E4WXY0Qmx3cnB3aVRpWUdGNUlJcFlTc2VCb3VxUngzaWRWeTJiOWFPRVY2V0prb1ZNRnNDSnBzNHN6VkRHWGE4ejJjNV9mQ3hCUENidncxaHRVNnZnYUhxZ1hpWE1XcFB6SmVyOWxKei1pc2ZHcV9kT19SZ1NuRQ?oc=5",
+      "published_at": "2026-06-14T08:26:52Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "35,100 Shares in NVIDIA Corporation $NVDA Acquired by Arvin Capital Management LP    MarketBeat"
+    },
+    {
+      "id": "fc616d9d106e6697",
+      "title": "Artemis Wealth Advisors LLC Trims Holdings in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxNNjlXU1VJZFBhZGowR0xwN0NhQUNlbnY2cVo2Smt2ODJyeFYwWEFHclZDbHR1Q1g4ekVRWUwxTHQ0S2xndEMwSWhPMkZOMVFLbExqams1RmRSM1FaYXVyMWZ3dVFEZF9sa2hxdFhlbUZjOHpvNEtFNnFXYWlhaW4wZXVsYzA3X0ZHVHlZRFFfLUNUQV95ZmkyNWlHYmlPYXJTSkVhXy1rSzJ6cjg4TVZiZzROMFd4NmtCYkJRTWhFSUdyVHpXRkhRYjVn?oc=5",
+      "published_at": "2026-06-14T08:26:51Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Artemis Wealth Advisors LLC Trims Holdings in NVIDIA Corporation $NVDA    MarketBeat"
     },
     {
       "id": "1b99b575e857d424",
@@ -973,6 +1215,74 @@
       "summary": "Prime minister says British armed forces intercepted a Russian shadow fleet vessel in the early hours of Sunday morning As my colleagues report in this story , teenagers under the age of 16 are expected to be banned from accessing “high-risk” social media apps while safer platforms will be subjected to restrictions, under a sweeping government crackdown. Under-18s will also be banned from using romantic or sexual AI chatbots after a consultation on keeping children safe online . I don’t want to "
     },
     {
+      "id": "82cc51b5db434a9d",
+      "title": "Avid Wealth Partners LLC Grows Stock Holdings in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQYUNhU1lHVXNKNFhCSWV4NjVrMTJqNDJXVTMxMG83ZlNlNzh5Wk5xdVhWelZpUXNUYVMwRFZSaGdocE9FMVYxX09DTnlwMlhuQURjeWVkOFpkeE1zdzlwMEstdUl5TWotNmk2cFZJQk9MOE53OHdVRXV0TFBjeTFNek9rZmdNM1RiU1p6WUVVb05QMHloRUhGMllEbElHWHdKQTJLR2lINkxnX2NEcHFTXzBLSDZEdjlxNF9Wb2lXb0sxNVJiVnNsMHIwX3lPZw?oc=5",
+      "published_at": "2026-06-14T08:18:39Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Avid Wealth Partners LLC Grows Stock Holdings in NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "b88e8e6da5f603ea",
+      "title": "B&D White Capital Company LLC Buys 3,100 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPTy1KSVluUWNHVy1jLWdmeWNVckJtQ1hEN1dOVGFXLVZvdFNGbGtaNlVQVnZNa1huc09YZEVWVkQ2ejRQU3FBTzlBcnB1QXlzR0dFYWdvYng5TkwzelBET1d2MGN3dzJTaHRXeTU0VmZZZjg1YngxejZPc3F2aGxleFZTeG9JcmNOX1ZPN01lbFNscm5KeTl1U0IyMXlLM1pndkE4VmVNV0pKQUhveTQ4WDU3SkVXakxfQmJ0Y2hfTjlnMWw2ejB4bW5DTDlZZw?oc=5",
+      "published_at": "2026-06-14T08:18:38Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "B&D White Capital Company LLC Buys 3,100 Shares of NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "dcf11f7686ec1c7a",
+      "title": "Bollard Group LLC Sells 12,548 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNdzZOQlY0a1BValpaa3lZXzVuQmZXRlV5b00xZkw5YUN3cWNMcEljZEw5OWpZcGRBdUh2MDRxSHFyMVpNRF9EWklTQXZ5cFFSSUhWUlo5T3o1SG9GZ1JPcW9UeXpySE1JZF95UXJSdzkwOWU0REtxSEoxMzZrNUloLXdXREZIdGJLYUtoU2ZRLXNyS25ySkZfUDRyS0NkT2pQRW5iVVRvRzZOemxIZXMzVlNNRVhhMTVCOGU1ZWpNcnd1Zw?oc=5",
+      "published_at": "2026-06-14T08:18:25Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Bollard Group LLC Sells 12,548 Shares of NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "31697c2dc40dee32",
+      "title": "Blue Jean Financial LLC Makes New $1.55 Million Investment in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxOdjZESEo5MzlBVTVRU0o2REd0eHEzSFFHaXhTZUJmOURGYUsxanlnTFdrNkEyQ1czQzlmSDJoczFvQzZIX255bFVoQTZmcUptVEoydkFsM1JqQkJoVWZfbDVYZ2FhWHJIZGxOakJEczlEU2dCRklvZ1dhVlAzdWRXMjZWTE1QSm1GSWRWSXh4SmJma1hnc1d3ZndWb1J6cDVvd2hDSlhrNlRIc2gtMl8zSVRsdnFEaWRxRW5EVnRsdjRTR2J2VzRRVHNGWURzQ1dybzB3S1otQklNM3NC?oc=5",
+      "published_at": "2026-06-14T08:14:41Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Blue Jean Financial LLC Makes New $1.55 Million Investment in NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
       "id": "6ccd68de290d9b44",
       "title": "European wealth turns to Hong Kong as 30 family offices eye operations in the city",
       "source": "Business - South China Morning Post",
@@ -988,6 +1298,108 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Around 30 European family offices have expressed interest in establishing operations in Hong Kong, drawn by the city’s tax incentives and growing optimism about the prospects for China’s technology sector and Hong Kong’s property market, according to InvestHK and industry participants. Jason Fong, InvestHK’s global head of family office, said the government agency was assisting 30 European family offices that had indicated plans to set up in the city, accounting for about 19 per cent of the 160."
+    },
+    {
+      "id": "265a3a11b632e153",
+      "title": "NVIDIA Corporation $NVDA is Brown Advisory Inc.'s 5th Largest Position - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQajZSVGJiMmVnSG1CcHhnTnNhT2lKOWlWaVgwN2poTHl6UWpYUjZvekpsWGFObXFuaWpHOC1idThDdUt5LTBuMVhZWDFyWkg1SzkwcHhOb2JydUpDMkFrQklWX3FkZlNHdUJsSzd4T0pfbWdkTkh3TUJybjRjVl9ZQ256am9EMWh1RGVNNnhkLUlKYkY3MFRIeF9aWllwcGhGQkNwYkdJZ2xqZmV4NzJzalRTLTJpd25sQ2dia2JJcFpSM1kyTWsw?oc=5",
+      "published_at": "2026-06-14T07:56:34Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA is Brown Advisory Inc.'s 5th Largest Position    MarketBeat"
+    },
+    {
+      "id": "16a4040830c8012d",
+      "title": "NVIDIA Corporation $NVDA is Biondo Investment Advisors LLC's 3rd Largest Position - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1wFBVV95cUxPcFZ0bWRmUV9oUHgyMGpkUEhEYko2dDdjVThpWTdLOGFpRjZXdUtmNkJ4UVEwNzBBeWExQUxkeG54OWlXUHEyNXZOVV9sMldIN3B0Y0gwLU1CWkRaUHVBRTQzSFN4cGF5bnMyaGMwUDkyaGpMbzV0MFVKZTJTa0JiYTA5S1lRbUdsd2RSbHNaUDlJakc4VFAwbFNOc1BLYjFKODI0cG40cUtWSlFXYU56dXlEWHM2ajRER25vNkR6dGNxSGlrNEFYd196U0FtQWVHME5LRzZpUQ?oc=5",
+      "published_at": "2026-06-14T07:50:30Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA is Biondo Investment Advisors LLC's 3rd Largest Position    MarketBeat"
+    },
+    {
+      "id": "e3d9895b34cc97d6",
+      "title": "NVIDIA Corporation $NVDA Shares Sold by Adams Diversified Equity Fund Inc. - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNdUxNQUJkRWlIbEx0MHljQ1VYQ19HS1J4cThFVFd0RllUeHI4cVI1bWVTM2pyUm5VNlNqNVNmZk9pY3ZPNnJNaFl1clg3U3VVemtEV3dzVDc0UDdkay1EZ2VOWU9QOGRtaW8wdFc3cEZDYXB0U1hLZ0h6cktUNGU2c3JEa1EteUYxUnQ4NW11SVhJNjdhbmRZak9WQ0R1TjNaYTVuT2JNdDB4M1F6N2JtcDNOTEhVblZRcXFqcjFuR1k4dy05anBlWVpoSmNWUQ?oc=5",
+      "published_at": "2026-06-14T07:43:16Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA Shares Sold by Adams Diversified Equity Fund Inc.    MarketBeat"
+    },
+    {
+      "id": "81dce814c455d246",
+      "title": "NVIDIA Corporation $NVDA Position Reduced by Arax Advisory Partners - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPMkV5eUlhSnVPY3lYeTA2T1FpRVpNR080NVlBcFBRb0MxT2h2cGNrcHFqMHE1b0JzOVpLTnp0OTMyd3huSFNZYjhmcmVHNlNxQXc5Q1lmUHBlaTVFdkNTeVpoM2lVQWdNMHU5dEktam9Yb2tUQUJkcnNfMUVWMExrTFJYbGg1eVllSm9EdzJfc3lkTXhLWGp3UTNOa1l1T0lVem9naHdhOE43Zjdia1lvd1ZnTGljeE12N1k2cEFIX3p3UFR4Snc?oc=5",
+      "published_at": "2026-06-14T07:30:26Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA Position Reduced by Arax Advisory Partners    MarketBeat"
+    },
+    {
+      "id": "a06407a472a23b36",
+      "title": "Ally Financial Inc. Purchases 71,000 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNcjh1SUstQWFQam0wUHVMT04xclh4Tk9rUW40ZTJyWWZtY05MQ3c3RVViYlotV3duaVdfUTZtd2lySzBscEFRSHdoY1ZUeGFkeDNYMlFCeExLc0Y4Nml2Q2k5MW12YUtZY2tIajA5WWU4ZFlzUW1veVg5WVg3MFNXX0xYeFRJbWNsclMzd1VkeDZxVFhnWnZTOVZnMzZoeU1ud29ETGxMWHh3OGRFVmp3LS1uSWxTSm9SOWJaVGdmTDFEZ1FncDVNVg?oc=5",
+      "published_at": "2026-06-14T07:22:29Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Ally Financial Inc. Purchases 71,000 Shares of NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "27dfa09c73b45f42",
+      "title": "Apple Inc. (NASDAQ:AAPL) Receives Consensus Recommendation of \"Moderate Buy\" from Analysts - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQd0d3SFpSVW1TUDN0eG13U1ZLRmRNeEZHZUlESWw0T3Q1TU9Nbk5mX3kwMVA4YlRMWTV3enAxU1MySTNqOHlmZEo0QzltZFgxUkFpSVRfQ2dwTWRKSGtBUHlzTk1ZaG9MN05ia1FIcXQ4a0pSMzNablN6MGZkeVFucTYtYTMtS0JkX21VOXhraTlYa3dMdDgwQjZrcWpjVlZ6V3gzZlg0WXh0azJtc1RDVjFCNXIwVUxTSHZsQzluYjVWanJEZDY4U2gtTHBvenhmSjloag?oc=5",
+      "published_at": "2026-06-14T06:28:23Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc. (NASDAQ:AAPL) Receives Consensus Recommendation of \"Moderate Buy\" from Analysts    MarketBeat"
     },
     {
       "id": "462189fdb13f3ba4",
@@ -1364,6 +1776,25 @@
       "summary": "Comments"
     },
     {
+      "id": "4177e4320b441996",
+      "title": "NVIDIA Corporation (NVDA) Partners with Nebius to Support AI Robotics Startup in Europe - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxQSEhhOWF3aGxNX2dkU2VSazdCWFVGTE9faXM3Q05QY0NLcGE2NnNoTGdJbFN5cVhPVHVucnZYazN6OW8zN2o2ZkZWMFVWVVc1YmRxVmdqVlVTMDhBT0xuYm9jNU9vRno1WDNTSU5wYjEtMFdvWHYzUml6ZGVqeG8zam1rYkJqX19MNFNYeVl6Z1NJcmU0WG1Yejd0T0RWUlRTSjhoLTVnNW9jLTZr?oc=5",
+      "published_at": "2026-06-13T19:25:21Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation (NVDA) Partners with Nebius to Support AI Robotics Startup in Europe    Yahoo Finance"
+    },
+    {
       "id": "33c8e33183bf659e",
       "title": "Amazon voiced concerns about Anthropic AI models before US government's crackdown, source says - Reuters",
       "source": "\"site:reuters.com\" - Google News",
@@ -1398,6 +1829,23 @@
       "summary": "Anthropic has blocked access to its Fable 5 and Mythos 5 models after the government flagged them as a security threat when used by foreign nationals."
     },
     {
+      "id": "27b0dfb812a56099",
+      "title": "NVIDIA Corporation (NVDA) Partners With South Korea’s LG Group On Humanoid Robots And Data Centers - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQVnA1bWF6bkwyck50Skp0bWFRREVxU3ppN3BQVHk1Tk5yR0JRYlVEUXU2Ukw4aXJmYU41Q0k0WERlQm02VTQ5b3B3MTE4bHVPR3pxdkx2ajI3SlBZZU8xcGRSemYtdmxTdkp0eTJGemdvX0d3VFZtY0ZwOWp4c3M2dlVPdDE2UndyRFFWams1WG5tdE41b1dPdVdlR0xGdU1tT0wya1NR?oc=5",
+      "published_at": "2026-06-13T17:59:48Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation (NVDA) Partners With South Korea’s LG Group On Humanoid Robots And Data Centers    Yahoo Finance"
+    },
+    {
       "id": "442c0e276a648c7d",
       "title": "PwC Report: AI Making Medical Bills Higher",
       "source": "Hacker News",
@@ -1413,6 +1861,57 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Comments"
+    },
+    {
+      "id": "96fc8f8ced29fa46",
+      "title": "Microsoft (MSFT): The Top Strong Buy Stock to Invest In - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxQaE1TeUx2ckU0WU5ocDloUFdIVXlzb2dBX0tOTFZjeGk2eEZRRXEzeHJuMjE0T3drQk44ZHRtc1JkdHpXRWxOcTkxVmJiR2Q1eWdkVW9uWUFpVkVqRVNuRkVkRnU5bU5WR2FDUk1ZYzFZSVRZTFNtQnJrN0EzQmx2b2xkWXVJb1FtWmpDb0x2TEZoX3VSM2ttVXBR?oc=5",
+      "published_at": "2026-06-13T17:13:08Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft (MSFT): The Top Strong Buy Stock to Invest In    Yahoo Finance"
+    },
+    {
+      "id": "edd205e58cbc632c",
+      "title": "Is Microsoft Corporation (MSFT) A Good Stock To Buy Now? - Insider Monkey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQdGxIU3RXanpub0lYd296cWZ3ZXRncWdyaE85MEZxQ2NFR3RYWVNyNXZBS3ZwOUZ5Q0xjVlk1Mm9Cam5uUkhiWDNBY0tiUUNJRHVfT3NsOGVURklTeWhWTXdYZHRGZ244QWw4SXBPZVBqa1BfQU9KTUpuQU5rMGh0cTdJVGhvRmxvV3JKQXNoWHhDVFNzNWdoWTAweVkyR2lSbktKLWxwZlTSAagBQVVfeXFMUHRsSFN0V2p6bm9JWHdvenFmd2V0Z3FncmhPOTBGcUNjRUd0WFlTcjV2QUt2cDlGeUNMY1ZZNTJvQmpublJIYlgzQWNLYlFDSUR1X09zbDhlVEZJU3loVk13WGR0RmduOEFsOElwT2VQamtQX0FPSk1KbkFOazBodHE3SVRob0Zsb1dySkFzaFh4Q1RTczVnaFkwMHlZMkdpUm5LSi1scGZU?oc=5",
+      "published_at": "2026-06-13T17:03:45Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Is Microsoft Corporation (MSFT) A Good Stock To Buy Now?    Insider Monkey"
+    },
+    {
+      "id": "c106d3291fa4808b",
+      "title": "Is Microsoft Corporation (MSFT) A Good Stock To Buy Now? - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOdzI3aDIxVGJLNDFVYlJmWXE2cDl1Y2czT3dUcUZoRXZILWJicEsxaDVyOHdGVjJFVGtWM0hnTm0xelFrUDlxTS1TcEtIdHlmZHR2MExQbUw0TGdIWGpZT2Zmall3REFMTGNPbTNPcWRQUG01aDBPaEhtOU8teFhOZUxrMHljZEpkd19HZWJXMEtsU3ZPd3pmV2M2ZUpLLVp3TjE0Tg?oc=5",
+      "published_at": "2026-06-13T16:55:57Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Is Microsoft Corporation (MSFT) A Good Stock To Buy Now?    Yahoo Finance"
     },
     {
       "id": "f2fc0f920fdd9758",
@@ -1447,6 +1946,91 @@
       "processed": false,
       "alert_sent": false,
       "summary": "I turned off Siri on the Mac years ago and never looked back. Similarly, I found Apple Intelligence so fruitless I never engage with it. But the new Siri AI coming to macOS 27 Golden Gate has at least got me slightly rethinking things. I'm still early in testing Siri AI, as I've only had […]"
+    },
+    {
+      "id": "32a00b4bae8435d9",
+      "title": "Apple (NASDAQ: AAPL) Drops Tariff Talk But Rising Memory Costs Threaten Record Margins - foreignpolicyjournal.com",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxOUkpua2dZZWxoZUVFVVhqWWpyVkFKUW9wUFhlT081d01UVW03NkRockttRnd4cVFHbDZDemxla0Z6RGIxZUd1X3RSaHR6ZFRmV191cGtHVUJMR1Y1WENaV2N1N0xLc0FERVowWUx6US1qdEwtTEZsSGdRQ0Ztd285M3ZmUC1jUUdpTzc4dVl1ckZya3dvYXhpbl96NDFLRDdud0NaMXA3ekV0Rk9FZDFScVQ5M1MwcEdNZFVXdHpsSS1KVHhYNGpSQ1BoUUw?oc=5",
+      "published_at": "2026-06-13T14:59:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple (NASDAQ: AAPL) Drops Tariff Talk But Rising Memory Costs Threaten Record Margins    foreignpolicyjournal.com"
+    },
+    {
+      "id": "f2c66304af8716c9",
+      "title": "Keystone Investors PTE Ltd. Boosts Stock Holdings in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxNZEtINmU2eno5dlc0eWFwTVlPdkhBdGU5VVNidHo4ajNYN1VNdktaVzFKWGxZZWRqMWoxRjc3NXNsclVkQmRJOThWSVc2bjZUV1hHLUlteVhJQUdBQWxQSFNyN2tCQWhWaURJQ2FoUmFfaWNCMHpVY1hWQUpJSjVQY2ZlQVl1cmNocF9Td05qeHVWRjMxNHkwYkg0UFIzQmUxRUpYeFlhdWpZaE1qYlJzN19VQ3pST3NONVFjci1mYzJHanQwTTdiMEJuOFNkSWxMQnc?oc=5",
+      "published_at": "2026-06-13T14:55:18Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Keystone Investors PTE Ltd. Boosts Stock Holdings in NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "50250f39cbc4a962",
+      "title": "Apple's iPhone Could Hold A Clue To America's Declining Birth Rate - Apple (NASDAQ:AAPL), AT&T (NYSE:T) - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxQanctakVyMmV5SV83VDlsdTllazZkTjdLNXpZZDh6c3hnUXF2YUMyWk85X3hpS1VGUkU4MEZGSldyUXJfNkNCWV9vMjRnX2RHenhTd1hEREFDZzhmdGhRV0lWRFhGTW13RmxNQ0duc1pQdVF6U3ZsUzA3c3ZLMjVQY1JVZGtaZF9RV2x3SFZZUE9WMU9Tc0hmWlpyTnFlb2FITk1RdXNiQkxqSkt3aFRIUU5rNDBZVl8zYXVPcXFyTmYxbWdXSE9jSmJPa3dVMWM?oc=5",
+      "published_at": "2026-06-13T13:01:07Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple's iPhone Could Hold A Clue To America's Declining Birth Rate - Apple (NASDAQ:AAPL), AT&T (NYSE:T)    Benzinga"
+    },
+    {
+      "id": "3b7d8a4ca7983dc8",
+      "title": "Tillman Hartley LLC Purchases 4,635 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNZlRxQzBEc25Ta2RkVzlIMVpxdF9aV3g3SVZ1NVZJRmpsTmQ2SXRzZDU4OWtCYldUbkVCTUJtWWkwcEk1Rm02UmRPSEVPdWNUY3hEN3dEZTJobjNzNGpsU05hakVvN05SdEdKYy14N3JQbUpIaGdLOVloVzA1cnEwcFNVSFVGY0FFc25yM0g3WlQ0N0RRMjJpVGZaR19MeVFwYnlYOWlHeWc4RDJ5VW82S1c1ZXFLSVBUZEZtaS1GeXJJSjlVX19Jbw?oc=5",
+      "published_at": "2026-06-13T12:43:49Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Tillman Hartley LLC Purchases 4,635 Shares of NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "88bf6724b6948256",
+      "title": "Klingenstein Fields & Co. LP Sells 7,288 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOR2o3SEI3OVJKMUp2UlJ3YXQ4YTJpUGZrYnoyMXRuX2p1RkZrall0OThKTlYzUjhOTElSVFNUSXZVQktaZW1wZW1DTUFCdG95TWZEcWpzbU5WZDc1ZXBwUU1zcnYxTmdneDVmODVDTkJsbFhMbXpNckluSHJzYTBfOFAxOHY3a0p4WmxxZ0txZEEtbk85WkZsV2poMFVrYm9tYWtqeF9yb2MxSDFkMDRicXJpeHRDajNvbVJVeXpFN3plSHBKei1yaWg3NA?oc=5",
+      "published_at": "2026-06-13T12:43:38Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Klingenstein Fields & Co. LP Sells 7,288 Shares of NVIDIA Corporation $NVDA    MarketBeat"
     },
     {
       "id": "01e6f88e331d66d4",
@@ -1551,6 +2135,23 @@
       "summary": "Y Intercept Hong Kong Ltd Invests $10.06 Million in Alibaba Group Holding Limited $BABA    MarketBeat"
     },
     {
+      "id": "cbc48d07e5baaad9",
+      "title": "Vistica Wealth Advisors LLC Takes Position in Apple Inc. $AAPL - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQdTV0UHpVQkQxUUhJWTlocTUzNWF3bm5ON1Q3dmZlcHd4Q1M2NGtFMUJlTm1mMnpCazdWM1o2ME5EMlpleERiZkhRZFdoZEVHWVJZT0VWZ0lFTV8wNDFLOFJNLXI0Yi0tRkZSZ0k1Tk9PTG1yOVpWNHNaREhud09xWnV3MFNSRk1QWGNLMXF6aE03ZDU3SDFVVzR1alNRS0pQTW1fay05QWkyVm5SRFhjRHRBWnFzRmhfbVZRZmd3?oc=5",
+      "published_at": "2026-06-13T11:18:20Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Vistica Wealth Advisors LLC Takes Position in Apple Inc. $AAPL    MarketBeat"
+    },
+    {
       "id": "5c831a07644db3f5",
       "title": "UK sets out AI infrastructure push at London Tech Week – how does it stack up?",
       "source": "Technology | The Guardian",
@@ -1602,6 +2203,23 @@
       "summary": "For all the noise that's been made about how generative AI is poised to revolutionize the filmmaking industry, there haven't really been any projects created with the technology that felt like the sort of entertainment people would pay to see. Most AI firms' video models are still only capable of churning out short bursts of […]"
     },
     {
+      "id": "76a28d3de54da96a",
+      "title": "Apple Inc. $AAPL Position Lessened by Klingenstein Fields & Co. LP - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQaVZCa3JVUEhvcEVMOGpQMjBXWVBrYmliVmh0MlR0dEVyRkQ4Y1RLbzJqTEpvQk91a283THVJMVp2TnpRZ1o4bkFWZlZrOVIxaS1Ba295Y1pBNGVMR3FnS1FvM0R0cWdxZ1pfMFRDclJ2aUgyekFuYmtrNHFUYTJtZG9SMkx2YUc4OGdubFJvSUU0VW9vNGF5Qm56aEZXcjdNS29fTzhWM0dRMHVjWGpGT1VZeTZtTjBGUWZHMGhRQQ?oc=5",
+      "published_at": "2026-06-13T10:45:20Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc. $AAPL Position Lessened by Klingenstein Fields & Co. LP    MarketBeat"
+    },
+    {
       "id": "33012a3501b29700",
       "title": "CLSA set to vanish as brand after 40 years in Asian brokerage: Report",
       "source": "Stocks-Markets-Economic Times",
@@ -1634,6 +2252,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong police have arrested four men and seized 9.5kg of suspected drugs worth about HK$7.2 million (US$918,850) in a case involving two mainland Chinese men allegedly recruited by a syndicate through online gaming platforms. Police said on Saturday that the operation began on Thursday, when officers intercepted a suspicious 21-year-old man from the mainland who attempted to flee in Tsim Sha Tsui. They escorted him to a nearby flat, where they seized 399 grams (14 ounces) of ketamine and 193."
+    },
+    {
+      "id": "52c77a083b1f1984",
+      "title": "Trillium Asset Management LLC Sells 261,684 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxNdEVXLVZiX2o2Wkx1T1Zhc2UzVUF1RWpVNVlHeHZ6WXRSa1VtamVud1htWmdhSmY2MFZtTWJmZTljMkM1UU90dVgxSVNHSkpENkUzVWtrTmxnaWtzbjFkdFN4VmdHay1YVzd2LTVSUlV0bXAxcDZSckxUQkVxdEQwR20yS3NCemFNUmMxc1BrLTNmV0lXUmQyOGRsSkpteldTWGpIZnM2Q0hHRHdlMHR5QTREcVJPU3BrUzlaQ2lZMlVCNUkzRnExQ0VXdDFkS1JuWXZv?oc=5",
+      "published_at": "2026-06-13T09:54:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Trillium Asset Management LLC Sells 261,684 Shares of NVIDIA Corporation $NVDA    MarketBeat"
     },
     {
       "id": "28be9ca5c1438ec3",
@@ -1670,6 +2305,23 @@
       "summary": "A pair of rare brown wood owls have been bred at a botanic garden in Hong Kong, with two chicks fledging last month. Kadoorie Farm and Botanic Garden in Tai Po kept the breeding programme under wraps for weeks, allowing the chicks to grow undisturbed before announcing it. The chicks, still downy white, were seen peering curiously from their nest among ferns in the farm’s mature forest. Their mother kept watch from a nearby tree during the day and foraged for food at night, the farm said in a..."
     },
     {
+      "id": "01f2967db0b750c4",
+      "title": "Quadrant Capital Group LLC Has $132.06 Million Stake in Apple Inc. $AAPL - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOXzdFT2Jzc0dLMUJkS1R1dnpOVW1Wekw1WThIemNoTmVwT2NWSkJULVJCbTZvejVMR0I5MEVpTVEzNU1QcVhEazF6T2FvVGE2dFBEdWZsc0stcWkzV2lVMzhrQXdiVlJmU01xTUlLUmFJOWdJTV9XNXU1cDdGRHZQbzgtcnFVbUlMc29ZUkI0d3ZqV3NFRWlFMTZZR2otSUYtME9sWEhBYzBYSy1iZmh5cTZOLXBwYzVVbnNmT1JmSTdmQkF2MDhRNw?oc=5",
+      "published_at": "2026-06-13T08:57:36Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Quadrant Capital Group LLC Has $132.06 Million Stake in Apple Inc. $AAPL    MarketBeat"
+    },
+    {
       "id": "5e4841fdd11d901e",
       "title": "Hop On misses court deadline for meeting owners from blaze-hit Tai Po estate",
       "source": "News - South China Morning Post",
@@ -1702,6 +2354,40 @@
       "processed": false,
       "alert_sent": false,
       "summary": "China drafts $295B AI data center plan with domestic tech focus    MSN"
+    },
+    {
+      "id": "a4c141681dbcedda",
+      "title": "Apple Inc. $AAPL Stock Holdings Lowered by Columbia Bank - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNM2Y1OGFQMmRiYUd2dW80czkwMnFoS1FCU1hsZUsyUnJNOElUdWRSazVId28yc1NKdDVRWndiTUxjUmFFX1BBOEpiYjh1S2k4Rk5WSFAwd0pvdUNyeV9HczZxWlQ0MWpSTDNKUkNvQmJ4TEx5OFpwcFZnZllaWGRXZjFidTByY3FKMTVXVmttbHJ6czJmc0pnZlczWjZ4OTR3MWxtSkJjeHBEX19ZR3huV0k5NDFEQQ?oc=5",
+      "published_at": "2026-06-13T07:43:14Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc. $AAPL Stock Holdings Lowered by Columbia Bank    MarketBeat"
+    },
+    {
+      "id": "66934549e2a059e9",
+      "title": "Gerber Kawasaki Wealth & Investment Management Grows Stock Position in Apple Inc. $AAPL - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxNa2JuZEh2cHI4ak9COWJDSEd5NHAtRTl0NE4xeGxtRkh0bHdIRTVMb2JNbl9BTnBhWFhTTkNQTGxJcTlIQVppR0JGeS02Z0VValpEcUFmWk11a25ZNVh2MktSdy1hVWVWYWcwZ1dWcHltcmZpLU52QUpIbmVRUmhtS01kckVyX3VOekhkQjl1eFNHaDVxLU1XMmI0cEd3NjU2emZjLVhYbTBZMkZOaEh0VWxpRWhxWC1sWlhKODdsOHVZZ0tKUGFXbHhaX1NNZ2RwdUo2UjdZeXQ4d3Fp?oc=5",
+      "published_at": "2026-06-13T07:43:14Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Gerber Kawasaki Wealth & Investment Management Grows Stock Position in Apple Inc. $AAPL    MarketBeat"
     },
     {
       "id": "8c19231cd4a31cca",
@@ -1993,6 +2679,25 @@
       "summary": "A new report suggests the unit, which employs 6,500 people, is on the verge of revolt."
     },
     {
+      "id": "79be3c6b55c2740e",
+      "title": "Apple (NASDAQ: AAPL) Stock Price Slides 8% After WWDC 2026 Despite AI Progress And Raised Price Target - foreignpolicyjournal.com",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxONDZ4eGdaZjJvTUplTmlWSU1PY1o0SGZkNno2YmhFZlEzcWdCZkVfM1ktLVQyb2QtdnFVbEJNcU45T09HbWp1ZHBIX3I2ZlZvT1V4a1JabEo3cnJIQWNlWVVleFNfS1VwT3MyckZxQVgxeVdfMWdIOWxHR2tLZkNVeFNKMFMzMmNwYVppMFBaRTJzN0tUeGhrRXJ3R2xjMl9OQ3pZbVRycXFJM2ZIWWxHek9LaWRoZzNLN2dZcXNDX213SkYzcTgwVGVVUjR3RWtXQUFUOUJEemFuWjUzaUFmVA?oc=5",
+      "published_at": "2026-06-12T22:30:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple (NASDAQ: AAPL) Stock Price Slides 8% After WWDC 2026 Despite AI Progress And Raised Price Target    foreignpolicyjournal.com"
+    },
+    {
       "id": "bf30219df5085511",
       "title": "Zuckerberg says Meta made 'mistakes' in AI workforce shift - Reuters",
       "source": "\"site:reuters.com\" - Google News",
@@ -2027,6 +2732,23 @@
       "summary": "As of today, SpaceX is owned by investors who will want to see it make money."
     },
     {
+      "id": "c9afed4ecc1e4a3e",
+      "title": "Apple (NASDAQ:AAPL) Trading Down 1.5% - Here's Why - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxNclJrSWt4WVlpMml3MTY2QW1lcFlCb0xjU3RmYTlDbkY3bzFsMjVYcXVUeFFwNi1jVkNIZGFMVjFObzNndkM0X2lBT19VYnZjZW04MmxPZUs1YzJQMnlzSld1Z1NmbmZoVlBlV3dWVHlxc01EM2VlUnlEYTF0YXltQ3YxX1ZrVEw1WFl3V2VvakpDZ3lDeGQ3Sm54WDA?oc=5",
+      "published_at": "2026-06-12T21:35:44Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple (NASDAQ:AAPL) Trading Down 1.5% - Here's Why    MarketBeat"
+    },
+    {
       "id": "09f25f69d03cb859",
       "title": "SpaceX’s surge on debut makes Musk world’s first trillionaire",
       "source": "International homepage",
@@ -2059,6 +2781,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Unidentified officer removed from frontline duties in the first known case of its kind in the UK A police officer is under criminal investigation over the alleged use of artificial intelligence and has been removed from frontline duties in the first known case of its kind in the UK. The officer, who has not been named, is being investigated over allegations of using the technology to “create evidential material in a number of cases” and perverting the course of justice. Continue reading..."
+    },
+    {
+      "id": "a68448f585c84f2a",
+      "title": "AAPL - Apple Inc Stock Price and Quote - Finviz",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiRkFVX3lxTE5OcXZ0WUY5TUFhb1JEbC1vR0xvaUdXcUhSVVo5NHVRYWtxd3k3Zy1pcHNBTWt5U3kyVDNzanVZdENiTzdIUUE?oc=5",
+      "published_at": "2026-06-12T20:00:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "AAPL - Apple Inc Stock Price and Quote    Finviz"
     },
     {
       "id": "d2f72914ca3302ff",
@@ -2112,6 +2851,23 @@
       "summary": "Full autonomy is rare, but Ukraine is installing AI modules on drones and robots."
     },
     {
+      "id": "5c96a799474dd7d2",
+      "title": "Apple (NASDAQ: AAPL) Stock Price Faces A Balancing Act Between Services Growth And Regulatory Risk - foreignpolicyjournal.com",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi3AFBVV95cUxPdDg1a2lmQlBlNVB4WFVJRTJVR2pzWjUyTmhMazVmaDF1czNfV3hwY1BJQlpOMVUzNi1LakVpNkxma0ZKRlpJODdJME9SYnhsUDFfbFIzdkdvQWphc2lXb3lzRDFWQmVvRWszYThQb2hiTF9Na3R5MGJyTTB1V2hZWFJDNUZXUDVxeDRYOE1xUjdDWGplRzZfdzlzSmtjZTJ5Z21TYTJjLWt1MW5rdTVxQ3J3cmo5YkhYbExrd1JhVGhXZm9ndGMxYzlvV0Zzb1FoUFhUUzZLaTBrLW1V?oc=5",
+      "published_at": "2026-06-12T17:46:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple (NASDAQ: AAPL) Stock Price Faces A Balancing Act Between Services Growth And Regulatory Risk    foreignpolicyjournal.com"
+    },
+    {
       "id": "db5d4a5b2d444f33",
       "title": "UK to ban under-16s from ‘high risk’ social media apps",
       "source": "World news | The Guardian",
@@ -2144,6 +2900,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "The tech giant said a group called \"Outsider Enterprise\" used AI to scam hundreds of thousands of victims, sending 2.5 million text messages over a span of two weeks."
+    },
+    {
+      "id": "ee9ac5c410afc69a",
+      "title": "MSFT Stock Price Prediction 2025-2026 | Microsoft Corporation Forecast - 24/7 Wall St.",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOckZoakd6MWFpZ3Nsc3ZMMS1BMTlMOWU2M1Njb3dHRnJBY08yRlpMMi1PN3FUbEt1VDg5eW9md09lMzZoWmtxc2x2UnNzNjFzMUlKZ0NETWQ5MDBTZVZrTkxIMVUyNm1GbEpweE1MbE5hcXFTcjhDbVYtM2pBMlNMd2xzOUJOUmtCRVJnYzJsVGd6QQ?oc=5",
+      "published_at": "2026-06-12T17:21:55Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "MSFT Stock Price Prediction 2025-2026 | Microsoft Corporation Forecast    24/7 Wall St."
     },
     {
       "id": "99929da37dd40050",
@@ -2401,6 +3174,23 @@
       "summary": "The United States and China should hold regular high-level meetings and deepen cooperation on emerging technologies such as artificial intelligence, as greater transparency is essential to avoid a downturn in relations, a veteran US diplomat has said. Richard Haass, president emeritus of the Council on Foreign Relations, said meetings between senior officials from Washington and Beijing should become routine, rather than being treated as “news”. “This is a relationship that needs to be..."
     },
     {
+      "id": "735f89e40a20e53b",
+      "title": "Can Microsoft (MSFT) Stock Rebound in 2026? - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQRlBVUWF4dWQ0bDEySGdISzdPNGhnMmxSbGFIMHNnUWpmWlE0RkRGeHQzNzVuTHhYOXgwMkJDYi05YzBzV2lXUnJvcUJ4cTREX1FkZ3hBS0dNSWJjVXB6aVlRVWg5RDVKdXVsajZVcVdBVWZJOFZUSlpZOG5MYjRhZDMwd21BdU1zV21qdGlFdDVDbWhyVUlDOG1vcUF6QU0?oc=5",
+      "published_at": "2026-06-12T13:57:26Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Can Microsoft (MSFT) Stock Rebound in 2026?    Yahoo Finance"
+    },
+    {
       "id": "030fb0f87b287f6b",
       "title": "Paul Chan praises blockbuster film about Teochew community during local premiere",
       "source": "News - South China Morning Post",
@@ -2416,6 +3206,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong’s finance chief praised a blockbuster film about the Teochew community as it premiered locally on Friday, and highlighted the ethnic group’s contributions to the city’s development, even as some critics panned the production as overly patriotic. Dear You, an unexpected box-office hit that was shot on a shoestring budget, focuses on a grandson’s efforts to learn more about his family history by tracing letters sent home decades ago between Chaoshan and Thailand. The film will screen in."
+    },
+    {
+      "id": "500bfee089f75f3d",
+      "title": "Microsoft: Nadella's Next Move Could Define The AI Trade (NASDAQ:MSFT) - Seeking Alpha",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOZW1FSWNsNmpPTE5XS0xyWmtUbWZGYW1JejBFS0FmdzIwTWNndDN0cDcwcDliR0g1WmVxUHUtbGprNVdiRzkteW5HVnlYOVBVYjRPeDFLN1M3d1ZBcGZMYTFaTEJxODJuOTB6dlZDLTZmUTliWmRqb2Q4aXUwb2cxdmZLRGRuQWhGYXRjYVpYUEFOTFNOSl9MZTdn?oc=5",
+      "published_at": "2026-06-12T13:38:29Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft: Nadella's Next Move Could Define The AI Trade (NASDAQ:MSFT)    Seeking Alpha"
     },
     {
       "id": "1222460824d51409",
@@ -2452,6 +3261,42 @@
       "summary": "Elon Musk’s AI-to-rockets group raised $75bn in the world’s biggest initial public offering"
     },
     {
+      "id": "8ba5c2c3fca72b20",
+      "title": "Microsoft Corporation (MSFT) Announces a New Quantum Chip, Here’s What You Need to Know - Insider Monkey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQT255ZWI0UUttbFVkemlPZHNNNl9kbnhJNGFMSm1VQ2gtVmprM1drcEt5aWliT25aVDdCSmtRRmdtSDFvbTVTcHVydjV2d1NQSGZlRFBDZnJtSzE5QndZYndjeEU3dW5UNXhtRWlYNW5HWTVuTnctSDNJUDVKTzhwZi1TQnJBRFp2T2VqN2dhT2Mybjh4QlI3SUt3QUJTS1FnZ1M3QmtSVktUcnMzc2c1bU51c0NtcC1tSnB1bHNVa1ZUUE5manfSAc4BQVVfeXFMTlp4NV9ITHFWT0FoMHo0VmZvclNMYU5hOGE3RFFxRTBnS0xzODFaMjgzakd6Q2ZrMVFQaURqUkg4d2dRUjJ1anhTUzBfVEJnN0Z6QThPdXJTeU55VUc4aUpZNm5OdDQyZVZ6RmM5d3V6U1hFSU5FUEhXOUM3bnhZWmIybDQtSlJiS3Rqbkszb1hMcGNvRjUxVTdHZHJUdUFzOEE2WWxRUW9MTE9MSFpERlRmbUliTG9CRnByNnhNTEtncFFsemx0Y2FESEVLOVE?oc=5",
+      "published_at": "2026-06-12T13:11:25Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft Corporation (MSFT) Announces a New Quantum Chip, Here’s What You Need to Know    Insider Monkey"
+    },
+    {
+      "id": "856dee040ddb0ba5",
+      "title": "Apple Inc (AAPL) Declines Following Important AI Advancements at WWDC 2026 - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOQUV6eFhtZGpOTUJLYW00bWRJTThmVk1ZdHZabmdqV3lYSGREc0lEcVRZNk04M2Vtc0FrUWJXeGUxSXRmbTNheEpXTVZFbG85V1dmb3JuZXI3RER3TU5sUExIemxaZWFPbk9KYXlMVE1hbi15bjBXbkFzcHJaR1dDd3I0LThjSWlNcXAwV1VuVGI5QVd6QVBac3VZM0drNXM?oc=5",
+      "published_at": "2026-06-12T13:11:03Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc (AAPL) Declines Following Important AI Advancements at WWDC 2026    Yahoo Finance"
+    },
+    {
       "id": "9cac26b099abf8ad",
       "title": "Court extends order against college finance chief in HK$25m embezzlement case",
       "source": "News - South China Morning Post",
@@ -2484,6 +3329,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Gaming handhelds are amazing. They make it so much easier to fit all kinds of games into my day. Sadly, they’re less affordable than they’ve ever been — due to an unprecedented, AI-fueled shortage of memory chips, an unforced oil crisis, rampant inflation, fallout from tariffs, and more. But that’s not going to stop you. […]"
+    },
+    {
+      "id": "923705f8e7102333",
+      "title": "NVIDIA Corporation $NVDA Stock Position Lifted by Wescott Financial Advisory Group LLC - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxNbzhXVGZwbGtIbk1KZEJEdHk0RF9lQVVZUFhaNUZ1VEVhc0oxb3A2c3dXdHRfbUNRS2hhU19YNk5TdDh1T3dLTlRTVjFocEVPSDE4VGl3MzRzQTctUjdYa003YjVUbHVIWjFhZGFOOXBveW9oc2VZVF8xT3lWZnRRVGxoenN5RDZJZnhySXRnbTJ6S3U5MTZqcmZwbnYyd3dFVzdyclhWS3Z1SFVFTkZWZEg4cWlrRW52YVBnMWRNWWw5MTlNYjdVVklnc1VVZUljWS1kTFRnRllmeExya2U4?oc=5",
+      "published_at": "2026-06-12T12:22:32Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA Stock Position Lifted by Wescott Financial Advisory Group LLC    MarketBeat"
     },
     {
       "id": "eeae5a6b4a97cb62",
@@ -2741,6 +3603,40 @@
       "summary": "Hong Kong is reeling from a double tragedy on Wednesday after a 48-year-old social worker jumped to her death from her 19th-floor home in Taikoo Shing after arguing with her 12-year-old daughter about “education problems”. Hours later, the girl also jumped from her living room. The South China Morning Post breaks down the sequence of events and examines how Hongkongers can cope with stress and maintain harmonious family relationships. 1. How did the tragedy unfold? First, a government social..."
     },
     {
+      "id": "668e6a55c6b811e3",
+      "title": "What's Going On With NVIDIA Stock Friday? - NVIDIA (NASDAQ:NVDA) - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPaE51MzgwMFdUT0ZqQS1VOEFUWlYwWGR6YXFQSDE5Z0pLb1dHYnlQdzdEZzFvbjV6cER6NzMyUmR1UnRmV0hsOUp2aVNzcU9oM2VIaTViaTlGWjhIRUxUM084cjVEd0ljZG9SdGRXenNWSFlWc0N2RUdhdDRDSDN1RDE1bGVxY2k1LXA0U1IySVNydTRNTkV5MzZ1eE9ibkZha09SSWdWS1luemhKVHc?oc=5",
+      "published_at": "2026-06-12T10:06:33Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "What's Going On With NVIDIA Stock Friday? - NVIDIA (NASDAQ:NVDA)    Benzinga"
+    },
+    {
+      "id": "e2f7db2c8e98e350",
+      "title": "Microsoft Corp (NASDAQ:MSFT) Tops Dividend Screen with Strong Ratings and Growth Potential - ChartMill",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi1gFBVV95cUxPNmYtN04yek5wR2tTX2l5dHg4cHBYWlhjdGdwQy1scGQ1SVJFMm82TFVVZ2VPTkR2U0JxampnUjVPd3FsdlhLZ1dFT2FESTAzbjhLNXNENnFmaXRwa1EyS1I1SWowRGVZSW9FYzBfUFg1ZE5DWGJiaEFvS1VNLWNWVnVWOWZrUWdhYkJKTUVsUG15Z0JjQnhQVHZyM1JucDY1d1M5WGpObHBXV1NkZG8tYTItMlpGN2ZBZFY4cGJpejdIT0hEX0RBeVFWNzhNQ2c1TkdvQzJR?oc=5",
+      "published_at": "2026-06-12T10:00:36Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft Corp (NASDAQ:MSFT) Tops Dividend Screen with Strong Ratings and Growth Potential    ChartMill"
+    },
+    {
       "id": "fab6f6add524f396",
       "title": "Hong Kong gazettes tax break for fund managers’ bonuses to bolster role as wealth hub",
       "source": "Business - South China Morning Post",
@@ -2824,6 +3720,40 @@
       "processed": false,
       "alert_sent": false,
       "summary": "IPO for Elon Musk’s company comes in what is predicted to be a banner year for public offerings of AI companies SpaceX will become publicly traded on Friday after nearly two and a half decades as a private company. Executives are slated to ring the bell on Wall Street with the rocket ship maker’s historic stock market debut. If all goes to plan, the company’s initial public offering (IPO) will mint a valuation of $1.77tn – earning it the designation of the world’s largest ever IPO. Elon Musk, th"
+    },
+    {
+      "id": "5da2d86cc19ca93a",
+      "title": "Apple Inc. $AAPL Stock Position Lessened by MIdWestOne Financial Group Inc. - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPWGh2aHdKMGRxQjRuZS1QWm9BNjNjZloySlVCRi1PdG8wTVlOMzY3NC05RGN2ZGRfM1MzVzRNTE16SUk4LU5iR2VEc1M4X0Z1cnh4V3B4bENRQXJfUWlNa0dUZEZ2QXZLNnpISUQ4MklWTDVOU2ZQTko2dnY4WmN5OFZiS1d2bnAyY0J6bkVJOHNsRGkzcmFzTXBIdk1rYTljQzE5LUdZand2NlRLUFZaNjZ5WlRoZlZueU9DemNubmJ0RkRUTFNZdEx6Rl9OQQ?oc=5",
+      "published_at": "2026-06-12T08:51:11Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc. $AAPL Stock Position Lessened by MIdWestOne Financial Group Inc.    MarketBeat"
+    },
+    {
+      "id": "79e49b7840729ab3",
+      "title": "Private Management Group Inc. Sells 2,461 Shares of Apple Inc. $AAPL - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNWFpYOGtBUl9GYzBiOFNkZFQ4UlB6MWdvS0Q3TUk1cURRemo2SEszamg4RnhWNzE3YXVaaFdRaFhTR1VoYnJTYi1HYzBDZlhWZjkwWmtwcG1sQW1QakZtRTY5VThYdFNZOE1OMktpMWtjSGpNWGdHdlFQMnhMMnhmOGc0RGFYZWwyeXo1Y3poLW45TkdDbkFEeHY1YmU4OWwwWFlkRnpXRzhwSjFvbmtWQkRHZnFTbHJCS180X01wTnR5UDA?oc=5",
+      "published_at": "2026-06-12T08:51:11Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Private Management Group Inc. Sells 2,461 Shares of Apple Inc. $AAPL    MarketBeat"
     },
     {
       "id": "42ff9a1742c4c6a6",
@@ -3253,6 +4183,59 @@
       "summary": "EngineAI Files for Hong Kong IPO Amid Rising Demand for AI and Robotics Stocks    econotimes.com"
     },
     {
+      "id": "2fd10d260bef163e",
+      "title": "AI Integration and iPhone Growth Assert Apple Inc. (AAPL) as One of the Best Forever Stocks to Buy - Yahoo Finance UK",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxOUjh1NHliY0o3aGtvMTlmVHNwR1ZPeU94UEh4alV6aHFuWVgzOEFxM3prZExIVEwwclBTLXd6RllEaThNMFhEMWVuSlhod3pZTXhEZjFoMlUxdDY0OXoxamEwVUw5Q19tcEllYm1jUjA4M1hHRlAzaUJYaHVidy1sNVBMY1dzNFZUNk81aQ?oc=5",
+      "published_at": "2026-06-12T03:26:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "AI Integration and iPhone Growth Assert Apple Inc. (AAPL) as One of the Best Forever Stocks to Buy    Yahoo Finance UK"
+    },
+    {
+      "id": "bf9719e9722721af",
+      "title": "NVIDIA Corporation (NVDA): A Forever Stock to Buy amid Growing Business Ties in Korea - Yahoo Finance UK",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMijwFBVV95cUxORzEtUEJ2ZnFybjRheHRCQzRnSl8xVm9Vc011QWtfWnMyWGZwVFBVbE90TGpTOUFtRkhiUGdzLVNmTWZwVW00OWtMNHZscFRTMEtjSUpmTV85ZjhVc09SalUzWlRCUkptQjAxRlFTdTl1LVNPMVR3aFBFYUpUcTNsa081SkRRZTkxUWJsN19HMA?oc=5",
+      "published_at": "2026-06-12T03:25:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation (NVDA): A Forever Stock to Buy amid Growing Business Ties in Korea    Yahoo Finance UK"
+    },
+    {
+      "id": "8e44db296a5e031e",
+      "title": "Here’s why Microsoft Corporation (MSFT) is one of the Best Forever Stock to Buy - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPZ1puZW43MlM0dzZMNG50X2dCWGZabDdUaXNXRTE0OXJEWkhseVY4MDI5RE5iTnVuSTVHRkZwSmI0QVRwQ1JDUVlVWTc1aVhXSlN2S3JuVVZ2WS15MUdhZzhUQjF6Z0FqM3pDTkJhMllhTUtKeW10dDN3V293amFOeUR3RnIxMG84eFBDYUdYZ0FsMkRjbktmTTdodk0zWm5y?oc=5",
+      "published_at": "2026-06-12T03:25:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Here’s why Microsoft Corporation (MSFT) is one of the Best Forever Stock to Buy    Yahoo Finance"
+    },
+    {
       "id": "5777be253519e8af",
       "title": "1966 Hong Kong rainstorm leaves 64 dead in one of city’s worst floods ever – SCMP archive",
       "source": "News - South China Morning Post",
@@ -3302,6 +4285,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "South Korean stocks surged on Friday, with the KOSPI jumping as much as 8.5%, driven by optimism that Middle East tensions could ease after U.S. President Donald Trump signaled a possible Iran deal this weekend. The rally helped the index end a volatile week up 3.2%, recovering from the previous week's 3.7% decline triggered by a global selloff in AI and technology stocks."
+    },
+    {
+      "id": "d9079f1a30198d3c",
+      "title": "Apple Inc (AAPL): Our Calculation of Intrinsic Value - The Acquirer's Multiple",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNZjdSWGpoR3owTDFmOGhZbjI5c3BxRnVmaXdCWHo0bzQ2OVJfVEdBc3ZRNjdwQWtFMVltNHhqbVJacVRLUFFwZVN4MmswUG8zbDMtbU1xY3ZUQm9ERWlHcVRNTUY1QzJRNHZSNENpSWJ6Vld1Q1ZkdXNvVlJrSnZwZWFLeU9nck9BTlRCSWhZbERlVS1F?oc=5",
+      "published_at": "2026-06-12T02:37:09Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc (AAPL): Our Calculation of Intrinsic Value    The Acquirer's Multiple"
     },
     {
       "id": "89f48438bc8cb3c3",
@@ -3610,6 +4610,61 @@
       "summary": "The huge sums that Wall Street is about to be asked for look like being only a down payment"
     },
     {
+      "id": "bad4a307f3bf459c",
+      "title": "Microsoft Corporation (MSFT) Is A Top AI Stock In Ken Griffin’s Portfolio - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNNzJWQlVIWXRRMHNONFZabGxGLXhNTFVYOXFkZGM3VVFnX2lNa1N6R2UzSkM3VFkxRkpTZGx2ejNLamU4bEFRNXFQcjlvcmhGOW81Mk8yUnpXRGFkU3pFYnExbVNHUHdSNnZvNjFkalYwRVVsUkFyWEE0YWI2WktyOV9IcGRpdWxIMWVNTXUyX1VrdWpjM0RaQWFYVV84VTg?oc=5",
+      "published_at": "2026-06-11T17:31:05Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft Corporation (MSFT) Is A Top AI Stock In Ken Griffin’s Portfolio    Yahoo Finance"
+    },
+    {
+      "id": "2138d7894fddd307",
+      "title": "Apple Inc. (AAPL) Is A Top Stock In Ken Griffin’s Portfolio - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxON3N3cmh4eF94TWwzRlFPZmZDaXFJSkZFSVlNUExWTTNFOVBaRlNlUlRVSk5pV3VqTjcxYlZqU2Q2THo5OGs0eE1fMElMN0NodHdQQ2tMSUV4TmwtdW12NDFBNzlud3lad0Z0UnFmem45SFExNm9udTJmeUNqMk4xcl9GcE9lNkpZeG90NUZ1RXQ2a2s?oc=5",
+      "published_at": "2026-06-11T17:30:42Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc. (AAPL) Is A Top Stock In Ken Griffin’s Portfolio    Yahoo Finance"
+    },
+    {
+      "id": "b29a07f72584d9a6",
+      "title": "NVIDIA Corp. (NVDA) Is A Top AI Stock In Ken Griffin’s Portfolio - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQV01BRzUyZWtsY1BYQ1Iza1lZNVczSnJCb0huVmNZODQ0YjY4VjFiTUVwa3BLcmNWdDZvUjd4OWpTVEg0MTZDaEhOajZkSl9kXzRBbFFuSUtqVEJya3Rpdjk5c2NVclotUFdiZ3RsVTMyUDdNMko4VzVOUjhqaDh3aDlqaGJwaEtqMWZTa1Fkakp0QQ?oc=5",
+      "published_at": "2026-06-11T17:30:12Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corp. (NVDA) Is A Top AI Stock In Ken Griffin’s Portfolio    Yahoo Finance"
+    },
+    {
       "id": "d455e74874e28df6",
       "title": "Meta’s Edits app is getting an AI assistant and a desktop version",
       "source": "TechCrunch",
@@ -3676,6 +4731,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Coinbase's agent can use x402 protocol to get access to data and APIs."
+    },
+    {
+      "id": "0b4cc4c29cfd987f",
+      "title": "What's Going On With Microsoft Stock Thursday? - Microsoft (NASDAQ:MSFT) - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNNHNWMlBnR2w5ZV9IbjlKTExQclp4WmxzTmxUUEN5V2VQTmtwMmxiZFhpS3h5OHluNkQ5WUd2OHFkZDBuazFVMzhrQ3pheHZPdUhKWV9sczVLSVlxTTRONXRtbkI4ek5aaV9lUFp5R01OcWVQLWhkTlB5OE5XbE1jSWpoeWF4MHZOZFJuQ01vWTVobnFpSXBucTNvTThCN3RieE9SZUNYcjFNNEt4OHNSNnNiTTRmUHJKUjJ3cFRB?oc=5",
+      "published_at": "2026-06-11T16:37:06Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "What's Going On With Microsoft Stock Thursday? - Microsoft (NASDAQ:MSFT)    Benzinga"
     },
     {
       "id": "99c2dbaa43715e0f",
@@ -3778,6 +4850,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Former xAI engineer Devin Kim alleges he was illegally fired for trying to implement safety mechanisms for the chatbot A former engineer at Elon Musk ’s xAI who now heads a thinktank focused on AI safety filed a lawsuit claiming he was fired from the SpaceX subsidiary for raising concerns about the risks artificial intelligence poses to humanity. Devin Kim claims in the lawsuit filed in California state court on Tuesday that his efforts to place guardrails on the development of the chatbot Grok "
+    },
+    {
+      "id": "a1810414b80b225a",
+      "title": "Buy The Dip: Why Microsoft Is Heavily Tilted To The Upside (NASDAQ:MSFT) - Seeking Alpha",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxOdnk4dzRVUWZsYVFBUlQyOUw5ZS0wLTBwQXAwb1RHZU9CcXdBRHJRYmVnaVNQNlZBVlZBVTJ4Y3lXN2ZwbGFBZ0lLNV9KSklNT2x3UW1rWVBudGVQQUV5Q1FEa3RqeVhYNE42b1B2bXh4RnBaallJNmpBanRGeHNyRjV0RkNVdGc4SUliclY2RnlGc3FEWnVILXRLTi04aVE?oc=5",
+      "published_at": "2026-06-11T15:43:14Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Buy The Dip: Why Microsoft Is Heavily Tilted To The Upside (NASDAQ:MSFT)    Seeking Alpha"
     },
     {
       "id": "493baaebb4f4976c",
@@ -4273,6 +5362,23 @@
       "summary": "The first such movie accepted by a festival, ‘Dreams of Violets’ portrays victims of state brutality without capturing their humanity"
     },
     {
+      "id": "411a573f29911414",
+      "title": "Vise Technologies Inc. Buys 223,526 Shares of Apple Inc. $AAPL - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOdXNlUWlBTENKR1pFcm9BaW5JWlBTMUV0OHBrcFhHcW9yQjB1VUhCSUMwY28yNHdaQXVNdUJEVkJpTVVKTGpjZS1wYnNKREhlMVhRdGZYMmFaRC1KR2lhRzdwNklLQmN4WHhQaF9ZRnZjU2E1Rm1oN1JBZHl6cVZ1ZHBrYmd0T0FhRVhzcndOdEdPYTRPWUpoY1E4WlRnZGRsNXNyYl9CVERkUkE1T1VkczREaElHNXJGZmhz?oc=5",
+      "published_at": "2026-06-11T11:24:58Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Vise Technologies Inc. Buys 223,526 Shares of Apple Inc. $AAPL    MarketBeat"
+    },
+    {
       "id": "fc328584113a3a0e",
       "title": "Equipment failure triggers delays of up to 15 minutes along Tseung Kwan O MTR line",
       "source": "News - South China Morning Post",
@@ -4597,6 +5703,57 @@
       "summary": "Indian IT stocks, led by Infosys, HCLTech and LTIMindtree, fell up to 3% as hotter-than-expected US inflation fuelled concerns over prolonged higher interest rates. The selloff was compounded by lingering worries about AI-driven disruption and its potential impact on future technology spending and demand from key US clients."
     },
     {
+      "id": "d504ef191609d5ad",
+      "title": "Fosun International Ltd Purchases 3,300 Shares of NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPX3B5LTBEMHl2UFdTUXktSmdfOGlua1pyVnRoYjdnUmR0aDNsUWlNRWhlLWVoSWgxLWU1Nkc2LTg0ck15UUVkbmxWM0pyeVlvZEpLbUFTaE4yeFZVRXl1dUwzQ2oxdUFwdkFHUmtYM2hXbEpPSEthOWkzNnJCZXJpR2wzSWk1enJsdWJxbUY4OHY1VGliRjNEbnJ6YmJ2MlhsSGp2ME9LSm0tZ3pvNjliZUVNYWNGVzFMLXJ6M2NVMXdMMlp4NkJsRktVdGdNQQ?oc=5",
+      "published_at": "2026-06-11T07:38:42Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Fosun International Ltd Purchases 3,300 Shares of NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "f8ae9a30dde667f0",
+      "title": "NVIDIA Corporation $NVDA Stock Position Boosted by Continuum Advisory LLC - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOVVQySU1qbUFERjhtVkR4b2N1amFIUEwycm5DMzVaa05LRkMzT0pTU1h3b1YtQXZrTjg1eTJlUkVRdGdHS3FQTVE4Vk5GQ3FUTmkwcHNId1hVdGVzNjU5YWRqZkY2ZXBKaU53bG9tajk2NDBXQmNZdjRRUUZJa3p2WUZGWlJWOU5tWHFuUUtuMTJjM0xsT3pYN3V4ak1ycExYNk9LZ2pvc0pMQzN1VmctTkJDY2ZKd0JlNmJJVlRsOGUwb0ViMjJ2bHBHaTJjZw?oc=5",
+      "published_at": "2026-06-11T07:33:03Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA Stock Position Boosted by Continuum Advisory LLC    MarketBeat"
+    },
+    {
+      "id": "a3ee4940fd7fc477",
+      "title": "15,043 Shares in Apple Inc. $AAPL Bought by Avise Financial Cooperative Inc. - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQSWVWaGlYR0NqTWU4ak52X3d3NHBoejU1SzJKR3d6NjY2MEl4VjItcmdzQ1Vtc2FmSTNrOTYtVEVhUUNTamdPN1pyVTJMSzBzMzVTME1TVnZOOEk5S0RmbEtBdmRwcDBubExKNW5TT2dyTDgzN2ozbUF1TjBlSDV4WWF3QnJPcnBsc0lJTlprbXRuOXBSblJoRk5sWjJraHpfc0lld25QVGVMSXFMNXEzbDd0R2dyQkUtTjVjdnZnanhOSVp4dDhRdnhEb3JTQQ?oc=5",
+      "published_at": "2026-06-11T07:19:04Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "15,043 Shares in Apple Inc. $AAPL Bought by Avise Financial Cooperative Inc.    MarketBeat"
+    },
+    {
       "id": "edf95b620ebe750d",
       "title": "Hong Kong Stock Ratings Summary: China Galaxy Securities has assigned Alibaba a 'Recommended' rating. - 富途牛牛",
       "source": "\"Alibaba stock OR 9988.HK\" - Google News",
@@ -4646,6 +5803,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Xiaomi Unveils Billion-Parameter AI and Leica-Equipped 17T, Yet Shares Languish Near Yearly Trough    AD HOC NEWS"
+    },
+    {
+      "id": "ed792351dbfbc560",
+      "title": "Microsoft: The Opportunity Cost Is Rising - Seeking Alpha",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxPMGFsNk54ZEpNYzJvbzAwWm9QQV85N2ZnLVpFRzBlUXpBSXRXZHFZOUdfWHZnQTdPMS15VUFMTHNBUHVERlZuMGxUeEtIY0JTWkVYNS11TmxjN1BVVXp2WlQ3X0RkSEdEeE4xQTR3MS1PcGphRm96UlRmNG9jVGlkRDFZOWdZbzFE?oc=5",
+      "published_at": "2026-06-11T06:11:15Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft: The Opportunity Cost Is Rising    Seeking Alpha"
     },
     {
       "id": "baea3c7b9a5843d4",
@@ -5260,6 +6434,23 @@
       "summary": "During a recent discussion in Shenzhen with British Foreign Secretary Yvette Cooper, I was reminded that the development of artificial intelligence (AI) is no longer only a technological race. It is a test of whether major economies can build the institutions, standards and economic systems needed to integrate intelligent machines into human society. Britain has every reason to enter this new era with confidence. It has contributed to much of the modern world’s foundations. In 1687, Isaac Newton"
     },
     {
+      "id": "d6bf7b6acb06b735",
+      "title": "MSFT STOCK- MICROSOFT CORP STOCK TODAYS BREAKING NEWS | MSFT STOCK Ncaa Men's Volleyball Championship 2026 (nJ3iBR757m) - Fathom Journal",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiZEFVX3lxTE91bVlMS2R2R1JEUmFxMXNZdDJxbnBUX2tuXzNlSS04dmJsNXdQYms3TzY3eGJvSzU5ZWpKNDNaTjUwOEV1ZWU2X01xZk85Vmt3d2psVkpETm50RUJUS0kwVmtOeDU?oc=5",
+      "published_at": "2026-06-10T21:26:33Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "MSFT STOCK- MICROSOFT CORP STOCK TODAYS BREAKING NEWS | MSFT STOCK Ncaa Men's Volleyball Championship 2026 (nJ3iBR757m)    Fathom Journal"
+    },
+    {
       "id": "8883a1d2babb2fad",
       "title": "Trading Day: Sizzling AI now fizzling - Reuters",
       "source": "\"site:reuters.com\" - Google News",
@@ -5396,6 +6587,23 @@
       "summary": "Is SpaceX a rocket company, satellite communications business or AI powerhouse? That’s a key question for investors to assess heading into the IPO."
     },
     {
+      "id": "2724319e2b299263",
+      "title": "NVIDIA Corp Stock (NVDA) Moved Down by 3.31% on Jun 10: What Investors Need To Know - TradingKey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNYnBjbE1mVU1ONDJna3BhcU9tdVkxMkVKQTJEZVJrY2poamxiQ2ZTSmJPTmZfVkpmQXJLZVJ0c04zSU1EQUhUVEg5SE5fOEVsWi1HbV9HSUI2UGtCVnRraG5VSWlNWnJqNlpWNl9pUWFVTWNLMDdoWDk1SkFUOFFwMDFndzN4bHRqTVRn?oc=5",
+      "published_at": "2026-06-10T19:15:23Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corp Stock (NVDA) Moved Down by 3.31% on Jun 10: What Investors Need To Know    TradingKey"
+    },
+    {
       "id": "a4fa18445b9b291b",
       "title": "US tightens pressure on Iran with new sanctions and threats of more strikes",
       "source": "News - South China Morning Post",
@@ -5479,6 +6687,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hello and welcome to Regulator, a newsletter for Verge subscribers about tech politics, tech influence, and tech shenanigans in Washington, DC. (If you're not a subscriber, you can get on board here.) We're back after a two-week hiatus, during most of which I was gallivanting in the Netherlands for a family wedding, and a trip […]"
+    },
+    {
+      "id": "b1a67146bc45f016",
+      "title": "Microsoft Corp (MSFT): Azure’s Role in Digital Asset Infrastructure Adds Indirect Crypto Exposure - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOZHVLS2Z2c0tMZ3dYY0xLRVh2VE5BNjVab19EaHFuU2p3OUJlaGtxVW9Eb0p3OXRaVk13MERUeHF1VW5hRUpwTXNQQ3kxVkFkQkxHV2ZXUHJLNHlrSE1EM0RzYk1OMlYtLUN5QkNfSndqcFhYWm1RSnBlcnZoVjhCZmR6TnZLU0JMTEZtUktxTnRNNXZyaExQeVVLWQ?oc=5",
+      "published_at": "2026-06-10T17:22:04Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft Corp (MSFT): Azure’s Role in Digital Asset Infrastructure Adds Indirect Crypto Exposure    Yahoo Finance"
     },
     {
       "id": "8114491ad0b7977b",
@@ -5583,6 +6808,23 @@
       "summary": "Anthropic released Claude Fable, its first Mythos-class AI model, yesterday and it's already causing concerns inside Microsoft. Sources tell me that Microsoft is limiting the use of Claude Fable 5 for employees because of Anthropic's new data retention requirements. While Microsoft quickly rolled out Claude Fable 5 to its GitHub Copilot and Foundry customers, I'm […]"
     },
     {
+      "id": "0ae8c7530bfcf166",
+      "title": "Nvidia: Vera CPU And RTX Spark Widen The Company's Growth Runway (NASDAQ:NVDA) - Seeking Alpha",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxOZDVCS0NMY0xOcnhjeW85VFFrT2ROT2d5aHJ3bnpiSkV1MGFEY2YwZlE0OEI3SlpBOU91VlN0cjJwajN1bkhUNERFemxqOW16NDdkR3R0V1NCd0dIVWJKdHFDUUluVGNFZXFvV1ZQdUhveW0yY2g0Q3NTVF9BMmhzcnRrc0ppci1DdW84Zy1FcHFOeVk2RUJRRV9KZjBpQnd6MG1qOA?oc=5",
+      "published_at": "2026-06-10T16:44:26Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Nvidia: Vera CPU And RTX Spark Widen The Company's Growth Runway (NASDAQ:NVDA)    Seeking Alpha"
+    },
+    {
       "id": "8a56e3d7821d78e3",
       "title": "Trump’s AI fund idea is good politics, but bad economics",
       "source": "Technology",
@@ -5632,6 +6874,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Trump says he thinks AI companies will agree to 'giving back' to the public    Reuters"
+    },
+    {
+      "id": "a6599ac199fc4c50",
+      "title": "Weirdly, the iPhone Might Be About to Become a Huge Drag on Apple’s Stock Price — or Maybe Not? - 24/7 Wall St.",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxOX1BzTm5FREdjUVlSMlp4VnJRbGNBSkl2UktFcU9PUC10MTNUZmlETVNwVnBaODRWdm9vOW5qOG82OVdQWmZZLUhmZ2kwcnJHV0VRREFETXhSUTNnVHkyTG9FdTA1YTB4Rk1leHNUTHFaSGRySHRVUmdkTjJvZnlpOC05T3dqeldDeDBOcE8tWk02TXRuN3QwdEtwdmVhQkZjdXhPWFFLdjNzVHJ2MFYwbGxlUjZFMlNSWmtNOW1DdnVIMEM2cG5YblFCZWlkR2s?oc=5",
+      "published_at": "2026-06-10T16:27:55Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Weirdly, the iPhone Might Be About to Become a Huge Drag on Apple’s Stock Price — or Maybe Not?    24/7 Wall St."
     },
     {
       "id": "dcda13ecd44c77e2",
@@ -5838,6 +7097,23 @@
       "summary": "Apple’s upcoming watchOS 27 update will bring Siri AI and other exciting features to the Apple Watch Series 9 and newer Apple Watch models. If you’re contemplating an upgrade, all colorways of the GPS-enabled 42mm Apple Watch Series 11 — the latest model — are on sale for $299 ($100 off) at Amazon, Walmart, and […]"
     },
     {
+      "id": "dd477ffcf82e7492",
+      "title": "What's Going On With Microsoft Stock Wednesday? - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPQ2NiZG03OXlBc0pwX3VBRWMtVS1fYTZDX0M2VnBWMkp4MjdnSG5idmJLNGNLdFVsUk1ZZVN0RGNILUVFUkdlZ2lPTFR3UUxoNFhvY0lWaDFMNnR2SU8tbHlDaGctNnljU2RxaHlEYi16RUFRdGFhWDdJSm1nVnI3b2xyaFRzRUg0R3VaOWNoajBIT3NORHA5eWQ3enVmNHlGRTZTeUxtWmtYY3NjVzV4VmRNZmNlNi1ZTmpfUlRuaUE?oc=5",
+      "published_at": "2026-06-10T14:50:28Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "What's Going On With Microsoft Stock Wednesday?    Benzinga"
+    },
+    {
       "id": "39a48ff586c88d94",
       "title": "GLP Targets $2B in Asset Sales Ahead of Hong Kong IPO and More APAC Real Estate Headlines - Mingtiandi",
       "source": "\"China 295 billion AI data center plan 2028\" - Google News",
@@ -5906,6 +7182,25 @@
       "summary": "This is Optimizer, a weekly newsletter sent from Verge senior reviewer Victoria Song that dissects and discusses the latest gizmos and potions that swear they're going to change your life. This week's issue is a special early edition tied to The Verge's WWDC coverage. You can expect our next issue at its usual time next […]"
     },
     {
+      "id": "3113de66020c8b23",
+      "title": "Apple’s Next Chapter: AI Innovation and Leadership Change Signal Upside - 24/7 Wall St.",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQemxEeEhxcno2eWtwaEZWd1hRd28yRkRJY01WbW9INUI3U3ZuaVd3OS0zMXMwa1dNbHhBa2VJLXlMdEZOa21HclVVLUFTcGZnRW5maElLYlNZOFlORXVlTzljYVlsWUVOVWh3Q3RwWThWZ2JiN0pYNGJPb00yMEhBOE0tcWJGTEZpTXBrYnphT2RZLUR4TUlpcW5zbmRMVlVzZVRpcTB1SDBhTFZ5TnFlUkRUbw?oc=5",
+      "published_at": "2026-06-10T13:56:16Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple’s Next Chapter: AI Innovation and Leadership Change Signal Upside    24/7 Wall St."
+    },
+    {
       "id": "ae31bd95ae4e2ffb",
       "title": "A €0.01 bank transfer could compromise a banking AI agent",
       "source": "Hacker News",
@@ -5940,6 +7235,40 @@
       "summary": "The funding round was led by Norwest, with participation S Capital VC, Cerca Partners, and Oceans Ventures. Snowflake Ventures also participated as a strategic investor."
     },
     {
+      "id": "6a30db24530bef5c",
+      "title": "Microsoft Corporation (MSFT): Valuation Gap Signals Opportunity? - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOcTZDRm1aNUdYUDFYallXdDZicHJDRC05QVpyZWxhZ3I5N1NhamtGaVZ3TUZZWWwtRC12aWNHUExERmRvczRqakZaQVFoZmlydVVlTVIxX1lxTmo3SVZ1SXFIQ3hyNlNNUUtJczA4T2QxUEh0bkhVcXg3TFF6RzQyZ2hHU053b3JNd05pN1djcUdjUTFWV1I5U20ySktrQnd6eks3aUVXSzc?oc=5",
+      "published_at": "2026-06-10T13:27:39Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft Corporation (MSFT): Valuation Gap Signals Opportunity?    Yahoo Finance"
+    },
+    {
+      "id": "8078b83026c4205b",
+      "title": "Apple (AAPL) Declined Defies Strong Fundamentals - Insider Monkey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxORHBTQVhUMEhfM0hzV0tKMkhMYXlpM0xkWmhub0tpMTl3UEt1VFZweUU5UllCakJ2NHhGLVE3d2FNNjNOQUZCcElWMUdKbFRvNGhGR1hIZGR1M3dybkg2US1EclJkUTUzM1E1Nkh0bmhZVi1SSFlLMDd2Q2pMNDcyc0tXZ2VBZDdaOHQ1d01JdG1XLU540gGcAUFVX3lxTE0yTUpJLXBmZFhuRHE0ZDNuVzNoVEVLbHJyd2VmTEg4Rml4alktT2o0bHU3Q0FlX0dqenJiSGJqU3JyM2lYd3o3UlA0RVlxRFVzQVZqalV1bS16R0gzb2g3ZWxwQ2Y2TGRqMU9meXhVLVAxUFNmdm8wUGwyVDZhTjI3NGpZLVF1ZTdERHdLR0U3NENRRFFELTYxZG1DeQ?oc=5",
+      "published_at": "2026-06-10T13:16:24Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple (AAPL) Declined Defies Strong Fundamentals    Insider Monkey"
+    },
+    {
       "id": "bb8c7bdb2374fcf3",
       "title": "Proposed Sai Kung marine park to cover most coral reefs: Hong Kong authorities",
       "source": "News - South China Morning Post",
@@ -5955,6 +7284,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "A planned marine park in waters surrounding Sharp Island in Sai Kung will cover most coral reefs, Hong Kong authorities have said, allaying a green group’s concerns about insufficient protection of ecologically sensitive areas. Janet Lee Ka-wai, senior marine conservation officer at the Agriculture, Fisheries and Conservation Department, also said on Wednesday that underwater mapping technology had been used to assess coral coverage and identify ecological sites. Major coral spots identified in."
+    },
+    {
+      "id": "c9cece14272e06d6",
+      "title": "Apple Might Haven Taken Aim at OpenAI with New Announcement. There’s Only One Problem. - 24/7 Wall St.",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOYnVkNHV4VzdNaE8yVnFzQ0xKbzVhbXM1N0ljSTJfMEg3VTBHaFQ4bXdKNFRUUTNMbFJ6VU9xXzdLZldDdkpVTFhQUi1FbXcxaXZ2dEZ0dnhWSUpWWkRXNHJkM2NUeXBVR0FsSWVHaHdfLUpVTjNZbUEzdWJENXIzNE1Zd28wNWlkcGdfWnY4Z0JpRzZqeFRhY0xvZlJzQURFampHSml0Z0NGajZLbUs0NmdaSW9xYnZLT1BleUY5OXl5OTFHT1E?oc=5",
+      "published_at": "2026-06-10T12:47:54Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Might Haven Taken Aim at OpenAI with New Announcement. There’s Only One Problem.    24/7 Wall St."
     },
     {
       "id": "4a461f40743b33b1",
@@ -6091,6 +7437,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Half of Americans fear AI could put someone in their household out of work, Reuters/Ipsos poll finds    Reuters"
+    },
+    {
+      "id": "49c3857a1280204d",
+      "title": "AAPL stock slides, but is it a reaction to AI announcements? - 9to5Mac",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOMEw3NF9haFRTdFhtb2EtSjR6dUNCbnhIZTFWaEtrR0c3T2NPUXY2V2VsOTRmaGIyemVwT2tDZl9KUFlXUlVMeVpKTmwybm5rN3k2UEZWa3BaTEh1Q05POHBTNFJYU1FxeUoxVnlTdTd5RmFjVHo4bDdDQU95WGY3a0phd2FTS0xXM19rb3h6OGpzNFBG?oc=5",
+      "published_at": "2026-06-10T11:07:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "AAPL stock slides, but is it a reaction to AI announcements?    9to5Mac"
     },
     {
       "id": "f8de79f8d009c851",
@@ -6314,6 +7679,40 @@
       "summary": "Alibaba Group Holding Stock Slides 2.2% in Hong Kong    Moomoo"
     },
     {
+      "id": "e1a47d5b0b021e3f",
+      "title": "Houlihan Financial Resource Group Ltd. Raises Stock Holdings in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi4AFBVV95cUxNSXlYWHlnVC1IaFRPQmh4ZTVmdi0wOEZBMlZXNWVoNUgtVFgxbVdteXR4by0xcVJnZHZFd3gtOUdYdEdzcjlEOTd4aklMc2VRYTBSMVZNM2k1THRqcGNIa2I5TlNST1BIMTZ2N3VNTi1PbGZoUFd3MnI3LXkwa2w3UkZrVEtadlNoTnhOVUxuLVJnUDlaSmpyM20yc2U3LTZtVk5XbVlhY2RSRWlOTkNUODZyODZnWkNCS1NKRW84OVZYaHF5aUZqNnFDM2dsRXBvSkthUkJISnZQWWpKUDlPXw?oc=5",
+      "published_at": "2026-06-10T08:42:53Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Houlihan Financial Resource Group Ltd. Raises Stock Holdings in NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
+      "id": "d78c8dbe84aeb527",
+      "title": "NVIDIA Corporation $NVDA Stock Position Boosted by Foundations Investment Advisors LLC - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi3wFBVV95cUxQT3VrRF9YeVc0T08yUE43dDB3QkowUHU5ME5uRnQ3SEVhQlcyS1JYaWdUaXFDREU0ZjNNX3V5ZnBOcnUyT19OWnVTSFpRd0RXcTF4X2gwRkdKMVZmWFZhVUlGbU4xU2p3S2J2V1FJYy1GcW92Zi1FSWhlY2loSVEweGNhaVctdjRkNi1YS0RKMVNxcjJaLUx0OFR4ZXlyY2w0aUFxQlR5RWpEZklkNHEtVzFONGJfcUlwNEliT0RwMmJWdnkyQ0hmLUY5MnlVdFZpcklORlVTZkk2X2JPRnNR?oc=5",
+      "published_at": "2026-06-10T08:42:50Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corporation $NVDA Stock Position Boosted by Foundations Investment Advisors LLC    MarketBeat"
+    },
+    {
       "id": "4fbcfa5d1a75a599",
       "title": "WhatsApp ordered to host rival AI assistants for free",
       "source": "The Verge",
@@ -6329,6 +7728,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Meta has been ordered by the European Commission to restore free WhatsApp access for chatbots made by rival AI providers while the regulator finishes its antitrust investigation. The rare interim measure announced on Tuesday was deemed necessary \"to prevent serious and irreparable damage to competition\" in the general-purpose AI assistant market. This is only the […]"
+    },
+    {
+      "id": "bc8645c54549e021",
+      "title": "Apple's Stock Declines After WWDC, Despite AI Updates (AAPL) - GuruFocus",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNSmRVOVR5NjU0SnI3ZktSbUJnNW5LNXc3WWV2TGJmX1RObk5WbDhIYk9yZy1Bc2JZdkpjYkk4VThpZm5mMnJ3REZJbzdiU2Y2NlJBSFNhVmFTd3hpMmtnN2dldGo0ZERRRmhlaUZTRDRnRmVUOUd0aVlyaFJFYUhqd28zUW9mZkh0Nk5UNGl4WXlRd29Oc25VSEx3X0g1V0d5dGpMQzZPYWtycFE?oc=5",
+      "published_at": "2026-06-10T08:37:30Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple's Stock Declines After WWDC, Despite AI Updates (AAPL)    GuruFocus"
     },
     {
       "id": "77fad28ae43febb0",
@@ -6431,6 +7849,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong Stock Market Movement | Alibaba-W (09988) Drops Over 3% as Alibaba Cloud Announces Price Reduction for Container Compute Service ACS Agent Sandbox    富途牛牛"
+    },
+    {
+      "id": "595673605137f596",
+      "title": "Constant Guidance Financial LLC Boosts Stock Holdings in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi2AFBVV95cUxOZ1VocnNpMm9aY0czX2dxNllQUVFFMDFwMXNJaXR0NHhHTzI3Vk4tbWprRHdNc1pIelJqd3ZKbThualdkRjRQSUtzZk9YejhVclc3ZFlmS25HQ29kdzZWTGNBVFVpVW44T2d6R256T3FTdG43b0Z3TXJoV2Z1dzdKN0NyZmNTRmpuRkxuejZ4ZG5xN2JKeEpvaHNlMEs5OExndlFkN3E5MUlOYk9RREVOcEhXU01tYnU0TUVzYjJQRzFudktwNDNMVWJZekR2RlZYT1FDRXRBTnM?oc=5",
+      "published_at": "2026-06-10T07:40:10Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Constant Guidance Financial LLC Boosts Stock Holdings in NVIDIA Corporation $NVDA    MarketBeat"
     },
     {
       "id": "3a5d6ab38f6d4668",
@@ -7063,6 +8498,23 @@
       "summary": "Super Micro Computer to raise $7 billion in equity offerings to meet AI server demand    Reuters"
     },
     {
+      "id": "1882ac40d857c437",
+      "title": "Why Apple (AAPL) Shares Are Sliding Today - StockStory",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxNSVRLYzRrNUt2amE3YlAxY19LbUNpMXlfT1JpbHZyYWVTTHNMVXh0cWZFV2k4VTFaaFVrNzZGVDR4bDltcjZuc0NsQ05pRjF1MndpMGtVNVRzeVhwV3YtR2hxTDhOLU9rM1Y4OGhqLTV0ZjN5dnF4Y2R1RjJFWXNRemJIRk5QS09GX3ZyNDhFektKak01WUdMeEN3Yy1zUnNhM0NNWXdn?oc=5",
+      "published_at": "2026-06-09T21:55:43Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Why Apple (AAPL) Shares Are Sliding Today    StockStory"
+    },
+    {
       "id": "415c65fb9b2af9e5",
       "title": "XIAOMI-W (01810) Analyst Ratings, Stock Forecast and Price Target - Moomoo",
       "source": "\"Xiaomi stock OR 1810.HK\" - Google News",
@@ -7078,6 +8530,40 @@
       "processed": false,
       "alert_sent": false,
       "summary": "XIAOMI-W (01810) Analyst Ratings, Stock Forecast and Price Target    Moomoo"
+    },
+    {
+      "id": "db99354e133818d0",
+      "title": "Apple Inc (AAPL) Stock Down 3.6% but Still Overvalued -- GF Scor - GuruFocus",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxObkJSdVZLd19iMnMtcmFoOGtHTzU0a0dnbUdnYVBmdjZYX1JBR19kZXBoUlNNeFlPOVJjMkZiTkVoeFlxVWRNb3NjWnpxY2xZRjRYY1h5RFFBb05WZHNyQ0kxZnBMUG5Ya29sVUtNbEdSYlFKeTdyTmxhRklkNGZHekQzZDNxMDUxQlNzcEJ4anpxSmRUMjFEOFNKTEhTTUxmeGdiUFFkS2swS2hFZjZaVVJ6a1JsQQ?oc=5",
+      "published_at": "2026-06-09T21:24:24Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc (AAPL) Stock Down 3.6% but Still Overvalued -- GF Scor    GuruFocus"
+    },
+    {
+      "id": "ada9e29438769c99",
+      "title": "Apple Kicks Off WWDC. How to Play AAPL Stock Here. - Barchart.com",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMilwFBVV95cUxOZkZTMW9rYkpkR1ZBNi0wd01jMWxlLVA1d3EzSXc4cVRLSDRTUVRmaXBTU3VCVTFQVGMtN0NOYXVqcHdwZGczeUx6M1Q4SnlCUFB0dVdEMllTSEFRRlhWQTRFMmZhNnpkemptaTNlSDRKS3A1RmtYUDEwZUJDVUhrTkd3bzBYUlQtS2daUExQVldCdVBWRWJr?oc=5",
+      "published_at": "2026-06-09T21:01:39Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Kicks Off WWDC. How to Play AAPL Stock Here.    Barchart.com"
     },
     {
       "id": "446e5a5a6c0342bb",
@@ -7250,6 +8736,23 @@
       "summary": "China Weighs $295 Billion AI Data Center Buildout Over Five Years    TradingView"
     },
     {
+      "id": "045c7a7ccf8348e0",
+      "title": "Here is why NVIDIA Corporation (NVDA) is among the Best Automation Stocks to Buy for Warehouse Construction - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNNWp0ZDlxYkJQT0pYWmk2U0UzX1JWSVdGVy1DejNPREhRNEt6eHNCVXJYaGFrVmc0SmxvbVpOTE5YRUIxa3RRNnBZTnNrNlJDRUp3U3JRZHBFRnFaSkdzd2kwR2pEOUhuSVdtek0yOU94QzlReHNaMlluX0hrbGdCRUF1NVdmQUFjbWZHN0M5dFo2VUJsM2tVZ3kxVGtaNW8?oc=5",
+      "published_at": "2026-06-09T19:41:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Here is why NVIDIA Corporation (NVDA) is among the Best Automation Stocks to Buy for Warehouse Construction    Yahoo Finance"
+    },
+    {
       "id": "177d431d7900ec24",
       "title": "China Plans USD 295 Billion AI Infrastructure Push to Interconnect Data Centers - Fineko/abc.az",
       "source": "\"China 295 billion AI data center plan 2028\" - Google News",
@@ -7352,6 +8855,23 @@
       "summary": "Comments"
     },
     {
+      "id": "128e2c232119c191",
+      "title": "NVIDIA Corp Stock (NVDA) Moved Down by 3.46% on Jun 9: Drivers Behind the Movement - TradingKey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxNVFFIbGtvYTE2YVNaSHhVUWtKLXhJV0VvWE1HdmI3WEJDMW9IbEMxdlJxdWZXTFpyamlpX21oU2djSVdyTnFNSHBuQjFIMWdVZTcwV0I0TTZVNjJNTnN1LTJCMkd0QnlQQUMwbnF3MzJHbGJiczR2ZnZaOG12emlOUmlfNDN3dVN1Q0I0?oc=5",
+      "published_at": "2026-06-09T17:15:33Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "NVIDIA Corp Stock (NVDA) Moved Down by 3.46% on Jun 9: Drivers Behind the Movement    TradingKey"
+    },
+    {
       "id": "4be64719243e712e",
       "title": "Apple wants Europe to blink",
       "source": "The Verge",
@@ -7435,6 +8955,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "China plans $295B AI data center network using domestic chips    MSN"
+    },
+    {
+      "id": "5dc6b8cdda6c2a96",
+      "title": "Apple Inc Stock (AAPL) Moved Down by 3.42% on Jun 9: What Investors Need To Know - TradingKey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPa09ieU9lYV9BcWh5ZF83Y2xVeG9qVFJobVRwS1E5Um4wNUhHMlo0UkppM1FyUnFwYzY0bkxmTGdzeVYtTnhZR25yZXg3ZkJsWUQ3NWJNTnVlQW5XMWRZM3VaMTVUMkNOY0Itcmg0UGtnYnpyQ2JqNGVQLTcweUNaQkl1TDMtSU1EUkZB?oc=5",
+      "published_at": "2026-06-09T16:16:44Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc Stock (AAPL) Moved Down by 3.42% on Jun 9: What Investors Need To Know    TradingKey"
     },
     {
       "id": "337ef28fc32e63f2",
@@ -7554,6 +9091,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Meta is planning to use the data shared by other businesses to personalize your feed and its AI responses. In a blog post on Tuesday, Meta explains that it already uses your off-platform activity, like the games you play or your purchases on other websites, to serve you ads. But now it's expanding the scope […]"
+    },
+    {
+      "id": "ded7714e039a16d9",
+      "title": "Unrealized Potential of Microsoft Corporation’s (MSFT) Role in Advancing Agentic AI - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxQRndpM3pENmFpYk8wZGd2Tlk4bmhHTl96S2U2bjF5NmlEY3FZLWZFekJYNW9ucmNhYjh2ZTVxOUt1UTh4R1R3aDNrUmM3WnB0SlM4T28tbnNNYVo1UEtBY0t5Z3pYUWttQm9mVWdvbXFURjZ0T3E2N2NQbm56bTdJTTk2bjdYTXZvZjZqLWdaNjk5T3hEd0o3eE9GSno4b2lLcC1iUXRHTzg?oc=5",
+      "published_at": "2026-06-09T14:55:32Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Unrealized Potential of Microsoft Corporation’s (MSFT) Role in Advancing Agentic AI    Yahoo Finance"
     },
     {
       "id": "543cdfdde46abeaf",
@@ -7777,6 +9333,25 @@
       "summary": "Most of Apple's current AI ideas are roughly the same as everyone else's AI ideas. A chatbot you can ask questions; quick ways to create or summarize text; bizarre, borderline creepy image-generation tools. The company spent most of its WWDC keynote playing catch-up with the state of the AI art, announcing Siri features you can […]"
     },
     {
+      "id": "44371b4fb86dc23b",
+      "title": "Apple Just Delivered Its $75 Per Share AI Moment at WWDC. Wall Street Says the Stock Could Hit $440 by Year-End. - 24/7 Wall St.",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi5wFBVV95cUxOMDlzYThrNEVBUVN3eW1kS3BZOFBQLVVJdlE0UlhlQXdvSXN2NlVVQ1JrUGdVbjdlNVNwcXlMZGJBal8ybmdZNG4xT3lwc2E4RGhJMWNoV2U0ejBXTFN6TXJoWFBOZkVmV21ZalowWjRONzNQM2IxYWp6MVkzOWtVcFZkR2dmSTlRcDZhT1VPODNXb3JFY24wa0JIdzBySVU5RjBQQzlzb0dXc0FfS01BcDRnV1hDbmdyUFF3LU5lZ3otZy1ndjhITGVRWnhPN1BOR1V0c0dzY0puLWVKLVptdWhURkxLbWs?oc=5",
+      "published_at": "2026-06-09T13:26:41Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Just Delivered Its $75 Per Share AI Moment at WWDC. Wall Street Says the Stock Could Hit $440 by Year-End.    24/7 Wall St."
+    },
+    {
       "id": "4bffe4b94d04b7e9",
       "title": "No tech rule exemption for Apple, EU regulators say amid spat over Siri AI delay - Reuters",
       "source": "\"site:reuters.com\" - Google News",
@@ -7964,6 +9539,23 @@
       "summary": "China preparing US$295 bil plan to fund nationwide AI buildout — Bloomberg    The Edge Singapore"
     },
     {
+      "id": "8108ed35c0f921f3",
+      "title": "Apple Stock Forecast: Apple Posted $111.2B Revenue, So Why Did AAPL Fall After WWDC? - TradingKey",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi6gFBVV95cUxOMXV4XzlFSkVPUTRmVEdHSWd2UW0zQlVWMTc1a3JPRHU0eFZqMkxjcTBZS3NtekYwcUxYb0hjTG5PWDZRVjNnWVUzY2pqSVlEMEtCUTBBMmtBU18wUGQ3UnMtTkFsMDBPYy1ueUxmZFhMdWRyenJiV21XUS1XS09zaWI3cktiXzl1N3RPbFJNdElfeTZPQ0s5WUhIUmtUX3VJYVNBV1ZiRXhoc2YwbjRrdXRyeS1wMUFDU1FPM1FiaHF3SGw2MWt0NE9YM21zM0pJWV9rTjJ3aUtNMENwMTBqZnJnQ243eUk0R3c?oc=5",
+      "published_at": "2026-06-09T12:06:29Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Stock Forecast: Apple Posted $111.2B Revenue, So Why Did AAPL Fall After WWDC?    TradingKey"
+    },
+    {
       "id": "63cc21766e915eb9",
       "title": "Man jailed for 10 months over seditious messages thrown from Hong Kong flat",
       "source": "News - South China Morning Post",
@@ -8134,6 +9726,23 @@
       "summary": "Hundreds of security guards and police officers were deployed on Tuesday to evict about 20 residents from a Hong Kong village as part of the government’s Northern Metropolis blueprint, despite residents saying their concerns remain largely unresolved. The operation by the Lands Department on Tuesday sparked heated confrontations with Tin Sam Tsuen villagers, who lived in properties built under the small-house policy. They argued that the government had yet to provide satisfactory compensation..."
     },
     {
+      "id": "ace528bdc9f9a736",
+      "title": "Microsoft Corp (NASDAQ:MSFT) Presents a Classic GARP Opportunity with Affordable Growth - ChartMill",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0gFBVV95cUxPclI3aUNFOXlnVlhHTEFYV3k3SkJ1NDdmZm14Sm1KZm5ITDhwaWoyWWNaOEYyRWdycVRIa09RWFhmT1RSZUF0NlYyWWxoNnN6al9hMkZQNGdRQ0hqWkdYYWJpMEE4UGJXc2JXWmhzNW9mcXFJQnRTOGMtUVNHYVNvNVByZjlKMVliMzI3bUZKME1Ud0tRVjdOaWtwbjR3YXIyUXp5WldWTkFUaDU4TE5NLVFjdS1zNWFRM2ZaeXkwRi0yTFZHdWVEWUFOdjdueFlLZUE?oc=5",
+      "published_at": "2026-06-09T10:40:29Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft Corp (NASDAQ:MSFT) Presents a Classic GARP Opportunity with Affordable Growth    ChartMill"
+    },
+    {
       "id": "24c26a5e90a54fde",
       "title": "China Preps $295 Billion Plan to Fund Nationwide AI Buildout - Yahoo Finance",
       "source": "\"China 295 billion AI data center plan 2028\" - Google News",
@@ -8166,6 +9775,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "China Preps $295 Billion Plan to Fund Nationwide AI Buildout    Bloomberg.com"
+    },
+    {
+      "id": "abb99c0ecf474c4d",
+      "title": "What's Going On With Apple Stock Tuesday? - Apple (NASDAQ:AAPL), Alphabet (NASDAQ:GOOGL) - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPc1FsOHdWb3p3UGJkZHhYV0RYMWF2U3d1aDNJMC11V0VHbktBbkNUTmFWVmFmbUk2bm12U2pCNWZnMW5YVE0zZ09NTDZZaWx5alVVRE1XZU1CNHpEcVdCdXNFQkJSc2tFeUJkUE14SXV4alpZQklLNDFzYkdfT2RLVko3OThyRjZOcl9lY1lrdXVGc3VwWlRyenE2MlBmdnNOdjQ1aDdmQTQwWEw0dFdHSw?oc=5",
+      "published_at": "2026-06-09T10:31:16Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "What's Going On With Apple Stock Tuesday? - Apple (NASDAQ:AAPL), Alphabet (NASDAQ:GOOGL)    Benzinga"
     },
     {
       "id": "071c17e5225621a7",
@@ -8234,6 +9860,25 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong Chu Hai College has sued its finance head, along with a company and its director, for allegedly embezzling over HK$25 million (US$3.19 million) by disguising the transfers as academic and administrative expenses. The private institution filed the lawsuit in the High Court on Monday to reclaim what it said were misappropriated funds transferred to finance director Ray Yip Kam‑chun, Ho Chung-ling and Rivers Design Engineering “under the guise of payroll, autopay and academic..."
+    },
+    {
+      "id": "ebc1abe55f558433",
+      "title": "Apple (NASDAQ: AAPL) Stock Price Drops Nearly 2% After WWDC AI Siri And Apple Intelligence Reveal - foreignpolicyjournal.com",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi2gFBVV95cUxNd1p4ckIyTnBiaUFtYTN2WEQzcFBRU2U0dEU2NUxLdzUwMFFRRkstUkdJWFo0cFRySDQ0ak5GLVJsenAtLVdXMk16YkJ3cUdQWlVRQVVjUk15ZWkzVlZWWlRKSlIyZHBERmU3SnpmUlNDbTRBTVVrYXZhS0dPaGdEeEE0dzhHTXhreks4cU1jdkoxSHdlT1VKcm5HT2k1Ym56R2JtMWp5bmJPY1UwdXVQd1BxRWFmMzBGaDFZTlB4cVpYLUlRanZLaFhiMG9TMERTaGtSRl9GdUp6QQ?oc=5",
+      "published_at": "2026-06-09T10:01:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple (NASDAQ: AAPL) Stock Price Drops Nearly 2% After WWDC AI Siri And Apple Intelligence Reveal    foreignpolicyjournal.com"
     },
     {
       "id": "754c212a9e536d1c",
@@ -8355,6 +10000,23 @@
       "summary": "China is moving to leverage data as a core strategic asset, aiming to build industry-specific data sets to power its next-generation artificial intelligence models, as developers worldwide grapple with a looming data drought. On Monday, the country’s data authority unveiled a sweeping nationwide plan to boost the supply of high-quality AI training data, underscoring Beijing’s resolve to secure a leading position in the global AI competition. The draft plan, published online by the National Data."
     },
     {
+      "id": "55ddb00bc53713c6",
+      "title": "Linden Rose Investment LLC Purchases New Shares in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNS1V4T0tCSTRCQjhFRmZQcTNWeUhZQjh1RWdNcHNVV2k1aWMtckxyY1lEZkJ6X1huNkpLbi1GTDhNb053RmFtUWIxUXRDWEQ1X1A1QnpLejRmMmIycjdwOUMwVGo1a3VEdXBwaU1XaW1FYUFRSTJXalJ1dmxZZXdwN3E2WVJKRlQzM3ptRXZ5Z1E4c2Y0ZURxWGVnTGg4Z2c5czlRS2dhQ0k2VFUyUXh6S3k1UjNjd2U0ak54dXBKclFqMjBtMUk2c2E2WWVNQWYz?oc=5",
+      "published_at": "2026-06-09T08:32:28Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Linden Rose Investment LLC Purchases New Shares in NVIDIA Corporation $NVDA    MarketBeat"
+    },
+    {
       "id": "d25cfd8970d5baeb",
       "title": "Doctors and NHS could be sued for mistakes made by AI tools, report warns",
       "source": "World news | The Guardian",
@@ -8404,6 +10066,23 @@
       "processed": false,
       "alert_sent": false,
       "summary": "UN study shows Hong Kong data centres have some of the world’s worst carbon footprints    Global Voices"
+    },
+    {
+      "id": "6a88214d5b365466",
+      "title": "Eukles Asset Management Has $23.90 Million Stock Holdings in NVIDIA Corporation $NVDA - MarketBeat",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi2wFBVV95cUxPQ3EtaS1JM1dRMjRtek0yZThrbDB3SFZJNlVSdXlSSFFMdXJUcTNuOTJ5WXBKRU5NYjFIRk5nMjlUWUVBUWU1U09YbmpMYVJRdlJrU3MzNHRKOURmTEtUdDdRLWJVM1Q2T1VEdWRYbzIzUXF6R1BxbXVfblplWG5pbEpzZ3pSWU9PUUVmVGZQeEtRblduVEZnZE95TDVZejJMNFBjOGVPTnVmcjA5dVJCNFdVZ1I0LWdORC1IeVh5QkpTNHVDSk92eXA2Z1l6bXZacFgwcXBfQ2dRdzQ?oc=5",
+      "published_at": "2026-06-09T07:38:01Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Eukles Asset Management Has $23.90 Million Stock Holdings in NVIDIA Corporation $NVDA    MarketBeat"
     },
     {
       "id": "1ef73e9db6c0fe47",
@@ -8984,6 +10663,25 @@
       "summary": "The Real Bottleneck in the Age of AI Agents Isn't the Model -- It's the Data    acrofan.com"
     },
     {
+      "id": "5aa92113be38190e",
+      "title": "Apple Inc. (AAPL.US) to Launch Siri AI in Autumn, Initially Excluding China and EU - AASTOCKS.com",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxQR1NOVl91LTZ4NlNKQk5DYURrWmRobFBQVnByN1NIVUUzWE9uOGRKTnJBZ1VwTVdnbW1WRkVqYUxRajBpanMxcXRQMDctM09jSGFpc0s3M05qVVY0bXEtdHJDUGxGODRZTDQ3TmV0SDNHRFRKTy0zMUZPMjF6RE5aLVF0eDhkM1E2QjN2cTlhc3RwQQ?oc=5",
+      "published_at": "2026-06-09T00:50:00Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc. (AAPL.US) to Launch Siri AI in Autumn, Initially Excluding China and EU    AASTOCKS.com"
+    },
+    {
       "id": "39c2debdbb521ee2",
       "title": "Sacking of school principal for Singapore row is ‘death sentence’, lawmaker says",
       "source": "News - South China Morning Post",
@@ -9104,6 +10802,40 @@
       "summary": "Critics say that setting up orbital data centers is easier said than done. But Musk argues that it’s not a “super hard problem” to solve."
     },
     {
+      "id": "408d5eeacf70d414",
+      "title": "Microsoft Shares Edge Lower Monday As Nasdaq Rallies: What's Going On? - Microsoft (NASDAQ:MSFT) - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOT0VJOWNhQmdjYTFyZXpOTjJodWtBWHl6a05Tanh6a1ExSmUxVlRDV0pmYkJIaUJGWWVzSVpiQmNja3VFMWhrX3NRUXA1S1lVcWJZRE5Sc25MNzNrX1YxUkV5WFVnVldJc3o2RXUtSEJua1p0aU9MYmR2VXBlM1lRRFh5dHZTcW9kWkJEblE5X2RnczE3SHlka21YZnozc29BalhwVFYwazFlOEZ5RlRORGxHT2lLdXF3OGxNODJsVkZYZmRHYXRN?oc=5",
+      "published_at": "2026-06-08T19:19:01Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "MSFT"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Microsoft Shares Edge Lower Monday As Nasdaq Rallies: What's Going On? - Microsoft (NASDAQ:MSFT)    Benzinga"
+    },
+    {
+      "id": "c78184d52409c3d8",
+      "title": "Apple Stock Is Sliding Today: What's Going On? - Apple (NASDAQ:AAPL) - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxOTlBfLXhRQUxid1RCeXZvVC1ablp6STFrRVZaeVhUVURVblk5OFhucHhNMmFEQkNPTlhadjhpTUpvVXJKOGFQU293VGdDbkp0XzJZRXUwRVRoVHFiQV9lZWhQMEF5MWl4amxTSXE4VlpwcU5FWXZ4aWdoa3U4emNoOVRROU9GVUFpVXR1M0hPRFcwSDNIY01hX0xscVZuZEotb2hLYTNrUQ?oc=5",
+      "published_at": "2026-06-08T19:14:30Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Stock Is Sliding Today: What's Going On? - Apple (NASDAQ:AAPL)    Benzinga"
+    },
+    {
       "id": "8c9d7271a85a8279",
       "title": "For the 2nd time in weeks, Microsoft packages laced with credential stealer",
       "source": "Biz & IT - Ars Technica",
@@ -9121,6 +10853,74 @@
       "summary": "73 packages run self-replicating stealer as soon as they're opened by an AI agent."
     },
     {
+      "id": "582494068241eb95",
+      "title": "This Stock Is My Biggest Bet For June - 24/7 Wall St.",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMiiAFBVV95cUxNbWNRZ2FfSndTZHhsSTVkX0pvLWZYNXBCcFV6Yll2MzRLOHNMVl9IcmtJeGRHbUhHVjNsVmJKSFYxcE1pY2U3RVNXNEdFYTBJUFF3UTJjMThCakdpUVR5TEVtSFJBS1Q4Rm54WjhYRXQ0ZVlMX1NFeElLUHpjamloY3NMaUdpRkla?oc=5",
+      "published_at": "2026-06-08T16:25:23Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "This Stock Is My Biggest Bet For June    24/7 Wall St."
+    },
+    {
+      "id": "bdc5adcf2120b1de",
+      "title": "Is NVIDIA Corporation (NVDA) A Good Stock To Buy Now? - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNN194MXRGalVGSDVneTBHTXlMNVlEd1ZNcnFSeFo1Uko5NmZiSGFwWUtaVDNoNDJaRGtjZmxWdGdWTFJ4M19qRm5EU3JxZkhjRTNDV2YzSjJpSGZoNVZUejdqdEdFVVJKdE5sMWdoamt3NHRGbzMxSThCUk5zNWJuc3MycWNRSzM0Q1lyWFZXUXZpR1JKWTBEVGlfYlRVc25q?oc=5",
+      "published_at": "2026-06-08T15:21:42Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "NVDA"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Is NVIDIA Corporation (NVDA) A Good Stock To Buy Now?    Yahoo Finance"
+    },
+    {
+      "id": "8b4b43a25e4f5a71",
+      "title": "Is Apple Inc. (AAPL) A Good Stock To Buy Now? - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOb2V6Rng4azBaN2FOaVpfRVNVZEhjbDQ5QWcxRFZVMWV2aFV5aHMwRkRwbnI4SXU1enFFZlFsb2NPd1lVTW10dGxMZ2stWHFjdW82aE1VZS13RENKdV9hTHJVUmxIUTZZUklDRVlldzFwYkRUV2tzU2hnSDFncmdZSVJjdFZnM0ctV19YRTYwWEExc0RK?oc=5",
+      "published_at": "2026-06-08T15:19:57Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Is Apple Inc. (AAPL) A Good Stock To Buy Now?    Yahoo Finance"
+    },
+    {
+      "id": "78b53c97d3f04622",
+      "title": "Apple Inc (NASDAQ:AAPL) Meets All Quality Criteria of the Caviar Cruise Stock Screener - ChartMill",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxNWUFqaFBpbVRYckllQ0s2cjNlLUVTRHFCU21YRDc3LTUzSm1SN3R4M3lXSXhOc08wZVVKYVhJRmVISTNWckY3RC1OWmNocFk2aEg5SUZJUkhudG9XbS1DUXlJQVNCdDBrdFdhTENOUHk0NnhqSTlnWDFkbDJpZFQ0a09EU2dZdW10akozem01U1lpaUNBblQtSzZCeUlNWDRQcUltcy0tdEZiRkZ6R2ExZnJUMmVYWXRERnhjWk1oSk5BNXhWc0tKNlV4N0Y3UlBp?oc=5",
+      "published_at": "2026-06-08T12:50:32Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple Inc (NASDAQ:AAPL) Meets All Quality Criteria of the Caviar Cruise Stock Screener    ChartMill"
+    },
+    {
       "id": "fcc25e416993cd20",
       "title": "Hong Kong data centres outpace global average for carbon footprint: UN study - South China Morning Post",
       "source": "\"Sandy Ridge data center Hong Kong\" - Google News",
@@ -9136,7 +10936,41 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Hong Kong data centres outpace global average for carbon footprint: UN study    South China Morning Post"
+    },
+    {
+      "id": "7c3547bee240a3b6",
+      "title": "Top Analyst Eyes 30% Upside On AAPL Stock Ahead Of WWDC: No 'Treadmill Approach' Expected As John Ternus - Benzinga",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMimgJBVV95cUxQTHV2T1dUNXlIdXk2X3l3LWhlb3BwTVFndF9NaVhnXzlnbWVDOXd4RVFBNHZNUW9tVG5Wakk3ekFKdHZreDQ2ZDVBa25GX05WUUJCR0FmQk5hNHFwTWxqblZLWVVhdHFPenluWXQySUl3d1FNUWxTM2lERnhKTXRVeHR3Q0ZHYXRsYXd3dExhX2FiZ3NuT2ItN0ZuN2dBRUhzdW5MR01jdnR3RXlwY3lDQjdDdEhHek1YMm0ySmswTG53Qnh3MGRvUmpXcEwwR3FsQ3pDOHZNVUI1enVJSE5qSi1rM1ppQTVyTVNacEFGd3FxQXN6bUVTTk42MlRTblpjNkpabEZCNlgxR2VyMm85Uzc1dDN0MHpIYnc?oc=5",
+      "published_at": "2026-06-08T11:33:17Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Top Analyst Eyes 30% Upside On AAPL Stock Ahead Of WWDC: No 'Treadmill Approach' Expected As John Ternus    Benzinga"
+    },
+    {
+      "id": "e21e076e24a01c26",
+      "title": "Apple (AAPL) Is A Top Stock In Billionaire Ken Fisher’s Portfolio - Yahoo Finance",
+      "source": "Google News",
+      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPLXpCMlhJMDRZTlA0c0ZoV0tOaHcycTJDUkl3aE0wZFVwdkxlRWRxcE5ValptdDlhc1c0b1REYk1xVllhUlB2QWdBc1BaT2gzUjJrZWVsSUlHSmVBSkxkQTZnQVNDa2w5TjBid3lsd1ZxSEdMZWprSjFIZTN1QVhBSlpOVGZrcXBrX2hxcTc0NDE1U0w5OWluNHpRQVFEdw?oc=5",
+      "published_at": "2026-06-08T10:54:04Z",
+      "fetched_at": "2026-06-15T09:54:43.697185Z",
+      "ticker_tags": [
+        "AAPL"
+      ],
+      "sector_tags": [],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Apple (AAPL) Is A Top Stock In Billionaire Ken Fisher’s Portfolio    Yahoo Finance"
     }
   ],
-  "updated_at": "2026-06-15T09:37:45.297616Z"
+  "updated_at": "2026-06-15T09:54:43.697185Z"
 }

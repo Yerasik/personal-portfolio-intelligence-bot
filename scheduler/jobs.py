@@ -9,18 +9,18 @@ from __future__ import annotations
 import logging
 import threading
 from collections.abc import Callable
-from dataclasses import dataclass, field, replace
-from datetime import UTC, datetime
+from dataclasses import dataclass, field
+from datetime import UTC, datetime, timedelta
 from typing import Final
 
 from apscheduler.executors.pool import ThreadPoolExecutor
+from apscheduler.jobstores.base import JobLookupError
 from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
 from analysis.industries import build_news_focus_industries
 from analysis.llm import LlmClient
-from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
 from analysis.rules import AlertCandidate, RulesEngine
 from analysis.summarizer import Summarizer
 from collectors.base import CollectorContext
@@ -29,7 +29,7 @@ from collectors.market_data import MarketDataCollector
 from collectors.news_data import NewsDataCollector
 from config.loader import ConfigurationBundle
 from config.settings import RuntimeSettings
-from storage.models import AppConfig, BotState, NewsCache, PendingAlert
+from storage.models import AppConfig, BotState, EvaluatedAlertRecord, NewsCache, PendingAlert
 from storage.repository import DataRepository
 
 from bot.notifier import TelegramNotifier, build_localized_daily_content
@@ -130,43 +130,26 @@ def _alert_to_pending(alert: AlertCandidate) -> PendingAlert:
     )
 
 
-_PRICE_MOVE_ALERT_TYPES: Final = ("price_drop", "price_rise")
-
-
-def _enrich_price_move_alerts(
-    services: SchedulerServices,
-    alerts: list[AlertCandidate],
+def _record_evaluated_alerts(
     state: BotState,
-    news_cache: NewsCache,
-    app_config: AppConfig,
-) -> list[AlertCandidate]:
-    """Attach best-effort LLM explanations to price-move alerts."""
-    if not app_config.enable_llm_summaries:
-        return alerts
-
-    llm = LlmClient(settings=services.runtime, app_config=app_config)
-    enriched: list[AlertCandidate] = []
+    alerts: list[AlertCandidate],
+    *,
+    evaluated_at: datetime,
+    suppression_hours: int,
+) -> None:
+    """Remember evaluated alert keys so warning/info alerts are not regenerated every run."""
     for alert in alerts:
-        quote = state.latest_prices.get(alert.ticker) if alert.ticker else None
-        if (
-            alert.type in _PRICE_MOVE_ALERT_TYPES
-            and alert.ticker
-            and quote is not None
-            and quote.change_pct is not None
-        ):
-            news = recent_news_titles_for_ticker(news_cache, alert.ticker)
-            explanation = explain_price_move(
-                llm,
-                alert.ticker,
-                quote.change_pct,
-                "today",
-                news,
-                company_name=quote.company_name,
-                sector=quote.sector,
+        state.last_evaluated_alerts.append(
+            EvaluatedAlertRecord(
+                alert_key=alert.alert_key,
+                evaluated_at=evaluated_at,
             )
-            alert = replace(alert, llm_explanation=explanation.to_message())
-        enriched.append(alert)
-    return enriched
+        )
+    retention = timedelta(hours=max(suppression_hours * 4, 24))
+    cutoff = evaluated_at - retention
+    state.last_evaluated_alerts = [
+        record for record in state.last_evaluated_alerts if record.evaluated_at >= cutoff
+    ]
 
 
 def run_market_data_job(services: SchedulerServices) -> None:
@@ -247,17 +230,26 @@ def run_rule_evaluation_job(services: SchedulerServices) -> None:
         ticker_to_industry=ticker_industries.ticker_to_industry,
     )
     alerts = rules.evaluate(portfolio, state, news_cache)
-    alerts = _enrich_price_move_alerts(services, alerts, state, news_cache, app_config)
-
+    evaluated_at = datetime.now(tz=UTC)
+    _record_evaluated_alerts(
+        state,
+        alerts,
+        evaluated_at=evaluated_at,
+        suppression_hours=app_config.alert_suppression_hours,
+    )
     state.pending_alerts = [_alert_to_pending(alert) for alert in alerts]
     services.repository.save_state(state)
 
     logger.info("Rule evaluation finished with %d alert(s)", len(alerts))
 
+    summarizer = services.build_summarizer()
     delivery = services.get_notifier().deliver_urgent_alerts(
         alerts,
         services.repository,
         app_config,
+        llm=summarizer.llm,
+        state=state,
+        news_cache=news_cache,
     )
     logger.info(
         "Telegram urgent alert delivery: sent=%d skipped=%d failed=%d",
@@ -292,18 +284,17 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
         user.language for user in services.repository.load_users().users
     } or {"en"}
 
-    if app_config.enable_llm_summaries:
-        advisory_by_language, news_summary_by_language = build_localized_daily_content(
-            llm=summarizer.llm,
-            portfolio=portfolio,
-            app_config=app_config,
-            state=state,
-            news_cache=news_cache,
-            alerts=alerts,
-            ticker_to_industry=ticker_industries.ticker_to_industry,
-            company_names=company_names,
-            languages=languages,
-        )
+    advisory_by_language, news_summary_by_language = build_localized_daily_content(
+        llm=summarizer.llm,
+        portfolio=portfolio,
+        app_config=app_config,
+        state=state,
+        news_cache=news_cache,
+        alerts=alerts,
+        ticker_to_industry=ticker_industries.ticker_to_industry,
+        company_names=company_names,
+        languages=languages,
+    )
 
     logger.info("Daily summary generated with %d alert(s)", len(alerts))
 
@@ -376,6 +367,11 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
             id=JOB_DAILY_SUMMARY,
             replace_existing=True,
         )
+    else:
+        try:
+            scheduler.remove_job(JOB_DAILY_SUMMARY)
+        except JobLookupError:
+            pass
 
     registered = [job.id for job in scheduler.get_jobs()]
     logger.info(
@@ -418,6 +414,17 @@ def build_scheduler(
 
         _built_scheduler = AppScheduler(scheduler=scheduler, services=services)
         return _built_scheduler
+
+
+def reload_scheduler_jobs() -> bool:
+    """Re-register scheduled jobs after config.json changes."""
+    global _built_scheduler
+
+    with _scheduler_lock:
+        if _built_scheduler is None:
+            return False
+        register_jobs(_built_scheduler.scheduler, _built_scheduler.services)
+        return True
 
 
 def start_scheduler_background(app_scheduler: AppScheduler) -> threading.Thread:

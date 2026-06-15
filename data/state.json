@@ -1,7 +1,7 @@
 {
   "last_digest_at": "2026-06-15T00:07:36.468796Z",
-  "last_market_fetch_at": "2026-06-15T09:37:43.903858Z",
-  "last_news_fetch_at": "2026-06-15T09:37:45.297616Z",
+  "last_market_fetch_at": "2026-06-15T09:54:46.706768Z",
+  "last_news_fetch_at": "2026-06-15T09:54:43.697185Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
@@ -12,7 +12,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-15T09:37:43.903858Z"
+      "fetched_at": "2026-06-15T09:54:46.706768Z"
     },
     "AAPL": {
       "ticker": "AAPL",
@@ -23,7 +23,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:37:43.903858Z"
+      "fetched_at": "2026-06-15T09:54:46.706768Z"
     },
     "NVDA": {
       "ticker": "NVDA",
@@ -34,7 +34,7 @@
       "sector": "Technology",
       "industry": "Semiconductors",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:37:43.903858Z"
+      "fetched_at": "2026-06-15T09:54:46.706768Z"
     },
     "MSFT": {
       "ticker": "MSFT",
@@ -45,7 +45,7 @@
       "sector": "Technology",
       "industry": "Software - Infrastructure",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:37:43.903858Z"
+      "fetched_at": "2026-06-15T09:54:46.706768Z"
     }
   },
   "last_sent_alerts": [
@@ -70,6 +70,7 @@
       "sent_at": "2026-06-10T03:03:18.248828Z"
     }
   ],
+  "last_evaluated_alerts": [],
   "pending_alerts": [
     {
       "id": "8218b2ff6d58a65d",

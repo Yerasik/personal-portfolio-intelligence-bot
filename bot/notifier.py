@@ -9,16 +9,18 @@ from datetime import UTC, datetime, timedelta
 import httpx
 
 from analysis.llm import LlmAdvisoryResult, LlmClient
+from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
 from analysis.news_summarizer import NewsSummary, summarize_news
 from analysis.rules import AlertCandidate
 from bot.formatter import format_daily_summary, format_urgent_alert
 from config.settings import RuntimeSettings
-from storage.models import AppConfig, BotUser, SentAlertRecord
+from storage.models import AppConfig, BotState, BotUser, NewsCache, SentAlertRecord
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
 
 TELEGRAM_API_TIMEOUT_SECONDS = 30.0
+_PRICE_MOVE_ALERT_TYPES = frozenset({"price_drop", "price_rise"})
 
 
 @dataclass
@@ -68,6 +70,10 @@ class TelegramNotifier:
         alerts: list[AlertCandidate],
         repository: DataRepository,
         app_config: AppConfig,
+        *,
+        llm: LlmClient | None = None,
+        state: BotState | None = None,
+        news_cache: NewsCache | None = None,
     ) -> AlertDeliveryResult:
         """Send unsent urgent alerts to all users and record deliveries in state."""
         if not self.is_configured:
@@ -109,8 +115,38 @@ class TelegramNotifier:
                 continue
 
             delivery_failed = False
+            explanation_by_lang: dict[str, str] = {}
             for user in users:
-                message = format_urgent_alert(alert, lang=user.language)
+                llm_explanation: str | None = None
+                if (
+                    app_config.enable_llm_summaries
+                    and llm is not None
+                    and state is not None
+                    and news_cache is not None
+                    and alert.type in _PRICE_MOVE_ALERT_TYPES
+                    and alert.ticker
+                ):
+                    if user.language not in explanation_by_lang:
+                        quote = state.latest_prices.get(alert.ticker)
+                        if quote is not None and quote.change_pct is not None:
+                            news = recent_news_titles_for_ticker(news_cache, alert.ticker)
+                            explanation_by_lang[user.language] = explain_price_move(
+                                llm,
+                                alert.ticker,
+                                quote.change_pct,
+                                "today",
+                                news,
+                                company_name=quote.company_name,
+                                sector=quote.sector,
+                                language=user.language,
+                            ).to_message(user.language)
+                    llm_explanation = explanation_by_lang.get(user.language)
+
+                message = format_urgent_alert(
+                    alert,
+                    lang=user.language,
+                    llm_explanation=llm_explanation,
+                )
                 try:
                     self.send_text(user.chat_id, message)
                 except Exception as exc:
@@ -221,22 +257,19 @@ def build_localized_daily_content(
     advisory_by_language: dict[str, LlmAdvisoryResult | None] = {}
     news_summary_by_language: dict[str, NewsSummary | None] = {}
 
-    if not app_config.enable_llm_summaries:
-        for lang in languages:
-            advisory_by_language[lang] = None
-            news_summary_by_language[lang] = None
-        return advisory_by_language, news_summary_by_language
-
     for lang in languages:
-        advisory_by_language[lang] = llm.synthesize_advisory(
-            portfolio,
-            app_config,
-            state,
-            news_cache,
-            alerts,
-            ticker_to_industry=ticker_to_industry,
-            language=lang,
-        )
+        if app_config.enable_llm_summaries:
+            advisory_by_language[lang] = llm.synthesize_advisory(
+                portfolio,
+                app_config,
+                state,
+                news_cache,
+                alerts,
+                ticker_to_industry=ticker_to_industry,
+                language=lang,
+            )
+        else:
+            advisory_by_language[lang] = None
         news_summary_by_language[lang] = summarize_news(
             llm,
             portfolio,
@@ -244,6 +277,7 @@ def build_localized_daily_content(
             news_cache,
             ticker_to_industry,
             company_names=company_names,
+            enabled=app_config.enable_llm_summaries,
             language=lang,
         )
 

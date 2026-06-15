@@ -226,8 +226,14 @@ class BotCommands:
 
     def reload_config_message(self, chat_id: int) -> str:
         """Reload config.json from disk (developer diagnostics)."""
+        from scheduler.jobs import reload_scheduler_jobs
+
         self.repository.load_config()
-        return t("reload_ok", self._lang(chat_id))
+        rescheduled = reload_scheduler_jobs()
+        lang = self._lang(chat_id)
+        if rescheduled:
+            return f"{t('reload_ok', lang)}\n{t('reload_jobs_ok', lang)}"
+        return t("reload_ok", lang)
 
     def debug_state_message(self, chat_id: int) -> str:
         """Return internal counters for developer diagnostics."""
