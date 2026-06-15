@@ -24,6 +24,7 @@ from analysis.move_explainer import explain_price_move, recent_news_titles_for_t
 from analysis.rules import AlertCandidate, RulesEngine
 from analysis.summarizer import Summarizer
 from collectors.base import CollectorContext
+from collectors.auto_news_discovery import AutoNewsDiscovery
 from collectors.market_data import MarketDataCollector
 from collectors.news_data import NewsDataCollector
 from config.loader import ConfigurationBundle
@@ -37,6 +38,7 @@ logger = logging.getLogger(__name__)
 
 JOB_MARKET_FETCH: Final = "market_fetch"
 JOB_NEWS_FETCH: Final = "news_fetch"
+JOB_AUTO_NEWS_DISCOVERY: Final = "auto_news_discovery"
 JOB_RULE_EVALUATION: Final = "rule_evaluation"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
 
@@ -216,6 +218,22 @@ def run_news_data_job(services: SchedulerServices) -> None:
         raise RuntimeError(result.message)
 
 
+def run_auto_news_discovery_job(services: SchedulerServices) -> None:
+    """Discover per-ticker news from yfinance, Google News RSS, and optional Finnhub."""
+    discovery = AutoNewsDiscovery(
+        services.repository,
+        finnhub_api_key=services.runtime.finnhub_api_key,
+    )
+    result = discovery.run()
+    logger.info(
+        "Auto news discovery finished: tickers=%d discovered=%d merged=%d cache_total=%d",
+        result.tickers_processed,
+        len(result.discovered),
+        result.new_items_merged,
+        result.total_cache_items,
+    )
+
+
 def run_rule_evaluation_job(services: SchedulerServices) -> None:
     """Evaluate rules, persist pending alerts, and deliver urgent Telegram alerts."""
     app_config = services.load_app_config()
@@ -324,6 +342,17 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
         lambda: _run_job(JOB_NEWS_FETCH, lambda: run_news_data_job(services)),
         trigger=IntervalTrigger(minutes=app_config.news_fetch_interval_minutes),
         id=JOB_NEWS_FETCH,
+        replace_existing=True,
+        next_run_time=now,
+    )
+
+    scheduler.add_job(
+        lambda: _run_job(
+            JOB_AUTO_NEWS_DISCOVERY,
+            lambda: run_auto_news_discovery_job(services),
+        ),
+        trigger=IntervalTrigger(minutes=app_config.auto_news_interval_minutes),
+        id=JOB_AUTO_NEWS_DISCOVERY,
         replace_existing=True,
         next_run_time=now,
     )

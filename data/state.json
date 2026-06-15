@@ -1,7 +1,7 @@
 {
   "last_digest_at": "2026-06-15T00:07:36.468796Z",
-  "last_market_fetch_at": "2026-06-15T09:18:09.490548Z",
-  "last_news_fetch_at": "2026-06-15T09:18:11.187369Z",
+  "last_market_fetch_at": "2026-06-15T09:37:43.903858Z",
+  "last_news_fetch_at": "2026-06-15T09:37:45.297616Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
@@ -12,7 +12,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-15T09:18:09.490548Z"
+      "fetched_at": "2026-06-15T09:37:43.903858Z"
     },
     "AAPL": {
       "ticker": "AAPL",
@@ -23,7 +23,7 @@
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:18:09.490548Z"
+      "fetched_at": "2026-06-15T09:37:43.903858Z"
     },
     "NVDA": {
       "ticker": "NVDA",
@@ -34,7 +34,7 @@
       "sector": "Technology",
       "industry": "Semiconductors",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:18:09.490548Z"
+      "fetched_at": "2026-06-15T09:37:43.903858Z"
     },
     "MSFT": {
       "ticker": "MSFT",
@@ -45,7 +45,7 @@
       "sector": "Technology",
       "industry": "Software - Infrastructure",
       "currency": "USD",
-      "fetched_at": "2026-06-15T09:18:09.490548Z"
+      "fetched_at": "2026-06-15T09:37:43.903858Z"
     }
   },
   "last_sent_alerts": [
@@ -72,11 +72,11 @@
   ],
   "pending_alerts": [
     {
-      "id": "ca642a74b11cf612",
+      "id": "8218b2ff6d58a65d",
       "type": "sector_attention",
       "severity": "warning",
       "message": "Sector attention: AI: 28 articles tagged to AI were found in the last 24 hour(s).",
-      "created_at": "2026-06-15T09:18:21.533833Z",
+      "created_at": "2026-06-15T09:38:05.621902Z",
       "related_tickers": [],
       "industry": "AI",
       "llm_explanation": null,
@@ -86,11 +86,11 @@
       }
     },
     {
-      "id": "084b73b4cde5d87a",
+      "id": "aff61df879cd0dda",
       "type": "sector_attention",
       "severity": "warning",
       "message": "Sector attention: Hong Kong: 26 articles tagged to Hong Kong were found in the last 24 hour(s).",
-      "created_at": "2026-06-15T09:18:21.533833Z",
+      "created_at": "2026-06-15T09:38:05.621902Z",
       "related_tickers": [],
       "industry": "Hong Kong",
       "llm_explanation": null,

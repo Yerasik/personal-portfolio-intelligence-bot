@@ -52,6 +52,13 @@ class TickerIndustryMap(BaseModel):
     ticker_to_industry: dict[str, str] = Field(default_factory=dict)
 
 
+class TickerMetadata(BaseModel):
+    """Cached company names resolved from market data providers."""
+
+    ticker_to_company_name: dict[str, str] = Field(default_factory=dict)
+    updated_at: datetime | None = None
+
+
 class AppConfig(BaseModel):
     """Bot behavior and watch settings persisted in config.json."""
 
@@ -71,6 +78,7 @@ class AppConfig(BaseModel):
     alert_suppression_hours: int = Field(default=12, ge=1, le=168)
     market_fetch_interval_minutes: int = Field(default=30, ge=5, le=1440)
     news_fetch_interval_minutes: int = Field(default=60, ge=5, le=1440)
+    auto_news_interval_minutes: int = Field(default=30, ge=5, le=1440)
     rule_evaluation_interval_minutes: int = Field(default=60, ge=5, le=1440)
     enable_daily_summary: bool = True
     ollama_base_url: str = ""

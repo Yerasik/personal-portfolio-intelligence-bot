@@ -14,6 +14,7 @@ from storage.models import (
     NewsCache,
     Portfolio,
     TickerIndustryMap,
+    TickerMetadata,
     UserRole,
 )
 from storage.paths import DataPaths
@@ -131,6 +132,14 @@ class DataRepository:
     def save_ticker_industries(self, mapping: TickerIndustryMap) -> None:
         """Write data/ticker_industries.json atomically."""
         self._store.write_model(self._paths.ticker_industries, mapping)
+
+    def load_ticker_metadata(self) -> TickerMetadata:
+        """Read cached company names from data/ticker_metadata.json."""
+        return self._store.read_model(self._paths.ticker_metadata, TickerMetadata)
+
+    def save_ticker_metadata(self, metadata: TickerMetadata) -> None:
+        """Write data/ticker_metadata.json atomically."""
+        self._store.write_model(self._paths.ticker_metadata, metadata)
 
     def load_users(self) -> BotUsers:
         """Read authorized Telegram users from data/users.json."""

@@ -17,6 +17,7 @@ import scheduler.jobs as jobs_module
 from config.loader import ConfigurationBundle
 from config.settings import RuntimeSettings
 from scheduler.jobs import (
+    JOB_AUTO_NEWS_DISCOVERY,
     JOB_DAILY_SUMMARY,
     JOB_MARKET_FETCH,
     JOB_NEWS_FETCH,
@@ -106,6 +107,7 @@ def run_test() -> None:
         expected = {
             JOB_MARKET_FETCH,
             JOB_NEWS_FETCH,
+            JOB_AUTO_NEWS_DISCOVERY,
             JOB_RULE_EVALUATION,
             JOB_DAILY_SUMMARY,
         }

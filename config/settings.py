@@ -26,3 +26,4 @@ class RuntimeSettings(BaseSettings):
     log_level: str = Field(default="INFO", alias="LOG_LEVEL")
     data_dir: str = Field(default="/app/data", alias="DATA_DIR")
     log_dir: str = Field(default="/app/logs", alias="LOG_DIR")
+    finnhub_api_key: str | None = Field(default=None, alias="FINNHUB_API_KEY")
