@@ -20,6 +20,7 @@ from analysis.news_summarizer import (
     summarize_news,
 )
 from bot.formatter import format_news_summary
+from bot.i18n import t
 from storage.models import AppConfig, NewsCache, NewsItem, Portfolio, Position
 
 NOW = datetime(2026, 6, 8, 12, 0, tzinfo=UTC)
@@ -85,15 +86,26 @@ def run_test() -> None:
     if len(ticker_items) != 2:
         raise AssertionError(f"expected 2 AAPL items, got {len(ticker_items)}")
 
-    sector_prompt = build_sector_summary_prompt("AI", ["AI chip demand rises"])
-    if "Sector: AI" not in sector_prompt or "Do not invent" not in sector_prompt:
-        raise AssertionError("sector prompt missing expected instructions")
+    sector_prompt = build_sector_summary_prompt("AI", sector_items)
+    if (
+        "Sector: AI" not in sector_prompt
+        or "Developments:" not in sector_prompt
+        or "1. AI chip demand rises" not in sector_prompt
+        or "Do not merge" not in sector_prompt
+    ):
+        raise AssertionError("sector prompt missing expected structured instructions")
 
     ticker_prompt = build_ticker_summary_prompt(
-        "NVDA", "NVIDIA Corporation", ["NVIDIA data center growth"]
+        "NVDA",
+        "NVIDIA Corporation",
+        news_items_for_ticker(cache, "NVDA"),
     )
-    if "Ticker: NVDA" not in ticker_prompt or "shareholder" not in ticker_prompt.lower():
-        raise AssertionError("ticker prompt missing expected instructions")
+    if (
+        "Ticker: NVDA" not in ticker_prompt
+        or "Developments:" not in ticker_prompt
+        or "shareholder" not in ticker_prompt.lower()
+    ):
+        raise AssertionError("ticker prompt missing expected structured instructions")
 
     llm = FakeLlm("- Theme one\n- Theme two\nTakeaway: constructive.")
     summary = summarize_news(
@@ -118,8 +130,18 @@ def run_test() -> None:
         NewsCache(),
         mapping,
     )
-    if empty.ticker_summaries["ZZZZ"] != "No recent news items for this ticker in the cache.":
+    if empty.ticker_summaries["ZZZZ"] != t("news_no_ticker_cache", "en"):
         raise AssertionError(f"unexpected empty ticker message: {empty.ticker_summaries}")
+
+    rendered_ru = format_news_summary(
+        NewsSummary(
+            sector_summaries={"AI": "Сводка по ИИ."},
+            ticker_summaries={"AAPL": t("news_no_ticker_cache", "ru")},
+        ),
+        lang="ru",
+    )
+    if t("news_no_ticker_cache", "ru") not in rendered_ru:
+        raise AssertionError("Russian news summary should keep localized empty ticker text")
 
     rendered = format_news_summary(
         NewsSummary(

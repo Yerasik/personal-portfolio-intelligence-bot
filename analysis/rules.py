@@ -90,6 +90,7 @@ class AlertCandidate:
     explanation: str
     created_at: datetime
     llm_explanation: str | None = None
+    details: dict[str, float | int | str] = field(default_factory=dict)
 
     @property
     def alert_key(self) -> str:
@@ -180,6 +181,10 @@ class RulesEngine:
                     title=title,
                     explanation=explanation,
                     created_at=evaluated_at,
+                    details={
+                        "change_pct": round(abs(change_pct), 2),
+                        "threshold": threshold,
+                    },
                 )
             )
 
@@ -220,6 +225,10 @@ class RulesEngine:
                     title=title,
                     explanation=explanation,
                     created_at=evaluated_at,
+                    details={
+                        "change_pct": round(change_pct, 2),
+                        "threshold": threshold,
+                    },
                 )
             )
 
@@ -261,6 +270,10 @@ class RulesEngine:
                     title=title,
                     explanation=explanation,
                     created_at=evaluated_at,
+                    details={
+                        "count": len(recent),
+                        "hours": self.app_config.alert_negative_news_window_hours,
+                    },
                 )
             )
 
@@ -304,6 +317,10 @@ class RulesEngine:
                     title=title,
                     explanation=explanation,
                     created_at=evaluated_at,
+                    details={
+                        "count": len(recent),
+                        "hours": self.app_config.alert_sector_window_hours,
+                    },
                 )
             )
 
@@ -341,6 +358,7 @@ class RulesEngine:
         title: str,
         explanation: str,
         created_at: datetime,
+        details: dict[str, float | int | str] | None = None,
     ) -> AlertCandidate:
         """Build an AlertCandidate with a stable dedup key and short id hash."""
         alert_key = f"{alert_type}:{ticker or ''}:{industry or ''}"
@@ -356,6 +374,7 @@ class RulesEngine:
             title=title,
             explanation=explanation,
             created_at=created_at,
+            details=details or {},
         )
 
     def _urgency_for_price_move(

@@ -124,6 +124,7 @@ def _alert_to_pending(alert: AlertCandidate) -> PendingAlert:
         related_tickers=[alert.ticker] if alert.ticker else [],
         industry=alert.industry,
         llm_explanation=alert.llm_explanation,
+        details=alert.details,
     )
 
 

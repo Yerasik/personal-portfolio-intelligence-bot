@@ -136,6 +136,7 @@ def run_test() -> None:
                 ),
                 created_at=NOW,
                 industry="Consumer Electronics",
+                details={"count": 4, "hours": 24},
             ),
             lang="en",
         )

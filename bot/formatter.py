@@ -37,14 +37,103 @@ def _suggested_action(alert: AlertCandidate, lang: str = "en") -> str:
     return t("review_monitor", lang)
 
 
+def _alert_details(alert: AlertCandidate) -> dict[str, float | int | str]:
+    return dict(alert.details)
+
+
+def _urgency_label(urgency: str, lang: str) -> str:
+    key = f"alert_urgency_{urgency}"
+    return t(key, lang)
+
+
+def _localized_alert_title(alert: AlertCandidate, lang: str) -> str:
+    """Render an alert title in the user's language when structured details exist."""
+    details = _alert_details(alert)
+    symbol = alert.ticker or ""
+    industry = alert.industry or ""
+
+    if alert.type == "price_drop" and "change_pct" in details:
+        return t(
+            "alert_price_drop_title",
+            lang,
+            symbol=symbol,
+            pct=details["change_pct"],
+        )
+    if alert.type == "price_rise" and "change_pct" in details:
+        return t(
+            "alert_price_rise_title",
+            lang,
+            symbol=symbol,
+            pct=details["change_pct"],
+        )
+    if alert.type == "repeated_negative_news" and symbol:
+        return t("alert_negative_news_title", lang, symbol=symbol)
+    if alert.type == "sector_attention" and industry:
+        return t("alert_sector_title", lang, industry=industry)
+    return alert.title
+
+
+def _localized_alert_explanation(alert: AlertCandidate, lang: str) -> str:
+    """Render an alert explanation in the user's language when structured details exist."""
+    details = _alert_details(alert)
+    symbol = alert.ticker or ""
+    industry = alert.industry or ""
+
+    if alert.type == "price_drop" and {"change_pct", "threshold"} <= details.keys():
+        return t(
+            "alert_price_drop_explanation",
+            lang,
+            symbol=symbol,
+            pct=details["change_pct"],
+            threshold=details["threshold"],
+        )
+    if alert.type == "price_rise" and {"change_pct", "threshold"} <= details.keys():
+        return t(
+            "alert_price_rise_explanation",
+            lang,
+            symbol=symbol,
+            pct=details["change_pct"],
+            threshold=details["threshold"],
+        )
+    if alert.type == "repeated_negative_news" and {"count", "hours"} <= details.keys():
+        return t(
+            "alert_negative_news_explanation",
+            lang,
+            symbol=symbol,
+            count=details["count"],
+            hours=details["hours"],
+        )
+    if alert.type == "sector_attention" and {"count", "hours"} <= details.keys():
+        return t(
+            "alert_sector_explanation",
+            lang,
+            industry=industry,
+            count=details["count"],
+            hours=details["hours"],
+        )
+    return alert.explanation
+
+
+def _localized_alert_line(alert: AlertCandidate, lang: str) -> str:
+    """One-line alert summary for digests and /analyze."""
+    target = alert.ticker or alert.industry or t("alert_target_na", lang)
+    return t(
+        "alert_summary_line",
+        lang,
+        urgency=_urgency_label(alert.urgency, lang),
+        title=_localized_alert_title(alert, lang),
+        target=target,
+    )
+
+
 def format_urgent_alert(alert: AlertCandidate, *, lang: str = "en") -> str:
     """Format an urgent alert for Telegram delivery."""
     target = alert.ticker or alert.industry or "portfolio"
     lines = [
         t("urgent_alert", lang),
-        alert.title,
+        _localized_alert_title(alert, lang),
         f"{t('target', lang)}: {target}",
-        alert.explanation,
+        _localized_alert_explanation(alert, lang),
     ]
     if alert.llm_explanation:
         lines.extend(["", alert.llm_explanation])
@@ -56,10 +145,14 @@ def format_informational_alert(alert: AlertCandidate, *, lang: str = "en") -> st
     """Format a non-urgent alert for Telegram delivery."""
     target = alert.ticker or alert.industry or "portfolio"
     lines = [
-        f"{alert.urgency.upper()} update",
-        alert.title,
+        t(
+            "alert_nonurgent_header",
+            lang,
+            urgency=_urgency_label(alert.urgency, lang),
+        ),
+        _localized_alert_title(alert, lang),
         f"{t('target', lang)}: {target}",
-        alert.explanation,
+        _localized_alert_explanation(alert, lang),
     ]
     if alert.llm_explanation:
         lines.extend(["", alert.llm_explanation])
@@ -120,8 +213,7 @@ def format_daily_summary(
     if alerts:
         lines.append(t("alerts_header", lang))
         for alert in alerts[:5]:
-            target = alert.ticker or alert.industry or "n/a"
-            lines.append(f"- [{alert.urgency}] {alert.title} ({target})")
+            lines.append(_localized_alert_line(alert, lang))
         if len(alerts) > 5:
             lines.append(t("plus_more", lang, count=len(alerts) - 5))
         lines.append("")
@@ -145,9 +237,15 @@ def format_start(*, lang: str = "en", is_developer: bool = False) -> str:
     lines = [
         t("welcome_title", lang),
         "",
-        t("welcome_body", lang),
+        t("welcome_greeting", lang),
         "",
-        t("welcome_user", lang),
+        t("welcome_features", lang),
+        "",
+        t("welcome_quick_start", lang),
+        "",
+        t("welcome_tip", lang),
+        "",
+        t("advisory_footer", lang),
     ]
     if is_developer:
         lines.extend(["", t("welcome_dev_extra", lang)])
@@ -322,11 +420,8 @@ def format_analyze(
     if alerts:
         lines.append(t("analyze_alerts_count", lang, count=len(alerts)))
         for alert in alerts:
-            target = alert.ticker or alert.industry or "portfolio"
-            lines.append(
-                f"- [{alert.urgency.upper()}] {alert.title} ({target})"
-            )
-            lines.append(f"  {alert.explanation}")
+            lines.append(_localized_alert_line(alert, lang))
+            lines.append(f"  {_localized_alert_explanation(alert, lang)}")
         lines.append("")
     else:
         lines.extend([t("analyze_no_alerts", lang), ""])
@@ -447,6 +542,7 @@ def format_alert(alert: PendingAlert, *, lang: str = "en") -> str:
         explanation=explanation,
         created_at=alert.created_at,
         llm_explanation=alert.llm_explanation,
+        details=alert.details,
     )
     if alert.severity == "urgent":
         return format_urgent_alert(candidate, lang=lang)

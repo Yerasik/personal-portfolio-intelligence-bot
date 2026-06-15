@@ -86,6 +86,7 @@ def run_test() -> None:
             title="AAPL down 8.0% today",
             explanation="AAPL fell 8.00% since the last market fetch.",
             created_at=__import__("datetime").datetime.now(__import__("datetime").UTC),
+            details={"change_pct": 8.0, "threshold": 5.0},
         )
         en_text = format_urgent_alert(alert, lang="en")
         de_text = format_urgent_alert(alert, lang="de")
@@ -96,8 +97,12 @@ def run_test() -> None:
             raise AssertionError("German alert header missing")
         if "СРОЧНОЕ ПРЕДУПРЕЖДЕНИЕ" not in ru_text:
             raise AssertionError("Russian alert header missing")
-        if alert.title not in en_text or alert.title not in de_text or alert.title not in ru_text:
-            raise AssertionError("alert body should be shared across languages")
+        if "AAPL down 8.0% today" not in en_text:
+            raise AssertionError("English alert title missing")
+        if "AAPL heute -8.0%" not in de_text:
+            raise AssertionError("German alert title missing")
+        if "AAPL сегодня -8.0%" not in ru_text:
+            raise AssertionError("Russian alert title missing")
 
         if t("developer_only", "de") not in t("developer_only", "de"):
             raise AssertionError("translation lookup failed")

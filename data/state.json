@@ -1,51 +1,51 @@
 {
-  "last_digest_at": "2026-06-10T00:00:02.138979Z",
-  "last_market_fetch_at": "2026-06-10T08:37:08.689282Z",
-  "last_news_fetch_at": "2026-06-10T08:07:09.895021Z",
+  "last_digest_at": "2026-06-15T00:07:36.468796Z",
+  "last_market_fetch_at": "2026-06-15T09:18:09.490548Z",
+  "last_news_fetch_at": "2026-06-15T09:18:11.187369Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
-      "price": 26.31999969482422,
-      "change_pct": -3.2352979537936393,
-      "volume": 226259692,
+      "price": 26.260000228881836,
+      "change_pct": 0.2290055885313314,
+      "volume": 94791143,
       "company_name": "XIAOMI-W",
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-10T08:37:08.689282Z"
+      "fetched_at": "2026-06-15T09:18:09.490548Z"
     },
     "AAPL": {
       "ticker": "AAPL",
-      "price": 301.5400085449219,
-      "change_pct": -1.8871568497684967,
-      "volume": 69930268,
+      "price": 291.1300048828125,
+      "change_pct": -1.522172961362226,
+      "volume": 38742100,
       "company_name": "Apple Inc.",
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "USD",
-      "fetched_at": "2026-06-10T08:37:08.689282Z"
+      "fetched_at": "2026-06-15T09:18:09.490548Z"
     },
     "NVDA": {
       "ticker": "NVDA",
-      "price": 208.63999938964844,
-      "change_pct": 1.7259839984335006,
-      "volume": 179602708,
+      "price": 205.19000244140625,
+      "change_pct": 0.15620019126554033,
+      "volume": 112001800,
       "company_name": "NVIDIA Corporation",
       "sector": "Technology",
       "industry": "Semiconductors",
       "currency": "USD",
-      "fetched_at": "2026-06-10T08:37:08.689282Z"
+      "fetched_at": "2026-06-15T09:18:09.490548Z"
     },
     "MSFT": {
       "ticker": "MSFT",
-      "price": 411.739990234375,
-      "change_pct": -1.1831960627074065,
-      "volume": 34131015,
+      "price": 390.739990234375,
+      "change_pct": 0.10247320290952906,
+      "volume": 34865800,
       "company_name": "Microsoft Corporation",
       "sector": "Technology",
       "industry": "Software - Infrastructure",
       "currency": "USD",
-      "fetched_at": "2026-06-10T08:37:08.689282Z"
+      "fetched_at": "2026-06-15T09:18:09.490548Z"
     }
   },
   "last_sent_alerts": [
@@ -72,24 +72,32 @@
   ],
   "pending_alerts": [
     {
-      "id": "62e8077b8e20f72a",
+      "id": "ca642a74b11cf612",
       "type": "sector_attention",
       "severity": "warning",
-      "message": "Sector attention: AI: 67 articles tagged to AI were found in the last 24 hour(s).",
-      "created_at": "2026-06-10T08:07:19.887277Z",
+      "message": "Sector attention: AI: 28 articles tagged to AI were found in the last 24 hour(s).",
+      "created_at": "2026-06-15T09:18:21.533833Z",
       "related_tickers": [],
       "industry": "AI",
-      "llm_explanation": null
+      "llm_explanation": null,
+      "details": {
+        "count": 28,
+        "hours": 24
+      }
     },
     {
-      "id": "900cf5006ef39aac",
+      "id": "084b73b4cde5d87a",
       "type": "sector_attention",
       "severity": "warning",
-      "message": "Sector attention: Hong Kong: 27 articles tagged to Hong Kong were found in the last 24 hour(s).",
-      "created_at": "2026-06-10T08:07:19.887277Z",
+      "message": "Sector attention: Hong Kong: 26 articles tagged to Hong Kong were found in the last 24 hour(s).",
+      "created_at": "2026-06-15T09:18:21.533833Z",
       "related_tickers": [],
       "industry": "Hong Kong",
-      "llm_explanation": null
+      "llm_explanation": null,
+      "details": {
+        "count": 26,
+        "hours": 24
+      }
     }
   ]
 }

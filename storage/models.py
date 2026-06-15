@@ -89,6 +89,7 @@ class PendingAlert(BaseModel):
     related_tickers: list[str] = Field(default_factory=list)
     industry: str | None = None
     llm_explanation: str | None = None
+    details: dict[str, str | int | float] = Field(default_factory=dict)
 
 
 class MarketQuote(BaseModel):
