@@ -14,6 +14,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("menu", "Show the tap-to-run menu"),
     BotCommand("help", "List all commands"),
     BotCommand("portfolio", "Holdings and latest prices"),
+    BotCommand("strategy", "Investment idea behind each holding"),
     BotCommand("industries", "Focus industries and news counts"),
     BotCommand("news_summary", "LLM news by sector and ticker"),
     BotCommand("analyze", "Portfolio advisory or /analyze AAPL"),
@@ -22,6 +23,8 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
 
 DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = ORDINARY_BOT_COMMANDS + (
     BotCommand("add_ticker", "Add shares (new or existing holding)"),
+    BotCommand("add_ticker_strategy", "Add holding with investment idea"),
+    BotCommand("edit_strategy", "Rewrite a stored investment idea"),
     BotCommand("remove_ticker", "Remove a holding from the portfolio"),
     BotCommand("list_users", "List authorized users"),
     BotCommand("add_user", "Authorize a Telegram user"),
@@ -37,13 +40,21 @@ TELEGRAM_BOT_COMMANDS = ORDINARY_BOT_COMMANDS
 def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
     """Persistent reply keyboard; developers get portfolio-edit and user-management buttons."""
     rows = [
-        [KeyboardButton("/portfolio"), KeyboardButton("/industries")],
-        [KeyboardButton("/news_summary"), KeyboardButton("/analyze")],
-        [KeyboardButton("/set_language"), KeyboardButton("/help")],
+        [KeyboardButton("/portfolio"), KeyboardButton("/strategy")],
+        [KeyboardButton("/industries"), KeyboardButton("/news_summary")],
+        [KeyboardButton("/analyze"), KeyboardButton("/set_language")],
+        [KeyboardButton("/help"), KeyboardButton("/menu")],
     ]
     if is_developer:
         rows.insert(
             2,
+            [
+                KeyboardButton("/add_ticker_strategy"),
+                KeyboardButton("/edit_strategy"),
+            ],
+        )
+        rows.insert(
+            3,
             [KeyboardButton("/add_ticker"), KeyboardButton("/remove_ticker")],
         )
         rows.extend(
@@ -52,7 +63,6 @@ def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
                 [KeyboardButton("/add_user"), KeyboardButton("/remove_user")],
             ]
         )
-    rows.append([KeyboardButton("/menu")])
     return ReplyKeyboardMarkup(
         rows,
         resize_keyboard=True,

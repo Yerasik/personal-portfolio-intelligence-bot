@@ -15,6 +15,8 @@ from storage.models import (
     Portfolio,
     TickerIndustryMap,
     TickerMetadata,
+    TickerStrategies,
+    TickerStrategy,
     UserRole,
 )
 from storage.paths import DataPaths
@@ -140,6 +142,127 @@ class DataRepository:
     def save_ticker_metadata(self, metadata: TickerMetadata) -> None:
         """Write data/ticker_metadata.json atomically."""
         self._store.write_model(self._paths.ticker_metadata, metadata)
+
+    def load_ticker_strategies(self) -> TickerStrategies:
+        """Read per-ticker investment ideas from data/ticker_strategies.json."""
+        return self._store.read_model(self._paths.ticker_strategies, TickerStrategies)
+
+    def save_ticker_strategies(self, strategies: TickerStrategies) -> None:
+        """Write data/ticker_strategies.json atomically."""
+        self._store.write_model(self._paths.ticker_strategies, strategies)
+
+    def get_ticker_strategy(self, ticker: str) -> TickerStrategy | None:
+        """Return the stored strategy for a ticker, if any."""
+        symbol = normalize_ticker(ticker)
+        return self.load_ticker_strategies().by_ticker.get(symbol)
+
+    def upsert_ticker_strategy(
+        self,
+        ticker: str,
+        *,
+        developer_reasoning: str,
+        strategy_text: str,
+        shares_at_add: float | None = None,
+        strategy_text_by_language: dict[str, str] | None = None,
+    ) -> TickerStrategy:
+        """Create or replace the strategy record for a ticker."""
+        from datetime import UTC, datetime
+
+        symbol = normalize_ticker(ticker)
+        now = datetime.now(tz=UTC)
+        strategies = self.load_ticker_strategies()
+        existing = strategies.by_ticker.get(symbol)
+        translations = dict(strategy_text_by_language or {})
+        if "en" not in translations:
+            translations["en"] = strategy_text.strip()
+        record = TickerStrategy(
+            ticker=symbol,
+            developer_reasoning=developer_reasoning.strip(),
+            strategy_text=strategy_text.strip(),
+            strategy_text_by_language=translations,
+            shares_at_add=shares_at_add,
+            created_at=existing.created_at if existing is not None else now,
+            updated_at=now,
+        )
+        strategies.by_ticker[symbol] = record
+        self.save_ticker_strategies(strategies)
+        return record
+
+    def set_strategy_translation(
+        self,
+        ticker: str,
+        language: str,
+        text: str,
+    ) -> TickerStrategy | None:
+        """Cache localized strategy display text for one language."""
+        from datetime import UTC, datetime
+
+        from storage.languages import normalize_language
+
+        symbol = normalize_ticker(ticker)
+        lang = normalize_language(language)
+        cleaned = text.strip()
+        if not cleaned:
+            return None
+
+        strategies = self.load_ticker_strategies()
+        existing = strategies.by_ticker.get(symbol)
+        if existing is None:
+            return None
+
+        translations = dict(existing.strategy_text_by_language)
+        translations[lang] = cleaned
+        updated = existing.model_copy(
+            update={
+                "strategy_text_by_language": translations,
+                "updated_at": datetime.now(tz=UTC),
+            }
+        )
+        strategies.by_ticker[symbol] = updated
+        self.save_ticker_strategies(strategies)
+        return updated
+
+    def edit_ticker_strategy_text(
+        self,
+        ticker: str,
+        strategy_text: str,
+        *,
+        editor_language: str = "en",
+    ) -> tuple[bool, str]:
+        """Hard-overwrite the user-facing strategy text for a ticker."""
+        from datetime import UTC, datetime
+
+        from storage.languages import normalize_language
+
+        symbol = normalize_ticker(ticker)
+        cleaned = strategy_text.strip()
+        if not cleaned:
+            return False, "empty_text"
+
+        strategies = self.load_ticker_strategies()
+        existing = strategies.by_ticker.get(symbol)
+        if existing is None:
+            return False, "not_found"
+
+        editor_lang = normalize_language(editor_language)
+        strategies.by_ticker[symbol] = existing.model_copy(
+            update={
+                "strategy_text": cleaned,
+                "strategy_text_by_language": {editor_lang: cleaned},
+                "updated_at": datetime.now(tz=UTC),
+            }
+        )
+        self.save_ticker_strategies(strategies)
+        return True, "updated"
+
+    def remove_ticker_strategy(self, ticker: str) -> None:
+        """Delete the strategy record when a holding is removed."""
+        symbol = normalize_ticker(ticker)
+        strategies = self.load_ticker_strategies()
+        if symbol not in strategies.by_ticker:
+            return
+        strategies.by_ticker.pop(symbol, None)
+        self.save_ticker_strategies(strategies)
 
     def load_users(self) -> BotUsers:
         """Read authorized Telegram users from data/users.json."""

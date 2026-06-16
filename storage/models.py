@@ -59,6 +59,24 @@ class TickerMetadata(BaseModel):
     updated_at: datetime | None = None
 
 
+class TickerStrategy(BaseModel):
+    """Investment rationale for a portfolio holding."""
+
+    ticker: str
+    developer_reasoning: str
+    strategy_text: str
+    strategy_text_by_language: dict[str, str] = Field(default_factory=dict)
+    shares_at_add: float | None = None
+    created_at: datetime
+    updated_at: datetime
+
+
+class TickerStrategies(BaseModel):
+    """Per-ticker investment ideas persisted in ticker_strategies.json."""
+
+    by_ticker: dict[str, TickerStrategy] = Field(default_factory=dict)
+
+
 class AppConfig(BaseModel):
     """Bot behavior and watch settings persisted in config.json."""
 

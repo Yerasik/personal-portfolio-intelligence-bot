@@ -17,6 +17,7 @@ class PortfolioTickerResult:
     success: bool
     message: str
     ticker: str = ""
+    is_new_position: bool = False
 
 
 def normalize_ticker(symbol: str) -> str:
@@ -115,6 +116,7 @@ def add_ticker_to_portfolio(
                 f"now holding {new_total:g} share(s)."
             ),
             normalized,
+            is_new_position=False,
         )
 
     updated = portfolio.model_copy(
@@ -129,6 +131,7 @@ def add_ticker_to_portfolio(
         True,
         f"Added {normalized} ({shares:g} share(s)) to the portfolio.",
         normalized,
+        is_new_position=True,
     )
 
 

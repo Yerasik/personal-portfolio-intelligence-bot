@@ -9,7 +9,15 @@ from analysis.move_explainer import PriceMoveExplanation
 from analysis.news_summarizer import NewsSummary
 from analysis.rules import AlertCandidate
 from bot.i18n import t
-from storage.models import AppConfig, BotState, MarketQuote, NewsCache, PendingAlert, Portfolio
+from storage.models import (
+    AppConfig,
+    BotState,
+    MarketQuote,
+    NewsCache,
+    PendingAlert,
+    Portfolio,
+    TickerStrategy,
+)
 
 TELEGRAM_MESSAGE_LIMIT = 4096
 
@@ -553,3 +561,85 @@ def format_alert(alert: PendingAlert, *, lang: str = "en") -> str:
     if alert.severity == "urgent":
         return format_urgent_alert(candidate, lang=lang)
     return format_informational_alert(candidate, lang=lang)
+
+
+def format_strategy_list(
+    portfolio: Portfolio,
+    strategies: dict[str, TickerStrategy],
+    *,
+    display_by_ticker: dict[str, str] | None = None,
+    lang: str = "en",
+) -> str:
+    """List portfolio tickers and whether a stored strategy exists."""
+    if not portfolio.positions:
+        return t("strategy_portfolio_empty", lang)
+
+    localized = display_by_ticker or {}
+    lines = [t("strategy_list_header", lang), ""]
+    for position in portfolio.positions:
+        symbol = position.ticker.strip().upper()
+        strategy = strategies.get(symbol)
+        if strategy is None:
+            lines.append(t("strategy_list_missing", lang, symbol=symbol))
+            continue
+        preview = localized.get(symbol, strategy.strategy_text).replace("\n", " ").strip()
+        if len(preview) > 120:
+            preview = preview[:117].rstrip() + "..."
+        lines.append(t("strategy_list_item", lang, symbol=symbol, preview=preview))
+
+    lines.extend(["", t("strategy_list_hint", lang)])
+    return truncate_message("\n".join(lines))
+
+
+def format_strategy_detail(
+    strategy: TickerStrategy,
+    *,
+    display_text: str | None = None,
+    lang: str = "en",
+    is_developer: bool = False,
+) -> str:
+    """Render the full investment idea for one ticker."""
+    body = (display_text if display_text is not None else strategy.strategy_text).strip()
+    lines = [
+        t("strategy_detail_header", lang, symbol=strategy.ticker),
+        "",
+        body,
+    ]
+    if is_developer:
+        lines.extend(
+            [
+                "",
+                t("strategy_developer_notes", lang),
+                strategy.developer_reasoning,
+                "",
+                t(
+                    "strategy_updated",
+                    lang,
+                    date=_format_user_date(strategy.updated_at),
+                ),
+            ]
+        )
+    lines.extend(["", t("advisory_footer", lang)])
+    return truncate_message("\n".join(lines))
+
+
+def format_strategy_announcement(
+    ticker: str,
+    shares: float,
+    announcement_text: str,
+    *,
+    lang: str = "en",
+) -> str:
+    """Format the Telegram alert sent when a developer adds a new holding."""
+    symbol = ticker.strip().upper()
+    lines = [
+        t("strategy_announcement_header", lang),
+        t("strategy_announcement_added", lang, symbol=symbol, shares=shares),
+        "",
+        announcement_text.strip(),
+        "",
+        t("strategy_announcement_hint", lang, symbol=symbol),
+        "",
+        t("advisory_footer", lang),
+    ]
+    return truncate_message("\n".join(lines))

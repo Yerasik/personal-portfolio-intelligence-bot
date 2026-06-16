@@ -12,7 +12,7 @@ from analysis.llm import LlmAdvisoryResult, LlmClient
 from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
 from analysis.news_summarizer import NewsSummary, summarize_news
 from analysis.rules import AlertCandidate
-from bot.formatter import format_daily_summary, format_urgent_alert
+from bot.formatter import format_daily_summary, format_strategy_announcement, format_urgent_alert
 from config.settings import RuntimeSettings
 from storage.models import AppConfig, BotState, BotUser, NewsCache, SentAlertRecord
 from storage.repository import DataRepository
@@ -239,6 +239,82 @@ class TelegramNotifier:
             logger.info("Daily summary delivered to chat_id=%s (lang=%s)", user.chat_id, lang)
 
         return delivered
+
+    def notify_new_ticker_strategy(
+        self,
+        repository: DataRepository,
+        ticker: str,
+        shares: float,
+        *,
+        llm: LlmClient,
+        app_config: AppConfig,
+        strategy_text: str,
+        announcement_en: str,
+        state: BotState,
+        strategy_text_by_language: dict[str, str] | None = None,
+    ) -> int:
+        """Alert ordinary users when a developer adds a new holding with a strategy."""
+        if not self.is_configured:
+            logger.warning("Telegram notifier not configured; skipping strategy notification")
+            return 0
+
+        users = self._authorized_users(repository)
+        ordinary_users = [user for user in users if user.role == "ordinary"]
+        if not ordinary_users:
+            return 0
+
+        symbol = ticker.strip().upper()
+        quote = state.latest_prices.get(symbol)
+        company_name = quote.company_name if quote is not None else ""
+        localized_strategy = strategy_text_by_language or {}
+        announcements_by_lang: dict[str, str] = {"en": announcement_en}
+        sent = 0
+
+        for user in ordinary_users:
+            lang = user.language
+            if lang not in announcements_by_lang:
+                from analysis.strategy_writer import generate_strategy_announcement
+
+                source_text = localized_strategy.get(lang) or localized_strategy.get(
+                    "en", strategy_text
+                )
+                if lang == "en":
+                    announcements_by_lang[lang] = announcement_en
+                else:
+                    announcements_by_lang[lang] = generate_strategy_announcement(
+                        llm,
+                        symbol,
+                        source_text,
+                        shares=shares,
+                        company_name=company_name,
+                        language=lang,
+                        enabled=app_config.enable_llm_summaries,
+                    )
+
+            message = format_strategy_announcement(
+                symbol,
+                shares,
+                announcements_by_lang[lang],
+                lang=lang,
+            )
+            try:
+                self.send_text(user.chat_id, message)
+            except Exception:
+                logger.exception(
+                    "Failed to send strategy announcement for %s to chat_id=%s",
+                    symbol,
+                    user.chat_id,
+                )
+                continue
+            sent += 1
+            logger.info(
+                "Strategy announcement for %s delivered to chat_id=%s (lang=%s)",
+                symbol,
+                user.chat_id,
+                lang,
+            )
+
+        return sent
 
 
 def build_localized_daily_content(

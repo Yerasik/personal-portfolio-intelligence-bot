@@ -38,7 +38,7 @@ def build_bot_context(
         .post_init(setup_telegram_menu)
         .build()
     )
-    commands = BotCommands(repository=repository, llm=llm)
+    commands = BotCommands(repository=repository, llm=llm, settings=settings)
     register_handlers(application, commands, repository)
     return BotContext(
         settings=settings,

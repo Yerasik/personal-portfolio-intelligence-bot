@@ -35,6 +35,10 @@ class DataPaths:
         return self.root / "ticker_metadata.json"
 
     @property
+    def ticker_strategies(self) -> Path:
+        return self.root / "ticker_strategies.json"
+
+    @property
     def users(self) -> Path:
         return self.root / "users.json"
 

@@ -25,6 +25,7 @@ from storage.models import (
     Portfolio,
     TickerIndustryMap,
     TickerMetadata,
+    TickerStrategies,
 )
 from storage.repository import DataRepository
 
@@ -149,6 +150,7 @@ def validate_json_documents(repository: DataRepository) -> StartupReport:
         ("portfolio", paths.portfolio, Portfolio),
         ("ticker_industries", paths.ticker_industries, TickerIndustryMap),
         ("ticker_metadata", paths.ticker_metadata, TickerMetadata),
+        ("ticker_strategies", paths.ticker_strategies, TickerStrategies),
         ("state", paths.state, BotState),
         ("news_cache", paths.news_cache, NewsCache),
         ("users", paths.users, BotUsers),

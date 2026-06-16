@@ -19,6 +19,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "welcome_features": (
             "What I can do\n"
             "  • Holdings and latest prices — /portfolio\n"
+            "  • Why each stock is held — /strategy\n"
             "  • Industry news and headlines — /industries, /news_summary\n"
             "  • Portfolio or single-stock review — /analyze or /analyze AAPL\n"
             "  • Urgent alerts and daily summaries — sent automatically"
@@ -36,14 +37,17 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Developer tools\n"
-            "  /add_ticker · /remove_ticker — edit holdings\n"
+            "  /add_ticker · /add_ticker_strategy · /remove_ticker — edit holdings\n"
+            "  /edit_strategy — rewrite a stored investment idea\n"
             "  /list_users · /add_user · /remove_user — manage access\n"
             "  /reload_config · /debug_state — diagnostics"
         ),
         "help_header": "Command reference",
         "help_commands": (
             "Portfolio\n"
-            "  /portfolio — holdings and latest prices\n\n"
+            "  /portfolio — holdings and latest prices\n"
+            "  /strategy — investment idea behind each holding\n"
+            "  /strategy <TICKER> — full idea for one stock\n\n"
             "News\n"
             "  /industries — sectors and headline counts\n"
             "  /news_summary — news digest by sector and stock\n\n"
@@ -58,6 +62,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Portfolio edits\n"
             "  /add_ticker <TICKER> [qty] — add or increase a position\n"
+            "  /add_ticker_strategy <TICKER> [qty] <reasoning> — add with investment idea\n"
+            "  /edit_strategy <TICKER> <text> — rewrite the stored idea\n"
             "  /remove_ticker <TICKER> — remove a position\n\n"
             "User management\n"
             "  /list_users — show authorized users\n"
@@ -69,7 +75,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "Tap a button below or type a command.\n\n"
-            "Portfolio — /portfolio\n"
+            "Portfolio — /portfolio · /strategy\n"
             "News — /industries · /news_summary\n"
             "Analysis — /analyze\n"
             "Settings — /set_language · /help"
@@ -81,7 +87,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — authorize a user\n"
             "/remove_user <chat_id> — revoke access\n\n"
             "Portfolio edits, e.g.:\n"
-            "/add_ticker AAPL 5\n"
+            "/add_ticker_strategy NVDA 5 AI infrastructure thesis\n"
+            "/edit_strategy NVDA updated thesis text\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -141,6 +148,33 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "Could not add ticker: {message}",
         "remove_ticker_ok": "Removed: {message}",
         "remove_ticker_fail": "Could not remove ticker: {message}",
+        "strategy_list_header": "Investment ideas",
+        "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_missing": "• {symbol} — (no strategy saved yet)",
+        "strategy_list_hint": "Run /strategy <TICKER> for the full idea behind one holding.",
+        "strategy_portfolio_empty": "Portfolio is empty — no investment ideas to show.",
+        "strategy_detail_header": "Investment idea: {symbol}",
+        "strategy_developer_notes": "Developer notes (internal):",
+        "strategy_updated": "Last updated: {date}",
+        "strategy_not_found": "No strategy saved for {symbol}.",
+        "strategy_announcement_header": "New holding added",
+        "strategy_announcement_added": "{symbol} — {shares:g} share(s) added to the portfolio.",
+        "strategy_announcement_hint": "Run /strategy {symbol} anytime to review the full idea.",
+        "add_ticker_strategy_ok": "Added {symbol} and saved the investment strategy.\nNotified {count} user(s).",
+        "add_ticker_strategy_ok_no_notify": "Added {symbol} and saved the investment strategy.",
+        "add_ticker_strategy_fail": "Could not add ticker strategy: {message}",
+        "add_ticker_strategy_usage": (
+            "Usage: /add_ticker_strategy <TICKER> [shares] <reasoning>\n"
+            "Example: /add_ticker_strategy NVDA 5 US AI chip leader with data-center exposure"
+        ),
+        "edit_strategy_ok": "Updated strategy for {symbol}.",
+        "edit_strategy_fail": "Could not update strategy: {message}",
+        "edit_strategy_usage": (
+            "Usage: /edit_strategy <TICKER> <new strategy text>\n"
+            "Example: /edit_strategy NVDA Core AI infrastructure holding; monitor export policy risk."
+        ),
+        "edit_strategy_not_found": "No strategy saved for {symbol}.",
+        "edit_strategy_empty": "Strategy text cannot be empty.",
         "urgent_alert": "URGENT ALERT",
         "target": "Target",
         "suggested": "Suggested",
@@ -232,6 +266,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "welcome_features": (
             "Was ich kann\n"
             "  • Bestände und aktuelle Kurse — /portfolio\n"
+            "  • Idee hinter jeder Position — /strategy\n"
             "  • Branchennews und Schlagzeilen — /industries, /news_summary\n"
             "  • Portfolio- oder Einzelaktien-Analyse — /analyze oder /analyze AAPL\n"
             "  • Dringende Warnungen und Tageszusammenfassungen — automatisch"
@@ -249,14 +284,17 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Entwickler-Tools\n"
-            "  /add_ticker · /remove_ticker — Bestände bearbeiten\n"
+            "  /add_ticker · /add_ticker_strategy · /remove_ticker — Bestände bearbeiten\n"
+            "  /edit_strategy — gespeicherte Anlageidee überschreiben\n"
             "  /list_users · /add_user · /remove_user — Zugriff verwalten\n"
             "  /reload_config · /debug_state — Diagnose"
         ),
         "help_header": "Befehlsübersicht",
         "help_commands": (
             "Portfolio\n"
-            "  /portfolio — Bestände und Kurse\n\n"
+            "  /portfolio — Bestände und Kurse\n"
+            "  /strategy — Anlageidee hinter jeder Position\n"
+            "  /strategy <TICKER> — vollständige Idee zu einer Aktie\n\n"
             "Nachrichten\n"
             "  /industries — Branchen und Schlagzeilen\n"
             "  /news_summary — Nachrichten nach Sektor und Ticker\n\n"
@@ -271,6 +309,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Bestandsänderungen\n"
             "  /add_ticker <TICKER> [Anzahl] — Position hinzufügen/erhöhen\n"
+            "  /add_ticker_strategy <TICKER> [Anzahl] <Begründung> — mit Anlageidee\n"
+            "  /edit_strategy <TICKER> <Text> — gespeicherte Idee überschreiben\n"
             "  /remove_ticker <TICKER> — Position entfernen\n\n"
             "Benutzerverwaltung\n"
             "  /list_users — autorisierte Benutzer\n"
@@ -282,7 +322,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "Tippen Sie unten oder geben Sie einen Befehl ein.\n\n"
-            "Portfolio — /portfolio\n"
+            "Portfolio — /portfolio · /strategy\n"
             "Nachrichten — /industries · /news_summary\n"
             "Analyse — /analyze\n"
             "Einstellungen — /set_language · /help"
@@ -294,7 +334,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — Benutzer hinzufügen\n"
             "/remove_user <chat_id> — Zugriff entziehen\n\n"
             "Bestandsänderungen, z. B.:\n"
-            "/add_ticker AAPL 5\n"
+            "/add_ticker_strategy NVDA 5 KI-Infrastruktur-These\n"
+            "/edit_strategy NVDA aktualisierter Strategietext\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -354,6 +395,33 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "Ticker nicht hinzugefügt: {message}",
         "remove_ticker_ok": "Entfernt: {message}",
         "remove_ticker_fail": "Ticker nicht entfernt: {message}",
+        "strategy_list_header": "Anlageideen",
+        "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_missing": "• {symbol} — (noch keine Strategie gespeichert)",
+        "strategy_list_hint": "/strategy <TICKER> zeigt die vollständige Idee zu einer Position.",
+        "strategy_portfolio_empty": "Portfolio ist leer — keine Anlageideen vorhanden.",
+        "strategy_detail_header": "Anlageidee: {symbol}",
+        "strategy_developer_notes": "Entwickler-Notizen (intern):",
+        "strategy_updated": "Zuletzt aktualisiert: {date}",
+        "strategy_not_found": "Keine Strategie für {symbol} gespeichert.",
+        "strategy_announcement_header": "Neue Position hinzugefügt",
+        "strategy_announcement_added": "{symbol} — {shares:g} Aktie(n) zum Portfolio hinzugefügt.",
+        "strategy_announcement_hint": "/strategy {symbol} zeigt jederzeit die vollständige Idee.",
+        "add_ticker_strategy_ok": "{symbol} hinzugefügt und Anlageidee gespeichert.\n{count} Benutzer benachrichtigt.",
+        "add_ticker_strategy_ok_no_notify": "{symbol} hinzugefügt und Anlageidee gespeichert.",
+        "add_ticker_strategy_fail": "Ticker-Strategie nicht hinzugefügt: {message}",
+        "add_ticker_strategy_usage": (
+            "Verwendung: /add_ticker_strategy <TICKER> [Anzahl] <Begründung>\n"
+            "Beispiel: /add_ticker_strategy NVDA 5 US-KI-Chipführer mit Rechenzentrum-Exposure"
+        ),
+        "edit_strategy_ok": "Strategie für {symbol} aktualisiert.",
+        "edit_strategy_fail": "Strategie nicht aktualisiert: {message}",
+        "edit_strategy_usage": (
+            "Verwendung: /edit_strategy <TICKER> <neuer Strategietext>\n"
+            "Beispiel: /edit_strategy NVDA Kern-KI-Infrastruktur; Exportrisiko beobachten."
+        ),
+        "edit_strategy_not_found": "Keine Strategie für {symbol} gespeichert.",
+        "edit_strategy_empty": "Strategietext darf nicht leer sein.",
         "urgent_alert": "DRINGENDE WARNUNG",
         "target": "Ziel",
         "suggested": "Empfehlung",
@@ -442,6 +510,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "welcome_features": (
             "我能做什么\n"
             "  • 持仓与最新价格 — /portfolio\n"
+            "  • 每只股票的持仓逻辑 — /strategy\n"
             "  • 行业新闻与头条 — /industries、/news_summary\n"
             "  • 组合或单股分析 — /analyze 或 /analyze AAPL\n"
             "  • 紧急预警与每日摘要 — 自动推送"
@@ -459,14 +528,17 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "开发者工具\n"
-            "  /add_ticker · /remove_ticker — 编辑持仓\n"
+            "  /add_ticker · /add_ticker_strategy · /remove_ticker — 编辑持仓\n"
+            "  /edit_strategy — 直接改写已保存的投资逻辑\n"
             "  /list_users · /add_user · /remove_user — 管理访问权限\n"
             "  /reload_config · /debug_state — 诊断"
         ),
         "help_header": "命令参考",
         "help_commands": (
             "投资组合\n"
-            "  /portfolio — 持仓与最新价格\n\n"
+            "  /portfolio — 持仓与最新价格\n"
+            "  /strategy — 每只持仓的投资逻辑\n"
+            "  /strategy <代码> — 查看单只股票的完整逻辑\n\n"
             "新闻\n"
             "  /industries — 行业与新闻数量\n"
             "  /news_summary — 按行业/股票的新闻摘要\n\n"
@@ -481,6 +553,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "编辑持仓\n"
             "  /add_ticker <代码> [数量] — 添加或增加持仓\n"
+            "  /add_ticker_strategy <代码> [数量] <理由> — 添加并记录投资逻辑\n"
+            "  /edit_strategy <代码> <文本> — 直接改写已保存的逻辑\n"
             "  /remove_ticker <代码> — 移除持仓\n\n"
             "用户管理\n"
             "  /list_users — 查看授权用户\n"
@@ -492,7 +566,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "点击下方按钮或输入命令。\n\n"
-            "投资组合 — /portfolio\n"
+            "投资组合 — /portfolio · /strategy\n"
             "新闻 — /industries · /news_summary\n"
             "分析 — /analyze\n"
             "设置 — /set_language · /help"
@@ -504,7 +578,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — 添加用户\n"
             "/remove_user <chat_id> — 移除访问\n\n"
             "编辑持仓示例：\n"
-            "/add_ticker AAPL 5\n"
+            "/add_ticker_strategy NVDA 5 AI基础设施投资逻辑\n"
+            "/edit_strategy NVDA 更新后的策略说明\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -561,6 +636,33 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "无法添加：{message}",
         "remove_ticker_ok": "已移除：{message}",
         "remove_ticker_fail": "无法移除：{message}",
+        "strategy_list_header": "投资逻辑",
+        "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_missing": "• {symbol} —（尚未保存策略）",
+        "strategy_list_hint": "使用 /strategy <代码> 查看单只股票的完整逻辑。",
+        "strategy_portfolio_empty": "投资组合为空，暂无投资逻辑。",
+        "strategy_detail_header": "投资逻辑：{symbol}",
+        "strategy_developer_notes": "开发者备注（内部）：",
+        "strategy_updated": "最后更新：{date}",
+        "strategy_not_found": "尚未保存 {symbol} 的策略。",
+        "strategy_announcement_header": "新增持仓",
+        "strategy_announcement_added": "已将 {symbol} — {shares:g} 股加入投资组合。",
+        "strategy_announcement_hint": "随时运行 /strategy {symbol} 查看完整逻辑。",
+        "add_ticker_strategy_ok": "已添加 {symbol} 并保存投资逻辑。\n已通知 {count} 位用户。",
+        "add_ticker_strategy_ok_no_notify": "已添加 {symbol} 并保存投资逻辑。",
+        "add_ticker_strategy_fail": "无法添加策略：{message}",
+        "add_ticker_strategy_usage": (
+            "用法：/add_ticker_strategy <代码> [数量] <理由>\n"
+            "示例：/add_ticker_strategy NVDA 5 美国AI芯片龙头，受益于数据中心需求"
+        ),
+        "edit_strategy_ok": "已更新 {symbol} 的策略。",
+        "edit_strategy_fail": "无法更新策略：{message}",
+        "edit_strategy_usage": (
+            "用法：/edit_strategy <代码> <新策略文本>\n"
+            "示例：/edit_strategy NVDA 核心AI基础设施持仓；关注出口政策风险。"
+        ),
+        "edit_strategy_not_found": "尚未保存 {symbol} 的策略。",
+        "edit_strategy_empty": "策略文本不能为空。",
         "urgent_alert": "紧急预警",
         "target": "目标",
         "suggested": "建议",
@@ -649,6 +751,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "welcome_features": (
             "Что я умею\n"
             "  • Позиции и актуальные цены — /portfolio\n"
+            "  • Логика каждой позиции — /strategy\n"
             "  • Новости по отраслям — /industries, /news_summary\n"
             "  • Обзор портфеля или одной акции — /analyze или /analyze AAPL\n"
             "  • Срочные предупреждения и ежедневные сводки — автоматически"
@@ -666,14 +769,17 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Инструменты разработчика\n"
-            "  /add_ticker · /remove_ticker — изменение портфеля\n"
+            "  /add_ticker · /add_ticker_strategy · /remove_ticker — изменение портфеля\n"
+            "  /edit_strategy — перезаписать сохранённую инвестиционную идею\n"
             "  /list_users · /add_user · /remove_user — управление доступом\n"
             "  /reload_config · /debug_state — диагностика"
         ),
         "help_header": "Справка по командам",
         "help_commands": (
             "Портфель\n"
-            "  /portfolio — позиции и котировки\n\n"
+            "  /portfolio — позиции и котировки\n"
+            "  /strategy — идея за каждой позицией\n"
+            "  /strategy <ТИКЕР> — полная идея по одной акции\n\n"
             "Новости\n"
             "  /industries — отрасли и количество новостей\n"
             "  /news_summary — сводка по секторам и тикерам\n\n"
@@ -688,6 +794,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Изменение портфеля\n"
             "  /add_ticker <ТИКЕР> [кол-во] — добавить или увеличить позицию\n"
+            "  /add_ticker_strategy <ТИКЕР> [кол-во] <обоснование> — добавить с идеей\n"
+            "  /edit_strategy <ТИКЕР> <текст> — перезаписать сохранённую идею\n"
             "  /remove_ticker <ТИКЕР> — удалить позицию\n\n"
             "Управление пользователями\n"
             "  /list_users — список пользователей\n"
@@ -699,7 +807,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "Нажмите кнопку ниже или введите команду.\n\n"
-            "Портфель — /portfolio\n"
+            "Портфель — /portfolio · /strategy\n"
             "Новости — /industries · /news_summary\n"
             "Анализ — /analyze\n"
             "Настройки — /set_language · /help"
@@ -711,7 +819,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — добавить пользователя\n"
             "/remove_user <chat_id> — удалить доступ\n\n"
             "Примеры изменения портфеля:\n"
-            "/add_ticker AAPL 5\n"
+            "/add_ticker_strategy NVDA 5 тезис по AI-инфраструктуре\n"
+            "/edit_strategy NVDA обновлённый текст стратегии\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -771,6 +880,33 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "Не удалось добавить: {message}",
         "remove_ticker_ok": "Удалено: {message}",
         "remove_ticker_fail": "Не удалось удалить: {message}",
+        "strategy_list_header": "Инвестиционные идеи",
+        "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_missing": "• {symbol} — (стратегия ещё не сохранена)",
+        "strategy_list_hint": "Команда /strategy <ТИКЕР> показывает полную идею по позиции.",
+        "strategy_portfolio_empty": "Портфель пуст — нет сохранённых идей.",
+        "strategy_detail_header": "Инвестиционная идея: {symbol}",
+        "strategy_developer_notes": "Заметки разработчика (внутренние):",
+        "strategy_updated": "Последнее обновление: {date}",
+        "strategy_not_found": "Для {symbol} нет сохранённой стратегии.",
+        "strategy_announcement_header": "Добавлена новая позиция",
+        "strategy_announcement_added": "{symbol} — добавлено {shares:g} акц.",
+        "strategy_announcement_hint": "Команда /strategy {symbol} покажет полную идею в любой момент.",
+        "add_ticker_strategy_ok": "Добавлен {symbol}, стратегия сохранена.\nУведомлено пользователей: {count}.",
+        "add_ticker_strategy_ok_no_notify": "Добавлен {symbol}, стратегия сохранена.",
+        "add_ticker_strategy_fail": "Не удалось добавить стратегию: {message}",
+        "add_ticker_strategy_usage": (
+            "Использование: /add_ticker_strategy <ТИКЕР> [кол-во] <обоснование>\n"
+            "Пример: /add_ticker_strategy NVDA 5 лидер US AI-чипов, экспозиция к дата-центрам"
+        ),
+        "edit_strategy_ok": "Стратегия для {symbol} обновлена.",
+        "edit_strategy_fail": "Не удалось обновить стратегию: {message}",
+        "edit_strategy_usage": (
+            "Использование: /edit_strategy <ТИКЕР> <новый текст>\n"
+            "Пример: /edit_strategy NVDA ядро AI-инфраструктуры; следить за экспортными ограничениями."
+        ),
+        "edit_strategy_not_found": "Для {symbol} нет сохранённой стратегии.",
+        "edit_strategy_empty": "Текст стратегии не может быть пустым.",
         "urgent_alert": "СРОЧНОЕ ПРЕДУПРЕЖДЕНИЕ",
         "target": "Цель",
         "suggested": "Рекомендация",

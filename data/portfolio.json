@@ -1,27 +1,27 @@
 {
   "positions": [
     {
+      "ticker": "6082.HK",
+      "shares": 201.0,
+      "cost_basis": 56.15,
+      "notes": ""
+    },
+    {
       "ticker": "1810.HK",
-      "shares": 10.0,
-      "cost_basis": 31.0,
+      "shares": 201.0,
+      "cost_basis": 31.81,
       "notes": ""
     },
     {
-      "ticker": "AAPL",
-      "shares": 11.0,
-      "cost_basis": null,
+      "ticker": "9988.HK",
+      "shares": 101.0,
+      "cost_basis": 109.29,
       "notes": ""
     },
     {
-      "ticker": "NVDA",
-      "shares": 5.0,
-      "cost_basis": null,
-      "notes": ""
-    },
-    {
-      "ticker": "MSFT",
-      "shares": 1.0,
-      "cost_basis": null,
+      "ticker": "VRT",
+      "shares": 3.0,
+      "cost_basis": 318.2,
       "notes": ""
     }
   ],

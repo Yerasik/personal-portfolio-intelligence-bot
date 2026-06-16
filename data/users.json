@@ -2,8 +2,8 @@
   "users": [
     {
       "chat_id": 1303775573,
-      "language": "ru",
-      "role": "ordinary"
+      "language": "en",
+      "role": "developer"
     },
     {
       "chat_id": 589115817,

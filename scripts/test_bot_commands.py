@@ -101,7 +101,7 @@ def run_test() -> None:
             telegram_chat_id="12345",
         )
         llm = LlmClient(settings=settings)
-        commands = BotCommands(repository=repository, llm=llm)
+        commands = BotCommands(repository=repository, llm=llm, settings=settings)
 
         portfolio_text = commands.portfolio_message(12345)
         if "AAPL" not in portfolio_text or "180.00" not in portfolio_text:
@@ -172,7 +172,15 @@ def run_test() -> None:
             for row in dev_kb.keyboard
             for button in row
         }
-        for cmd in ("/list_users", "/add_user", "/remove_user", "/add_ticker", "/remove_ticker"):
+        for cmd in (
+            "/list_users",
+            "/add_user",
+            "/remove_user",
+            "/add_ticker",
+            "/add_ticker_strategy",
+            "/edit_strategy",
+            "/remove_ticker",
+        ):
             if cmd not in dev_labels:
                 raise AssertionError(f"developer keyboard missing {cmd}")
 
@@ -182,7 +190,9 @@ def run_test() -> None:
             for row in ordinary_kb.keyboard
             for button in row
         }
-        for cmd in ("/add_user", "/add_ticker", "/remove_ticker"):
+        if "/strategy" not in ordinary_labels:
+            raise AssertionError("ordinary keyboard should expose /strategy")
+        for cmd in ("/add_user", "/add_ticker", "/remove_ticker", "/edit_strategy"):
             if cmd in ordinary_labels:
                 raise AssertionError(f"ordinary keyboard must not expose {cmd}")
 

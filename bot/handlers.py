@@ -195,6 +195,99 @@ _REMOVE_TICKER_USAGE = (
 )
 
 
+def _parse_strategy_add_args(args: list[str]) -> tuple[str, float, str] | None:
+    """Parse /add_ticker_strategy <TICKER> [shares] <reasoning>."""
+    if len(args) < 2:
+        return None
+    ticker = args[0]
+    shares = 1.0
+    reasoning_start = 1
+    try:
+        shares = float(args[1])
+        reasoning_start = 2
+    except ValueError:
+        reasoning_start = 1
+    reasoning = " ".join(args[reasoning_start:]).strip()
+    if not reasoning:
+        return None
+    return ticker, shares, reasoning
+
+
+async def strategy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /strategy — show investment ideas for holdings."""
+    user = await _guard(update, context)
+    if user is None or update.message is None:
+        return
+
+    args = context.args or []
+    ticker = args[0] if args else None
+    await update.message.reply_text(
+        _commands(context).strategy_message(user.chat_id, ticker=ticker)
+    )
+
+
+async def add_ticker_strategy_command(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> None:
+    """Handle /add_ticker_strategy — add a holding with developer reasoning."""
+    user = await _guard_developer(update, context)
+    if user is None:
+        return
+
+    args = context.args or []
+    parsed = _parse_strategy_add_args(args)
+    if parsed is None:
+        await _reply_with_menu(
+            update,
+            t("add_ticker_strategy_usage", user.language),
+            user=user,
+        )
+        return
+
+    ticker, shares, reasoning = parsed
+    if shares <= 0:
+        await _reply_with_menu(
+            update,
+            f"Invalid share count.\n\n{t('add_ticker_strategy_usage', user.language)}",
+            user=user,
+        )
+        return
+
+    message = _commands(context).add_ticker_strategy_message(
+        user.chat_id,
+        ticker,
+        shares,
+        reasoning,
+    )
+    await _reply_with_menu(update, message, user=user)
+
+
+async def edit_strategy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /edit_strategy — hard-overwrite stored strategy text."""
+    user = await _guard_developer(update, context)
+    if user is None:
+        return
+
+    args = context.args or []
+    if len(args) < 2:
+        await _reply_with_menu(
+            update,
+            t("edit_strategy_usage", user.language),
+            user=user,
+        )
+        return
+
+    ticker = args[0]
+    strategy_text = " ".join(args[1:]).strip()
+    message = _commands(context).edit_strategy_message(
+        user.chat_id,
+        ticker,
+        strategy_text,
+    )
+    await _reply_with_menu(update, message, user=user)
+
+
 async def add_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /add_ticker — add a validated holding (developer only)."""
     user = await _guard_developer(update, context)
@@ -389,9 +482,12 @@ def register_handlers(
         ("menu", menu_command),
         ("help", help_command),
         ("portfolio", portfolio_command),
+        ("strategy", strategy_command),
         ("industries", industries_command),
         ("news_summary", news_summary_command),
         ("add_ticker", add_ticker_command),
+        ("add_ticker_strategy", add_ticker_strategy_command),
+        ("edit_strategy", edit_strategy_command),
         ("remove_ticker", remove_ticker_command),
         ("analyze", analyze_command),
         ("set_language", set_language_command),
