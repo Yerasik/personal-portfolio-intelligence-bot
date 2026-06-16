@@ -22,6 +22,7 @@ from scheduler.jobs import (
     JOB_MARKET_FETCH,
     JOB_NEWS_FETCH,
     JOB_RULE_EVALUATION,
+    JOB_SENTIMENT_ANALYSIS,
     SchedulerServices,
     _run_job,
     build_scheduler,
@@ -109,6 +110,7 @@ def run_test() -> None:
             JOB_NEWS_FETCH,
             JOB_AUTO_NEWS_DISCOVERY,
             JOB_RULE_EVALUATION,
+            JOB_SENTIMENT_ANALYSIS,
             JOB_DAILY_SUMMARY,
         }
         if job_ids != expected:

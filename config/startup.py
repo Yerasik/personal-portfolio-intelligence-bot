@@ -23,6 +23,7 @@ from storage.models import (
     BotUsers,
     NewsCache,
     Portfolio,
+    SignalsFile,
     TickerIndustryMap,
     TickerMetadata,
     TickerStrategies,
@@ -153,6 +154,7 @@ def validate_json_documents(repository: DataRepository) -> StartupReport:
         ("ticker_strategies", paths.ticker_strategies, TickerStrategies),
         ("state", paths.state, BotState),
         ("news_cache", paths.news_cache, NewsCache),
+        ("signals", paths.signals, SignalsFile),
         ("users", paths.users, BotUsers),
     )
 
@@ -242,11 +244,12 @@ def log_startup_summary(
     logger.info("Cached news items: %d", len(news_cache.items))
     logger.info("Pending alerts: %d", len(state.pending_alerts))
     logger.info(
-        "Scheduler intervals (minutes): market=%d news=%d auto=%d rules=%d",
+        "Scheduler intervals (minutes): market=%d news=%d auto=%d rules=%d sentiment=%d",
         app_config.market_fetch_interval_minutes,
         app_config.news_fetch_interval_minutes,
         app_config.auto_news_interval_minutes,
         app_config.rule_evaluation_interval_minutes,
+        app_config.sentiment_analysis_interval_minutes,
     )
     logger.info(
         "Daily summary: %s at %02d:%02d %s",

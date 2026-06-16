@@ -77,6 +77,20 @@ class TickerStrategies(BaseModel):
     by_ticker: dict[str, TickerStrategy] = Field(default_factory=dict)
 
 
+class TickerSentimentSignal(BaseModel):
+    """Cached sentiment score for one ticker."""
+
+    score: float
+    updated_at: datetime
+    article_count: int
+
+
+class SignalsFile(BaseModel):
+    """Derived signals persisted in signals.json."""
+
+    sentiment: dict[str, TickerSentimentSignal] = Field(default_factory=dict)
+
+
 class AppConfig(BaseModel):
     """Bot behavior and watch settings persisted in config.json."""
 
@@ -99,6 +113,7 @@ class AppConfig(BaseModel):
     news_fetch_interval_minutes: int = Field(default=60, ge=5, le=1440)
     auto_news_interval_minutes: int = Field(default=30, ge=5, le=1440)
     rule_evaluation_interval_minutes: int = Field(default=60, ge=5, le=1440)
+    sentiment_analysis_interval_minutes: int = Field(default=60, ge=5, le=1440)
     enable_daily_summary: bool = True
     ollama_base_url: str = ""
     ollama_model: str = ""

@@ -25,8 +25,10 @@ from storage.models import (
     NewsCache,
     PendingAlert,
     Portfolio,
+    TickerSentimentSignal,
     TickerStrategy,
 )
+from storage.portfolio_ops import normalize_ticker
 
 TELEGRAM_MESSAGE_LIMIT = 4096
 
@@ -588,6 +590,8 @@ def format_analyze(
     advisory: LlmAdvisoryResult | None,
     app_config: AppConfig,
     *,
+    portfolio: Portfolio | None = None,
+    sentiment_by_ticker: dict[str, TickerSentimentSignal] | None = None,
     lang: str = "en",
     is_developer: bool = False,
 ) -> str:
@@ -602,6 +606,15 @@ def format_analyze(
         lines.append("")
     else:
         lines.extend([t("analyze_no_alerts", lang), ""])
+
+    sentiment_lines = _format_analyze_sentiment_lines(
+        portfolio,
+        sentiment_by_ticker,
+        lang=lang,
+    )
+    if sentiment_lines:
+        lines.extend(sentiment_lines)
+        lines.append("")
 
     if app_config.enable_llm_summaries:
         if advisory is None:
@@ -632,6 +645,38 @@ def format_analyze(
         lines.append(t(key, lang))
 
     return truncate_message("\n".join(lines))
+
+
+def _format_analyze_sentiment_lines(
+    portfolio: Portfolio | None,
+    sentiment_by_ticker: dict[str, TickerSentimentSignal] | None,
+    *,
+    lang: str,
+) -> list[str]:
+    """Build optional news-sentiment section for /analyze."""
+    if portfolio is None or not sentiment_by_ticker:
+        return []
+
+    lines: list[str] = []
+    for position in portfolio.positions:
+        symbol = normalize_ticker(position.ticker)
+        record = sentiment_by_ticker.get(symbol)
+        if record is None:
+            continue
+        lines.append(
+            t(
+                "analyze_sentiment_line",
+                lang,
+                symbol=symbol,
+                score=record.score,
+                count=record.article_count,
+            )
+        )
+
+    if not lines:
+        return []
+
+    return [t("analyze_sentiment_header", lang), *lines]
 
 
 def format_ticker_analysis(

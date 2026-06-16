@@ -23,6 +23,7 @@ from analysis.industries import build_news_focus_industries
 from analysis.llm import LlmClient
 from analysis.rules import RulesEngine
 from scheduler.alert_delivery import evaluate_and_deliver_alerts
+from analysis.sentiment_analyzer import run_sentiment_analysis
 from analysis.summarizer import Summarizer
 from collectors.base import CollectorContext
 from collectors.auto_news_discovery import AutoNewsDiscovery
@@ -41,6 +42,7 @@ JOB_MARKET_FETCH: Final = "market_fetch"
 JOB_NEWS_FETCH: Final = "news_fetch"
 JOB_AUTO_NEWS_DISCOVERY: Final = "auto_news_discovery"
 JOB_RULE_EVALUATION: Final = "rule_evaluation"
+JOB_SENTIMENT_ANALYSIS: Final = "sentiment_analysis"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
 
 _built_scheduler: AppScheduler | None = None
@@ -213,6 +215,15 @@ def run_rule_evaluation_job(services: SchedulerServices) -> None:
     )
 
 
+def run_sentiment_analysis_job(services: SchedulerServices) -> None:
+    """Score cached news sentiment per ticker and persist signals.json."""
+    scores = run_sentiment_analysis(services.repository)
+    logger.info(
+        "Sentiment analysis finished for %d ticker(s)",
+        len(scores),
+    )
+
+
 def run_daily_summary_job(services: SchedulerServices) -> None:
     """Build the daily digest and send it to Telegram."""
     app_config = services.load_app_config()
@@ -306,6 +317,17 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
         lambda: _run_job(JOB_RULE_EVALUATION, lambda: run_rule_evaluation_job(services)),
         trigger=IntervalTrigger(minutes=app_config.rule_evaluation_interval_minutes),
         id=JOB_RULE_EVALUATION,
+        replace_existing=True,
+        next_run_time=now,
+    )
+
+    scheduler.add_job(
+        lambda: _run_job(
+            JOB_SENTIMENT_ANALYSIS,
+            lambda: run_sentiment_analysis_job(services),
+        ),
+        trigger=IntervalTrigger(minutes=app_config.sentiment_analysis_interval_minutes),
+        id=JOB_SENTIMENT_ANALYSIS,
         replace_existing=True,
         next_run_time=now,
     )

@@ -135,6 +135,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_header": "Portfolio analysis",
         "analyze_alerts_count": "Rule alerts ({count}):",
         "analyze_no_alerts": "Rule alerts: none triggered.",
+        "analyze_sentiment_header": "News sentiment (cached articles):",
+        "analyze_sentiment_line": "- {symbol}: {score:+.2f} ({count} article(s))",
         "analyze_llm_disabled": "LLM advisory: disabled (enable_llm_summaries in config.json).",
         "analyze_llm_disabled_user": "AI summary is not available right now.",
         "analyze_llm_empty": "LLM advisory: enabled but no result returned.",
@@ -181,6 +183,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_fail": "Could not add ticker strategy: {message}",
         "add_ticker_strategy_usage": (
             "Usage: /add_ticker_strategy <TICKER> [shares] <reasoning>\n"
+            "If the ticker is already held, only the strategy is saved "
+            "(use /add_ticker to add shares).\n"
             "Example: /add_ticker_strategy NVDA 5 US AI chip leader with data-center exposure"
         ),
         "edit_strategy_ok": "Updated strategy for {symbol}.",
@@ -402,6 +406,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_header": "Portfolio-Analyse",
         "analyze_alerts_count": "Regel-Warnungen ({count}):",
         "analyze_no_alerts": "Regel-Warnungen: keine ausgelöst.",
+        "analyze_sentiment_header": "News-Stimmung (gespeicherte Artikel):",
+        "analyze_sentiment_line": "- {symbol}: {score:+.2f} ({count} Artikel)",
         "analyze_llm_disabled": "LLM-Beratung: deaktiviert (enable_llm_summaries in config.json).",
         "analyze_llm_disabled_user": "KI-Zusammenfassung derzeit nicht verfügbar.",
         "analyze_llm_empty": "LLM-Beratung: aktiviert, aber kein Ergebnis.",
@@ -663,6 +669,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_header": "投资组合分析",
         "analyze_alerts_count": "规则预警（{count}）：",
         "analyze_no_alerts": "规则预警：无触发项。",
+        "analyze_sentiment_header": "新闻情绪（缓存文章）：",
+        "analyze_sentiment_line": "- {symbol}：{score:+.2f}（{count} 篇）",
         "analyze_llm_disabled": "LLM 建议：已禁用（config.json 中 enable_llm_summaries）。",
         "analyze_llm_disabled_user": "AI 摘要暂不可用。",
         "analyze_llm_empty": "LLM 建议：已启用但未返回结果。",
@@ -927,6 +935,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_header": "Анализ портфеля",
         "analyze_alerts_count": "Предупреждения по правилам ({count}):",
         "analyze_no_alerts": "Предупреждения по правилам: нет срабатываний.",
+        "analyze_sentiment_header": "Настроение новостей (кэш статей):",
+        "analyze_sentiment_line": "- {symbol}: {score:+.2f} ({count} стат.)",
         "analyze_llm_disabled": "LLM-рекомендация: отключена (enable_llm_summaries в config.json).",
         "analyze_llm_disabled_user": "ИИ-сводка сейчас недоступна.",
         "analyze_llm_empty": "LLM-рекомендация: включена, но результат не получен.",

@@ -18,6 +18,7 @@ from bot.formatter import truncate_message
 from bot.i18n import normalize_language, t
 from bot.menu import main_menu_keyboard, setup_user_telegram_menu
 from storage.models import BotUser, UserRole
+from storage.portfolio_ops import portfolio_has_ticker
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -204,18 +205,33 @@ _REMOVE_TICKER_USAGE = (
 )
 
 
-def _parse_strategy_add_args(args: list[str]) -> tuple[str, float, str] | None:
-    """Parse /add_ticker_strategy <TICKER> [shares] <reasoning>."""
+def _parse_strategy_add_args(
+    args: list[str],
+    *,
+    ticker_already_held: bool,
+) -> tuple[str, float | None, str] | None:
+    """Parse /add_ticker_strategy <TICKER> [shares] <reasoning>.
+
+    When the ticker is already in the portfolio, everything after the ticker
+    is treated as reasoning and shares are not changed.
+    """
     if len(args) < 2:
         return None
     ticker = args[0]
+    if ticker_already_held:
+        reasoning = " ".join(args[1:]).strip()
+        if not reasoning:
+            return None
+        return ticker, None, reasoning
+
     shares = 1.0
     reasoning_start = 1
-    try:
-        shares = float(args[1])
-        reasoning_start = 2
-    except ValueError:
-        reasoning_start = 1
+    if len(args) >= 3:
+        try:
+            shares = float(args[1])
+            reasoning_start = 2
+        except ValueError:
+            reasoning_start = 1
     reasoning = " ".join(args[reasoning_start:]).strip()
     if not reasoning:
         return None
@@ -245,7 +261,16 @@ async def add_ticker_strategy_command(
         return
 
     args = context.args or []
-    parsed = _parse_strategy_add_args(args)
+    ticker_already_held = False
+    if args:
+        ticker_already_held = portfolio_has_ticker(
+            _repository(context).load_portfolio(),
+            args[0],
+        )
+    parsed = _parse_strategy_add_args(
+        args,
+        ticker_already_held=ticker_already_held,
+    )
     if parsed is None:
         await _reply_with_menu(
             update,
@@ -255,7 +280,7 @@ async def add_ticker_strategy_command(
         return
 
     ticker, shares, reasoning = parsed
-    if shares <= 0:
+    if shares is not None and shares <= 0:
         await _reply_with_menu(
             update,
             f"Invalid share count.\n\n{t('add_ticker_strategy_usage', user.language)}",

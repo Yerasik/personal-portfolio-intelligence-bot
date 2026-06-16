@@ -42,6 +42,10 @@ class DataPaths:
     def users(self) -> Path:
         return self.root / "users.json"
 
+    @property
+    def signals(self) -> Path:
+        return self.root / "signals.json"
+
 
 def resolve_data_paths(data_dir: str | Path) -> DataPaths:
     """Build path helpers for the configured data directory."""

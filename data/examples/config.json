@@ -24,6 +24,7 @@
   "news_fetch_interval_minutes": 60,
   "auto_news_interval_minutes": 30,
   "rule_evaluation_interval_minutes": 60,
+  "sentiment_analysis_interval_minutes": 60,
   "enable_daily_summary": true,
   "ollama_base_url": "",
   "ollama_model": "qwen3:30b",

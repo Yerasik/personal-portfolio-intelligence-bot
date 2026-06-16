@@ -154,6 +154,43 @@ def run_test() -> None:
             raise AssertionError("expected on-demand translation after edit")
 
         print("Strategy command checks passed.")
+
+        repository.save_portfolio(
+            Portfolio(positions=[Position(ticker="HOLD", shares=201.0)])
+        )
+        generated_hold = GeneratedStrategy(
+            strategy_text="Updated thesis without changing shares.",
+            announcement_text="",
+        )
+        with patch.object(
+            repository,
+            "add_ticker_to_portfolio",
+        ) as add_mock, patch(
+            "bot.commands.build_strategy_text_by_language",
+            return_value=(generated_hold, {"en": generated_hold.strategy_text}),
+        ), patch.object(
+            commands,
+            "_deliver_alerts_after_portfolio_change",
+        ), patch.object(
+            commands,
+            "_notifier",
+        ) as notifier_factory:
+            notifier_factory.return_value.notify_strategy_content.return_value = 0
+            commands.add_ticker_strategy_message(
+                111,
+                "HOLD",
+                None,
+                "Reasoning that should not add shares.",
+            )
+
+        if add_mock.called:
+            raise AssertionError("add_ticker_to_portfolio must not run for existing holdings")
+        loaded = repository.load_portfolio()
+        hold = next(p for p in loaded.positions if p.ticker == "HOLD")
+        if hold.shares != 201.0:
+            raise AssertionError(f"shares changed unexpectedly: {hold.shares}")
+
+        print("Existing-holding strategy checks passed.")
     finally:
         shutil.rmtree(temp_dir, ignore_errors=True)
 

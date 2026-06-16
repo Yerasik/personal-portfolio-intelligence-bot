@@ -41,7 +41,7 @@ from bot.i18n import SUPPORTED_LANGUAGES, normalize_language, t
 from bot.notifier import TelegramNotifier
 from config.settings import RuntimeSettings
 from storage.models import TickerStrategy, UserRole
-from storage.portfolio_ops import PortfolioTickerResult, normalize_ticker
+from storage.portfolio_ops import PortfolioTickerResult, normalize_ticker, portfolio_has_ticker
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -243,6 +243,8 @@ class BotCommands:
             alerts,
             advisory,
             app_config,
+            portfolio=portfolio,
+            sentiment_by_ticker=self.repository.load_signals().sentiment,
             lang=lang,
             is_developer=self._is_developer(chat_id),
         )
@@ -421,17 +423,45 @@ class BotCommands:
         self,
         chat_id: int,
         ticker: str,
-        shares: float,
+        shares: float | None,
         reasoning: str,
     ) -> str:
-        """Add a holding, generate strategy copy, and notify ordinary users."""
+        """Add a holding or save strategy for an existing one, then notify users."""
         lang = self._lang(chat_id)
         app_config = self.repository.load_config()
-        result = self.repository.add_ticker_to_portfolio(ticker, shares=shares)
-        if not result.success:
-            return t("add_ticker_strategy_fail", lang, message=result.message)
+        portfolio = self.repository.load_portfolio()
+        symbol = normalize_ticker(ticker)
+        is_new_position = not portfolio_has_ticker(portfolio, symbol)
 
-        symbol = result.ticker
+        if is_new_position:
+            add_shares = shares if shares is not None else 1.0
+            result = self.repository.add_ticker_to_portfolio(ticker, shares=add_shares)
+            if not result.success:
+                return t("add_ticker_strategy_fail", lang, message=result.message)
+            position_shares = add_shares
+        else:
+            position = next(
+                (
+                    item
+                    for item in portfolio.positions
+                    if normalize_ticker(item.ticker) == symbol
+                ),
+                None,
+            )
+            if position is None:
+                return t(
+                    "add_ticker_strategy_fail",
+                    lang,
+                    message=f"{symbol} is not in the portfolio.",
+                )
+            result = PortfolioTickerResult(
+                True,
+                f"Saved strategy for {symbol}.",
+                symbol,
+                is_new_position=False,
+            )
+            position_shares = position.shares
+
         state = self.repository.load_state()
         quote = state.latest_prices.get(symbol)
         company_name = quote.company_name if quote is not None else ""
@@ -443,25 +473,35 @@ class BotCommands:
             self.llm,
             symbol,
             reasoning,
-            shares=shares,
+            shares=position_shares,
             company_name=company_name,
             languages=user_languages,
             enabled=app_config.enable_llm_summaries,
+        )
+        existing_strategy = self.repository.get_ticker_strategy(symbol)
+        shares_at_add = (
+            (shares if shares is not None else 1.0)
+            if is_new_position
+            else (
+                existing_strategy.shares_at_add
+                if existing_strategy is not None and existing_strategy.shares_at_add is not None
+                else position_shares
+            )
         )
         self.repository.upsert_ticker_strategy(
             symbol,
             developer_reasoning=reasoning,
             strategy_text=generated.strategy_text,
-            shares_at_add=shares,
+            shares_at_add=shares_at_add,
             strategy_text_by_language=by_language,
         )
 
         notified = 0
-        if result.is_new_position:
+        if is_new_position:
             localized_for_notify = by_language.get("en", generated.strategy_text)
             notified = self._notify_ordinary_strategy_announcement(
                 symbol,
-                shares,
+                position_shares,
                 announcement_en=generated.announcement_text,
                 strategy_text_by_language=by_language,
                 strategy_text=localized_for_notify,
@@ -474,7 +514,6 @@ class BotCommands:
             self._deliver_alerts_after_portfolio_change()
             return t(key, lang, symbol=symbol, count=notified)
 
-        notified += self._notify_ordinary_portfolio_add(result, shares_added=shares)
         notified += self._notifier().notify_strategy_content(
             self.repository,
             symbol=symbol,

@@ -13,6 +13,7 @@ from storage.models import (
     BotUsers,
     NewsCache,
     Portfolio,
+    SignalsFile,
     TickerIndustryMap,
     TickerMetadata,
     TickerStrategies,
@@ -126,6 +127,14 @@ class DataRepository:
     def save_news_cache(self, cache: NewsCache) -> None:
         """Write data/news_cache.json atomically."""
         self._store.write_model(self._paths.news_cache, cache)
+
+    def load_signals(self) -> SignalsFile:
+        """Read derived signals from data/signals.json."""
+        return self._store.read_model(self._paths.signals, SignalsFile)
+
+    def save_signals(self, signals: SignalsFile) -> None:
+        """Write data/signals.json atomically."""
+        self._store.write_model(self._paths.signals, signals)
 
     def load_ticker_industries(self) -> TickerIndustryMap:
         """Read static ticker-to-industry mappings from data/ticker_industries.json."""
