@@ -10,6 +10,9 @@ build/
 .venv/
 venv/
 logs/*.log
+
+# Live bot data (holdings, Telegram chat IDs, strategies, runtime cache)
+data/*.json
 data/*.lock
 data/*.tmp
 .pytest_cache/

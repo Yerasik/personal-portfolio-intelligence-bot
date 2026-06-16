@@ -1,0 +1,11 @@
+{
+  "positions": [
+    {
+      "ticker": "AAPL",
+      "shares": 10.0,
+      "cost_basis": 150.0,
+      "notes": ""
+    }
+  ],
+  "notes": ""
+}

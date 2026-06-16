@@ -1,0 +1,7 @@
+{
+  "ticker_to_industry": {
+    "AAPL": "Consumer Electronics",
+    "MSFT": "Software - Infrastructure",
+    "NVDA": "US Semiconductors"
+  }
+}

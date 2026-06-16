@@ -1,0 +1,7 @@
+{
+  "ticker_to_company_name": {
+    "AAPL": "Apple Inc.",
+    "MSFT": "Microsoft Corporation",
+    "NVDA": "NVIDIA Corporation"
+  }
+}

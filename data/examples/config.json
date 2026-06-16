@@ -1,0 +1,31 @@
+{
+  "timezone": "Asia/Hong_Kong",
+  "digest_hour": 8,
+  "digest_minute": 0,
+  "focus_industries": [
+    "AI",
+    "Hong Kong"
+  ],
+  "sector_keywords": {},
+  "extra_watchlist": [],
+  "rss_feed_urls": [
+    "https://feeds.reuters.com/reuters/businessNews",
+    "https://techcrunch.com/feed/"
+  ],
+  "news_max_items": 500,
+  "news_retention_days": 14,
+  "alert_price_change_pct": 5.0,
+  "alert_negative_news_count": 3,
+  "alert_negative_news_window_hours": 24,
+  "alert_sector_article_count": 3,
+  "alert_sector_window_hours": 24,
+  "alert_suppression_hours": 12,
+  "market_fetch_interval_minutes": 30,
+  "news_fetch_interval_minutes": 60,
+  "auto_news_interval_minutes": 30,
+  "rule_evaluation_interval_minutes": 60,
+  "enable_daily_summary": true,
+  "ollama_base_url": "",
+  "ollama_model": "qwen3:30b",
+  "enable_llm_summaries": false
+}

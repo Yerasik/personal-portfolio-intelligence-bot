@@ -255,6 +255,7 @@ class TelegramNotifier:
             return False
 
         summaries = news_summary_by_language or {}
+        state = repository.load_state()
         delivered = False
         for user in users:
             lang = user.language
@@ -264,6 +265,7 @@ class TelegramNotifier:
                 advisory_by_language.get(lang),
                 app_config,
                 news_summary=summaries.get(lang),
+                state=state,
                 lang=lang,
             )
             try:

@@ -10,6 +10,12 @@ from collections.abc import Iterator
 from analysis.llm import LlmAdvisoryResult
 from analysis.move_explainer import PriceMoveExplanation
 from analysis.news_summarizer import NewsGroupSummary, NewsSummary
+from analysis.portfolio_valuation import (
+    PositionValuation,
+    PortfolioValuation,
+    build_portfolio_valuation,
+    infer_quote_currency,
+)
 from analysis.rules import AlertCandidate
 from bot.i18n import t
 from storage.models import (
@@ -282,6 +288,57 @@ def format_news_summary(news_summary: NewsSummary, *, lang: str = "en") -> str:
     return "\n\n".join(format_news_summary_messages(news_summary, lang=lang))
 
 
+def _append_hkd_valuation_lines(
+    lines: list[str],
+    valuation: PositionValuation,
+    lang: str,
+    *,
+    include_weight: bool = True,
+) -> None:
+    """Append HKD value, weight, and P/L lines for one holding."""
+    if valuation.market_value_hkd is not None:
+        lines.append(
+            t("portfolio_value_hkd", lang, value=valuation.market_value_hkd)
+        )
+    if include_weight and valuation.weight_pct is not None:
+        lines.append(t("portfolio_weight", lang, weight=valuation.weight_pct))
+    if valuation.pl_hkd is not None and valuation.pl_pct is not None:
+        lines.append(
+            t(
+                "portfolio_pl_hkd",
+                lang,
+                amount=valuation.pl_hkd,
+                pct=valuation.pl_pct,
+            )
+        )
+
+
+def _append_portfolio_totals_hkd(
+    lines: list[str],
+    valuation: PortfolioValuation,
+    lang: str,
+) -> None:
+    """Append portfolio-wide HKD totals."""
+    lines.append(
+        t(
+            "portfolio_total_value_hkd",
+            lang,
+            value=valuation.total_market_value_hkd,
+        )
+    )
+    if valuation.total_pl_hkd is not None and valuation.total_pl_pct is not None:
+        lines.append(
+            t(
+                "portfolio_total_pl_hkd",
+                lang,
+                amount=valuation.total_pl_hkd,
+                pct=valuation.total_pl_pct,
+            )
+        )
+    elif any(position.cost_value_hkd is None for position in valuation.positions):
+        lines.append(t("portfolio_total_pl_partial", lang))
+
+
 def format_daily_summary(
     portfolio: Portfolio,
     alerts: list[AlertCandidate],
@@ -289,6 +346,7 @@ def format_daily_summary(
     app_config: AppConfig,
     news_summary: NewsSummary | None = None,
     *,
+    state: BotState | None = None,
     lang: str = "en",
 ) -> str:
     """Format a concise daily summary for Telegram delivery."""
@@ -301,8 +359,28 @@ def format_daily_summary(
             holdings=len(portfolio.positions),
             alerts=len(alerts),
         ),
-        "",
     ]
+
+    if state is not None and portfolio.positions:
+        valuation = build_portfolio_valuation(portfolio, state)
+        lines.append(
+            t(
+                "daily_portfolio_value_hkd",
+                lang,
+                value=valuation.total_market_value_hkd,
+            )
+        )
+        if valuation.total_pl_hkd is not None and valuation.total_pl_pct is not None:
+            lines.append(
+                t(
+                    "daily_portfolio_pl_hkd",
+                    lang,
+                    amount=valuation.total_pl_hkd,
+                    pct=valuation.total_pl_pct,
+                )
+            )
+
+    lines.append("")
 
     if alerts:
         lines.append(t("alerts_header", lang))
@@ -360,6 +438,9 @@ def format_portfolio(
         key = "portfolio_empty_dev" if is_developer else "portfolio_empty"
         return t(key, lang)
 
+    valuation = build_portfolio_valuation(portfolio, state)
+    by_ticker = {item.ticker: item for item in valuation.positions}
+
     lines = [t("portfolio_header", lang, count=len(portfolio.positions)), ""]
     for position in portfolio.positions:
         symbol = position.ticker.strip().upper()
@@ -372,6 +453,7 @@ def format_portfolio(
             )
 
         quote = state.latest_prices.get(symbol)
+        position_value = by_ticker.get(symbol)
         if quote is None or quote.price is None:
             lines.append(t("portfolio_price_unavailable", lang))
         else:
@@ -381,11 +463,13 @@ def format_portfolio(
                 else "n/a"
             )
             label = quote.company_name or symbol
+            currency = infer_quote_currency(quote, symbol)
             lines.append(
                 t(
-                    "portfolio_last_price",
+                    "portfolio_last_price_ccy",
                     lang,
                     price=quote.price,
+                    currency=currency,
                     change=change,
                 )
             )
@@ -407,6 +491,8 @@ def format_portfolio(
                             date=_format_user_date(quote.fetched_at),
                         )
                     )
+        if position_value is not None:
+            _append_hkd_valuation_lines(lines, position_value, lang)
         if position.notes:
             lines.append(
                 t("portfolio_position_notes", lang, notes=position.notes)
@@ -415,6 +501,9 @@ def format_portfolio(
 
     if portfolio.notes:
         lines.extend([t("portfolio_notes_header", lang), portfolio.notes])
+
+    lines.append("")
+    _append_portfolio_totals_hkd(lines, valuation, lang)
 
     if state.last_market_fetch_at:
         if is_developer:
@@ -552,6 +641,7 @@ def format_ticker_analysis(
     explanation: PriceMoveExplanation | None,
     app_config: AppConfig,
     *,
+    position_valuation: PositionValuation | None = None,
     lang: str = "en",
     is_developer: bool = False,
 ) -> str:
@@ -569,15 +659,35 @@ def format_ticker_analysis(
     )
     label = quote.company_name or symbol
     lines.append(t("ticker_company", lang, name=label))
+    currency = infer_quote_currency(quote, symbol)
     lines.append(
         t(
-            "ticker_last_price",
+            "ticker_last_price_ccy",
             lang,
             price=quote.price,
+            currency=currency,
             change=change,
             window=window,
         )
     )
+    if position_valuation is not None and position_valuation.market_value_hkd is not None:
+        lines.append(
+            t(
+                "ticker_value_hkd",
+                lang,
+                shares=position_valuation.shares,
+                value=position_valuation.market_value_hkd,
+            )
+        )
+        if position_valuation.pl_hkd is not None and position_valuation.pl_pct is not None:
+            lines.append(
+                t(
+                    "ticker_pl_hkd",
+                    lang,
+                    amount=position_valuation.pl_hkd,
+                    pct=position_valuation.pl_pct,
+                )
+            )
     if quote.sector:
         lines.append(t("ticker_sector", lang, sector=quote.sector))
     lines.append("")

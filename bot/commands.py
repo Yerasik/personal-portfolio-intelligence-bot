@@ -21,6 +21,7 @@ from analysis.strategy_writer import (
     localized_strategy_text,
 )
 from analysis.news_summarizer import iter_news_summary_groups
+from analysis.portfolio_valuation import valuation_for_ticker
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
@@ -296,10 +297,12 @@ class BotCommands:
         lang = self._lang(chat_id)
         symbol = ticker.strip().upper()
         app_config = self.repository.load_config()
+        portfolio = self.repository.load_portfolio()
         state = self.repository.load_state()
         news_cache = self.repository.load_news_cache()
 
         quote = state.latest_prices.get(symbol)
+        position_value = valuation_for_ticker(portfolio, state, symbol)
 
         explanation: PriceMoveExplanation | None = None
         if (
@@ -325,6 +328,7 @@ class BotCommands:
             window,
             explanation,
             app_config,
+            position_valuation=position_value,
             lang=lang,
             is_developer=self._is_developer(chat_id),
         )

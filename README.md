@@ -66,6 +66,8 @@ The app **exits immediately** if `TELEGRAM_BOT_TOKEN` or `TELEGRAM_CHAT_ID` is m
 
 ### 2. Configure portfolio data
 
+**Git:** live `data/*.json` files are gitignored (holdings, Telegram chat IDs, strategies, caches). Use `data/examples/` as templates — on a fresh clone run `cp data/examples/*.json data/` then edit locally.
+
 Edit files under `data/` on the host (mounted into the container):
 
 | File | Purpose |
