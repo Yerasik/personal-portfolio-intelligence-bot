@@ -17,13 +17,14 @@ from analysis.news_summarizer import (
     build_ticker_summary_prompt,
     news_items_for_sector,
     news_items_for_ticker,
+    summarize_daily_news_brief,
     summarize_news,
 )
-from bot.formatter import format_news_summary
+from bot.formatter import format_news_summary, format_news_summary_messages
 from bot.i18n import t
 from storage.models import AppConfig, NewsCache, NewsItem, Portfolio, Position
 
-NOW = datetime(2026, 6, 8, 12, 0, tzinfo=UTC)
+NOW = datetime.now(tz=UTC)
 
 
 class FakeLlm:
@@ -151,8 +152,30 @@ def run_test() -> None:
     )
     if "News by sector" not in rendered or "News by ticker" not in rendered:
         raise AssertionError(f"formatter missing sections: {rendered}")
-    if len(rendered) > 4096:
-        raise AssertionError("formatted message exceeds Telegram limit")
+
+    chunks = format_news_summary_messages(
+        NewsSummary(
+            sector_summaries={"AI": "AI theme summary."},
+            ticker_summaries={"AAPL": "Apple product news."},
+        )
+    )
+    if len(chunks) < 4:
+        raise AssertionError(f"expected multiple messages, got {len(chunks)}")
+    if any(len(chunk) > 4096 for chunk in chunks):
+        raise AssertionError("a split message exceeds Telegram limit")
+
+    daily_brief = summarize_daily_news_brief(
+        llm,
+        portfolio,
+        config,
+        cache,
+        mapping,
+        company_names={"NVDA": "NVIDIA Corporation"},
+    )
+    if daily_brief.sector_summaries:
+        raise AssertionError("daily brief should not include sectors")
+    if "AAPL" not in daily_brief.ticker_summaries:
+        raise AssertionError("daily brief should include AAPL ticker news")
 
     print("News summarizer checks passed.")
 

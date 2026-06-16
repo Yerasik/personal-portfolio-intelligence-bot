@@ -4,33 +4,45 @@
       "ticker": "VRT",
       "developer_reasoning": "Я думаю что инфраструктура для искусственного интеллекта будет развиваться быстро до IPO больших компаний ( Anthropic and OpenAI ), так что можно вложить в развитие дата центров до конца их гонки IPO.",
       "strategy_text": "The AI infrastructure sector, particularly data centers, may see accelerated demand as leading AI firms like Anthropic and OpenAI scale operations ahead of potential IPOs. Vertiv's role in providing critical infrastructure could align with this trend, though investors should monitor AI company expansion timelines and Vertiv's contract wins tied to AI clients. Key metrics include data center capacity growth and AI-driven revenue contributions.",
+      "strategy_text_by_language": {
+        "en": "The AI infrastructure sector, particularly data centers, may see accelerated demand as leading AI firms like Anthropic and OpenAI scale operations ahead of potential IPOs. Vertiv's role in providing critical infrastructure could align with this trend, though investors should monitor AI company expansion timelines and Vertiv's contract wins tied to AI clients. Key metrics include data center capacity growth and AI-driven revenue contributions."
+      },
       "shares_at_add": 1.0,
       "created_at": "2026-06-16T02:20:12.266558Z",
-      "updated_at": "2026-06-16T02:20:12.266558Z"
+      "updated_at": "2026-06-16T03:14:40.554006Z"
     },
     "9988.HK": {
       "ticker": "9988.HK",
       "developer_reasoning": "После добавление компании в черный лист Пентагона акции упали сильно. Однако думаю что компания одна из важнейших компаний на рынке Китая, так что уена акции должна вернуться к своей стоимости. Таргет цена 120+. Думаю такие компании как alibaba должны тоже в скором времени либо прямо либо косвенно поучаствовать в гонке AI.",
       "strategy_text": "Following the Pentagon blacklist inclusion, the stock experienced a sharp decline. The company's strategic role in China's market suggests the current price may reflect temporary sentiment rather than fundamental value. Monitor regulatory developments and AI sector trends for potential valuation alignment.",
+      "strategy_text_by_language": {
+        "en": "Following the Pentagon blacklist inclusion, the stock experienced a sharp decline. The company's strategic role in China's market suggests the current price may reflect temporary sentiment rather than fundamental value. Monitor regulatory developments and AI sector trends for potential valuation alignment."
+      },
       "shares_at_add": 1.0,
       "created_at": "2026-06-16T02:21:19.970878Z",
-      "updated_at": "2026-06-16T02:21:19.970878Z"
+      "updated_at": "2026-06-16T03:14:40.552112Z"
     },
     "1810.HK": {
       "ticker": "1810.HK",
       "developer_reasoning": "думаю компания потеряла деньги из-за войны и других ограничений связанных с геополитикой. Так как сейчас можно ожидать более мирную обстановку, можно ожидать рост компании.",
       "strategy_text": "Xiaomi has faced operational and financial pressures linked to geopolitical tensions, particularly in key international markets. A stabilization in global relations could support improved business performance. Investors should monitor geopolitical developments and Xiaomi's market dynamics in affected regions.",
+      "strategy_text_by_language": {
+        "en": "Xiaomi has faced operational and financial pressures linked to geopolitical tensions, particularly in key international markets. A stabilization in global relations could support improved business performance. Investors should monitor geopolitical developments and Xiaomi's market dynamics in affected regions."
+      },
       "shares_at_add": 1.0,
       "created_at": "2026-06-16T02:24:03.947352Z",
-      "updated_at": "2026-06-16T02:24:03.947352Z"
+      "updated_at": "2026-06-16T03:14:40.549483Z"
     },
     "6082.HK": {
       "ticker": "6082.HK",
       "developer_reasoning": "Думаю также с ростом спроса на AI возрастет спрос ра производителей чипов для данной технологии. Соотвественно частные производители должны набрать свою стоимость.",
       "strategy_text": "Rising AI adoption may increase demand for semiconductor manufacturers, potentially supporting value growth among private chip producers. Investors should review this trend alongside sector dynamics, technological advancements, and company-specific fundamentals to assess its relevance to their portfolio strategy.",
+      "strategy_text_by_language": {
+        "en": "Rising AI adoption may increase demand for semiconductor manufacturers, potentially supporting value growth among private chip producers. Investors should review this trend alongside sector dynamics, technological advancements, and company-specific fundamentals to assess its relevance to their portfolio strategy."
+      },
       "shares_at_add": 1.0,
       "created_at": "2026-06-16T02:25:26.492741Z",
-      "updated_at": "2026-06-16T02:25:26.492741Z"
+      "updated_at": "2026-06-16T03:14:40.546105Z"
     }
   }
 }

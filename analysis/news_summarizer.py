@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import logging
+from collections.abc import Iterator
 from dataclasses import dataclass
+from datetime import datetime
 from typing import TYPE_CHECKING, Any, Literal
 
 from analysis.industries import build_news_focus_industries
+from analysis.news_selection import select_news_for_summary
 from collectors.market_data import portfolio_tickers
 from storage.models import AppConfig, NewsCache, NewsItem, Portfolio
 
@@ -15,9 +18,11 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-MAX_ITEMS_PER_GROUP = 8
+MAX_ITEMS_PER_GROUP = 5
+MAX_DAILY_ITEMS_PER_TICKER = 3
 _SUMMARY_CLIP = 200
 MAX_SUMMARY_CHARS = 1200
+MAX_DAILY_SUMMARY_CHARS = 500
 
 SummarySource = Literal["llm", "fallback", "disabled"]
 
@@ -85,6 +90,15 @@ class NewsSummary:
     source: SummarySource = "llm"
 
 
+@dataclass(frozen=True)
+class NewsGroupSummary:
+    """One sector or ticker block produced by the LLM."""
+
+    kind: Literal["sector", "ticker"]
+    label: str
+    text: str
+
+
 def _item_timestamp(item: NewsItem) -> Any:
     return item.published_at or item.fetched_at
 
@@ -97,24 +111,51 @@ def _format_item_line(item: NewsItem) -> str:
     return item.title
 
 
-def news_items_for_sector(news_cache: NewsCache, sector: str) -> list[NewsItem]:
-    """Return recent news tagged with the given sector label."""
+def news_items_for_sector(
+    news_cache: NewsCache,
+    sector: str,
+    *,
+    window_hours: int = 48,
+    exclude_fingerprints: set[str] | None = None,
+    now: datetime | None = None,
+) -> list[NewsItem]:
+    """Return deduplicated recent news for a sector."""
     label = sector.strip()
     if not label:
         return []
     matched = [item for item in news_cache.items if label in item.sector_tags]
-    matched.sort(key=_item_timestamp, reverse=True)
-    return matched[:MAX_ITEMS_PER_GROUP]
+    selected, _fingerprints = select_news_for_summary(
+        matched,
+        max_items=MAX_ITEMS_PER_GROUP,
+        window_hours=window_hours,
+        exclude_fingerprints=exclude_fingerprints,
+        now=now,
+    )
+    return selected
 
 
-def news_items_for_ticker(news_cache: NewsCache, ticker: str) -> list[NewsItem]:
-    """Return recent news tagged with the given ticker symbol."""
+def news_items_for_ticker(
+    news_cache: NewsCache,
+    ticker: str,
+    *,
+    window_hours: int = 48,
+    exclude_fingerprints: set[str] | None = None,
+    now: datetime | None = None,
+    max_items: int = MAX_ITEMS_PER_GROUP,
+) -> list[NewsItem]:
+    """Return deduplicated recent news for a portfolio ticker."""
     symbol = ticker.strip().upper()
     if not symbol:
         return []
     matched = [item for item in news_cache.items if symbol in item.ticker_tags]
-    matched.sort(key=_item_timestamp, reverse=True)
-    return matched[:MAX_ITEMS_PER_GROUP]
+    selected, _ = select_news_for_summary(
+        matched,
+        max_items=max_items,
+        window_hours=window_hours,
+        exclude_fingerprints=exclude_fingerprints,
+        now=now,
+    )
+    return selected
 
 
 def build_sector_summary_prompt(
@@ -156,11 +197,11 @@ def build_ticker_summary_prompt(
     )
 
 
-def _clip_summary(text: str) -> str:
+def _clip_summary(text: str, *, max_chars: int = MAX_SUMMARY_CHARS) -> str:
     cleaned = text.strip()
-    if len(cleaned) <= MAX_SUMMARY_CHARS:
+    if len(cleaned) <= max_chars:
         return cleaned
-    return cleaned[: MAX_SUMMARY_CHARS - 20].rstrip() + "\n…(truncated)"
+    return cleaned[: max_chars - 20].rstrip() + "\n…(truncated)"
 
 
 def _deterministic_fallback(
@@ -188,6 +229,7 @@ def _summarize_group(
     label: str,
     items: list[NewsItem],
     language: str = "en",
+    max_chars: int = MAX_SUMMARY_CHARS,
 ) -> str:
     """Call the LLM for one group; fall back to headlines on failure."""
     if not getattr(llm, "is_configured", False):
@@ -197,10 +239,99 @@ def _summarize_group(
         response = llm.generate(prompt)
         if not response.strip():
             return _deterministic_fallback(label, items, language=language)
-        return _clip_summary(response)
+        return _clip_summary(response, max_chars=max_chars)
     except Exception as exc:
         logger.warning("News summary failed for %s: %s", label, exc)
         return _deterministic_fallback(label, items, language=language)
+
+
+def iter_news_summary_groups(
+    llm: LlmClient,
+    portfolio: Portfolio,
+    app_config: AppConfig,
+    news_cache: NewsCache,
+    ticker_to_industry: dict[str, str],
+    *,
+    company_names: dict[str, str] | None = None,
+    enabled: bool = True,
+    language: str = "en",
+) -> Iterator[NewsGroupSummary]:
+    """Yield one sector/ticker summary at a time as the LLM finishes each group."""
+    from bot.i18n import t
+
+    names = company_names or {}
+    focus_industries = build_news_focus_industries(
+        app_config.focus_industries,
+        portfolio,
+        ticker_to_industry,
+    )
+    tickers = portfolio_tickers(portfolio)
+
+    if not enabled:
+        disabled_message = t(_LLM_DISABLED_KEY, language)
+        for sector in focus_industries:
+            yield NewsGroupSummary("sector", sector, disabled_message)
+        for symbol in tickers:
+            yield NewsGroupSummary("ticker", symbol, disabled_message)
+        return
+
+    seen_fingerprints: set[str] = set()
+    window_hours = app_config.alert_sector_window_hours
+
+    for sector in focus_industries:
+        matched = [item for item in news_cache.items if sector in item.sector_tags]
+        items, new_fingerprints = select_news_for_summary(
+            matched,
+            max_items=MAX_ITEMS_PER_GROUP,
+            window_hours=window_hours,
+            exclude_fingerprints=seen_fingerprints,
+        )
+        if not items:
+            yield NewsGroupSummary("sector", sector, t(_NO_SECTOR_NEWS_KEY, language))
+            continue
+        seen_fingerprints |= new_fingerprints
+        prompt = build_sector_summary_prompt(sector, items, language=language)
+        yield NewsGroupSummary(
+            "sector",
+            sector,
+            _summarize_group(
+                llm,
+                prompt,
+                label=sector,
+                items=items,
+                language=language,
+            ),
+        )
+
+    for symbol in tickers:
+        matched = [item for item in news_cache.items if symbol in item.ticker_tags]
+        items, new_fingerprints = select_news_for_summary(
+            matched,
+            max_items=MAX_ITEMS_PER_GROUP,
+            window_hours=window_hours,
+            exclude_fingerprints=seen_fingerprints,
+        )
+        if not items:
+            yield NewsGroupSummary("ticker", symbol, t(_NO_TICKER_NEWS_KEY, language))
+            continue
+        seen_fingerprints |= new_fingerprints
+        prompt = build_ticker_summary_prompt(
+            symbol,
+            names.get(symbol, ""),
+            items,
+            language=language,
+        )
+        yield NewsGroupSummary(
+            "ticker",
+            symbol,
+            _summarize_group(
+                llm,
+                prompt,
+                label=symbol,
+                items=items,
+                language=language,
+            ),
+        )
 
 
 def summarize_news(
@@ -215,44 +346,61 @@ def summarize_news(
     language: str = "en",
 ) -> NewsSummary:
     """Produce sector- and ticker-level summaries from the news cache."""
-    from bot.i18n import t
+    sector_summaries: dict[str, str] = {}
+    ticker_summaries: dict[str, str] = {}
+    source: SummarySource = "disabled" if not enabled else "llm"
 
-    names = company_names or {}
-    focus_industries = build_news_focus_industries(
-        app_config.focus_industries,
+    for group in iter_news_summary_groups(
+        llm,
         portfolio,
+        app_config,
+        news_cache,
         ticker_to_industry,
+        company_names=company_names,
+        enabled=enabled,
+        language=language,
+    ):
+        if group.kind == "sector":
+            sector_summaries[group.label] = group.text
+        else:
+            ticker_summaries[group.label] = group.text
+
+    return NewsSummary(
+        sector_summaries=sector_summaries,
+        ticker_summaries=ticker_summaries,
+        source=source,
     )
+
+
+def summarize_daily_news_brief(
+    llm: LlmClient,
+    portfolio: Portfolio,
+    app_config: AppConfig,
+    news_cache: NewsCache,
+    ticker_to_industry: dict[str, str],
+    *,
+    company_names: dict[str, str] | None = None,
+    enabled: bool = True,
+    language: str = "en",
+) -> NewsSummary:
+    """Short ticker-only news digest for the daily summary (top headlines per holding)."""
+    _ = app_config, ticker_to_industry
+    names = company_names or {}
     tickers = portfolio_tickers(portfolio)
 
     if not enabled:
-        disabled_message = t(_LLM_DISABLED_KEY, language)
-        return NewsSummary(
-            sector_summaries={s: disabled_message for s in focus_industries},
-            ticker_summaries={ticker: disabled_message for ticker in tickers},
-            source="disabled",
-        )
-
-    sector_summaries: dict[str, str] = {}
-    for sector in focus_industries:
-        items = news_items_for_sector(news_cache, sector)
-        if not items:
-            sector_summaries[sector] = t(_NO_SECTOR_NEWS_KEY, language)
-            continue
-        prompt = build_sector_summary_prompt(sector, items, language=language)
-        sector_summaries[sector] = _summarize_group(
-            llm,
-            prompt,
-            label=sector,
-            items=items,
-            language=language,
-        )
+        return NewsSummary(sector_summaries={}, ticker_summaries={}, source="disabled")
 
     ticker_summaries: dict[str, str] = {}
+    window_hours = app_config.alert_sector_window_hours
     for symbol in tickers:
-        items = news_items_for_ticker(news_cache, symbol)
+        items = news_items_for_ticker(
+            news_cache,
+            symbol,
+            window_hours=window_hours,
+            max_items=MAX_DAILY_ITEMS_PER_TICKER,
+        )
         if not items:
-            ticker_summaries[symbol] = t(_NO_TICKER_NEWS_KEY, language)
             continue
         prompt = build_ticker_summary_prompt(
             symbol,
@@ -266,10 +414,11 @@ def summarize_news(
             label=symbol,
             items=items,
             language=language,
+            max_chars=MAX_DAILY_SUMMARY_CHARS,
         )
 
     return NewsSummary(
-        sector_summaries=sector_summaries,
+        sector_summaries={},
         ticker_summaries=ticker_summaries,
         source="llm",
     )

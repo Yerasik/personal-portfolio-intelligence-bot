@@ -14,6 +14,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
 from bot.commands import BotCommands
+from bot.formatter import truncate_message
 from bot.i18n import normalize_language, t
 from bot.menu import main_menu_keyboard, setup_user_telegram_menu
 from storage.models import BotUser, UserRole
@@ -174,13 +175,21 @@ async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 async def news_summary_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /news_summary — LLM summaries of cached news by sector and ticker."""
+    """Handle /news_summary — stream LLM summaries as each group completes."""
     user = await _guard(update, context)
     if user is None or update.message is None:
         return
-    await update.message.reply_text(
-        _commands(context).news_summary_message(user.chat_id)
-    )
+
+    footer = t("news_footer", user.language)
+    pending: str | None = None
+    for message in _commands(context).iter_news_summary_messages(user.chat_id):
+        if pending is not None:
+            await update.message.reply_text(pending)
+        pending = message
+
+    if pending is None:
+        return
+    await update.message.reply_text(truncate_message(f"{pending}\n\n{footer}"))
 
 
 _ADD_TICKER_USAGE = (

@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from datetime import datetime
 
+from collections.abc import Iterator
+
 from analysis.llm import LlmAdvisoryResult
 from analysis.move_explainer import PriceMoveExplanation
-from analysis.news_summarizer import NewsSummary
+from analysis.news_summarizer import NewsGroupSummary, NewsSummary
 from analysis.rules import AlertCandidate
 from bot.i18n import t
 from storage.models import (
@@ -195,12 +197,88 @@ def _append_news_summary_sections(
             lines.append("")
 
 
+def format_daily_news_brief(
+    news_summary: NewsSummary | None,
+    *,
+    lang: str = "en",
+) -> str:
+    """Render a compact ticker-news block for the daily digest."""
+    if news_summary is None or not news_summary.ticker_summaries:
+        return ""
+
+    lines = [t("daily_news_brief_title", lang), ""]
+    for ticker, summary in news_summary.ticker_summaries.items():
+        lines.append(f"{ticker}:")
+        lines.append(summary)
+        lines.append("")
+    return "\n".join(lines).strip()
+
+
+def _format_news_group_message(label: str, summary: str) -> str:
+    """Format one sector or ticker summary block."""
+    return truncate_message(f"{label}:\n{summary}")
+
+
+def iter_format_news_summary_messages(
+    groups: Iterator[NewsGroupSummary],
+    *,
+    lang: str = "en",
+) -> Iterator[str]:
+    """Yield Telegram messages for /news_summary as each group is ready."""
+    yield t("news_summary_title", lang)
+
+    sector_header_sent = False
+    ticker_header_sent = False
+    content_count = 0
+
+    for group in groups:
+        if group.kind == "sector":
+            if not sector_header_sent:
+                yield t("news_by_sector", lang)
+                sector_header_sent = True
+            yield _format_news_group_message(group.label, group.text)
+            content_count += 1
+            continue
+
+        if not ticker_header_sent:
+            yield t("news_by_ticker", lang)
+            ticker_header_sent = True
+        yield _format_news_group_message(group.label, group.text)
+        content_count += 1
+
+    if content_count == 0:
+        yield t("news_summary_empty", lang)
+
+
+def format_news_summary_messages(
+    news_summary: NewsSummary,
+    *,
+    lang: str = "en",
+) -> list[str]:
+    """Split /news_summary output into multiple Telegram-sized messages."""
+    messages: list[str] = [t("news_summary_title", lang)]
+
+    if news_summary.sector_summaries:
+        messages.append(t("news_by_sector", lang))
+        for sector, summary in news_summary.sector_summaries.items():
+            messages.append(_format_news_group_message(sector, summary))
+
+    if news_summary.ticker_summaries:
+        messages.append(t("news_by_ticker", lang))
+        for ticker, summary in news_summary.ticker_summaries.items():
+            messages.append(_format_news_group_message(ticker, summary))
+
+    if len(messages) == 1:
+        messages.append(t("news_summary_empty", lang))
+
+    footer = t("news_footer", lang)
+    messages[-1] = truncate_message(f"{messages[-1]}\n\n{footer}")
+    return messages
+
+
 def format_news_summary(news_summary: NewsSummary, *, lang: str = "en") -> str:
-    """Render on-demand /news_summary output."""
-    lines = [t("news_summary_title", lang), ""]
-    _append_news_summary_sections(lines, news_summary, lang=lang)
-    lines.append(t("news_footer", lang))
-    return truncate_message("\n".join(lines).strip())
+    """Render on-demand /news_summary output as a single string (tests/helpers)."""
+    return "\n\n".join(format_news_summary_messages(news_summary, lang=lang))
 
 
 def format_daily_summary(
@@ -213,6 +291,7 @@ def format_daily_summary(
     lang: str = "en",
 ) -> str:
     """Format a concise daily summary for Telegram delivery."""
+    _ = advisory, app_config
     lines = [
         t("daily_summary", lang),
         t(
@@ -226,21 +305,15 @@ def format_daily_summary(
 
     if alerts:
         lines.append(t("alerts_header", lang))
-        for alert in alerts[:5]:
+        for alert in alerts[:3]:
             lines.append(_localized_alert_line(alert, lang))
-        if len(alerts) > 5:
-            lines.append(t("plus_more", lang, count=len(alerts) - 5))
+        if len(alerts) > 3:
+            lines.append(t("plus_more", lang, count=len(alerts) - 3))
         lines.append("")
 
-    if app_config.enable_llm_summaries and advisory is not None:
-        lines.extend([t("advisory", lang), advisory.summary])
-        if advisory.suggested_actions:
-            actions = "; ".join(advisory.suggested_actions[:3])
-            lines.append(f"{t('actions', lang)} {actions}")
-        lines.append("")
-
-    if news_summary is not None:
-        _append_news_summary_sections(lines, news_summary, lang=lang)
+    brief = format_daily_news_brief(news_summary, lang=lang)
+    if brief:
+        lines.extend(["", brief])
 
     lines.append(t("advisory_footer", lang))
     return truncate_message("\n".join(lines))

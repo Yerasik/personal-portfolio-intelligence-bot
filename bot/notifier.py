@@ -10,7 +10,7 @@ import httpx
 
 from analysis.llm import LlmAdvisoryResult, LlmClient
 from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
-from analysis.news_summarizer import NewsSummary, summarize_news
+from analysis.news_summarizer import NewsSummary, summarize_daily_news_brief, summarize_news
 from analysis.rules import AlertCandidate
 from bot.formatter import format_daily_summary, format_strategy_announcement, format_urgent_alert
 from config.settings import RuntimeSettings
@@ -346,7 +346,7 @@ def build_localized_daily_content(
             )
         else:
             advisory_by_language[lang] = None
-        news_summary_by_language[lang] = summarize_news(
+        news_summary_by_language[lang] = summarize_daily_news_brief(
             llm,
             portfolio,
             app_config,

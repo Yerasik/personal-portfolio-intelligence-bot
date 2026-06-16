@@ -19,18 +19,21 @@ from analysis.strategy_writer import (
     build_strategy_text_by_language,
     localized_strategy_text,
 )
-from analysis.news_summarizer import summarize_news
+from analysis.news_summarizer import iter_news_summary_groups
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
     format_help,
     format_industries,
     format_news_summary,
+    format_news_summary_messages,
     format_portfolio,
     format_start,
     format_strategy_detail,
     format_strategy_list,
     format_ticker_analysis,
+    iter_format_news_summary_messages,
+    truncate_message,
 )
 from bot.i18n import SUPPORTED_LANGUAGES, normalize_language, t
 from bot.notifier import TelegramNotifier
@@ -137,8 +140,8 @@ class BotCommands:
             is_developer=self._is_developer(chat_id),
         )
 
-    def news_summary_message(self, chat_id: int) -> str:
-        """Summarize cached news by sector and portfolio ticker via the LLM."""
+    def iter_news_summary_messages(self, chat_id: int):
+        """Stream cached news summaries one Telegram message at a time."""
         lang = self._lang(chat_id)
         app_config = self.repository.load_config()
         portfolio = self.repository.load_portfolio()
@@ -151,7 +154,7 @@ class BotCommands:
             for symbol, quote in state.latest_prices.items()
             if quote.company_name
         }
-        summary = summarize_news(
+        groups = iter_news_summary_groups(
             self.llm,
             portfolio,
             app_config,
@@ -161,7 +164,20 @@ class BotCommands:
             enabled=app_config.enable_llm_summaries,
             language=lang,
         )
-        return format_news_summary(summary, lang=lang)
+        return iter_format_news_summary_messages(groups, lang=lang)
+
+    def news_summary_messages(self, chat_id: int) -> list[str]:
+        """Summarize cached news by sector and portfolio ticker via the LLM."""
+        messages = list(self.iter_news_summary_messages(chat_id))
+        if not messages:
+            return messages
+        footer = t("news_footer", self._lang(chat_id))
+        messages[-1] = truncate_message(f"{messages[-1]}\n\n{footer}")
+        return messages
+
+    def news_summary_message(self, chat_id: int) -> str:
+        """Legacy single-string news summary (joined messages)."""
+        return "\n\n".join(self.news_summary_messages(chat_id))
 
     def analyze_ticker_message(
         self,
