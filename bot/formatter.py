@@ -679,6 +679,29 @@ def _format_analyze_sentiment_lines(
     return [t("analyze_sentiment_header", lang), *lines]
 
 
+def format_pros_cons_analysis(
+    memos_by_ticker: dict[str, str],
+    *,
+    generated_for: str | None = None,
+    lang: str = "en",
+) -> str:
+    """Render cached or freshly generated pros/cons memos."""
+    if not memos_by_ticker:
+        return t("analyze_pros_empty", lang)
+
+    lines = [t("analyze_pros_header", lang), ""]
+    for symbol in sorted(memos_by_ticker):
+        lines.extend([f"{symbol}:", memos_by_ticker[symbol].strip(), ""])
+
+    if generated_for:
+        lines.append(t("analyze_pros_generated", lang, symbol=generated_for))
+    else:
+        lines.append(t("analyze_pros_cached", lang))
+
+    lines.append(t("advisory_footer", lang))
+    return truncate_message("\n".join(lines))
+
+
 def format_ticker_analysis(
     ticker: str,
     quote: MarketQuote | None,

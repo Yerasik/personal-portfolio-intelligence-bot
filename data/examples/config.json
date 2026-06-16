@@ -25,6 +25,8 @@
   "auto_news_interval_minutes": 30,
   "rule_evaluation_interval_minutes": 60,
   "sentiment_analysis_interval_minutes": 60,
+  "pros_cons_interval_hours": 4,
+  "sentiment_alert_threshold": 0.3,
   "enable_daily_summary": true,
   "ollama_base_url": "",
   "ollama_model": "qwen3:30b",

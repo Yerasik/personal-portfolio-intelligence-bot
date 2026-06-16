@@ -21,10 +21,11 @@ from apscheduler.triggers.interval import IntervalTrigger
 
 from analysis.industries import build_news_focus_industries
 from analysis.llm import LlmClient
+from analysis.pros_cons_engine import run_pros_cons_job as execute_pros_cons_analysis
 from analysis.rules import RulesEngine
-from scheduler.alert_delivery import evaluate_and_deliver_alerts
 from analysis.sentiment_analyzer import run_sentiment_analysis
 from analysis.summarizer import Summarizer
+from scheduler.alert_delivery import evaluate_and_deliver_alerts
 from collectors.base import CollectorContext
 from collectors.auto_news_discovery import AutoNewsDiscovery
 from collectors.market_data import MarketDataCollector
@@ -43,6 +44,7 @@ JOB_NEWS_FETCH: Final = "news_fetch"
 JOB_AUTO_NEWS_DISCOVERY: Final = "auto_news_discovery"
 JOB_RULE_EVALUATION: Final = "rule_evaluation"
 JOB_SENTIMENT_ANALYSIS: Final = "sentiment_analysis"
+JOB_PROS_CONS: Final = "pros_cons"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
 
 _built_scheduler: AppScheduler | None = None
@@ -224,6 +226,18 @@ def run_sentiment_analysis_job(services: SchedulerServices) -> None:
     )
 
 
+def run_pros_cons_job(services: SchedulerServices) -> None:
+    """Generate pros/cons memos and alert on large sentiment shifts."""
+    app_config = services.load_app_config()
+    llm = LlmClient(settings=services.runtime, app_config=app_config)
+    execute_pros_cons_analysis(
+        services.repository,
+        llm,
+        app_config,
+        notifier=services.get_notifier(),
+    )
+
+
 def run_daily_summary_job(services: SchedulerServices) -> None:
     """Build the daily digest and send it to Telegram."""
     app_config = services.load_app_config()
@@ -328,6 +342,14 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
         ),
         trigger=IntervalTrigger(minutes=app_config.sentiment_analysis_interval_minutes),
         id=JOB_SENTIMENT_ANALYSIS,
+        replace_existing=True,
+        next_run_time=now,
+    )
+
+    scheduler.add_job(
+        lambda: _run_job(JOB_PROS_CONS, lambda: run_pros_cons_job(services)),
+        trigger=IntervalTrigger(hours=app_config.pros_cons_interval_hours),
+        id=JOB_PROS_CONS,
         replace_existing=True,
         next_run_time=now,
     )

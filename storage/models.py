@@ -85,10 +85,20 @@ class TickerSentimentSignal(BaseModel):
     article_count: int
 
 
+class TickerProsConsMemo(BaseModel):
+    """Cached pros/cons memo for one ticker."""
+
+    memo: str
+    generated_at: datetime
+    source: Literal["llm", "fallback"]
+
+
 class SignalsFile(BaseModel):
     """Derived signals persisted in signals.json."""
 
     sentiment: dict[str, TickerSentimentSignal] = Field(default_factory=dict)
+    pros_cons: dict[str, TickerProsConsMemo] = Field(default_factory=dict)
+    pros_cons_last_sentiment: dict[str, float] = Field(default_factory=dict)
 
 
 class AppConfig(BaseModel):
@@ -114,6 +124,8 @@ class AppConfig(BaseModel):
     auto_news_interval_minutes: int = Field(default=30, ge=5, le=1440)
     rule_evaluation_interval_minutes: int = Field(default=60, ge=5, le=1440)
     sentiment_analysis_interval_minutes: int = Field(default=60, ge=5, le=1440)
+    pros_cons_interval_hours: int = Field(default=4, ge=1, le=168)
+    sentiment_alert_threshold: float = Field(default=0.3, gt=0, le=2.0)
     enable_daily_summary: bool = True
     ollama_base_url: str = ""
     ollama_model: str = ""

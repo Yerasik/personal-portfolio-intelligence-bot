@@ -365,15 +365,26 @@ async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TY
 
 
 async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /analyze [ticker]."""
+    """Handle /analyze [pros] [ticker]."""
     user = await _guard(update, context)
     if user is None or update.message is None:
         return
 
     commands = _commands(context)
-    args = context.args or []
-    if args:
-        message = commands.analyze_ticker_message(user.chat_id, args[0])
+    raw_args = list(context.args or [])
+    pros_mode = False
+    if raw_args and raw_args[0].lower() in {"pros", "--pros", "-pros"}:
+        pros_mode = True
+        raw_args = raw_args[1:]
+    elif raw_args and raw_args[-1].lower() in {"pros", "--pros", "-pros"}:
+        pros_mode = True
+        raw_args = raw_args[:-1]
+
+    ticker = raw_args[0] if raw_args else None
+    if pros_mode:
+        message = commands.analyze_pros_message(user.chat_id, ticker=ticker)
+    elif ticker:
+        message = commands.analyze_ticker_message(user.chat_id, ticker)
     else:
         message = commands.analyze_message(user.chat_id)
     await update.message.reply_text(message)

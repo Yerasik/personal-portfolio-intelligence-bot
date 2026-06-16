@@ -244,12 +244,13 @@ def log_startup_summary(
     logger.info("Cached news items: %d", len(news_cache.items))
     logger.info("Pending alerts: %d", len(state.pending_alerts))
     logger.info(
-        "Scheduler intervals (minutes): market=%d news=%d auto=%d rules=%d sentiment=%d",
+        "Scheduler intervals (minutes): market=%d news=%d auto=%d rules=%d sentiment=%d; pros_cons every %d h",
         app_config.market_fetch_interval_minutes,
         app_config.news_fetch_interval_minutes,
         app_config.auto_news_interval_minutes,
         app_config.rule_evaluation_interval_minutes,
         app_config.sentiment_analysis_interval_minutes,
+        app_config.pros_cons_interval_hours,
     )
     logger.info(
         "Daily summary: %s at %02d:%02d %s",

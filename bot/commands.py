@@ -21,7 +21,7 @@ from analysis.strategy_writer import (
     localized_strategy_text,
 )
 from analysis.news_summarizer import iter_news_summary_groups
-from analysis.portfolio_valuation import valuation_for_ticker
+from analysis.pros_cons_engine import ProsConsEngine
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
@@ -30,6 +30,7 @@ from bot.formatter import (
     format_news_summary,
     format_news_summary_messages,
     format_portfolio,
+    format_pros_cons_analysis,
     format_start,
     format_strategy_detail,
     format_strategy_list,
@@ -248,6 +249,33 @@ class BotCommands:
             lang=lang,
             is_developer=self._is_developer(chat_id),
         )
+
+    def analyze_pros_message(self, chat_id: int, ticker: str | None = None) -> str:
+        """Show or generate pros/cons memos from signals.json."""
+        lang = self._lang(chat_id)
+        app_config = self.repository.load_config()
+        portfolio = self.repository.load_portfolio()
+
+        if ticker:
+            symbol = normalize_ticker(ticker)
+            engine = ProsConsEngine(self.llm, app_config)
+            result = engine.generate_for_ticker(symbol, repository=self.repository)
+            return format_pros_cons_analysis(
+                {symbol: result.memo},
+                generated_for={symbol},
+                lang=lang,
+            )
+
+        signals = self.repository.load_signals()
+        memos = {
+            normalize_ticker(position.ticker): record.memo
+            for position in portfolio.positions
+            if (record := signals.pros_cons.get(normalize_ticker(position.ticker)))
+            is not None
+        }
+        if not memos:
+            return t("analyze_pros_empty", lang)
+        return format_pros_cons_analysis(memos, lang=lang)
 
     def iter_news_summary_messages(self, chat_id: int):
         """Stream cached news summaries one Telegram message at a time."""
