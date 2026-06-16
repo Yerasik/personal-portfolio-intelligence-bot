@@ -1,18 +1,18 @@
 {
   "last_digest_at": "2026-06-16T00:28:54.883012Z",
-  "last_market_fetch_at": "2026-06-16T06:13:28.317284Z",
-  "last_news_fetch_at": "2026-06-16T06:13:29.593076Z",
+  "last_market_fetch_at": "2026-06-16T06:40:40.615093Z",
+  "last_news_fetch_at": "2026-06-16T06:40:42.078112Z",
   "latest_prices": {
     "1810.HK": {
       "ticker": "1810.HK",
-      "price": 25.739999771118164,
-      "change_pct": -1.9801997457401157,
-      "volume": 54768006,
+      "price": 25.760000228881836,
+      "change_pct": -1.9040365409063449,
+      "volume": 64658406,
       "company_name": "XIAOMI-W",
       "sector": "Technology",
       "industry": "Consumer Electronics",
       "currency": "HKD",
-      "fetched_at": "2026-06-16T06:13:28.317284Z"
+      "fetched_at": "2026-06-16T06:40:40.615093Z"
     },
     "VRT": {
       "ticker": "VRT",
@@ -23,29 +23,29 @@
       "sector": "Industrials",
       "industry": "Electrical Equipment & Parts",
       "currency": "USD",
-      "fetched_at": "2026-06-16T06:13:28.317284Z"
+      "fetched_at": "2026-06-16T06:40:40.615093Z"
     },
     "6082.HK": {
       "ticker": "6082.HK",
-      "price": 54.650001525878906,
-      "change_pct": -1.1754027489136563,
-      "volume": 6485400,
+      "price": 54.70000076293945,
+      "change_pct": -1.0849882141028877,
+      "volume": 7029600,
       "company_name": "BIREN TECH",
       "sector": "Technology",
       "industry": "Semiconductors",
       "currency": "HKD",
-      "fetched_at": "2026-06-16T06:13:28.317284Z"
+      "fetched_at": "2026-06-16T06:40:40.615093Z"
     },
     "9988.HK": {
       "ticker": "9988.HK",
-      "price": 107.30000305175781,
-      "change_pct": -1.8298261154237316,
-      "volume": 41013496,
+      "price": 107.0999984741211,
+      "change_pct": -2.012812915105712,
+      "volume": 45548008,
       "company_name": "BABA-W",
       "sector": "Consumer Cyclical",
       "industry": "Internet Retail",
       "currency": "HKD",
-      "fetched_at": "2026-06-16T06:13:28.317284Z"
+      "fetched_at": "2026-06-16T06:40:40.615093Z"
     }
   },
   "last_sent_alerts": [

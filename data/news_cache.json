@@ -1,6 +1,40 @@
 {
   "items": [
     {
+      "id": "e1e789df65d6e62f",
+      "title": "Hong Kong poultry stall suspended for disinfection after bird flu trace detected",
+      "source": "News - South China Morning Post",
+      "url": "https://www.scmp.com/news/hong-kong/health-environment/article/3357266/hong-kong-poultry-stall-suspended-disinfection-after-bird-flu-trace-detected?utm_source=rss_feed",
+      "published_at": "2026-06-16T06:39:57Z",
+      "fetched_at": "2026-06-16T06:40:42.078112Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "Hong Kong"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "A poultry stall at a Hong Kong market has been disinfected after an environmental sample tested positive for the H9 bird flu virus, with shoppers remaining largely unfazed despite a recent infection involving a two-year-old boy. The affected stall, the only live poultry shop operating inside Sha Tin’s Wo Che Market, temporarily suspended operations on Tuesday morning for cleaning. The shop owner and three staff members were seen scrubbing live chicken cages and wiping down price tags while..."
+    },
+    {
+      "id": "64c118cdb44ace9e",
+      "title": "Alibaba eyes physical world with its first suite of AI models for robots",
+      "source": "News - South China Morning Post",
+      "url": "https://www.scmp.com/tech/big-tech/article/3357260/alibaba-eyes-physical-world-its-first-suite-ai-models-robots?utm_source=rss_feed",
+      "published_at": "2026-06-16T06:16:03Z",
+      "fetched_at": "2026-06-16T06:40:42.078112Z",
+      "ticker_tags": [],
+      "sector_tags": [
+        "AI"
+      ],
+      "sentiment": null,
+      "importance": null,
+      "processed": false,
+      "alert_sent": false,
+      "summary": "Alibaba Group Holding has launched its first suite of artificial intelligence models for robots, joining a global race to move AI out of chatbot windows and into the physical world. The Hangzhou-based tech giant on Tuesday introduced the Qwen Robot Suite, marking its latest foray into “embodied AI” – machines that can perceive, reason and interact with physical environments. Developed by Alibaba’s AI research unit, Tongyi Lab, the suite has already entered pilot testing with selected Alibaba..."
+    },
+    {
       "id": "8bce7783306ad731",
       "title": "Schneider Electric and Foxconn Collaborate on AI Data Center Infrastructure - ARC Advisory Group",
       "source": "\"Vertiv OR Schneider Electric cooling data center\" - Google News",
@@ -14728,75 +14762,7 @@
       "processed": false,
       "alert_sent": false,
       "summary": "Indian companies are no longer in the top 10 of the MSCI Emerging Markets Index. A surge in AI stocks has shifted global capital. Taiwan and South Korea's chipmakers now dominate the index. Reliance Industries and HDFC Bank have fallen in global rankings. India's market weight has hit a six-year low. This concentration is driven by strong company growth."
-    },
-    {
-      "id": "e433d8516a0c2aed",
-      "title": "Asian tech stocks rebound after Wall Street embraces AI once more",
-      "source": "International homepage",
-      "url": "https://www.ft.com/content/f9367c83-c291-4446-bf12-8282e5169812",
-      "published_at": "2026-06-09T06:39:15Z",
-      "fetched_at": "2026-06-09T07:40:31.518128Z",
-      "ticker_tags": [],
-      "sector_tags": [
-        "AI"
-      ],
-      "sentiment": null,
-      "importance": null,
-      "processed": false,
-      "alert_sent": false,
-      "summary": "Chipmaker-dominant markets rally after sell-off on Monday"
-    },
-    {
-      "id": "6fb980684bc015c3",
-      "title": "Hong Kong film producer Raymond Wong sentenced to 5 months for insider trading",
-      "source": "News - South China Morning Post",
-      "url": "https://www.scmp.com/news/hong-kong/law-and-crime/article/3356470/hong-kong-film-producer-raymond-wong-sentenced-5-months-insider-trading?utm_source=rss_feed",
-      "published_at": "2026-06-09T06:32:24Z",
-      "fetched_at": "2026-06-09T06:40:31.554020Z",
-      "ticker_tags": [],
-      "sector_tags": [
-        "Hong Kong"
-      ],
-      "sentiment": null,
-      "importance": null,
-      "processed": false,
-      "alert_sent": false,
-      "summary": "A Hong Kong court has sentenced veteran film producer and actor Raymond Wong Pak-ming to five months in prison for sharing insider information with his sister to trade shares in an entertainment company he chaired in 2017. However, the 80-year-old will not have to begin serving the sentence immediately, after Magistrate Ko Wai-hung granted him bail pending appeal on Tuesday. Ko said he would not consider a suspended sentence or any non-custodial punishment for Wong, who was convicted of insider."
-    },
-    {
-      "id": "c530eb1287efc7f2",
-      "title": "Will India's AI multibaggers face a reality check as global bubble fears test valuations?",
-      "source": "Stocks-Markets-Economic Times",
-      "url": "https://economictimes.indiatimes.com/markets/stocks/news/will-indias-ai-multibaggers-face-a-reality-check-as-global-bubble-fears-test-valuations/articleshow/131603585.cms",
-      "published_at": "2026-06-09T06:29:30Z",
-      "fetched_at": "2026-06-09T06:40:31.554020Z",
-      "ticker_tags": [],
-      "sector_tags": [
-        "AI"
-      ],
-      "sentiment": null,
-      "importance": null,
-      "processed": false,
-      "alert_sent": false,
-      "summary": "India's AI stocks are facing scrutiny as global concerns about a tech bubble grow. Companies linked to data centers and high-performance computing have seen significant gains. Experts question if earnings can justify current valuations. Investors are now focusing on the sustainability of these high stock prices. The AI opportunity remains strong, but careful stock selection and valuation discipline are crucial."
-    },
-    {
-      "id": "139c81cfeefe1f78",
-      "title": "‘Integrity is non-negotiable,’ Hong Kong anti-corruption chief says at Apec seminar",
-      "source": "News - South China Morning Post",
-      "url": "https://www.scmp.com/news/hong-kong/law-and-crime/article/3356467/integrity-non-negotiable-hong-kong-anti-corruption-chief-says-apec-seminar?utm_source=rss_feed",
-      "published_at": "2026-06-09T06:18:37Z",
-      "fetched_at": "2026-06-09T06:40:31.554020Z",
-      "ticker_tags": [],
-      "sector_tags": [
-        "Hong Kong"
-      ],
-      "sentiment": null,
-      "importance": null,
-      "processed": false,
-      "alert_sent": false,
-      "summary": "Hong Kong’s anti-corruption chief has said trust is the real currency of finance, with an official from mainland China’s watchdog pledging to continue fostering a clean business environment and deepen regional cooperation. At an Asia-Pacific Economic Cooperation (Apec) seminar on Tuesday, Danny Woo Ying-ming, commissioner of the Independent Commission Against Corruption (ICAC), said corruption harmed prosperity at its core and attacked the very foundations of society. “Integrity … is the unseen."
     }
   ],
-  "updated_at": "2026-06-16T06:13:29.593076Z"
+  "updated_at": "2026-06-16T06:40:42.078112Z"
 }

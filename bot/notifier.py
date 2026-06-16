@@ -6,13 +6,23 @@ import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
+from collections.abc import Callable
+
 import httpx
 
 from analysis.llm import LlmAdvisoryResult, LlmClient
 from analysis.move_explainer import explain_price_move, recent_news_titles_for_ticker
 from analysis.news_summarizer import NewsSummary, summarize_daily_news_brief, summarize_news
 from analysis.rules import AlertCandidate
-from bot.formatter import format_daily_summary, format_strategy_announcement, format_urgent_alert
+from bot.formatter import (
+    format_daily_summary,
+    format_informational_alert,
+    format_portfolio_change_notification,
+    format_strategy_announcement,
+    format_strategy_update_notification,
+    format_urgent_alert,
+    truncate_message,
+)
 from config.settings import RuntimeSettings
 from storage.models import AppConfig, BotState, BotUser, NewsCache, SentAlertRecord
 from storage.repository import DataRepository
@@ -21,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 TELEGRAM_API_TIMEOUT_SECONDS = 30.0
 _PRICE_MOVE_ALERT_TYPES = frozenset({"price_drop", "price_rise"})
+_PUSHABLE_ALERT_URGENCIES = frozenset({"warning", "urgent"})
 
 
 @dataclass
@@ -65,7 +76,7 @@ class TelegramNotifier:
     def _authorized_users(self, repository: DataRepository) -> list[BotUser]:
         return repository.load_users().users
 
-    def deliver_urgent_alerts(
+    def deliver_alerts(
         self,
         alerts: list[AlertCandidate],
         repository: DataRepository,
@@ -75,7 +86,7 @@ class TelegramNotifier:
         state: BotState | None = None,
         news_cache: NewsCache | None = None,
     ) -> AlertDeliveryResult:
-        """Send unsent urgent alerts to all users and record deliveries in state."""
+        """Send unsent warning and urgent alerts to all users and record deliveries."""
         if not self.is_configured:
             logger.warning("Telegram notifier not configured; skipping alert delivery")
             return AlertDeliveryResult(skipped=len(alerts))
@@ -85,9 +96,11 @@ class TelegramNotifier:
             logger.warning("No authorized users; skipping alert delivery")
             return AlertDeliveryResult(skipped=len(alerts))
 
-        urgent_alerts = [alert for alert in alerts if alert.urgency == "urgent"]
-        if not urgent_alerts:
-            logger.info("No urgent alerts to deliver")
+        pushable_alerts = [
+            alert for alert in alerts if alert.urgency in _PUSHABLE_ALERT_URGENCIES
+        ]
+        if not pushable_alerts:
+            logger.info("No warning or urgent alerts to deliver")
             return AlertDeliveryResult()
 
         state = repository.load_state()
@@ -96,10 +109,10 @@ class TelegramNotifier:
         recent_ids, recent_keys = _recent_sent_keys(state.last_sent_alerts, now, cooldown)
 
         result = AlertDeliveryResult()
-        for alert in urgent_alerts:
+        for alert in pushable_alerts:
             if alert.id in recent_ids:
                 logger.info(
-                    "Skipping urgent alert id=%s key=%s (id cooldown active)",
+                    "Skipping alert id=%s key=%s (id cooldown active)",
                     alert.id,
                     alert.alert_key,
                 )
@@ -107,7 +120,7 @@ class TelegramNotifier:
                 continue
             if alert.alert_key in recent_keys:
                 logger.info(
-                    "Skipping urgent alert id=%s key=%s (key cooldown active)",
+                    "Skipping alert id=%s key=%s (key cooldown active)",
                     alert.id,
                     alert.alert_key,
                 )
@@ -142,16 +155,21 @@ class TelegramNotifier:
                             ).to_message(user.language)
                     llm_explanation = explanation_by_lang.get(user.language)
 
-                message = format_urgent_alert(
-                    alert,
-                    lang=user.language,
-                    llm_explanation=llm_explanation,
-                )
+                if alert.urgency == "urgent":
+                    message = format_urgent_alert(
+                        alert,
+                        lang=user.language,
+                        llm_explanation=llm_explanation,
+                    )
+                else:
+                    message = format_informational_alert(alert, lang=user.language)
+                    if llm_explanation:
+                        message = truncate_message(f"{message}\n\n{llm_explanation}")
                 try:
                     self.send_text(user.chat_id, message)
                 except Exception as exc:
                     logger.exception(
-                        "Failed to send urgent alert id=%s key=%s to chat_id=%s: %s",
+                        "Failed to send alert id=%s key=%s to chat_id=%s: %s",
                         alert.id,
                         alert.alert_key,
                         user.chat_id,
@@ -174,7 +192,8 @@ class TelegramNotifier:
             recent_keys.add(alert.alert_key)
             result.sent += 1
             logger.info(
-                "Delivered urgent alert id=%s key=%s to %d user(s)",
+                "Delivered %s alert id=%s key=%s to %d user(s)",
+                alert.urgency,
                 alert.id,
                 alert.alert_key,
                 len(users),
@@ -188,12 +207,32 @@ class TelegramNotifier:
         repository.save_state(state)
 
         logger.info(
-            "Urgent alert delivery finished: sent=%d skipped=%d failed=%d",
+            "Alert delivery finished: sent=%d skipped=%d failed=%d",
             result.sent,
             result.skipped,
             result.failed,
         )
         return result
+
+    def deliver_urgent_alerts(
+        self,
+        alerts: list[AlertCandidate],
+        repository: DataRepository,
+        app_config: AppConfig,
+        *,
+        llm: LlmClient | None = None,
+        state: BotState | None = None,
+        news_cache: NewsCache | None = None,
+    ) -> AlertDeliveryResult:
+        """Backward-compatible alias for deliver_alerts."""
+        return self.deliver_alerts(
+            alerts,
+            repository,
+            app_config,
+            llm=llm,
+            state=state,
+            news_cache=news_cache,
+        )
 
     def deliver_daily_summary(
         self,
@@ -240,6 +279,83 @@ class TelegramNotifier:
 
         return delivered
 
+    def _ordinary_users(self, repository: DataRepository) -> list[BotUser]:
+        return [
+            user
+            for user in self._authorized_users(repository)
+            if user.role == "ordinary"
+        ]
+
+    def notify_ordinary_users(
+        self,
+        repository: DataRepository,
+        *,
+        build_message: Callable[[str], str],
+    ) -> int:
+        """Send a per-language message to every ordinary user."""
+        if not self.is_configured:
+            logger.warning("Telegram notifier not configured; skipping user notification")
+            return 0
+
+        ordinary_users = self._ordinary_users(repository)
+        if not ordinary_users:
+            return 0
+
+        sent = 0
+        for user in ordinary_users:
+            message = build_message(user.language)
+            try:
+                self.send_text(user.chat_id, message)
+            except Exception:
+                logger.exception(
+                    "Failed to send portfolio notification to chat_id=%s",
+                    user.chat_id,
+                )
+                continue
+            sent += 1
+            logger.info(
+                "Portfolio notification delivered to chat_id=%s (lang=%s)",
+                user.chat_id,
+                user.language,
+            )
+        return sent
+
+    def notify_portfolio_change(
+        self,
+        repository: DataRepository,
+        *,
+        change: str,
+        symbol: str,
+        shares: float = 0.0,
+    ) -> int:
+        """Tell ordinary users when the developer changes portfolio holdings."""
+        return self.notify_ordinary_users(
+            repository,
+            build_message=lambda lang: format_portfolio_change_notification(
+                change=change,  # type: ignore[arg-type]
+                symbol=symbol,
+                shares=shares,
+                lang=lang,
+            ),
+        )
+
+    def notify_strategy_content(
+        self,
+        repository: DataRepository,
+        *,
+        symbol: str,
+        text_for_language: Callable[[str], str],
+    ) -> int:
+        """Tell ordinary users when a stored investment idea changes."""
+        return self.notify_ordinary_users(
+            repository,
+            build_message=lambda lang: format_strategy_update_notification(
+                symbol,
+                text_for_language(lang),
+                lang=lang,
+            ),
+        )
+
     def notify_new_ticker_strategy(
         self,
         repository: DataRepository,
@@ -258,9 +374,8 @@ class TelegramNotifier:
             logger.warning("Telegram notifier not configured; skipping strategy notification")
             return 0
 
-        users = self._authorized_users(repository)
-        ordinary_users = [user for user in users if user.role == "ordinary"]
-        if not ordinary_users:
+        users = self._ordinary_users(repository)
+        if not users:
             return 0
 
         symbol = ticker.strip().upper()
@@ -270,7 +385,7 @@ class TelegramNotifier:
         announcements_by_lang: dict[str, str] = {"en": announcement_en}
         sent = 0
 
-        for user in ordinary_users:
+        for user in users:
             lang = user.language
             if lang not in announcements_by_lang:
                 from analysis.strategy_writer import generate_strategy_announcement

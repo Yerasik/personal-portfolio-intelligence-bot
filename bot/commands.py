@@ -6,6 +6,7 @@ formatted plain-text strings ready for Telegram.
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 
 from analysis.industries import build_news_focus_industries
@@ -39,8 +40,10 @@ from bot.i18n import SUPPORTED_LANGUAGES, normalize_language, t
 from bot.notifier import TelegramNotifier
 from config.settings import RuntimeSettings
 from storage.models import TickerStrategy, UserRole
-from storage.portfolio_ops import normalize_ticker
+from storage.portfolio_ops import PortfolioTickerResult, normalize_ticker
 from storage.repository import DataRepository
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -53,6 +56,109 @@ class BotCommands:
 
     def _notifier(self) -> TelegramNotifier:
         return TelegramNotifier(self.settings)
+
+    def _deliver_alerts_after_portfolio_change(self) -> None:
+        """Refresh quotes and push any new warning/urgent alerts to all users."""
+        from scheduler.alert_delivery import refresh_market_data_and_deliver_alerts
+
+        try:
+            refresh_market_data_and_deliver_alerts(
+                self.repository,
+                self.settings,
+                self._notifier(),
+                llm=self.llm,
+            )
+        except Exception:
+            logger.exception("Immediate alert delivery after portfolio change failed")
+
+    def _holding_shares(self, symbol: str) -> float:
+        portfolio = self.repository.load_portfolio()
+        normalized = normalize_ticker(symbol)
+        for position in portfolio.positions:
+            if normalize_ticker(position.ticker) == normalized:
+                return position.shares
+        return 0.0
+
+    def _notify_ordinary_portfolio_add(
+        self,
+        result: PortfolioTickerResult,
+        *,
+        shares_added: float,
+    ) -> int:
+        change = "added_new" if result.is_new_position else "added_shares"
+        share_amount = (
+            self._holding_shares(result.ticker)
+            if result.is_new_position
+            else shares_added
+        )
+        return self._notifier().notify_portfolio_change(
+            self.repository,
+            change=change,
+            symbol=result.ticker,
+            shares=share_amount,
+        )
+
+    def _notify_ordinary_portfolio_remove(self, symbol: str) -> int:
+        return self._notifier().notify_portfolio_change(
+            self.repository,
+            change="removed",
+            symbol=symbol,
+        )
+
+    def _strategy_text_for_delivery(self, strategy: TickerStrategy, lang: str) -> str:
+        """Resolve strategy copy for outbound notifications without persisting translations."""
+        from bot.i18n import normalize_language
+
+        normalized = normalize_language(lang)
+        cached = strategy.strategy_text_by_language.get(normalized)
+        if cached:
+            return cached
+        if normalized == "en":
+            return strategy.strategy_text
+        app_config = self.repository.load_config()
+        return localized_strategy_text(
+            self.llm,
+            strategy,
+            normalized,
+            enabled=app_config.enable_llm_summaries,
+        )
+
+    def _notify_ordinary_strategy_update(self, symbol: str) -> int:
+        strategy = self.repository.get_ticker_strategy(symbol)
+        if strategy is None:
+            return 0
+
+        return self._notifier().notify_strategy_content(
+            self.repository,
+            symbol=symbol,
+            text_for_language=lambda lang, record=strategy: self._strategy_text_for_delivery(
+                record,
+                lang,
+            ),
+        )
+
+    def _notify_ordinary_strategy_announcement(
+        self,
+        symbol: str,
+        shares: float,
+        *,
+        announcement_en: str,
+        strategy_text_by_language: dict[str, str],
+        strategy_text: str,
+    ) -> int:
+        state = self.repository.load_state()
+        app_config = self.repository.load_config()
+        return self._notifier().notify_new_ticker_strategy(
+            self.repository,
+            symbol,
+            shares,
+            llm=self.llm,
+            app_config=app_config,
+            strategy_text=strategy_text,
+            announcement_en=announcement_en,
+            state=state,
+            strategy_text_by_language=strategy_text_by_language,
+        )
 
     def _lang(self, chat_id: int) -> str:
         return self.repository.user_language(chat_id)
@@ -227,17 +333,32 @@ class BotCommands:
         """Validate and add a ticker to portfolio.json."""
         lang = self._lang(chat_id)
         result = self.repository.add_ticker_to_portfolio(ticker, shares=shares)
-        key = "add_ticker_ok" if result.success else "add_ticker_fail"
-        return t(key, lang, message=result.message)
+        if result.success:
+            notified = self._notify_ordinary_portfolio_add(
+                result,
+                shares_added=shares,
+            )
+            self._deliver_alerts_after_portfolio_change()
+            message = t("add_ticker_ok", lang, message=result.message)
+            if notified:
+                message = f"{message}\n{t('users_notified', lang, count=notified)}"
+            return message
+        return t("add_ticker_fail", lang, message=result.message)
 
     def remove_ticker_message(self, chat_id: int, ticker: str) -> str:
         """Remove a ticker from portfolio.json."""
         lang = self._lang(chat_id)
+        symbol = normalize_ticker(ticker)
         result = self.repository.remove_ticker_from_portfolio(ticker)
         if result.success:
             self.repository.remove_ticker_strategy(ticker)
-        key = "remove_ticker_ok" if result.success else "remove_ticker_fail"
-        return t(key, lang, message=result.message)
+            notified = self._notify_ordinary_portfolio_remove(symbol)
+            self._deliver_alerts_after_portfolio_change()
+            message = t("remove_ticker_ok", lang, message=result.message)
+            if notified:
+                message = f"{message}\n{t('users_notified', lang, count=notified)}"
+            return message
+        return t("remove_ticker_fail", lang, message=result.message)
 
     def _strategy_display_text(self, strategy: TickerStrategy, lang: str) -> str:
         """Resolve strategy copy for the user's language, caching on demand."""
@@ -334,24 +455,32 @@ class BotCommands:
         notified = 0
         if result.is_new_position:
             localized_for_notify = by_language.get("en", generated.strategy_text)
-            notified = self._notifier().notify_new_ticker_strategy(
-                self.repository,
+            notified = self._notify_ordinary_strategy_announcement(
                 symbol,
                 shares,
-                llm=self.llm,
-                app_config=app_config,
-                strategy_text=localized_for_notify,
                 announcement_en=generated.announcement_text,
-                state=state,
                 strategy_text_by_language=by_language,
+                strategy_text=localized_for_notify,
             )
             key = (
                 "add_ticker_strategy_ok"
                 if notified
                 else "add_ticker_strategy_ok_no_notify"
             )
+            self._deliver_alerts_after_portfolio_change()
             return t(key, lang, symbol=symbol, count=notified)
 
+        notified += self._notify_ordinary_portfolio_add(result, shares_added=shares)
+        notified += self._notifier().notify_strategy_content(
+            self.repository,
+            symbol=symbol,
+            text_for_language=lambda language, bl=by_language, fallback=generated.strategy_text: (
+                bl.get(language) or bl.get("en", fallback)
+            ),
+        )
+        self._deliver_alerts_after_portfolio_change()
+        if notified:
+            return t("add_ticker_strategy_ok", lang, symbol=symbol, count=notified)
         return t("add_ticker_strategy_ok_no_notify", lang, symbol=symbol)
 
     def edit_strategy_message(self, chat_id: int, ticker: str, strategy_text: str) -> str:
@@ -368,7 +497,12 @@ class BotCommands:
             editor_language=lang,
         )
         if ok:
-            return t("edit_strategy_ok", lang, symbol=symbol)
+            notified = self._notify_ordinary_strategy_update(symbol)
+            self._deliver_alerts_after_portfolio_change()
+            message = t("edit_strategy_ok", lang, symbol=symbol)
+            if notified:
+                message = f"{message}\n{t('users_notified', lang, count=notified)}"
+            return message
         if result == "not_found":
             return t("edit_strategy_not_found", lang, symbol=symbol)
         return t("edit_strategy_fail", lang, message=result)

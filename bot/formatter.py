@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Literal
 
 from collections.abc import Iterator
 
@@ -710,6 +711,51 @@ def format_strategy_announcement(
         t("strategy_announcement_added", lang, symbol=symbol, shares=shares),
         "",
         announcement_text.strip(),
+        "",
+        t("strategy_announcement_hint", lang, symbol=symbol),
+        "",
+        t("advisory_footer", lang),
+    ]
+    return truncate_message("\n".join(lines))
+
+
+def format_portfolio_change_notification(
+    *,
+    change: Literal["added_new", "added_shares", "removed"],
+    symbol: str,
+    shares: float = 0.0,
+    lang: str = "en",
+) -> str:
+    """Format a portfolio holding change for ordinary users."""
+    ticker = symbol.strip().upper()
+    if change == "added_new":
+        detail = t("portfolio_notify_added_new", lang, symbol=ticker, shares=shares)
+    elif change == "added_shares":
+        detail = t("portfolio_notify_added_shares", lang, symbol=ticker, shares=shares)
+    else:
+        detail = t("portfolio_notify_removed", lang, symbol=ticker)
+    lines = [
+        t("portfolio_notify_header", lang),
+        detail,
+        "",
+        t("advisory_footer", lang),
+    ]
+    return truncate_message("\n".join(lines))
+
+
+def format_strategy_update_notification(
+    ticker: str,
+    strategy_text: str,
+    *,
+    lang: str = "en",
+) -> str:
+    """Format a strategy update for ordinary users."""
+    symbol = ticker.strip().upper()
+    lines = [
+        t("strategy_notify_header", lang),
+        f"{symbol}:",
+        "",
+        strategy_text.strip(),
         "",
         t("strategy_announcement_hint", lang, symbol=symbol),
         "",

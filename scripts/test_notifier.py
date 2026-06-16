@@ -54,6 +54,19 @@ class SettingsStub:
     telegram_bot_token = "test-token"
 
 
+def _warning_alert() -> AlertCandidate:
+    return AlertCandidate(
+        id="warn789",
+        type="price_drop",
+        ticker="NVDA",
+        industry=None,
+        urgency="warning",
+        title="NVDA down 3.0% today",
+        explanation="NVDA fell 3.00% since the last market fetch.",
+        created_at=NOW,
+    )
+
+
 def run_test() -> None:
     temp_dir = Path(tempfile.mkdtemp(prefix="notifier-test-"))
     print(f"Using temp data dir: {temp_dir}")
@@ -106,13 +119,18 @@ def run_test() -> None:
             mock_client.__enter__.return_value = mock_client
             mock_client.post.side_effect = _mock_post
 
-            first = notifier.deliver_urgent_alerts(
+            first = notifier.deliver_alerts(
                 [_urgent_alert()],
                 repository,
                 repository.load_config(),
             )
-            second = notifier.deliver_urgent_alerts(
+            second = notifier.deliver_alerts(
                 [_urgent_alert()],
+                repository,
+                repository.load_config(),
+            )
+            warning_delivery = notifier.deliver_alerts(
+                [_warning_alert()],
                 repository,
                 repository.load_config(),
             )
@@ -121,16 +139,20 @@ def run_test() -> None:
             raise AssertionError(f"expected first delivery to send 1 alert, got {first}")
         if second.sent != 0 or second.skipped != 1:
             raise AssertionError(f"expected second delivery to skip cooldown, got {second}")
-        if len(sent_messages) != 2:
-            raise AssertionError("expected two Telegram payloads for two users")
+        if warning_delivery.sent != 1:
+            raise AssertionError(f"expected warning alert delivery, got {warning_delivery}")
+        if len(sent_messages) != 4:
+            raise AssertionError(f"expected four Telegram payloads, got {len(sent_messages)}")
         if "URGENT ALERT" not in sent_messages[0]["text"]:
             raise AssertionError("English user should receive English labels")
         if "DRINGENDE WARNUNG" not in sent_messages[1]["text"]:
             raise AssertionError("German user should receive German labels")
 
         state = repository.load_state()
-        if len(state.last_sent_alerts) != 1:
-            raise AssertionError("expected one sent alert record after delivery")
+        if len(state.last_sent_alerts) != 2:
+            raise AssertionError(
+                f"expected two sent alert records after delivery, got {len(state.last_sent_alerts)}"
+            )
 
         print("Urgent alert message:\n", urgent_text)
         print("Informational alert message:\n", info_text)

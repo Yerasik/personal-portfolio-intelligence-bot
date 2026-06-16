@@ -67,6 +67,9 @@ def run_test() -> None:
         ), patch(
             "bot.commands.build_strategy_text_by_language",
             return_value=(generated, localized),
+        ), patch.object(
+            commands,
+            "_deliver_alerts_after_portfolio_change",
         ), patch("bot.notifier.httpx.Client") as mock_client_cls:
             mock_client = mock_client_cls.return_value
             mock_client.__enter__.return_value = mock_client
@@ -112,11 +115,27 @@ def run_test() -> None:
         if "English thesis" not in dev_detail:
             raise AssertionError("developer should see English cached strategy")
 
-        edit_message = commands.edit_strategy_message(
-            111,
-            "TEST",
-            "Hard rewritten strategy text for everyone.",
-        )
+        with patch.object(
+            commands,
+            "_deliver_alerts_after_portfolio_change",
+        ), patch("bot.notifier.httpx.Client") as mock_client_cls:
+            mock_client = mock_client_cls.return_value
+            mock_client.__enter__.return_value = mock_client
+
+            class Response:
+                def raise_for_status(self) -> None:
+                    return None
+
+                def json(self) -> dict:
+                    return {"ok": True}
+
+            mock_client.post.return_value = Response()
+            edit_message = commands.edit_strategy_message(
+                111,
+                "TEST",
+                "Hard rewritten strategy text for everyone.",
+            )
+
         if "updated" not in edit_message.lower():
             raise AssertionError(f"edit failed: {edit_message}")
 
