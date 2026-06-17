@@ -49,6 +49,14 @@
   "enable_daily_summary": true,
   "deep_digest_times": ["06:00", "20:00"],
   "enable_deep_digest": true,
+  "risk_profile": {
+    "max_annual_volatility_pct": 20,
+    "max_drawdown_pct": 20,
+    "max_single_holding_pct": 30,
+    "risk_metric_primary": "volatility",
+    "volatility_lookback_months": 6,
+    "include_sentiment_in_score": true
+  },
   "ollama_base_url": "",
   "ollama_model": "qwen3:30b",
   "enable_llm_summaries": false

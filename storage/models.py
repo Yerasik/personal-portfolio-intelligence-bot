@@ -101,6 +101,17 @@ class SignalsFile(BaseModel):
     pros_cons_last_sentiment: dict[str, float] = Field(default_factory=dict)
 
 
+class RiskProfile(BaseModel):
+    """Client risk tolerance limits for /analyze portfolio risk."""
+
+    max_annual_volatility_pct: float = Field(default=18.0, gt=0, le=100)
+    max_drawdown_pct: float = Field(default=20.0, gt=0, le=100)
+    max_single_holding_pct: float = Field(default=30.0, gt=0, le=100)
+    risk_metric_primary: Literal["volatility", "composite"] = "volatility"
+    volatility_lookback_months: int = Field(default=6, ge=1, le=24)
+    include_sentiment_in_score: bool = True
+
+
 class AppConfig(BaseModel):
     """Bot behavior and watch settings persisted in config.json."""
 
@@ -132,6 +143,7 @@ class AppConfig(BaseModel):
     enable_daily_summary: bool = True
     deep_digest_times: list[str] = Field(default_factory=lambda: ["06:00", "20:00"])
     enable_deep_digest: bool = True
+    risk_profile: RiskProfile = Field(default_factory=RiskProfile)
     ollama_base_url: str = ""
     ollama_model: str = ""
     enable_llm_summaries: bool = False

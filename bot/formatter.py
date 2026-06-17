@@ -780,6 +780,10 @@ def _format_risk_lines(risk: PortfolioRiskAssessment, lang: str) -> list[str]:
             score=risk.score,
         ),
     ]
+    if risk.within_limits:
+        lines.append(t("analyze_risk_within_limits", lang))
+    else:
+        lines.append(t("analyze_risk_above_limits", lang))
     for factor in risk.factors:
         lines.append(t("analyze_risk_factor", lang, detail=factor))
     return lines
