@@ -47,6 +47,8 @@
   "macro_sector_label": "Macro & Central Banks",
   "daily_summary_top_headlines": 5,
   "enable_daily_summary": true,
+  "deep_digest_times": ["06:00", "20:00"],
+  "enable_deep_digest": true,
   "ollama_base_url": "",
   "ollama_model": "qwen3:30b",
   "enable_llm_summaries": false

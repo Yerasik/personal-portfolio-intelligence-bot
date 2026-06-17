@@ -19,6 +19,7 @@ from config.settings import RuntimeSettings
 from scheduler.jobs import (
     JOB_AUTO_NEWS_DISCOVERY,
     JOB_DAILY_SUMMARY,
+    JOB_DEEP_DIGEST_PREFIX,
     JOB_MARKET_FETCH,
     JOB_NEWS_FETCH,
     JOB_RULE_EVALUATION,
@@ -114,6 +115,8 @@ def run_test() -> None:
             JOB_SENTIMENT_ANALYSIS,
             JOB_PROS_CONS,
             JOB_DAILY_SUMMARY,
+            f"{JOB_DEEP_DIGEST_PREFIX}06_00",
+            f"{JOB_DEEP_DIGEST_PREFIX}20_00",
         }
         if job_ids != expected:
             raise AssertionError(f"unexpected jobs registered: {job_ids}")
@@ -158,7 +161,7 @@ def run_test() -> None:
         finally:
             jobs_module.NewsDataCollector = original_news_collector
 
-        if captured_industries != ("AI", "Consumer Electronics"):
+        if captured_industries != ("Macro & Central Banks", "AI", "Consumer Electronics"):
             raise AssertionError(
                 f"news job passed unexpected industries: {captured_industries}"
             )
@@ -171,6 +174,12 @@ def run_test() -> None:
         job_ids_without_summary = {job.id for job in empty_scheduler.get_jobs()}
         if JOB_DAILY_SUMMARY in job_ids_without_summary:
             raise AssertionError("daily summary job should be omitted when disabled")
+
+        repository.save_config(AppConfig(enable_deep_digest=False))
+        empty_scheduler_2 = BlockingScheduler(timezone="UTC")
+        register_jobs(empty_scheduler_2, services)
+        if any(job.id.startswith(JOB_DEEP_DIGEST_PREFIX) for job in empty_scheduler_2.get_jobs()):
+            raise AssertionError("deep digest jobs should be omitted when disabled")
 
         print("Registered jobs:", sorted(job_ids))
         print("Pending alerts after rule evaluation:", len(updated_state.pending_alerts))

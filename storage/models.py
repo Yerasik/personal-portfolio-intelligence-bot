@@ -130,6 +130,8 @@ class AppConfig(BaseModel):
     macro_sector_label: str = "Macro & Central Banks"
     daily_summary_top_headlines: int = Field(default=5, ge=1, le=15)
     enable_daily_summary: bool = True
+    deep_digest_times: list[str] = Field(default_factory=lambda: ["06:00", "20:00"])
+    enable_deep_digest: bool = True
     ollama_base_url: str = ""
     ollama_model: str = ""
     enable_llm_summaries: bool = False
@@ -182,6 +184,9 @@ class BotState(BaseModel):
     """Operational state persisted in state.json."""
 
     last_digest_at: datetime | None = None
+    digest_sent_at: datetime | None = None
+    deep_digest_price_snapshot: dict[str, float] = Field(default_factory=dict)
+    deep_digest_sentiment_snapshot: dict[str, float] = Field(default_factory=dict)
     last_market_fetch_at: datetime | None = None
     last_news_fetch_at: datetime | None = None
     latest_prices: dict[str, MarketQuote] = Field(default_factory=dict)

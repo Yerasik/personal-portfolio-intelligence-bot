@@ -19,6 +19,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
+from analysis.deep_digest import parse_deep_digest_time, run_deep_digest
 from analysis.industries import build_news_fetch_industries
 from analysis.llm import LlmClient
 from analysis.pros_cons_engine import run_pros_cons_job as execute_pros_cons_analysis
@@ -46,6 +47,7 @@ JOB_RULE_EVALUATION: Final = "rule_evaluation"
 JOB_SENTIMENT_ANALYSIS: Final = "sentiment_analysis"
 JOB_PROS_CONS: Final = "pros_cons"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
+JOB_DEEP_DIGEST_PREFIX: Final = "deep_digest_"
 
 _built_scheduler: AppScheduler | None = None
 _scheduler_thread: threading.Thread | None = None
@@ -295,6 +297,32 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
         logger.warning("Daily summary was not sent to Telegram")
 
 
+def run_deep_digest_job(services: SchedulerServices) -> None:
+    """Build the morning/evening deep digest and send it to Telegram."""
+    app_config = services.load_app_config()
+    if not app_config.enable_deep_digest:
+        logger.info("Deep digest disabled in config.json")
+        return
+
+    llm = LlmClient(settings=services.runtime, app_config=app_config)
+    run_deep_digest(
+        services.repository,
+        llm,
+        app_config,
+        services.get_notifier(),
+    )
+
+
+def _remove_deep_digest_jobs(scheduler: BlockingScheduler) -> None:
+    """Drop all previously registered deep digest cron jobs."""
+    for job in scheduler.get_jobs():
+        if job.id.startswith(JOB_DEEP_DIGEST_PREFIX):
+            try:
+                scheduler.remove_job(job.id)
+            except JobLookupError:
+                pass
+
+
 def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> None:
     """Register all scheduled jobs using intervals from config.json."""
     app_config = services.load_app_config()
@@ -371,6 +399,26 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
             scheduler.remove_job(JOB_DAILY_SUMMARY)
         except JobLookupError:
             pass
+
+    _remove_deep_digest_jobs(scheduler)
+    if app_config.enable_deep_digest:
+        for time_str in app_config.deep_digest_times:
+            try:
+                hour, minute = parse_deep_digest_time(time_str)
+            except ValueError:
+                logger.warning("Skipping invalid deep_digest_times entry: %s", time_str)
+                continue
+            job_id = f"{JOB_DEEP_DIGEST_PREFIX}{hour:02d}_{minute:02d}"
+            scheduler.add_job(
+                lambda: _run_job(job_id, lambda: run_deep_digest_job(services)),
+                trigger=CronTrigger(
+                    hour=hour,
+                    minute=minute,
+                    timezone=timezone,
+                ),
+                id=job_id,
+                replace_existing=True,
+            )
 
     registered = [job.id for job in scheduler.get_jobs()]
     logger.info(
