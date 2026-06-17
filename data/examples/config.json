@@ -4,13 +4,29 @@
   "digest_minute": 0,
   "focus_industries": [
     "AI",
-    "Hong Kong"
+    "Hong Kong",
+    "Macro & Central Banks"
   ],
-  "sector_keywords": {},
+  "sector_keywords": {
+    "Macro & Central Banks": [
+      "Federal Reserve",
+      "Fed",
+      "FOMC",
+      "interest rate",
+      "central bank",
+      "ECB",
+      "PBOC",
+      "inflation",
+      "GDP",
+      "treasury yield",
+      "monetary policy"
+    ]
+  },
   "extra_watchlist": [],
   "rss_feed_urls": [
     "https://feeds.reuters.com/reuters/businessNews",
-    "https://techcrunch.com/feed/"
+    "https://techcrunch.com/feed/",
+    "https://news.google.com/rss/search?q=Federal+Reserve+OR+Fed+interest+rates+OR+central+bank&hl=en-US&gl=US&ceid=US:en"
   ],
   "news_max_items": 500,
   "news_retention_days": 14,
@@ -27,6 +43,9 @@
   "sentiment_analysis_interval_minutes": 60,
   "pros_cons_interval_hours": 4,
   "sentiment_alert_threshold": 0.3,
+  "enable_sector_attention_alerts": false,
+  "macro_sector_label": "Macro & Central Banks",
+  "daily_summary_top_headlines": 5,
   "enable_daily_summary": true,
   "ollama_base_url": "",
   "ollama_model": "qwen3:30b",

@@ -176,10 +176,12 @@ async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
 
 
 async def news_summary_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /news_summary — stream LLM summaries as each group completes."""
+    """Handle /news_summary — refresh news, then stream LLM summaries."""
     user = await _guard(update, context)
     if user is None or update.message is None:
         return
+
+    await update.message.reply_text(t("news_fetching", user.language))
 
     footer = t("news_footer", user.language)
     pending: str | None = None

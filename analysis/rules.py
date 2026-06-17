@@ -45,7 +45,6 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Literal
 
-from analysis.industries import build_news_focus_industries
 from collectors.market_data import tracked_tickers
 from storage.models import AppConfig, BotState, MarketQuote, NewsCache, NewsItem, Portfolio
 
@@ -138,14 +137,14 @@ class RulesEngine:
         candidates.extend(
             self._repeated_negative_news_alerts(portfolio, news_cache, evaluated_at)
         )
-        focus_industries = build_news_focus_industries(
-            self.app_config.focus_industries,
-            portfolio,
-            self.ticker_to_industry,
-        )
-        candidates.extend(
-            self._sector_attention_alerts(news_cache, evaluated_at, focus_industries)
-        )
+        if self.app_config.enable_sector_attention_alerts:
+            candidates.extend(
+                self._sector_attention_alerts(
+                    portfolio,
+                    news_cache,
+                    evaluated_at,
+                )
+            )
 
         suppressed = self._suppress_duplicates(candidates, state, evaluated_at)
         logger.info(
@@ -290,24 +289,40 @@ class RulesEngine:
 
         return alerts
 
+    def _portfolio_industries(self, portfolio: Portfolio) -> list[str]:
+        """Industries mapped from held tickers only (not broad focus_industries)."""
+        industries: list[str] = []
+        seen: set[str] = set()
+        for symbol in self._tracked_tickers(portfolio):
+            industry = self.ticker_to_industry.get(symbol, "").strip()
+            if not industry or industry in seen:
+                continue
+            seen.add(industry)
+            industries.append(industry)
+        return industries
+
     def _sector_attention_alerts(
         self,
+        portfolio: Portfolio,
         news_cache: NewsCache,
         evaluated_at: datetime,
-        focus_industries: list[str],
     ) -> list[AlertCandidate]:
-        """Alert when a focus industry gets unusually many news articles."""
+        """Alert when a portfolio-linked industry gets unusually many news articles."""
         window = timedelta(hours=self.app_config.alert_sector_window_hours)
         minimum = self.app_config.alert_sector_article_count
+        portfolio_symbols = set(self._tracked_tickers(portfolio))
         alerts: list[AlertCandidate] = []
 
-        for industry in focus_industries:
+        for industry in self._portfolio_industries(portfolio):
             label = industry.strip()
             if not label:
                 continue
 
             articles = [
-                item for item in news_cache.items if label in item.sector_tags
+                item
+                for item in news_cache.items
+                if label in item.sector_tags
+                and any(symbol in item.ticker_tags for symbol in portfolio_symbols)
             ]
             recent = self._articles_in_window(articles, evaluated_at, window)
             if len(recent) < minimum:
@@ -316,8 +331,8 @@ class RulesEngine:
             urgency: AlertUrgency = "warning" if len(recent) >= minimum + 1 else "info"
             title = f"Sector attention: {label}"
             explanation = (
-                f"{len(recent)} articles tagged to {label} were found in the last "
-                f"{self.app_config.alert_sector_window_hours} hour(s)."
+                f"{len(recent)} articles about {label} tied to your holdings were "
+                f"found in the last {self.app_config.alert_sector_window_hours} hour(s)."
             )
             alerts.append(
                 self._build_alert(

@@ -19,7 +19,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
-from analysis.industries import build_news_focus_industries
+from analysis.industries import build_news_fetch_industries
 from analysis.llm import LlmClient
 from analysis.pros_cons_engine import run_pros_cons_job as execute_pros_cons_analysis
 from analysis.rules import RulesEngine
@@ -152,10 +152,11 @@ def run_news_data_job(services: SchedulerServices) -> None:
     app_config = services.load_app_config()
     portfolio = services.repository.load_portfolio()
     ticker_industries = services.repository.load_ticker_industries()
-    focus_industries = build_news_focus_industries(
+    focus_industries = build_news_fetch_industries(
         app_config.focus_industries,
         portfolio,
         ticker_industries.ticker_to_industry,
+        app_config.macro_sector_label,
     )
     context = CollectorContext(
         repository=services.repository,

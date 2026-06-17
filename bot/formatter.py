@@ -9,7 +9,13 @@ from collections.abc import Iterator
 
 from analysis.llm import LlmAdvisoryResult
 from analysis.move_explainer import PriceMoveExplanation
-from analysis.news_summarizer import NewsGroupSummary, NewsSummary
+from analysis.news_summarizer import (
+    NewsGroupSummary,
+    NewsSummary,
+    portfolio_headlines_by_ticker,
+    top_important_headlines,
+)
+from analysis.portfolio_risk import PortfolioRiskAssessment
 from analysis.portfolio_valuation import (
     PositionValuation,
     PortfolioValuation,
@@ -209,17 +215,39 @@ def _append_news_summary_sections(
 def format_daily_news_brief(
     news_summary: NewsSummary | None,
     *,
+    portfolio: Portfolio | None = None,
+    news_cache: NewsCache | None = None,
+    app_config: AppConfig | None = None,
+    ticker_to_industry: dict[str, str] | None = None,
     lang: str = "en",
 ) -> str:
-    """Render a compact ticker-news block for the daily digest."""
-    if news_summary is None or not news_summary.ticker_summaries:
-        return ""
+    """Render top headlines and optional LLM digests for the daily summary."""
+    lines: list[str] = []
 
-    lines = [t("daily_news_brief_title", lang), ""]
-    for ticker, summary in news_summary.ticker_summaries.items():
-        lines.append(f"{ticker}:")
-        lines.append(summary)
-        lines.append("")
+    if (
+        portfolio is not None
+        and news_cache is not None
+        and app_config is not None
+        and ticker_to_industry is not None
+    ):
+        top_lines = _format_top_headlines_lines(
+            portfolio,
+            news_cache,
+            app_config,
+            ticker_to_industry,
+            lang=lang,
+        )
+        if top_lines:
+            lines.extend(top_lines)
+            lines.append("")
+
+    if news_summary is not None and news_summary.ticker_summaries:
+        lines.extend([t("daily_news_digest_title", lang), ""])
+        for ticker, summary in news_summary.ticker_summaries.items():
+            lines.append(f"{ticker}:")
+            lines.append(summary.strip())
+            lines.append("")
+
     return "\n".join(lines).strip()
 
 
@@ -349,17 +377,20 @@ def format_daily_summary(
     news_summary: NewsSummary | None = None,
     *,
     state: BotState | None = None,
+    news_cache: NewsCache | None = None,
+    ticker_to_industry: dict[str, str] | None = None,
     lang: str = "en",
 ) -> str:
     """Format a concise daily summary for Telegram delivery."""
-    _ = advisory, app_config
+    _ = advisory
+    visible_alerts = _visible_alerts(alerts, app_config)
     lines = [
         t("daily_summary", lang),
         t(
             "holdings_alerts",
             lang,
             holdings=len(portfolio.positions),
-            alerts=len(alerts),
+            alerts=len(visible_alerts),
         ),
     ]
 
@@ -384,15 +415,22 @@ def format_daily_summary(
 
     lines.append("")
 
-    if alerts:
+    if visible_alerts:
         lines.append(t("alerts_header", lang))
-        for alert in alerts[:3]:
+        for alert in visible_alerts[:3]:
             lines.append(_localized_alert_line(alert, lang))
-        if len(alerts) > 3:
-            lines.append(t("plus_more", lang, count=len(alerts) - 3))
+        if len(visible_alerts) > 3:
+            lines.append(t("plus_more", lang, count=len(visible_alerts) - 3))
         lines.append("")
 
-    brief = format_daily_news_brief(news_summary, lang=lang)
+    brief = format_daily_news_brief(
+        news_summary,
+        portfolio=portfolio,
+        news_cache=news_cache,
+        app_config=app_config,
+        ticker_to_industry=ticker_to_industry,
+        lang=lang,
+    )
     if brief:
         lines.extend(["", brief])
 
@@ -592,20 +630,39 @@ def format_analyze(
     *,
     portfolio: Portfolio | None = None,
     sentiment_by_ticker: dict[str, TickerSentimentSignal] | None = None,
+    news_cache: NewsCache | None = None,
+    ticker_to_industry: dict[str, str] | None = None,
+    risk: PortfolioRiskAssessment | None = None,
     lang: str = "en",
     is_developer: bool = False,
 ) -> str:
     """Render rule alerts and optional LLM advisory output."""
+    visible_alerts = _visible_alerts(alerts, app_config)
     lines = [t("analyze_header", lang), ""]
 
-    if alerts:
-        lines.append(t("analyze_alerts_count", lang, count=len(alerts)))
-        for alert in alerts:
+    if risk is not None:
+        lines.extend(_format_risk_lines(risk, lang))
+        lines.append("")
+
+    if visible_alerts:
+        lines.append(t("analyze_alerts_count", lang, count=len(visible_alerts)))
+        for alert in visible_alerts:
             lines.append(_localized_alert_line(alert, lang))
             lines.append(f"  {_localized_alert_explanation(alert, lang)}")
         lines.append("")
     else:
         lines.extend([t("analyze_no_alerts", lang), ""])
+
+    if portfolio is not None and news_cache is not None:
+        headline_lines = _format_portfolio_headlines_lines(
+            portfolio,
+            news_cache,
+            app_config,
+            lang=lang,
+        )
+        if headline_lines:
+            lines.extend(headline_lines)
+            lines.append("")
 
     sentiment_lines = _format_analyze_sentiment_lines(
         portfolio,
@@ -677,6 +734,76 @@ def _format_analyze_sentiment_lines(
         return []
 
     return [t("analyze_sentiment_header", lang), *lines]
+
+
+def _visible_alerts(
+    alerts: list[AlertCandidate],
+    app_config: AppConfig,
+) -> list[AlertCandidate]:
+    """Hide sector-attention alerts unless explicitly enabled in config."""
+    if app_config.enable_sector_attention_alerts:
+        return alerts
+    return [alert for alert in alerts if alert.type != "sector_attention"]
+
+
+def _format_top_headlines_lines(
+    portfolio: Portfolio,
+    news_cache: NewsCache,
+    app_config: AppConfig,
+    ticker_to_industry: dict[str, str],
+    *,
+    lang: str,
+) -> list[str]:
+    """Build ranked top headlines from all cached articles (macro excluded)."""
+    ranked = top_important_headlines(
+        portfolio,
+        news_cache,
+        app_config,
+        ticker_to_industry,
+    )
+    if not ranked:
+        return []
+
+    lines = [t("daily_top_headlines_title", lang), ""]
+    for row in ranked:
+        lines.append(f"• [{row.label}] {row.item.title.strip()}")
+    return lines
+
+
+def _format_risk_lines(risk: PortfolioRiskAssessment, lang: str) -> list[str]:
+    """Format portfolio risk level, score, and contributing factors."""
+    lines = [
+        t(
+            "analyze_risk_header",
+            lang,
+            level=t(f"risk_level_{risk.level}", lang),
+            score=risk.score,
+        ),
+    ]
+    for factor in risk.factors:
+        lines.append(t("analyze_risk_factor", lang, detail=factor))
+    return lines
+
+
+def _format_portfolio_headlines_lines(
+    portfolio: Portfolio,
+    news_cache: NewsCache,
+    app_config: AppConfig,
+    *,
+    lang: str,
+) -> list[str]:
+    """Build deduplicated headline bullets for each holding."""
+    headlines = portfolio_headlines_by_ticker(portfolio, news_cache, app_config)
+    if not headlines:
+        return []
+
+    lines = [t("portfolio_headlines_header", lang), ""]
+    for symbol in sorted(headlines):
+        lines.append(f"{symbol}:")
+        for item in headlines[symbol]:
+            lines.append(f"• {item.title.strip()}")
+        lines.append("")
+    return lines
 
 
 def format_pros_cons_analysis(

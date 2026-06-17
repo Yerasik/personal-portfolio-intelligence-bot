@@ -8,8 +8,14 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Literal
 
-from analysis.industries import build_news_focus_industries
-from analysis.news_selection import select_news_for_summary
+from analysis.industries import build_news_fetch_industries
+from analysis.news_selection import (
+    RankedNewsItem,
+    articles_matching_sector,
+    macro_sector_keywords,
+    select_news_for_summary,
+    select_top_global_articles,
+)
 from collectors.market_data import portfolio_tickers
 from storage.models import AppConfig, NewsCache, NewsItem, Portfolio
 
@@ -118,12 +124,19 @@ def news_items_for_sector(
     window_hours: int = 48,
     exclude_fingerprints: set[str] | None = None,
     now: datetime | None = None,
+    macro_label: str = "",
+    macro_keywords: list[str] | None = None,
 ) -> list[NewsItem]:
     """Return deduplicated recent news for a sector."""
     label = sector.strip()
     if not label:
         return []
-    matched = [item for item in news_cache.items if label in item.sector_tags]
+    matched = articles_matching_sector(
+        news_cache.items,
+        label,
+        macro_label=macro_label,
+        macro_keywords=macro_keywords,
+    )
     selected, _fingerprints = select_news_for_summary(
         matched,
         max_items=MAX_ITEMS_PER_GROUP,
@@ -156,6 +169,58 @@ def news_items_for_ticker(
         now=now,
     )
     return selected
+
+
+def portfolio_headlines_by_ticker(
+    portfolio: Portfolio,
+    news_cache: NewsCache,
+    app_config: AppConfig,
+    *,
+    max_per_ticker: int = 3,
+    now: datetime | None = None,
+) -> dict[str, list[NewsItem]]:
+    """Pick deduplicated top headlines per holding for digests and /analyze."""
+    window_hours = app_config.alert_sector_window_hours
+    seen_fingerprints: set[str] = set()
+    headlines: dict[str, list[NewsItem]] = {}
+
+    for symbol in portfolio_tickers(portfolio):
+        matched = [item for item in news_cache.items if symbol in item.ticker_tags]
+        items, new_fingerprints = select_news_for_summary(
+            matched,
+            max_items=max_per_ticker,
+            window_hours=window_hours,
+            exclude_fingerprints=seen_fingerprints,
+            now=now,
+        )
+        if items:
+            headlines[symbol] = items
+            seen_fingerprints |= new_fingerprints
+
+    return headlines
+
+
+def top_important_headlines(
+    portfolio: Portfolio,
+    news_cache: NewsCache,
+    app_config: AppConfig,
+    ticker_to_industry: dict[str, str],
+    *,
+    now: datetime | None = None,
+) -> list[RankedNewsItem]:
+    """Select the top headlines from all cached articles (macro excluded)."""
+    macro_label = app_config.macro_sector_label.strip() or "Macro & Central Banks"
+    keywords = macro_sector_keywords(app_config.sector_keywords, macro_label)
+
+    return select_top_global_articles(
+        news_cache.items,
+        portfolio_symbols=set(portfolio_tickers(portfolio)),
+        macro_label=macro_label,
+        macro_keywords=keywords,
+        max_items=app_config.daily_summary_top_headlines,
+        window_hours=app_config.alert_sector_window_hours,
+        now=now,
+    )
 
 
 def build_sector_summary_prompt(
@@ -260,10 +325,13 @@ def iter_news_summary_groups(
     from bot.i18n import t
 
     names = company_names or {}
-    focus_industries = build_news_focus_industries(
+    macro_label = app_config.macro_sector_label.strip() or "Macro & Central Banks"
+    macro_keywords = macro_sector_keywords(app_config.sector_keywords, macro_label)
+    focus_industries = build_news_fetch_industries(
         app_config.focus_industries,
         portfolio,
         ticker_to_industry,
+        macro_label,
     )
     tickers = portfolio_tickers(portfolio)
 
@@ -279,7 +347,12 @@ def iter_news_summary_groups(
     window_hours = app_config.alert_sector_window_hours
 
     for sector in focus_industries:
-        matched = [item for item in news_cache.items if sector in item.sector_tags]
+        matched = articles_matching_sector(
+            news_cache.items,
+            sector,
+            macro_label=macro_label,
+            macro_keywords=macro_keywords,
+        )
         items, new_fingerprints = select_news_for_summary(
             matched,
             max_items=MAX_ITEMS_PER_GROUP,

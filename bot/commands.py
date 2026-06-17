@@ -9,7 +9,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
-from analysis.industries import build_news_focus_industries
+from analysis.industries import build_news_fetch_industries, build_news_focus_industries
 from analysis.llm import LlmAdvisoryResult, LlmClient
 from analysis.move_explainer import (
     PriceMoveExplanation,
@@ -21,7 +21,7 @@ from analysis.strategy_writer import (
     localized_strategy_text,
 )
 from analysis.news_summarizer import iter_news_summary_groups
-from analysis.pros_cons_engine import ProsConsEngine
+from analysis.portfolio_risk import estimate_portfolio_risk
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
@@ -221,6 +221,7 @@ class BotCommands:
         ticker_industries = self.repository.load_ticker_industries()
         state = self.repository.load_state()
         news_cache = self.repository.load_news_cache()
+        signals = self.repository.load_signals()
 
         rules = RulesEngine(
             app_config=app_config,
@@ -240,12 +241,23 @@ class BotCommands:
                 language=lang,
             )
 
+        risk = estimate_portfolio_risk(
+            portfolio,
+            state,
+            signals,
+            alerts,
+            app_config,
+        )
+
         return format_analyze(
             alerts,
             advisory,
             app_config,
             portfolio=portfolio,
-            sentiment_by_ticker=self.repository.load_signals().sentiment,
+            sentiment_by_ticker=signals.sentiment,
+            news_cache=news_cache,
+            ticker_to_industry=ticker_industries.ticker_to_industry,
+            risk=risk,
             lang=lang,
             is_developer=self._is_developer(chat_id),
         )
@@ -277,8 +289,34 @@ class BotCommands:
             return t("analyze_pros_empty", lang)
         return format_pros_cons_analysis(memos, lang=lang)
 
+    def refresh_news_cache_for_summary(self) -> int:
+        """Fetch latest RSS news (including macro) before /news_summary."""
+        from collectors.news_data import NewsDataService
+
+        app_config = self.repository.load_config()
+        portfolio = self.repository.load_portfolio()
+        ticker_industries = self.repository.load_ticker_industries()
+        focus_industries = build_news_fetch_industries(
+            app_config.focus_industries,
+            portfolio,
+            ticker_industries.ticker_to_industry,
+            app_config.macro_sector_label,
+        )
+        batch = NewsDataService().run(
+            self.repository,
+            app_config,
+            portfolio,
+            focus_industries=focus_industries,
+        )
+        logger.info(
+            "News refresh for /news_summary: %d new article(s)",
+            batch.new_count,
+        )
+        return batch.new_count
+
     def iter_news_summary_messages(self, chat_id: int):
         """Stream cached news summaries one Telegram message at a time."""
+        self.refresh_news_cache_for_summary()
         lang = self._lang(chat_id)
         app_config = self.repository.load_config()
         portfolio = self.repository.load_portfolio()

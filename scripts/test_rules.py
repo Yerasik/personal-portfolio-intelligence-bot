@@ -68,6 +68,7 @@ def run_test() -> None:
         alert_sector_article_count=3,
         focus_industries=["Consumer Electronics"],
         alert_suppression_hours=12,
+        enable_sector_attention_alerts=True,
     )
     engine = RulesEngine(
         app_config=config,
@@ -133,18 +134,21 @@ def run_test() -> None:
                 item_id="s1",
                 title="Consumer Electronics demand update",
                 sectors=["Consumer Electronics"],
+                tickers=["AAPL"],
                 hours_ago=1,
             ),
             _news_item(
                 item_id="s2",
                 title="Gadget makers face margin pressure",
                 sectors=["Consumer Electronics"],
+                tickers=["AAPL"],
                 hours_ago=2,
             ),
             _news_item(
                 item_id="s3",
                 title="Wearables market outlook shifts",
                 sectors=["Consumer Electronics"],
+                tickers=["AAPL"],
                 hours_ago=3,
             ),
         ]
@@ -197,6 +201,7 @@ def run_test() -> None:
 
     portfolio_only_config = AppConfig(
         alert_sector_article_count=3,
+        enable_sector_attention_alerts=True,
         focus_industries=["AI"],
     )
     portfolio_only_engine = RulesEngine(
@@ -214,6 +219,25 @@ def run_test() -> None:
         raise AssertionError(
             "portfolio-derived Consumer Electronics should trigger sector alerts"
         )
+
+    ai_news_cache = NewsCache(
+        items=[
+            _news_item(item_id="ai1", title="AI stocks rally", sectors=["AI"], hours_ago=1),
+            _news_item(item_id="ai2", title="AI chip demand surges", sectors=["AI"], hours_ago=2),
+            _news_item(item_id="ai3", title="AI data center boom", sectors=["AI"], hours_ago=3),
+        ]
+    )
+    ai_engine = RulesEngine(
+        app_config=AppConfig(
+            alert_sector_article_count=3,
+            focus_industries=["AI"],
+            enable_sector_attention_alerts=False,
+        ),
+        ticker_to_industry={"AAPL": "Consumer Electronics"},
+    )
+    ai_alerts = ai_engine.evaluate(portfolio, state, ai_news_cache, now=NOW)
+    if any(alert.type == "sector_attention" for alert in ai_alerts):
+        raise AssertionError("broad AI sector news must not alert when sector alerts are disabled")
 
     print("Example alert objects:")
     print(json.dumps([asdict(alert) for alert in alerts], indent=2, default=str))

@@ -97,7 +97,13 @@ class TelegramNotifier:
             return AlertDeliveryResult(skipped=len(alerts))
 
         pushable_alerts = [
-            alert for alert in alerts if alert.urgency in _PUSHABLE_ALERT_URGENCIES
+            alert
+            for alert in alerts
+            if alert.urgency in _PUSHABLE_ALERT_URGENCIES
+            and (
+                app_config.enable_sector_attention_alerts
+                or alert.type != "sector_attention"
+            )
         ]
         if not pushable_alerts:
             logger.info("No warning or urgent alerts to deliver")
@@ -256,6 +262,8 @@ class TelegramNotifier:
 
         summaries = news_summary_by_language or {}
         state = repository.load_state()
+        news_cache = repository.load_news_cache()
+        ticker_to_industry = repository.load_ticker_industries().ticker_to_industry
         delivered = False
         for user in users:
             lang = user.language
@@ -266,6 +274,8 @@ class TelegramNotifier:
                 app_config,
                 news_summary=summaries.get(lang),
                 state=state,
+                news_cache=news_cache,
+                ticker_to_industry=ticker_to_industry,
                 lang=lang,
             )
             try:

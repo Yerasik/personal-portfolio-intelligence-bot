@@ -126,6 +126,9 @@ class AppConfig(BaseModel):
     sentiment_analysis_interval_minutes: int = Field(default=60, ge=5, le=1440)
     pros_cons_interval_hours: int = Field(default=4, ge=1, le=168)
     sentiment_alert_threshold: float = Field(default=0.3, gt=0, le=2.0)
+    enable_sector_attention_alerts: bool = False
+    macro_sector_label: str = "Macro & Central Banks"
+    daily_summary_top_headlines: int = Field(default=5, ge=1, le=15)
     enable_daily_summary: bool = True
     ollama_base_url: str = ""
     ollama_model: str = ""

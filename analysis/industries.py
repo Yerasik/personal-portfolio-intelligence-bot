@@ -69,6 +69,24 @@ def build_news_focus_industries(
     return combined
 
 
+def build_news_fetch_industries(
+    configured_industries: list[str],
+    portfolio: Portfolio,
+    ticker_to_industry: dict[str, str],
+    macro_sector_label: str = "",
+) -> list[str]:
+    """Industries used for RSS tagging and /news_summary, including macro."""
+    focus = build_news_focus_industries(
+        configured_industries,
+        portfolio,
+        ticker_to_industry,
+    )
+    label = _normalize_industry(macro_sector_label)
+    if label and label.lower() not in {industry.lower() for industry in focus}:
+        return [label, *focus]
+    return focus
+
+
 def guess_industry_with_llm(
     llm: LlmClient,
     ticker: str,
