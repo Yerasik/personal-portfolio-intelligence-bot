@@ -194,6 +194,10 @@ class TelegramNotifier:
                     sent_at=now,
                 )
             )
+            if alert.type == "price_drop" and alert.ticker:
+                state.price_alert_regime[alert.ticker] = "drop"
+            elif alert.type == "price_rise" and alert.ticker:
+                state.price_alert_regime[alert.ticker] = "rise"
             recent_ids.add(alert.id)
             recent_keys.add(alert.alert_key)
             result.sent += 1

@@ -11,10 +11,40 @@ from bot.notifier import AlertDeliveryResult, TelegramNotifier
 from collectors.base import CollectorContext
 from collectors.market_data import MarketDataCollector
 from config.settings import RuntimeSettings
-from storage.models import AppConfig, BotState, EvaluatedAlertRecord, PendingAlert
+from storage.models import AppConfig, BotState, EvaluatedAlertRecord, PendingAlert, Portfolio
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
+
+
+def sync_price_alert_regimes(
+    state: BotState,
+    portfolio: Portfolio,
+    app_config: AppConfig,
+) -> None:
+    """Clear latched price regimes when a ticker moves back into the neutral band."""
+    from collectors.market_data import tracked_tickers
+
+    threshold = app_config.alert_price_change_pct
+    reset_band = threshold * 0.5
+    if reset_band <= 0:
+        return
+
+    regimes = dict(state.price_alert_regime)
+    for symbol in tracked_tickers(portfolio, app_config.extra_watchlist):
+        quote = state.latest_prices.get(symbol)
+        if quote is None or quote.change_pct is None:
+            continue
+        if abs(quote.change_pct) >= reset_band:
+            continue
+        if symbol in regimes:
+            logger.info(
+                "Cleared price alert regime for %s (change %.2f%% inside neutral band)",
+                symbol,
+                quote.change_pct,
+            )
+        regimes.pop(symbol, None)
+    state.price_alert_regime = regimes
 
 
 def _alert_to_pending(alert: AlertCandidate) -> PendingAlert:
@@ -70,6 +100,8 @@ def evaluate_and_deliver_alerts(
     state = repository.load_state()
     news_cache = repository.load_news_cache()
     ticker_industries = repository.load_ticker_industries()
+
+    sync_price_alert_regimes(state, portfolio, config)
 
     rules = RulesEngine(
         app_config=config,

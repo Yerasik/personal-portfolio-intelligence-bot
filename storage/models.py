@@ -206,6 +206,7 @@ class BotState(BaseModel):
     last_sent_alerts: list[SentAlertRecord] = Field(default_factory=list)
     last_evaluated_alerts: list[EvaluatedAlertRecord] = Field(default_factory=list)
     pending_alerts: list[PendingAlert] = Field(default_factory=list)
+    price_alert_regime: dict[str, Literal["drop", "rise"]] = Field(default_factory=dict)
 
 
 class NewsItem(BaseModel):

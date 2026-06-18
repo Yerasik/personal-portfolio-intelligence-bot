@@ -122,6 +122,18 @@ def _quote_from_history(symbol: str, history: object) -> tuple[float | None, flo
     return price, change_pct, volume
 
 
+def _change_pct_from_info(
+    info: dict[str, object],
+    history_change_pct: float | None,
+) -> float | None:
+    """Prefer yfinance session change % over two-day close comparison."""
+    for key in ("regularMarketChangePercent", "preMarketChangePercent"):
+        value = _coerce_float(info.get(key))
+        if value is not None:
+            return value
+    return history_change_pct
+
+
 def _load_price_history(symbol: str) -> object:
     """Fetch recent daily bars for a ticker using a single yfinance call."""
     with _quiet_yfinance():
@@ -151,12 +163,13 @@ def fetch_quote(ticker: str, fetched_at: datetime | None = None) -> MarketQuote:
 
     when = fetched_at or datetime.now(tz=UTC)
     history = _load_price_history(symbol)
-    price, change_pct, volume = _quote_from_history(symbol, history)
+    price, history_change_pct, volume = _quote_from_history(symbol, history)
 
     if price is None:
         raise ValueError(f"Unknown or delisted ticker: {symbol}")
 
     info = _load_company_info(symbol)
+    change_pct = _change_pct_from_info(info, history_change_pct)
 
     return MarketQuote(
         ticker=symbol,

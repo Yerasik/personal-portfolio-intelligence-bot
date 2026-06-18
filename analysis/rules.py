@@ -57,6 +57,7 @@ AlertType = Literal[
     "sector_attention",
 ]
 AlertUrgency = Literal["info", "warning", "urgent"]
+PriceAlertRegime = Literal["drop", "rise"]
 
 
 def _recent_suppression_keys(
@@ -174,6 +175,9 @@ class RulesEngine:
                 continue
             if quote.change_pct is None or quote.change_pct > -threshold:
                 continue
+            if state.price_alert_regime.get(symbol) == "drop":
+                logger.debug("Skipping repeat price_drop for %s (regime latched)", symbol)
+                continue
 
             change_pct = quote.change_pct
             urgency = self._urgency_for_price_move(change_pct, threshold)
@@ -215,6 +219,9 @@ class RulesEngine:
             if quote is None:
                 continue
             if quote.change_pct is None or quote.change_pct < threshold:
+                continue
+            if state.price_alert_regime.get(symbol) == "rise":
+                logger.debug("Skipping repeat price_rise for %s (regime latched)", symbol)
                 continue
 
             change_pct = quote.change_pct

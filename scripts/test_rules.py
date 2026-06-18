@@ -199,6 +199,39 @@ def run_test() -> None:
             "recently evaluated price_rise alert for MSFT should be suppressed"
         )
 
+    latched_state = state.model_copy(
+        update={"price_alert_regime": {"AAPL": "drop"}}
+    )
+    latched = engine.evaluate(portfolio, latched_state, news_cache, now=NOW)
+    if any(alert.type == "price_drop" and alert.ticker == "AAPL" for alert in latched):
+        raise AssertionError(
+            "price_drop for AAPL should be suppressed while drop regime is latched"
+        )
+
+    recovered_state = latched_state.model_copy(
+        update={
+            "latest_prices": {
+                **latched_state.latest_prices,
+                "AAPL": MarketQuote(
+                    ticker="AAPL",
+                    price=168.0,
+                    change_pct=-6.5,
+                    volume=1000,
+                    company_name="Apple Inc.",
+                    fetched_at=NOW,
+                ),
+            },
+            "price_alert_regime": {},
+        }
+    )
+    retrigger = engine.evaluate(portfolio, recovered_state, news_cache, now=NOW)
+    if not any(
+        alert.type == "price_drop" and alert.ticker == "AAPL" for alert in retrigger
+    ):
+        raise AssertionError(
+            "price_drop should fire again after regime clears and move re-breaches threshold"
+        )
+
     portfolio_only_config = AppConfig(
         alert_sector_article_count=3,
         enable_sector_attention_alerts=True,

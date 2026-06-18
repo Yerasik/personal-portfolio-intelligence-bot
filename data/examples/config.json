@@ -35,7 +35,7 @@
   "alert_negative_news_window_hours": 24,
   "alert_sector_article_count": 3,
   "alert_sector_window_hours": 24,
-  "alert_suppression_hours": 12,
+  "alert_suppression_hours": 24,
   "market_fetch_interval_minutes": 30,
   "news_fetch_interval_minutes": 60,
   "auto_news_interval_minutes": 30,
