@@ -382,7 +382,11 @@ def run_deep_digest(
         logger.info("Deep digest skipped: no portfolio holdings")
         return False
 
-    sent = notifier.deliver_deep_digest(repository, messages)
+    sent = notifier.deliver_deep_digest(
+        repository,
+        messages,
+        recipients=app_config.deep_digest_recipients,
+    )
     if sent:
         record_deep_digest_delivery(repository, delivered_at=evaluated_at)
         logger.info("Deep digest delivered")

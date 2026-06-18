@@ -295,15 +295,21 @@ class TelegramNotifier:
         self,
         repository: DataRepository,
         messages_by_language: dict[str, str],
+        *,
+        recipients: str = "developers",
     ) -> bool:
-        """Send the deep digest to each authorized user in their language."""
+        """Send the deep digest to developers (default) or all authorized users."""
         if not self.is_configured:
             logger.warning("Telegram notifier not configured; skipping deep digest send")
             return False
 
-        users = self._authorized_users(repository)
+        if recipients == "all_users":
+            users = self._authorized_users(repository)
+        else:
+            users = self._developer_users(repository)
+
         if not users:
-            logger.warning("No authorized users; skipping deep digest send")
+            logger.warning("No deep digest recipients; skipping send")
             return False
 
         delivered = False
@@ -329,6 +335,13 @@ class TelegramNotifier:
             )
 
         return delivered
+
+    def _developer_users(self, repository: DataRepository) -> list[BotUser]:
+        return [
+            user
+            for user in self._authorized_users(repository)
+            if user.role == "developer"
+        ]
 
     def _ordinary_users(self, repository: DataRepository) -> list[BotUser]:
         return [

@@ -49,6 +49,7 @@
   "enable_daily_summary": true,
   "deep_digest_times": ["06:00", "20:00"],
   "enable_deep_digest": true,
+  "deep_digest_recipients": "developers",
   "risk_profile": {
     "max_annual_volatility_pct": 20,
     "max_drawdown_pct": 20,

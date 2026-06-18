@@ -143,6 +143,7 @@ class AppConfig(BaseModel):
     enable_daily_summary: bool = True
     deep_digest_times: list[str] = Field(default_factory=lambda: ["06:00", "20:00"])
     enable_deep_digest: bool = True
+    deep_digest_recipients: Literal["developers", "all_users"] = "developers"
     risk_profile: RiskProfile = Field(default_factory=RiskProfile)
     ollama_base_url: str = ""
     ollama_model: str = ""

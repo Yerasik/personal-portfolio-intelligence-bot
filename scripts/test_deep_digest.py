@@ -55,8 +55,17 @@ class RecordingNotifier:
         self.calls: list[tuple[int, str]] = []
         self.is_configured = True
 
-    def deliver_deep_digest(self, repository: DataRepository, messages_by_language: dict[str, str]) -> bool:
-        for user in repository.load_users().users:
+    def deliver_deep_digest(
+        self,
+        repository: DataRepository,
+        messages_by_language: dict[str, str],
+        *,
+        recipients: str = "developers",
+    ) -> bool:
+        users = repository.load_users().users
+        if recipients != "all_users":
+            users = [user for user in users if user.role == "developer"]
+        for user in users:
             message = messages_by_language.get(user.language) or messages_by_language.get("en", "")
             self.calls.append((user.chat_id, message))
         return bool(self.calls)
@@ -150,8 +159,14 @@ def run_test() -> None:
         finally:
             jobs_module.LlmClient = original_client
 
-        if len(notifier.calls) != 2:
-            raise AssertionError("run_deep_digest_job should fan out to all users")
+        if len(notifier.calls) != 1:
+            raise AssertionError(
+                f"expected deep digest fan-out to developers only (1 user), got {len(notifier.calls)}"
+            )
+
+        chat_ids = {chat_id for chat_id, _message in notifier.calls}
+        if chat_ids != {222}:
+            raise AssertionError(f"expected developer chat_id 222 only, got {chat_ids}")
 
         sent = run_deep_digest(
             repository,
@@ -164,12 +179,8 @@ def run_test() -> None:
         if not sent:
             raise AssertionError("expected deep digest to send")
 
-        if len(notifier.calls) != 4:
-            raise AssertionError(f"expected fan-out to 4 sends after forced rerun, got {len(notifier.calls)}")
-
-        chat_ids = {chat_id for chat_id, _message in notifier.calls}
-        if chat_ids != {111, 222}:
-            raise AssertionError(f"unexpected fan-out chat ids: {chat_ids}")
+        if len(notifier.calls) != 2:
+            raise AssertionError(f"expected 2 developer sends after forced rerun, got {len(notifier.calls)}")
 
         if not llm.prompts:
             raise AssertionError("expected Ollama prompt to be generated")
@@ -191,7 +202,7 @@ def run_test() -> None:
         )
         if duplicate:
             raise AssertionError("duplicate send should be skipped without force")
-        if len(notifier.calls) != 4:
+        if len(notifier.calls) != 2:
             raise AssertionError("fan-out should not run again for duplicate slot")
 
         print("Deep digest checks passed.")
