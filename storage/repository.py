@@ -23,10 +23,12 @@ from storage.models import (
 from storage.paths import DataPaths
 from storage.portfolio_ops import (
     PortfolioTickerResult,
+    SellTickerResult,
     add_ticker_to_portfolio,
     normalize_ticker,
     portfolio_has_ticker,
     remove_ticker_from_portfolio,
+    sell_ticker_from_portfolio,
     validate_ticker_format,
     verify_ticker_exists,
 )
@@ -106,6 +108,34 @@ class DataRepository:
 
         def _mutate(portfolio: Portfolio) -> Portfolio:
             updated, result = remove_ticker_from_portfolio(portfolio, normalized)
+            result_holder.append(result)
+            return updated
+
+        self._store.mutate_model(self._paths.portfolio, Portfolio, _mutate)
+        return result_holder[0]
+
+    def sell_ticker_from_portfolio(
+        self,
+        ticker: str,
+        *,
+        sell_price: float,
+        shares: float | None = None,
+    ) -> SellTickerResult:
+        """Sell shares at a price, credit cash, and update portfolio.json."""
+        normalized = normalize_ticker(ticker)
+        format_error = validate_ticker_format(normalized)
+        if format_error:
+            return SellTickerResult(False, format_error, normalized)
+
+        result_holder: list[SellTickerResult] = []
+
+        def _mutate(portfolio: Portfolio) -> Portfolio:
+            updated, result = sell_ticker_from_portfolio(
+                portfolio,
+                normalized,
+                sell_price=sell_price,
+                shares=shares,
+            )
             result_holder.append(result)
             return updated
 

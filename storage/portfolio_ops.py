@@ -20,6 +20,20 @@ class PortfolioTickerResult:
     is_new_position: bool = False
 
 
+@dataclass(frozen=True)
+class SellTickerResult:
+    """Outcome of selling shares from a portfolio position."""
+
+    success: bool
+    message: str
+    ticker: str = ""
+    shares_sold: float = 0.0
+    sell_price: float = 0.0
+    proceeds: float = 0.0
+    cash_balance: float = 0.0
+    fully_sold: bool = False
+
+
 def normalize_ticker(symbol: str) -> str:
     """Normalize a ticker symbol for storage and lookup."""
     return symbol.strip().upper()
@@ -165,4 +179,97 @@ def remove_ticker_from_portfolio(
         True,
         f"Removed {normalized} from the portfolio.",
         normalized,
+    )
+
+
+def sell_ticker_from_portfolio(
+    portfolio: Portfolio,
+    symbol: str,
+    *,
+    sell_price: float,
+    shares: float | None = None,
+) -> tuple[Portfolio, SellTickerResult]:
+    """Sell shares at a given price, remove or reduce the position, and credit cash."""
+    normalized = normalize_ticker(symbol)
+    format_error = validate_ticker_format(normalized)
+    if format_error:
+        return portfolio, SellTickerResult(False, format_error, normalized)
+
+    if sell_price <= 0:
+        return portfolio, SellTickerResult(
+            False,
+            "Sell price must be greater than zero.",
+            normalized,
+        )
+
+    position = next(
+        (
+            item
+            for item in portfolio.positions
+            if normalize_ticker(item.ticker) == normalized
+        ),
+        None,
+    )
+    if position is None:
+        return portfolio, SellTickerResult(
+            False,
+            f"{normalized} is not in the portfolio.",
+            normalized,
+        )
+
+    shares_to_sell = position.shares if shares is None else shares
+    if shares_to_sell <= 0:
+        return portfolio, SellTickerResult(
+            False,
+            "Shares to sell must be greater than zero.",
+            normalized,
+        )
+    if shares_to_sell > position.shares + 1e-9:
+        return portfolio, SellTickerResult(
+            False,
+            (
+                f"Cannot sell {shares_to_sell:g} share(s) of {normalized}; "
+                f"only {position.shares:g} held."
+            ),
+            normalized,
+        )
+
+    proceeds = shares_to_sell * sell_price
+    new_cash = portfolio.cash + proceeds
+    fully_sold = abs(shares_to_sell - position.shares) < 1e-9
+
+    if fully_sold:
+        new_positions = [
+            item
+            for item in portfolio.positions
+            if normalize_ticker(item.ticker) != normalized
+        ]
+    else:
+        remaining = position.shares - shares_to_sell
+        new_positions = [
+            (
+                item.model_copy(update={"shares": remaining})
+                if normalize_ticker(item.ticker) == normalized
+                else item
+            )
+            for item in portfolio.positions
+        ]
+
+    updated = portfolio.model_copy(
+        update={"positions": new_positions, "cash": new_cash}
+    )
+    action = "Sold all" if fully_sold else f"Sold {shares_to_sell:g}"
+    message = (
+        f"{action} share(s) of {normalized} at {sell_price:g}; "
+        f"proceeds {proceeds:,.2f} (cash balance {new_cash:,.2f})."
+    )
+    return updated, SellTickerResult(
+        True,
+        message,
+        normalized,
+        shares_sold=shares_to_sell,
+        sell_price=sell_price,
+        proceeds=proceeds,
+        cash_balance=new_cash,
+        fully_sold=fully_sold,
     )

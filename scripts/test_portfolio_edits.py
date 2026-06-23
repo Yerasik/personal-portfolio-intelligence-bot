@@ -19,6 +19,7 @@ from storage.portfolio_ops import (
     add_ticker_to_portfolio,
     normalize_ticker,
     remove_ticker_from_portfolio,
+    sell_ticker_from_portfolio,
     validate_ticker_format,
 )
 from storage.repository import DataRepository
@@ -51,6 +52,32 @@ def run_test() -> None:
     updated, removed = remove_ticker_from_portfolio(updated, "AAPL")
     if not removed.success or len(updated.positions) != 1:
         raise AssertionError(f"remove failed: {removed}")
+
+    portfolio = Portfolio(
+        positions=[Position(ticker="MSFT", shares=10, cost_basis=400.0)],
+        cash=1000.0,
+    )
+    updated, sold = sell_ticker_from_portfolio(
+        portfolio,
+        "MSFT",
+        sell_price=420.0,
+        shares=4.0,
+    )
+    if not sold.success or sold.proceeds != 1680.0:
+        raise AssertionError(f"partial sell failed: {sold}")
+    if updated.cash != 2680.0:
+        raise AssertionError(f"unexpected cash after partial sell: {updated.cash}")
+    msft = next(p for p in updated.positions if p.ticker == "MSFT")
+    if msft.shares != 6:
+        raise AssertionError(f"expected 6 MSFT shares, got {msft.shares}")
+
+    updated, sold_all = sell_ticker_from_portfolio(updated, "MSFT", sell_price=425.0)
+    if not sold_all.success or not sold_all.fully_sold:
+        raise AssertionError(f"full sell failed: {sold_all}")
+    if updated.positions:
+        raise AssertionError("position should be removed after full sell")
+    if updated.cash != 5230.0:
+        raise AssertionError(f"unexpected cash after full sell: {updated.cash}")
 
     temp_dir = Path(tempfile.mkdtemp(prefix="portfolio-edit-test-"))
     try:

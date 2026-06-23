@@ -37,7 +37,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Developer tools\n"
-            "  /add_ticker · /add_ticker_strategy · /remove_ticker — edit holdings\n"
+            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — edit holdings\n"
             "  /edit_strategy — rewrite a stored investment idea\n"
             "  /list_users · /add_user · /remove_user — manage access\n"
             "  /reload_config · /debug_state — diagnostics"
@@ -64,6 +64,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker <TICKER> [qty] — add or increase a position\n"
             "  /add_ticker_strategy <TICKER> [qty] <reasoning> — add with investment idea\n"
             "  /edit_strategy <TICKER> <text> — rewrite the stored idea\n"
+            "  /sell_ticker <TICKER> [qty] <price> <reasoning> — sell and notify users\n"
             "  /remove_ticker <TICKER> — remove a position\n\n"
             "User management\n"
             "  /list_users — show authorized users\n"
@@ -89,6 +90,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Portfolio edits, e.g.:\n"
             "/add_ticker_strategy NVDA 5 AI infrastructure thesis\n"
             "/edit_strategy NVDA updated thesis text\n"
+            "/sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -164,6 +166,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "Could not add ticker: {message}",
         "remove_ticker_ok": "Removed: {message}",
         "remove_ticker_fail": "Could not remove ticker: {message}",
+        "sell_ticker_ok": "Sold: {message}\nCash balance: {cash:,.2f}",
+        "sell_ticker_fail": "Could not sell ticker: {message}",
+        "sell_ticker_usage": (
+            "Usage: /sell_ticker <TICKER> [shares] <price> <reasoning>\n"
+            "Proceeds are credited to portfolio cash (visible to developers in /portfolio).\n"
+            "Example: /sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
+            "Example: /sell_ticker AAPL 5 190.50 Trimming position ahead of product cycle"
+        ),
+        "sell_announcement_header": "Position sold",
+        "sell_announcement_sold_all": "{symbol} — sold all {shares:g} share(s) from the portfolio.",
+        "sell_announcement_sold_partial": "{symbol} — sold {shares:g} share(s) from the portfolio.",
+        "portfolio_cash": "Cash balance: {cash:,.2f}",
         "strategy_list_header": "Investment ideas",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_missing": "• {symbol} — (no strategy saved yet)",
@@ -325,7 +339,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Entwickler-Tools\n"
-            "  /add_ticker · /add_ticker_strategy · /remove_ticker — Bestände bearbeiten\n"
+            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — Bestände bearbeiten\n"
             "  /edit_strategy — gespeicherte Anlageidee überschreiben\n"
             "  /list_users · /add_user · /remove_user — Zugriff verwalten\n"
             "  /reload_config · /debug_state — Diagnose"
@@ -352,6 +366,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker <TICKER> [Anzahl] — Position hinzufügen/erhöhen\n"
             "  /add_ticker_strategy <TICKER> [Anzahl] <Begründung> — mit Anlageidee\n"
             "  /edit_strategy <TICKER> <Text> — gespeicherte Idee überschreiben\n"
+            "  /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung> — verkaufen und Benutzer benachrichtigen\n"
             "  /remove_ticker <TICKER> — Position entfernen\n\n"
             "Benutzerverwaltung\n"
             "  /list_users — autorisierte Benutzer\n"
@@ -377,6 +392,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Bestandsänderungen, z. B.:\n"
             "/add_ticker_strategy NVDA 5 KI-Infrastruktur-These\n"
             "/edit_strategy NVDA aktualisierter Strategietext\n"
+            "/sell_ticker NVDA 150.25 Gewinnmitnahme nach Earnings-Rally\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -452,6 +468,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "Ticker nicht hinzugefügt: {message}",
         "remove_ticker_ok": "Entfernt: {message}",
         "remove_ticker_fail": "Ticker nicht entfernt: {message}",
+        "sell_ticker_ok": "Verkauft: {message}\nCash-Bestand: {cash:,.2f}",
+        "sell_ticker_fail": "Verkauf fehlgeschlagen: {message}",
+        "sell_ticker_usage": (
+            "Verwendung: /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung>\n"
+            "Erlös wird dem Portfolio-Cash gutgeschrieben (für Entwickler in /portfolio sichtbar).\n"
+            "Beispiel: /sell_ticker NVDA 150.25 Gewinnmitnahme nach Earnings-Rally\n"
+            "Beispiel: /sell_ticker AAPL 5 190.50 Position vor Produktzyklus reduzieren"
+        ),
+        "sell_announcement_header": "Position verkauft",
+        "sell_announcement_sold_all": "{symbol} — alle {shares:g} Anteile aus dem Portfolio verkauft.",
+        "sell_announcement_sold_partial": "{symbol} — {shares:g} Anteile aus dem Portfolio verkauft.",
+        "portfolio_cash": "Cash-Bestand: {cash:,.2f}",
         "strategy_list_header": "Anlageideen",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_missing": "• {symbol} — (noch keine Strategie gespeichert)",
@@ -608,7 +636,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "开发者工具\n"
-            "  /add_ticker · /add_ticker_strategy · /remove_ticker — 编辑持仓\n"
+            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — 编辑持仓\n"
             "  /edit_strategy — 直接改写已保存的投资逻辑\n"
             "  /list_users · /add_user · /remove_user — 管理访问权限\n"
             "  /reload_config · /debug_state — 诊断"
@@ -635,6 +663,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker <代码> [数量] — 添加或增加持仓\n"
             "  /add_ticker_strategy <代码> [数量] <理由> — 添加并记录投资逻辑\n"
             "  /edit_strategy <代码> <文本> — 直接改写已保存的逻辑\n"
+            "  /sell_ticker <代码> [数量] <价格> <理由> — 卖出并通知用户\n"
             "  /remove_ticker <代码> — 移除持仓\n\n"
             "用户管理\n"
             "  /list_users — 查看授权用户\n"
@@ -660,6 +689,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "编辑持仓示例：\n"
             "/add_ticker_strategy NVDA 5 AI基础设施投资逻辑\n"
             "/edit_strategy NVDA 更新后的策略说明\n"
+            "/sell_ticker NVDA 150.25 财报上涨后获利了结\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -732,6 +762,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "无法添加：{message}",
         "remove_ticker_ok": "已移除：{message}",
         "remove_ticker_fail": "无法移除：{message}",
+        "sell_ticker_ok": "已卖出：{message}\n现金余额：{cash:,.2f}",
+        "sell_ticker_fail": "无法卖出：{message}",
+        "sell_ticker_usage": (
+            "用法：/sell_ticker <代码> [数量] <价格> <理由>\n"
+            "卖出所得计入组合现金（开发者在 /portfolio 中可见）。\n"
+            "示例：/sell_ticker NVDA 150.25 财报上涨后获利了结\n"
+            "示例：/sell_ticker AAPL 5 190.50 产品周期前减仓"
+        ),
+        "sell_announcement_header": "已卖出持仓",
+        "sell_announcement_sold_all": "{symbol} — 已卖出全部 {shares:g} 股。",
+        "sell_announcement_sold_partial": "{symbol} — 已卖出 {shares:g} 股。",
+        "portfolio_cash": "现金余额：{cash:,.2f}",
         "strategy_list_header": "投资逻辑",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_missing": "• {symbol} —（尚未保存策略）",
@@ -888,7 +930,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Инструменты разработчика\n"
-            "  /add_ticker · /add_ticker_strategy · /remove_ticker — изменение портфеля\n"
+            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — изменение портфеля\n"
             "  /edit_strategy — перезаписать сохранённую инвестиционную идею\n"
             "  /list_users · /add_user · /remove_user — управление доступом\n"
             "  /reload_config · /debug_state — диагностика"
@@ -915,6 +957,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker <ТИКЕР> [кол-во] — добавить или увеличить позицию\n"
             "  /add_ticker_strategy <ТИКЕР> [кол-во] <обоснование> — добавить с идеей\n"
             "  /edit_strategy <ТИКЕР> <текст> — перезаписать сохранённую идею\n"
+            "  /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование> — продать и уведомить пользователей\n"
             "  /remove_ticker <ТИКЕР> — удалить позицию\n\n"
             "Управление пользователями\n"
             "  /list_users — список пользователей\n"
@@ -940,6 +983,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Примеры изменения портфеля:\n"
             "/add_ticker_strategy NVDA 5 тезис по AI-инфраструктуре\n"
             "/edit_strategy NVDA обновлённый текст стратегии\n"
+            "/sell_ticker NVDA 150.25 фиксация прибыли после отчёта\n"
             "/remove_ticker MSFT"
         ),
         "add_user_usage": (
@@ -1015,6 +1059,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_fail": "Не удалось добавить: {message}",
         "remove_ticker_ok": "Удалено: {message}",
         "remove_ticker_fail": "Не удалось удалить: {message}",
+        "sell_ticker_ok": "Продано: {message}\nОстаток cash: {cash:,.2f}",
+        "sell_ticker_fail": "Не удалось продать: {message}",
+        "sell_ticker_usage": (
+            "Использование: /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование>\n"
+            "Выручка зачисляется в cash портфеля (видно разработчику в /portfolio).\n"
+            "Пример: /sell_ticker NVDA 150.25 фиксация прибыли после отчёта\n"
+            "Пример: /sell_ticker AAPL 5 190.50 сокращение позиции перед циклом продуктов"
+        ),
+        "sell_announcement_header": "Позиция продана",
+        "sell_announcement_sold_all": "{symbol} — проданы все {shares:g} акц.",
+        "sell_announcement_sold_partial": "{symbol} — продано {shares:g} акц.",
+        "portfolio_cash": "Остаток cash: {cash:,.2f}",
         "strategy_list_header": "Инвестиционные идеи",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_missing": "• {symbol} — (стратегия ещё не сохранена)",

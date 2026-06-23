@@ -26,6 +26,7 @@ DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = ORDINARY_BOT_COMMANDS + (
     BotCommand("add_ticker_strategy", "Add holding with investment idea"),
     BotCommand("edit_strategy", "Rewrite a stored investment idea"),
     BotCommand("remove_ticker", "Remove a holding from the portfolio"),
+    BotCommand("sell_ticker", "Sell shares at a price and notify users"),
     BotCommand("list_users", "List authorized users"),
     BotCommand("add_user", "Authorize a Telegram user"),
     BotCommand("remove_user", "Revoke user access"),
@@ -55,7 +56,11 @@ def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
         )
         rows.insert(
             3,
-            [KeyboardButton("/add_ticker"), KeyboardButton("/remove_ticker")],
+            [
+                KeyboardButton("/add_ticker"),
+                KeyboardButton("/remove_ticker"),
+                KeyboardButton("/sell_ticker"),
+            ],
         )
         rows.extend(
             [

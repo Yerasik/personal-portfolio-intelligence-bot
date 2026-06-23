@@ -18,6 +18,7 @@ from analysis.move_explainer import (
 )
 from analysis.strategy_writer import (
     build_strategy_text_by_language,
+    generate_sell_announcement_from_reasoning,
     localized_strategy_text,
 )
 from analysis.news_summarizer import iter_news_summary_groups
@@ -431,6 +432,66 @@ class BotCommands:
                 message = f"{message}\n{t('users_notified', lang, count=notified)}"
             return message
         return t("remove_ticker_fail", lang, message=result.message)
+
+    def sell_ticker_message(
+        self,
+        chat_id: int,
+        ticker: str,
+        sell_price: float,
+        reasoning: str,
+        *,
+        shares: float | None = None,
+    ) -> str:
+        """Sell shares at a price, credit cash, and notify ordinary users."""
+        lang = self._lang(chat_id)
+        app_config = self.repository.load_config()
+        symbol = normalize_ticker(ticker)
+        result = self.repository.sell_ticker_from_portfolio(
+            ticker,
+            sell_price=sell_price,
+            shares=shares,
+        )
+        if not result.success:
+            return t("sell_ticker_fail", lang, message=result.message)
+
+        if result.fully_sold:
+            self.repository.remove_ticker_strategy(symbol)
+
+        state = self.repository.load_state()
+        quote = state.latest_prices.get(symbol)
+        company_name = quote.company_name if quote is not None else ""
+        announcement_en = generate_sell_announcement_from_reasoning(
+            self.llm,
+            symbol,
+            reasoning,
+            shares_sold=result.shares_sold,
+            sell_price=result.sell_price,
+            company_name=company_name,
+            language="en",
+            enabled=app_config.enable_llm_summaries,
+        )
+        notified = self._notifier().notify_ticker_sold(
+            self.repository,
+            symbol,
+            shares_sold=result.shares_sold,
+            sell_price=result.sell_price,
+            fully_sold=result.fully_sold,
+            llm=self.llm,
+            app_config=app_config,
+            announcement_en=announcement_en,
+            state=state,
+        )
+        self._deliver_alerts_after_portfolio_change()
+
+        message = t(
+            "sell_ticker_ok",
+            lang,
+            message=result.message,
+            cash=result.cash_balance,
+        )
+        if notified:
+            message = f"{message}\n{t('users_notified', lang, count=notified)}"
+        return message
 
     def _strategy_display_text(self, strategy: TickerStrategy, lang: str) -> str:
         """Resolve strategy copy for the user's language, caching on demand."""

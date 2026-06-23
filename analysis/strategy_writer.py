@@ -288,3 +288,133 @@ def generate_strategy_announcement(
             exc,
         )
         return strategy_text
+
+
+def build_sell_prompt(
+    ticker: str,
+    developer_reasoning: str,
+    *,
+    shares_sold: float,
+    sell_price: float,
+    company_name: str = "",
+    language: str = "en",
+) -> str:
+    """Build the LLM prompt for a sell announcement."""
+    from bot.i18n import llm_language_clause
+
+    company_line = company_name.strip() or "unknown"
+    return (
+        f"{_ROLE_INSTRUCTIONS}\n\n"
+        f"Ticker: {ticker.strip().upper()}\n"
+        f"Company: {company_line}\n"
+        f"Shares sold: {shares_sold:g}\n"
+        f"Sell price per share: {sell_price:g}\n"
+        f"Developer notes:\n{developer_reasoning.strip()}\n\n"
+        f"{llm_language_clause(language)}\n\n"
+        "Respond with JSON only using this schema:\n"
+        '{"announcement_text":"1-2 short sentences for a Telegram alert that '
+        'shares were sold, including the core rationale"}'
+    )
+
+
+def build_sell_announcement_prompt(
+    ticker: str,
+    announcement_en: str,
+    *,
+    shares_sold: float,
+    sell_price: float,
+    company_name: str = "",
+    language: str = "en",
+) -> str:
+    """Build a short localized sell-announcement prompt from English copy."""
+    from bot.i18n import llm_language_clause
+
+    company_line = company_name.strip() or "unknown"
+    return (
+        f"{_ROLE_INSTRUCTIONS}\n\n"
+        f"Ticker: {ticker.strip().upper()}\n"
+        f"Company: {company_line}\n"
+        f"Shares sold: {shares_sold:g}\n"
+        f"Sell price per share: {sell_price:g}\n"
+        f"English announcement:\n{announcement_en.strip()}\n\n"
+        f"{llm_language_clause(language)}\n\n"
+        "Write one short Telegram alert (1-2 sentences) telling users shares "
+        "were sold and summarizing the rationale. Respond with plain text only."
+    )
+
+
+def generate_sell_announcement_from_reasoning(
+    llm: LlmClient,
+    ticker: str,
+    developer_reasoning: str,
+    *,
+    shares_sold: float,
+    sell_price: float,
+    company_name: str = "",
+    language: str = "en",
+    enabled: bool = True,
+) -> str:
+    """Create sell announcement copy from developer notes."""
+    symbol = ticker.strip().upper()
+    reasoning = developer_reasoning.strip()
+    if not reasoning:
+        raise ValueError("Developer reasoning is empty")
+
+    if not enabled or not getattr(llm, "is_configured", False):
+        return reasoning
+
+    prompt = build_sell_prompt(
+        symbol,
+        reasoning,
+        shares_sold=shares_sold,
+        sell_price=sell_price,
+        company_name=company_name,
+        language=language,
+    )
+    try:
+        raw_response = llm.generate(prompt)
+        payload = _extract_json_object(raw_response)
+        announcement_text = str(payload.get("announcement_text", "")).strip()
+        return announcement_text or reasoning
+    except Exception as exc:
+        logger.warning("Sell announcement generation failed for %s: %s", symbol, exc)
+        return reasoning
+
+
+def generate_sell_announcement(
+    llm: LlmClient,
+    ticker: str,
+    announcement_en: str,
+    *,
+    shares_sold: float,
+    sell_price: float,
+    company_name: str = "",
+    language: str = "en",
+    enabled: bool = True,
+) -> str:
+    """Localize a short sell announcement for one user language."""
+    source = announcement_en.strip()
+    if not source:
+        return source
+    if not enabled or not getattr(llm, "is_configured", False):
+        return source
+
+    prompt = build_sell_announcement_prompt(
+        ticker,
+        source,
+        shares_sold=shares_sold,
+        sell_price=sell_price,
+        company_name=company_name,
+        language=language,
+    )
+    try:
+        response = llm.generate(prompt).strip()
+        return response or source
+    except Exception as exc:
+        logger.warning(
+            "Sell announcement localization failed for %s (%s): %s",
+            ticker,
+            language,
+            exc,
+        )
+        return source

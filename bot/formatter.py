@@ -544,6 +544,8 @@ def format_portfolio(
 
     lines.append("")
     _append_portfolio_totals_hkd(lines, valuation, lang)
+    if is_developer and portfolio.cash > 0:
+        lines.append(t("portfolio_cash", lang, cash=portfolio.cash))
 
     if state.last_market_fetch_at:
         if is_developer:
@@ -1022,6 +1024,36 @@ def format_strategy_announcement(
         announcement_text.strip(),
         "",
         t("strategy_announcement_hint", lang, symbol=symbol),
+        "",
+        t("advisory_footer", lang),
+    ]
+    return truncate_message("\n".join(lines))
+
+
+def format_sell_announcement(
+    ticker: str,
+    shares_sold: float,
+    announcement_text: str,
+    *,
+    fully_sold: bool,
+    lang: str = "en",
+) -> str:
+    """Format a sell announcement for ordinary users."""
+    symbol = ticker.strip().upper()
+    if fully_sold:
+        detail = t("sell_announcement_sold_all", lang, symbol=symbol, shares=shares_sold)
+    else:
+        detail = t(
+            "sell_announcement_sold_partial",
+            lang,
+            symbol=symbol,
+            shares=shares_sold,
+        )
+    lines = [
+        t("sell_announcement_header", lang),
+        detail,
+        "",
+        announcement_text.strip(),
         "",
         t("advisory_footer", lang),
     ]

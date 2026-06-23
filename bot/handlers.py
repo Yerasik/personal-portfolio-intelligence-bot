@@ -205,6 +205,52 @@ _REMOVE_TICKER_USAGE = (
     "Usage: /remove_ticker <SYMBOL>\n"
     "Example: /remove_ticker TSLA"
 )
+_SELL_TICKER_USAGE = (
+    "Usage: /sell_ticker <SYMBOL> [shares] <price> <reasoning>\n"
+    "Sell at the given price per share; proceeds are added to portfolio cash.\n"
+    "Example: /sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
+    "Example: /sell_ticker AAPL 5 190.50 Trimming position ahead of product cycle"
+)
+
+
+def _parse_sell_args(args: list[str]) -> tuple[str, float | None, float, str] | None:
+    """Parse /sell_ticker <TICKER> [shares] <price> <reasoning>."""
+    if len(args) < 3:
+        return None
+
+    ticker = args[0]
+    shares: float | None = None
+    price: float
+    reasoning_start: int
+
+    if len(args) >= 4:
+        try:
+            shares = float(args[1])
+            price = float(args[2])
+            reasoning_start = 3
+        except ValueError:
+            try:
+                price = float(args[1])
+            except ValueError:
+                return None
+            shares = None
+            reasoning_start = 2
+    else:
+        try:
+            price = float(args[1])
+        except ValueError:
+            return None
+        shares = None
+        reasoning_start = 2
+
+    reasoning = " ".join(args[reasoning_start:]).strip()
+    if not reasoning:
+        return None
+    if shares is not None and shares <= 0:
+        return None
+    if price <= 0:
+        return None
+    return ticker, shares, price, reasoning
 
 
 def _parse_strategy_add_args(
@@ -363,6 +409,33 @@ async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TY
         return
 
     message = _commands(context).remove_ticker_message(user.chat_id, args[0])
+    await _reply_with_menu(update, message, user=user)
+
+
+async def sell_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /sell_ticker — sell shares at a price and notify users."""
+    user = await _guard_developer(update, context)
+    if user is None:
+        return
+
+    args = context.args or []
+    parsed = _parse_sell_args(args)
+    if parsed is None:
+        await _reply_with_menu(
+            update,
+            t("sell_ticker_usage", user.language),
+            user=user,
+        )
+        return
+
+    ticker, shares, sell_price, reasoning = parsed
+    message = _commands(context).sell_ticker_message(
+        user.chat_id,
+        ticker,
+        sell_price,
+        reasoning,
+        shares=shares,
+    )
     await _reply_with_menu(update, message, user=user)
 
 
@@ -536,6 +609,7 @@ def register_handlers(
         ("add_ticker_strategy", add_ticker_strategy_command),
         ("edit_strategy", edit_strategy_command),
         ("remove_ticker", remove_ticker_command),
+        ("sell_ticker", sell_ticker_command),
         ("analyze", analyze_command),
         ("set_language", set_language_command),
         ("reload_config", reload_config_command),

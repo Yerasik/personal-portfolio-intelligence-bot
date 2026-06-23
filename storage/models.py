@@ -19,6 +19,7 @@ class Portfolio(BaseModel):
     """User portfolio persisted in portfolio.json."""
 
     positions: list[Position] = Field(default_factory=list)
+    cash: float = Field(default=0.0, ge=0)
     notes: str = ""
 
 

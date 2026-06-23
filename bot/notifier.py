@@ -18,6 +18,7 @@ from bot.formatter import (
     format_daily_summary,
     format_informational_alert,
     format_portfolio_change_notification,
+    format_sell_announcement,
     format_strategy_announcement,
     format_strategy_update_notification,
     format_urgent_alert,
@@ -492,6 +493,79 @@ class TelegramNotifier:
             sent += 1
             logger.info(
                 "Strategy announcement for %s delivered to chat_id=%s (lang=%s)",
+                symbol,
+                user.chat_id,
+                lang,
+            )
+
+        return sent
+
+    def notify_ticker_sold(
+        self,
+        repository: DataRepository,
+        ticker: str,
+        *,
+        shares_sold: float,
+        sell_price: float,
+        fully_sold: bool,
+        llm: LlmClient,
+        app_config: AppConfig,
+        announcement_en: str,
+        state: BotState,
+    ) -> int:
+        """Alert ordinary users when the developer sells shares."""
+        if not self.is_configured:
+            logger.warning("Telegram notifier not configured; skipping sell notification")
+            return 0
+
+        users = self._ordinary_users(repository)
+        if not users:
+            return 0
+
+        symbol = ticker.strip().upper()
+        quote = state.latest_prices.get(symbol)
+        company_name = quote.company_name if quote is not None else ""
+        announcements_by_lang: dict[str, str] = {"en": announcement_en}
+        sent = 0
+
+        for user in users:
+            lang = user.language
+            if lang not in announcements_by_lang:
+                from analysis.strategy_writer import generate_sell_announcement
+
+                if lang == "en":
+                    announcements_by_lang[lang] = announcement_en
+                else:
+                    announcements_by_lang[lang] = generate_sell_announcement(
+                        llm,
+                        symbol,
+                        announcement_en,
+                        shares_sold=shares_sold,
+                        sell_price=sell_price,
+                        company_name=company_name,
+                        language=lang,
+                        enabled=app_config.enable_llm_summaries,
+                    )
+
+            message = format_sell_announcement(
+                symbol,
+                shares_sold,
+                announcements_by_lang[lang],
+                fully_sold=fully_sold,
+                lang=lang,
+            )
+            try:
+                self.send_text(user.chat_id, message)
+            except Exception:
+                logger.exception(
+                    "Failed to send sell announcement for %s to chat_id=%s",
+                    symbol,
+                    user.chat_id,
+                )
+                continue
+            sent += 1
+            logger.info(
+                "Sell announcement for %s delivered to chat_id=%s (lang=%s)",
                 symbol,
                 user.chat_id,
                 lang,
