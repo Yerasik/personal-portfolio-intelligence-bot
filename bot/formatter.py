@@ -17,6 +17,7 @@ from analysis.news_summarizer import (
 )
 from analysis.performance_metrics import PerformanceMetrics
 from analysis.portfolio_risk import PortfolioRiskAssessment
+from analysis.risk_metrics import RiskMetricsReport
 from analysis.portfolio_valuation import (
     PositionValuation,
     PortfolioValuation,
@@ -413,6 +414,55 @@ def format_performance(metrics: PerformanceMetrics, *, lang: str = "en") -> str:
     lines.append(
         t("performance_line_snapshots", lang, count=metrics.snapshot_count)
     )
+    return truncate_message("\n".join(lines))
+
+
+def _format_risk_metric_value(value: float | None, *, lang: str, decimals: int = 2) -> str:
+    if value is None:
+        return t("performance_na", lang)
+    return f"{value:.{decimals}f}"
+
+
+def format_risk_metrics(report: RiskMetricsReport, *, lang: str = "en") -> str:
+    """Render on-demand historical risk metrics vs a benchmark."""
+    lines = [
+        t("risk_metrics_title", lang),
+        t(
+            "risk_metrics_window",
+            lang,
+            days=report.observation_days,
+            benchmark=report.benchmark_ticker,
+        ),
+        "",
+        t(
+            "risk_metrics_sharpe",
+            lang,
+            value=_format_risk_metric_value(report.sharpe_ratio, lang=lang),
+        ),
+        t(
+            "risk_metrics_max_drawdown",
+            lang,
+            value=_format_risk_metric_value(report.max_drawdown_pct, lang=lang),
+        ),
+        t(
+            "risk_metrics_portfolio_return",
+            lang,
+            value=_format_risk_metric_value(report.portfolio_return_pct, lang=lang),
+        ),
+        t(
+            "risk_metrics_benchmark_return",
+            lang,
+            benchmark=report.benchmark_ticker,
+            value=_format_risk_metric_value(report.benchmark_return_pct, lang=lang),
+        ),
+        t(
+            "risk_metrics_alpha",
+            lang,
+            value=_format_risk_metric_value(report.alpha_pct, lang=lang),
+        ),
+        "",
+        t("risk_metrics_footer", lang),
+    ]
     return truncate_message("\n".join(lines))
 
 

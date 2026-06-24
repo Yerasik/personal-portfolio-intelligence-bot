@@ -238,6 +238,18 @@ async def performance_command(update: Update, context: ContextTypes.DEFAULT_TYPE
         await update.message.reply_photo(photo=BytesIO(chart))
 
 
+async def risk_metrics_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /risk_metrics — Sharpe, drawdown, and benchmark comparison."""
+    user = await _guard(update, context)
+    if user is None or update.message is None:
+        return
+
+    await update.message.reply_text(t("risk_metrics_fetching", user.language))
+    await update.message.reply_text(
+        _commands(context).risk_metrics_message(user.chat_id)
+    )
+
+
 async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /industries — show focus industries and related news counts."""
     user = await _guard(update, context)
@@ -782,6 +794,7 @@ def register_handlers(
         ("help", help_command),
         ("portfolio", portfolio_command),
         ("performance", performance_command),
+        ("risk_metrics", risk_metrics_command),
         ("strategy", strategy_command),
         ("industries", industries_command),
         ("news_summary", news_summary_command),

@@ -173,6 +173,7 @@ class AppConfig(BaseModel):
     enable_deep_digest: bool = True
     deep_digest_recipients: Literal["developers", "all_users"] = "developers"
     risk_profile: RiskProfile = Field(default_factory=RiskProfile)
+    benchmark_ticker: str = "SPY"
     ollama_base_url: str = ""
     ollama_model: str = ""
     enable_llm_summaries: bool = False

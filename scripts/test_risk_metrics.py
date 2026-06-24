@@ -12,7 +12,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from analysis.risk_metrics import compute_portfolio_historical_metrics, herfindahl_index
+from analysis.risk_metrics import (
+    compute_portfolio_historical_metrics,
+    compute_risk_metrics_report,
+    herfindahl_index,
+)
+from bot.formatter import format_risk_metrics
 
 
 def run_test() -> None:
@@ -53,6 +58,45 @@ def run_test() -> None:
     hhi = herfindahl_index([100.0])
     if hhi != 1.0:
         raise AssertionError(f"single-name portfolio HHI should be 1.0, got {hhi}")
+
+    dates = pd.date_range("2026-01-01", periods=40, freq="B")
+    portfolio_series = pd.Series([100 + index * 0.5 for index in range(len(dates))], index=dates)
+    benchmark_series = pd.Series([200 + index * 0.2 for index in range(len(dates))], index=dates)
+
+    original_fetch_days = risk_metrics_module.fetch_close_history_days
+
+    def fake_fetch_days(ticker: str, *, lookback_days: int = 90) -> pd.Series:
+        if ticker == "AAA":
+            return portfolio_series
+        if ticker == "SPY":
+            return benchmark_series
+        return pd.Series(dtype=float)
+
+    risk_metrics_module.fetch_close_history_days = fake_fetch_days
+    try:
+        report = compute_risk_metrics_report(
+            {"AAA": 100.0},
+            benchmark_ticker="SPY",
+        )
+    finally:
+        risk_metrics_module.fetch_close_history_days = original_fetch_days
+
+    if report is None:
+        raise AssertionError("expected risk metrics report from synthetic history")
+    if report.sharpe_ratio is None:
+        raise AssertionError("expected Sharpe ratio")
+    if report.max_drawdown_pct is None:
+        raise AssertionError("expected max drawdown")
+    if report.portfolio_return_pct is None or report.benchmark_return_pct is None:
+        raise AssertionError("expected portfolio and benchmark returns")
+    if report.alpha_pct is None:
+        raise AssertionError("expected alpha")
+    if abs(report.alpha_pct - (report.portfolio_return_pct - report.benchmark_return_pct)) > 1e-6:
+        raise AssertionError("alpha should equal excess return over benchmark")
+
+    formatted = format_risk_metrics(report, lang="en")
+    if "Sharpe ratio" not in formatted or "Alpha vs benchmark" not in formatted:
+        raise AssertionError(f"unexpected formatted risk metrics: {formatted!r}")
 
     print("Risk metrics checks passed.")
 

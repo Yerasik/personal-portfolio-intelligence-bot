@@ -25,6 +25,8 @@ from analysis.news_summarizer import iter_news_summary_groups
 from analysis.performance_chart import render_performance_chart_png
 from analysis.performance_metrics import compute_performance_metrics
 from analysis.portfolio_risk import estimate_portfolio_risk
+from analysis.portfolio_valuation import build_portfolio_valuation
+from analysis.risk_metrics import compute_risk_metrics_report
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
@@ -35,6 +37,7 @@ from bot.formatter import (
     format_performance,
     format_portfolio,
     format_pros_cons_analysis,
+    format_risk_metrics,
     format_start,
     format_strategy_detail,
     format_strategy_list,
@@ -223,6 +226,30 @@ class BotCommands:
         """Render portfolio value over time when enough snapshots exist."""
         history = self.repository.load_performance_history()
         return render_performance_chart_png(history)
+
+    def risk_metrics_message(self, chat_id: int) -> str:
+        """Fetch 90-day history and format Sharpe, drawdown, and benchmark alpha."""
+        lang = self._lang(chat_id)
+        portfolio = self.repository.load_portfolio()
+        if not portfolio.positions:
+            return t("risk_metrics_empty", lang)
+
+        app_config = self.repository.load_config()
+        state = self.repository.load_state()
+        valuation = build_portfolio_valuation(portfolio, state)
+        weights = {
+            item.ticker: item.weight_pct or 0.0 for item in valuation.positions
+        }
+        if not any(weight > 0 for weight in weights.values()):
+            weights = {position.ticker: 1.0 for position in portfolio.positions}
+
+        report = compute_risk_metrics_report(
+            weights,
+            benchmark_ticker=app_config.benchmark_ticker,
+        )
+        if report is None:
+            return t("risk_metrics_unavailable", lang)
+        return format_risk_metrics(report, lang=lang)
 
     def industries_message(self, chat_id: int) -> str:
         """Load config + news cache and summarize focus industries."""

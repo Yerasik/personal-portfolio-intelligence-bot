@@ -15,6 +15,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("help", "List all commands"),
     BotCommand("portfolio", "Holdings and latest prices"),
     BotCommand("performance", "Returns, drawdown, and value chart"),
+    BotCommand("risk_metrics", "Sharpe, drawdown, vs benchmark"),
     BotCommand("strategy", "Investment idea behind each holding"),
     BotCommand("industries", "Focus industries and news counts"),
     BotCommand("news_summary", "LLM news by sector and ticker"),
@@ -49,9 +50,10 @@ def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
     """Persistent reply keyboard; developers get a compact row for cash + dev hub."""
     rows = [
         [KeyboardButton("/portfolio"), KeyboardButton("/performance")],
-        [KeyboardButton("/strategy"), KeyboardButton("/analyze")],
-        [KeyboardButton("/industries"), KeyboardButton("/news_summary")],
-        [KeyboardButton("/set_language"), KeyboardButton("/help"), KeyboardButton("/menu")],
+        [KeyboardButton("/analyze"), KeyboardButton("/risk_metrics")],
+        [KeyboardButton("/strategy"), KeyboardButton("/news_summary")],
+        [KeyboardButton("/industries"), KeyboardButton("/set_language")],
+        [KeyboardButton("/help"), KeyboardButton("/menu")],
     ]
     if is_developer:
         rows.insert(

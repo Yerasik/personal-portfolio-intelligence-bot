@@ -55,7 +55,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /news_summary — news digest by sector and stock\n\n"
             "Analysis\n"
             "  /analyze — portfolio review\n"
-            "  /analyze <TICKER> — explain a price move\n\n"
+            "  /analyze <TICKER> — explain a price move\n"
+            "  /risk_metrics — Sharpe, drawdown, vs benchmark\n\n"
             "Settings\n"
             "  /set_language <code> — language (en, de, zh, ru)\n"
             "  /menu — show keyboard\n"
@@ -83,7 +84,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Tap a button below or type a command.\n\n"
             "Portfolio — /portfolio · /strategy · /performance\n"
             "News — /industries · /news_summary\n"
-            "Analysis — /analyze\n"
+            "Analysis — /analyze · /risk_metrics\n"
             "Settings — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -402,6 +403,19 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "weekly_summary_title": "Weekly Portfolio Summary",
         "weekly_summary_holdings": "Holdings: {holdings}",
         "weekly_performance_header": "Weekly performance update:",
+        "risk_metrics_title": "Portfolio risk metrics (90 days)",
+        "risk_metrics_window": "{days} trading days vs {benchmark}",
+        "risk_metrics_sharpe": "Sharpe ratio: {value}",
+        "risk_metrics_max_drawdown": "Max drawdown: {value}%",
+        "risk_metrics_portfolio_return": "Portfolio return: {value}%",
+        "risk_metrics_benchmark_return": "{benchmark} return: {value}%",
+        "risk_metrics_alpha": "Alpha vs benchmark: {value}%",
+        "risk_metrics_footer": "Risk-free rate: 4.5% (annualized). Computed on demand from yfinance.",
+        "risk_metrics_fetching": "Fetching 90-day price history…",
+        "risk_metrics_empty": "Portfolio is empty — add holdings to compute risk metrics.",
+        "risk_metrics_unavailable": (
+            "Could not compute risk metrics. Check tickers and try again after market hours."
+        ),
         "alerts_header": "Alerts:",
         "plus_more": "- plus {count} more",
         "advisory": "Advisory:",
@@ -570,7 +584,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /news_summary — Nachrichten nach Sektor und Ticker\n\n"
             "Analyse\n"
             "  /analyze — Portfolio-Beratung\n"
-            "  /analyze <TICKER> — Kursbewegung erklären\n\n"
+            "  /analyze <TICKER> — Kursbewegung erklären\n"
+            "  /risk_metrics — Sharpe, Drawdown, vs. Benchmark\n\n"
             "Einstellungen\n"
             "  /set_language <code> — Sprache (en, de, zh, ru)\n"
             "  /menu — Tastatur anzeigen\n"
@@ -598,7 +613,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Tippen Sie unten oder geben Sie einen Befehl ein.\n\n"
             "Portfolio — /portfolio · /strategy · /performance\n"
             "Nachrichten — /industries · /news_summary\n"
-            "Analyse — /analyze\n"
+            "Analyse — /analyze · /risk_metrics\n"
             "Einstellungen — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -930,6 +945,19 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "weekly_summary_title": "Wöchentliche Portfolio-Zusammenfassung",
         "weekly_summary_holdings": "Bestände: {holdings}",
         "weekly_performance_header": "Wöchentliches Performance-Update:",
+        "risk_metrics_title": "Portfolio-Risikokennzahlen (90 Tage)",
+        "risk_metrics_window": "{days} Handelstage vs. {benchmark}",
+        "risk_metrics_sharpe": "Sharpe-Ratio: {value}",
+        "risk_metrics_max_drawdown": "Max. Drawdown: {value} %",
+        "risk_metrics_portfolio_return": "Portfolio-Rendite: {value} %",
+        "risk_metrics_benchmark_return": "{benchmark}-Rendite: {value} %",
+        "risk_metrics_alpha": "Alpha vs. Benchmark: {value} %",
+        "risk_metrics_footer": "Risikofreier Zins: 4,5 % (annualisiert). On-Demand via yfinance.",
+        "risk_metrics_fetching": "Lade 90-Tage-Kursverlauf…",
+        "risk_metrics_empty": "Portfolio ist leer — Bestände hinzufügen für Risikokennzahlen.",
+        "risk_metrics_unavailable": (
+            "Risikokennzahlen konnten nicht berechnet werden. Ticker prüfen und später erneut versuchen."
+        ),
         "alerts_header": "Warnungen:",
         "plus_more": "- plus {count} weitere",
         "advisory": "Beratung:",
@@ -1069,7 +1097,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /news_summary — 按行业/股票的新闻摘要\n\n"
             "分析\n"
             "  /analyze — 投资组合建议\n"
-            "  /analyze <代码> — 解释价格变动\n\n"
+            "  /analyze <代码> — 解释价格变动\n"
+            "  /risk_metrics — 夏普比率、回撤、相对基准\n\n"
             "设置\n"
             "  /set_language <code> — 语言 (en, de, zh, ru)\n"
             "  /menu — 显示键盘\n"
@@ -1097,7 +1126,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "点击下方按钮或输入命令。\n\n"
             "投资组合 — /portfolio · /strategy · /performance\n"
             "新闻 — /industries · /news_summary\n"
-            "分析 — /analyze\n"
+            "分析 — /analyze · /risk_metrics\n"
             "设置 — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -1423,6 +1452,17 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "weekly_summary_title": "每周投资组合摘要",
         "weekly_summary_holdings": "持仓数：{holdings}",
         "weekly_performance_header": "本周表现更新：",
+        "risk_metrics_title": "投资组合风险指标（90 日）",
+        "risk_metrics_window": "{days} 个交易日 vs {benchmark}",
+        "risk_metrics_sharpe": "夏普比率：{value}",
+        "risk_metrics_max_drawdown": "最大回撤：{value}%",
+        "risk_metrics_portfolio_return": "组合收益：{value}%",
+        "risk_metrics_benchmark_return": "{benchmark} 收益：{value}%",
+        "risk_metrics_alpha": "相对基准 Alpha：{value}%",
+        "risk_metrics_footer": "无风险利率：4.5%（年化）。由 yfinance 按需计算。",
+        "risk_metrics_fetching": "正在获取 90 日行情…",
+        "risk_metrics_empty": "投资组合为空 — 请先添加持仓。",
+        "risk_metrics_unavailable": "无法计算风险指标。请检查代码并在交易时段后重试。",
         "alerts_header": "预警：",
         "plus_more": "- 另有 {count} 条",
         "advisory": "建议：",
@@ -1562,7 +1602,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /news_summary — сводка по секторам и тикерам\n\n"
             "Анализ\n"
             "  /analyze — обзор портфеля\n"
-            "  /analyze <ТИКЕР> — объяснить движение цены\n\n"
+            "  /analyze <ТИКЕР> — объяснить движение цены\n"
+            "  /risk_metrics — Шарп, просадка, vs бенчмарк\n\n"
             "Настройки\n"
             "  /set_language <code> — язык (en, de, zh, ru)\n"
             "  /menu — показать клавиатуру\n"
@@ -1590,7 +1631,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Нажмите кнопку ниже или введите команду.\n\n"
             "Портфель — /portfolio · /strategy · /performance\n"
             "Новости — /industries · /news_summary\n"
-            "Анализ — /analyze\n"
+            "Анализ — /analyze · /risk_metrics\n"
             "Настройки — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -1923,6 +1964,19 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "weekly_summary_title": "Еженедельная сводка по портфелю",
         "weekly_summary_holdings": "Позиций: {holdings}",
         "weekly_performance_header": "Еженедельное обновление доходности:",
+        "risk_metrics_title": "Риск-метрики портфеля (90 дн.)",
+        "risk_metrics_window": "{days} торг. дн. vs {benchmark}",
+        "risk_metrics_sharpe": "Коэф. Шарпа: {value}",
+        "risk_metrics_max_drawdown": "Макс. просадка: {value}%",
+        "risk_metrics_portfolio_return": "Доходность портфеля: {value}%",
+        "risk_metrics_benchmark_return": "Доходность {benchmark}: {value}%",
+        "risk_metrics_alpha": "Альфа vs бенчмарк: {value}%",
+        "risk_metrics_footer": "Безрисковая ставка: 4,5% (годовая). Расчёт по запросу через yfinance.",
+        "risk_metrics_fetching": "Загрузка 90-дневной истории…",
+        "risk_metrics_empty": "Портфель пуст — добавьте позиции для расчёта метрик.",
+        "risk_metrics_unavailable": (
+            "Не удалось рассчитать метрики. Проверьте тикеры и повторите позже."
+        ),
         "alerts_header": "Предупреждения:",
         "plus_more": "- ещё {count}",
         "advisory": "Рекомендация:",
