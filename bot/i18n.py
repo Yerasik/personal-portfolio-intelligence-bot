@@ -62,7 +62,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Portfolio edits\n"
             "  /add_ticker <TICKER> [qty] — add or increase a position\n"
-            "  /add_ticker_strategy <TICKER> [qty] <reasoning> — add with investment idea\n"
+            "  /add_ticker_strategy <TICKER> <long|short> [qty] <reasoning> — add with investment idea\n"
             "  /edit_strategy <TICKER> <text> — rewrite the stored idea\n"
             "  /sell_ticker <TICKER> [qty] <price> <reasoning> — sell and notify users\n"
             "  /undo — reverse the last portfolio notification\n"
@@ -89,7 +89,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — authorize a user\n"
             "/remove_user <chat_id> — revoke access\n\n"
             "Portfolio edits, e.g.:\n"
-            "/add_ticker_strategy NVDA 5 AI infrastructure thesis\n"
+            "/add_ticker_strategy NVDA long 5 AI infrastructure thesis\n"
             "/edit_strategy NVDA updated thesis text\n"
             "/sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
             "/remove_ticker MSFT"
@@ -105,6 +105,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_empty_dev": "Portfolio is empty. Use /add_ticker to add a position.",
         "portfolio_header": "Portfolio ({count} position(s))",
         "portfolio_shares": "{symbol} — {shares:g} shares",
+        "portfolio_shares_horizon": "{symbol} — {shares:g} shares · {horizon}",
+        "portfolio_section_long": "Long-term holdings",
+        "portfolio_section_short": "Short-term holdings",
+        "horizon_label_long": "long-term",
+        "horizon_label_short": "short-term",
         "portfolio_cost_basis": "  Cost basis: {value:.2f}",
         "portfolio_price_unavailable": "  Price: unavailable",
         "portfolio_last_price": "  Last price: {price:.2f} ({change})",
@@ -220,6 +225,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash": "Cash balance: {cash:,.2f}",
         "strategy_list_header": "Investment ideas",
         "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_item_horizon": "• {symbol} ({horizon}) — {preview}",
+        "strategy_holding_horizon": "Holding horizon: {horizon}",
         "strategy_list_missing": "• {symbol} — (no strategy saved yet)",
         "strategy_list_hint": "Run /strategy <TICKER> for the full idea behind one holding.",
         "strategy_portfolio_empty": "Portfolio is empty — no investment ideas to show.",
@@ -240,11 +247,17 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "Added {symbol} and saved the investment strategy.",
         "add_ticker_strategy_fail": "Could not add ticker strategy: {message}",
         "add_ticker_strategy_usage": (
-            "Usage: /add_ticker_strategy <TICKER> [shares] <reasoning>\n"
+            "Usage: /add_ticker_strategy <TICKER> <long|short> [shares] <reasoning>\n"
             "If the ticker is already held, only the strategy is saved "
             "(use /add_ticker to add shares).\n"
-            "Example: /add_ticker_strategy NVDA 5 US AI chip leader with data-center exposure"
+            "Example: /add_ticker_strategy NVDA long 5 US AI chip leader with data-center exposure\n"
+            "Example: /add_ticker_strategy TSLA short 2 Earnings momentum trade"
         ),
+        "add_ticker_strategy_horizon_invalid": (
+            "Second argument must be long or short (holding horizon).\n\n"
+            "Example: /add_ticker_strategy NVDA long 5 AI infrastructure thesis"
+        ),
+        "add_ticker_strategy_shares_invalid": "Share count must be a positive number.",
         "edit_strategy_ok": "Updated strategy for {symbol}.",
         "edit_strategy_fail": "Could not update strategy: {message}",
         "edit_strategy_usage": (
@@ -404,7 +417,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Bestandsänderungen\n"
             "  /add_ticker <TICKER> [Anzahl] — Position hinzufügen/erhöhen\n"
-            "  /add_ticker_strategy <TICKER> [Anzahl] <Begründung> — mit Anlageidee\n"
+            "  /add_ticker_strategy <TICKER> <long|short> [Anzahl] <Begründung> — mit Anlageidee\n"
             "  /edit_strategy <TICKER> <Text> — gespeicherte Idee überschreiben\n"
             "  /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung> — verkaufen und Benutzer benachrichtigen\n"
             "  /undo — letzte Portfolio-Benachrichtigung rückgängig machen\n"
@@ -447,6 +460,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_empty_dev": "Portfolio ist leer. Nutzen Sie /add_ticker.",
         "portfolio_header": "Portfolio ({count} Position(en))",
         "portfolio_shares": "{symbol} — {shares:g} Anteile",
+        "portfolio_shares_horizon": "{symbol} — {shares:g} Anteile · {horizon}",
+        "portfolio_section_long": "Langfristige Positionen",
+        "portfolio_section_short": "Kurzfristige Positionen",
+        "horizon_label_long": "langfristig",
+        "horizon_label_short": "kurzfristig",
         "portfolio_cost_basis": "  Einstand: {value:.2f}",
         "portfolio_price_unavailable": "  Kurs: nicht verfügbar",
         "portfolio_last_price": "  Letzter Kurs: {price:.2f} ({change})",
@@ -558,6 +576,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash": "Cash-Bestand: {cash:,.2f}",
         "strategy_list_header": "Anlageideen",
         "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_item_horizon": "• {symbol} ({horizon}) — {preview}",
+        "strategy_holding_horizon": "Anlagehorizont: {horizon}",
         "strategy_list_missing": "• {symbol} — (noch keine Strategie gespeichert)",
         "strategy_list_hint": "/strategy <TICKER> zeigt die vollständige Idee zu einer Position.",
         "strategy_portfolio_empty": "Portfolio ist leer — keine Anlageideen vorhanden.",
@@ -578,9 +598,15 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "{symbol} hinzugefügt und Anlageidee gespeichert.",
         "add_ticker_strategy_fail": "Ticker-Strategie nicht hinzugefügt: {message}",
         "add_ticker_strategy_usage": (
-            "Verwendung: /add_ticker_strategy <TICKER> [Anzahl] <Begründung>\n"
-            "Beispiel: /add_ticker_strategy NVDA 5 US-KI-Chipführer mit Rechenzentrum-Exposure"
+            "Verwendung: /add_ticker_strategy <TICKER> <long|short> [Anzahl] <Begründung>\n"
+            "Beispiel: /add_ticker_strategy NVDA long 5 US-KI-Chipführer mit Rechenzentrum-Exposure\n"
+            "Beispiel: /add_ticker_strategy TSLA short 2 Earnings-Momentum-Trade"
         ),
+        "add_ticker_strategy_horizon_invalid": (
+            "Das zweite Argument muss long oder short sein (Anlagehorizont).\n\n"
+            "Beispiel: /add_ticker_strategy NVDA long 5 KI-Infrastruktur-These"
+        ),
+        "add_ticker_strategy_shares_invalid": "Die Anzahl muss eine positive Zahl sein.",
         "edit_strategy_ok": "Strategie für {symbol} aktualisiert.",
         "edit_strategy_fail": "Strategie nicht aktualisiert: {message}",
         "edit_strategy_usage": (
@@ -737,7 +763,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "编辑持仓\n"
             "  /add_ticker <代码> [数量] — 添加或增加持仓\n"
-            "  /add_ticker_strategy <代码> [数量] <理由> — 添加并记录投资逻辑\n"
+            "  /add_ticker_strategy <代码> <long|short> [数量] <理由> — 添加并记录投资逻辑\n"
             "  /edit_strategy <代码> <文本> — 直接改写已保存的逻辑\n"
             "  /sell_ticker <代码> [数量] <价格> <理由> — 卖出并通知用户\n"
             "  /undo — 撤销上一条投资组合通知\n"
@@ -780,6 +806,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_empty_dev": "投资组合为空。请使用 /add_ticker 添加。",
         "portfolio_header": "投资组合（{count} 个持仓）",
         "portfolio_shares": "{symbol} — {shares:g} 股",
+        "portfolio_shares_horizon": "{symbol} — {shares:g} 股 · {horizon}",
+        "portfolio_section_long": "长期持仓",
+        "portfolio_section_short": "短期持仓",
+        "horizon_label_long": "长期",
+        "horizon_label_short": "短期",
         "portfolio_cost_basis": "  成本：{value:.2f}",
         "portfolio_price_unavailable": "  价格：不可用",
         "portfolio_last_price": "  最新价：{price:.2f}（{change}）",
@@ -887,6 +918,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash": "现金余额：{cash:,.2f}",
         "strategy_list_header": "投资逻辑",
         "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_item_horizon": "• {symbol}（{horizon}）— {preview}",
+        "strategy_holding_horizon": "持仓周期：{horizon}",
         "strategy_list_missing": "• {symbol} —（尚未保存策略）",
         "strategy_list_hint": "使用 /strategy <代码> 查看单只股票的完整逻辑。",
         "strategy_portfolio_empty": "投资组合为空，暂无投资逻辑。",
@@ -907,9 +940,15 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "已添加 {symbol} 并保存投资逻辑。",
         "add_ticker_strategy_fail": "无法添加策略：{message}",
         "add_ticker_strategy_usage": (
-            "用法：/add_ticker_strategy <代码> [数量] <理由>\n"
-            "示例：/add_ticker_strategy NVDA 5 美国AI芯片龙头，受益于数据中心需求"
+            "用法：/add_ticker_strategy <代码> <long|short> [数量] <理由>\n"
+            "示例：/add_ticker_strategy NVDA long 5 美国AI芯片龙头，受益于数据中心需求\n"
+            "示例：/add_ticker_strategy TSLA short 2 财报动量交易"
         ),
+        "add_ticker_strategy_horizon_invalid": (
+            "第二个参数必须是 long 或 short（持仓周期）。\n\n"
+            "示例：/add_ticker_strategy NVDA long 5 AI基础设施投资逻辑"
+        ),
+        "add_ticker_strategy_shares_invalid": "数量必须是正数。",
         "edit_strategy_ok": "已更新 {symbol} 的策略。",
         "edit_strategy_fail": "无法更新策略：{message}",
         "edit_strategy_usage": (
@@ -1066,7 +1105,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Изменение портфеля\n"
             "  /add_ticker <ТИКЕР> [кол-во] — добавить или увеличить позицию\n"
-            "  /add_ticker_strategy <ТИКЕР> [кол-во] <обоснование> — добавить с идеей\n"
+            "  /add_ticker_strategy <ТИКЕР> <long|short> [кол-во] <обоснование> — добавить с идеей\n"
             "  /edit_strategy <ТИКЕР> <текст> — перезаписать сохранённую идею\n"
             "  /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование> — продать и уведомить пользователей\n"
             "  /undo — отменить последнее уведомление о портфеле\n"
@@ -1109,6 +1148,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_empty_dev": "Портфель пуст. Добавьте позиции через /add_ticker.",
         "portfolio_header": "Портфель ({count} поз.)",
         "portfolio_shares": "{symbol} — {shares:g} акций",
+        "portfolio_shares_horizon": "{symbol} — {shares:g} акций · {horizon}",
+        "portfolio_section_long": "Долгосрочные позиции",
+        "portfolio_section_short": "Краткосрочные позиции",
+        "horizon_label_long": "долгосрочная",
+        "horizon_label_short": "краткосрочная",
         "portfolio_cost_basis": "  Средняя цена: {value:.2f}",
         "portfolio_price_unavailable": "  Цена: недоступна",
         "portfolio_last_price": "  Последняя цена: {price:.2f} ({change})",
@@ -1219,6 +1263,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash": "Остаток cash: {cash:,.2f}",
         "strategy_list_header": "Инвестиционные идеи",
         "strategy_list_item": "• {symbol} — {preview}",
+        "strategy_list_item_horizon": "• {symbol} ({horizon}) — {preview}",
+        "strategy_holding_horizon": "Горизонт: {horizon}",
         "strategy_list_missing": "• {symbol} — (стратегия ещё не сохранена)",
         "strategy_list_hint": "Команда /strategy <ТИКЕР> показывает полную идею по позиции.",
         "strategy_portfolio_empty": "Портфель пуст — нет сохранённых идей.",
@@ -1239,9 +1285,15 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "Добавлен {symbol}, стратегия сохранена.",
         "add_ticker_strategy_fail": "Не удалось добавить стратегию: {message}",
         "add_ticker_strategy_usage": (
-            "Использование: /add_ticker_strategy <ТИКЕР> [кол-во] <обоснование>\n"
-            "Пример: /add_ticker_strategy NVDA 5 лидер US AI-чипов, экспозиция к дата-центрам"
+            "Использование: /add_ticker_strategy <ТИКЕР> <long|short> [кол-во] <обоснование>\n"
+            "Пример: /add_ticker_strategy NVDA long 5 лидер US AI-чипов, экспозиция к дата-центрам\n"
+            "Пример: /add_ticker_strategy TSLA short 2 трейд на импульсе отчёта"
         ),
+        "add_ticker_strategy_horizon_invalid": (
+            "Второй аргумент должен быть long или short (горизонт позиции).\n\n"
+            "Пример: /add_ticker_strategy NVDA long 5 тезис по AI-инфраструктуре"
+        ),
+        "add_ticker_strategy_shares_invalid": "Количество должно быть положительным числом.",
         "edit_strategy_ok": "Стратегия для {symbol} обновлена.",
         "edit_strategy_fail": "Не удалось обновить стратегию: {message}",
         "edit_strategy_usage": (

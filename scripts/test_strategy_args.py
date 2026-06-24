@@ -10,34 +10,50 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from bot.handlers import _parse_strategy_add_args
+from bot.strategy_args import parse_strategy_add_args
 
 
 def run_test() -> None:
-    parsed_new = _parse_strategy_add_args(
-        ["NVDA", "5", "AI", "infrastructure"],
+    parsed_new, err = parse_strategy_add_args(
+        ["NVDA", "long", "5", "AI", "infrastructure"],
         ticker_already_held=False,
     )
-    if parsed_new != ("NVDA", 5.0, "AI infrastructure"):
+    if err is not None or parsed_new is None:
+        raise AssertionError(f"unexpected new-ticker parse: {parsed_new}, {err}")
+    if (
+        parsed_new.ticker != "NVDA"
+        or parsed_new.holding_horizon != "long"
+        or parsed_new.shares != 5.0
+        or parsed_new.reasoning != "AI infrastructure"
+    ):
         raise AssertionError(f"unexpected new-ticker parse: {parsed_new}")
 
-    parsed_new_default = _parse_strategy_add_args(
-        ["NVDA", "AI", "infrastructure"],
+    parsed_new_default, err = parse_strategy_add_args(
+        ["NVDA", "short", "AI", "infrastructure"],
         ticker_already_held=False,
     )
-    if parsed_new_default != ("NVDA", 1.0, "AI infrastructure"):
+    if err is not None or parsed_new_default is None:
+        raise AssertionError(f"unexpected default shares parse: {parsed_new_default}, {err}")
+    if parsed_new_default.shares != 1.0 or parsed_new_default.holding_horizon != "short":
         raise AssertionError(f"unexpected default shares parse: {parsed_new_default}")
 
-    parsed_existing = _parse_strategy_add_args(
-        ["9988.HK", "120", "target", "price", "thesis"],
+    parsed_existing, err = parse_strategy_add_args(
+        ["9988.HK", "long", "120", "target", "price", "thesis"],
         ticker_already_held=True,
     )
-    if parsed_existing != (
-        "9988.HK",
-        None,
-        "120 target price thesis",
+    if err is not None or parsed_existing is None:
+        raise AssertionError(f"existing holding parse failed: {err}")
+    if (
+        parsed_existing.ticker != "9988.HK"
+        or parsed_existing.holding_horizon != "long"
+        or parsed_existing.shares is not None
+        or parsed_existing.reasoning != "120 target price thesis"
     ):
         raise AssertionError(f"existing holding should not parse share count: {parsed_existing}")
+
+    _, err = parse_strategy_add_args(["NVDA", "medium", "thesis"], ticker_already_held=False)
+    if err != "add_ticker_strategy_horizon_invalid":
+        raise AssertionError(f"invalid horizon should fail: {err}")
 
     print("Strategy argument parsing checks passed.")
 

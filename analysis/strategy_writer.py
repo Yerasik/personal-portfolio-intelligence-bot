@@ -51,6 +51,7 @@ def build_strategy_prompt(
     developer_reasoning: str,
     *,
     shares: float,
+    holding_horizon: str = "long",
     company_name: str = "",
     language: str = "en",
 ) -> str:
@@ -58,10 +59,12 @@ def build_strategy_prompt(
     from bot.i18n import llm_language_clause
 
     company_line = company_name.strip() or "unknown"
+    horizon_label = "long-term" if holding_horizon == "long" else "short-term"
     return (
         f"{_ROLE_INSTRUCTIONS}\n\n"
         f"Ticker: {ticker.strip().upper()}\n"
         f"Company: {company_line}\n"
+        f"Holding horizon: {horizon_label}\n"
         f"Shares added: {shares:g}\n"
         f"Developer notes:\n{developer_reasoning.strip()}\n\n"
         f"{llm_language_clause(language)}\n\n"
@@ -151,6 +154,7 @@ def build_strategy_text_by_language(
     developer_reasoning: str,
     *,
     shares: float,
+    holding_horizon: str = "long",
     company_name: str = "",
     languages: set[str],
     enabled: bool = True,
@@ -164,6 +168,7 @@ def build_strategy_text_by_language(
         ticker,
         developer_reasoning,
         shares=shares,
+        holding_horizon=holding_horizon,
         company_name=company_name,
         language="en",
         enabled=enabled,
@@ -178,6 +183,7 @@ def build_strategy_text_by_language(
             ticker,
             developer_reasoning,
             shares=shares,
+            holding_horizon=holding_horizon,
             company_name=company_name,
             language=lang,
             enabled=enabled,
@@ -218,6 +224,7 @@ def generate_ticker_strategy(
     developer_reasoning: str,
     *,
     shares: float,
+    holding_horizon: str = "long",
     company_name: str = "",
     language: str = "en",
     enabled: bool = True,
@@ -235,6 +242,7 @@ def generate_ticker_strategy(
         symbol,
         reasoning,
         shares=shares,
+        holding_horizon=holding_horizon,
         company_name=company_name,
         language=language,
     )

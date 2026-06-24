@@ -68,6 +68,7 @@ class TickerStrategy(BaseModel):
     strategy_text: str
     strategy_text_by_language: dict[str, str] = Field(default_factory=dict)
     shares_at_add: float | None = None
+    holding_horizon: Literal["long", "short"] = "long"
     created_at: datetime
     updated_at: datetime
 

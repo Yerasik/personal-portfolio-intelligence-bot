@@ -31,6 +31,7 @@ from storage.models import (
     NewsCache,
     PendingAlert,
     Portfolio,
+    Position,
     TickerSentimentSignal,
     TickerStrategy,
 )
@@ -458,6 +459,110 @@ def format_start(*, lang: str = "en", is_developer: bool = False) -> str:
     return "\n".join(lines)
 
 
+def _horizon_label(horizon: str, lang: str) -> str:
+    """Return a localized long/short horizon label."""
+    if horizon == "short":
+        return t("horizon_label_short", lang)
+    return t("horizon_label_long", lang)
+
+
+def _position_horizon(
+    position: Position,
+    strategies: dict[str, TickerStrategy] | None,
+) -> str:
+    """Resolve the holding horizon for one portfolio position."""
+    symbol = position.ticker.strip().upper()
+    if strategies and symbol in strategies:
+        return strategies[symbol].holding_horizon
+    return "long"
+
+
+def _group_positions_by_horizon(
+    portfolio: Portfolio,
+    strategies: dict[str, TickerStrategy] | None,
+) -> tuple[list[Position], list[Position]]:
+    """Split portfolio positions into long-term and short-term lists."""
+    long_positions: list[Position] = []
+    short_positions: list[Position] = []
+    for position in portfolio.positions:
+        if _position_horizon(position, strategies) == "short":
+            short_positions.append(position)
+        else:
+            long_positions.append(position)
+    return long_positions, short_positions
+
+
+def _append_portfolio_position_lines(
+    lines: list[str],
+    position: Position,
+    state: BotState,
+    by_ticker: dict[str, PositionValuation],
+    *,
+    lang: str,
+    is_developer: bool,
+    strategies: dict[str, TickerStrategy] | None,
+) -> None:
+    """Append formatted lines for a single portfolio holding."""
+    symbol = position.ticker.strip().upper()
+    horizon = _position_horizon(position, strategies)
+    lines.append(
+        t(
+            "portfolio_shares_horizon",
+            lang,
+            symbol=symbol,
+            shares=position.shares,
+            horizon=_horizon_label(horizon, lang),
+        )
+    )
+    if position.cost_basis is not None:
+        lines.append(t("portfolio_cost_basis", lang, value=position.cost_basis))
+
+    quote = state.latest_prices.get(symbol)
+    position_value = by_ticker.get(symbol)
+    if quote is None or quote.price is None:
+        lines.append(t("portfolio_price_unavailable", lang))
+    else:
+        change = (
+            f"{quote.change_pct:+.2f}%"
+            if quote.change_pct is not None
+            else "n/a"
+        )
+        label = quote.company_name or symbol
+        currency = infer_quote_currency(quote, symbol)
+        lines.append(
+            t(
+                "portfolio_last_price_ccy",
+                lang,
+                price=quote.price,
+                currency=currency,
+                change=change,
+            )
+        )
+        lines.append(t("portfolio_company", lang, name=label))
+        if quote.fetched_at:
+            if is_developer:
+                lines.append(
+                    t(
+                        "portfolio_quote_as_of",
+                        lang,
+                        timestamp=quote.fetched_at.isoformat(),
+                    )
+                )
+            else:
+                lines.append(
+                    t(
+                        "portfolio_quote_as_of_user",
+                        lang,
+                        date=_format_user_date(quote.fetched_at),
+                    )
+                )
+    if position_value is not None:
+        _append_hkd_valuation_lines(lines, position_value, lang)
+    if position.notes:
+        lines.append(t("portfolio_position_notes", lang, notes=position.notes))
+    lines.append("")
+
+
 def format_help(*, lang: str = "en", is_developer: bool = False) -> str:
     """Help text for /help."""
     lines = [t("help_header", lang), "", t("help_commands", lang)]
@@ -470,6 +575,7 @@ def format_portfolio(
     portfolio: Portfolio,
     state: BotState,
     *,
+    strategies: dict[str, TickerStrategy] | None = None,
     lang: str = "en",
     is_developer: bool = False,
 ) -> str:
@@ -480,64 +586,37 @@ def format_portfolio(
 
     valuation = build_portfolio_valuation(portfolio, state)
     by_ticker = {item.ticker: item for item in valuation.positions}
+    long_positions, short_positions = _group_positions_by_horizon(portfolio, strategies)
 
     lines = [t("portfolio_header", lang, count=len(portfolio.positions)), ""]
-    for position in portfolio.positions:
-        symbol = position.ticker.strip().upper()
-        lines.append(
-            t("portfolio_shares", lang, symbol=symbol, shares=position.shares)
-        )
-        if position.cost_basis is not None:
-            lines.append(
-                t("portfolio_cost_basis", lang, value=position.cost_basis)
+
+    if long_positions:
+        lines.append(t("portfolio_section_long", lang))
+        lines.append("")
+        for position in long_positions:
+            _append_portfolio_position_lines(
+                lines,
+                position,
+                state,
+                by_ticker,
+                lang=lang,
+                is_developer=is_developer,
+                strategies=strategies,
             )
 
-        quote = state.latest_prices.get(symbol)
-        position_value = by_ticker.get(symbol)
-        if quote is None or quote.price is None:
-            lines.append(t("portfolio_price_unavailable", lang))
-        else:
-            change = (
-                f"{quote.change_pct:+.2f}%"
-                if quote.change_pct is not None
-                else "n/a"
-            )
-            label = quote.company_name or symbol
-            currency = infer_quote_currency(quote, symbol)
-            lines.append(
-                t(
-                    "portfolio_last_price_ccy",
-                    lang,
-                    price=quote.price,
-                    currency=currency,
-                    change=change,
-                )
-            )
-            lines.append(t("portfolio_company", lang, name=label))
-            if quote.fetched_at:
-                if is_developer:
-                    lines.append(
-                        t(
-                            "portfolio_quote_as_of",
-                            lang,
-                            timestamp=quote.fetched_at.isoformat(),
-                        )
-                    )
-                else:
-                    lines.append(
-                        t(
-                            "portfolio_quote_as_of_user",
-                            lang,
-                            date=_format_user_date(quote.fetched_at),
-                        )
-                    )
-        if position_value is not None:
-            _append_hkd_valuation_lines(lines, position_value, lang)
-        if position.notes:
-            lines.append(
-                t("portfolio_position_notes", lang, notes=position.notes)
-            )
+    if short_positions:
+        lines.append(t("portfolio_section_short", lang))
         lines.append("")
+        for position in short_positions:
+            _append_portfolio_position_lines(
+                lines,
+                position,
+                state,
+                by_ticker,
+                lang=lang,
+                is_developer=is_developer,
+                strategies=strategies,
+            )
 
     if portfolio.notes:
         lines.extend([t("portfolio_notes_header", lang), portfolio.notes])
@@ -948,6 +1027,35 @@ def format_alert(alert: PendingAlert, *, lang: str = "en") -> str:
     return format_informational_alert(candidate, lang=lang)
 
 
+def _append_strategy_list_items(
+    lines: list[str],
+    positions: list[Position],
+    strategies: dict[str, TickerStrategy],
+    localized: dict[str, str],
+    *,
+    lang: str,
+) -> None:
+    """Append strategy list lines for one horizon group."""
+    for position in positions:
+        symbol = position.ticker.strip().upper()
+        strategy = strategies.get(symbol)
+        if strategy is None:
+            lines.append(t("strategy_list_missing", lang, symbol=symbol))
+            continue
+        preview = localized.get(symbol, strategy.strategy_text).replace("\n", " ").strip()
+        if len(preview) > 120:
+            preview = preview[:117].rstrip() + "..."
+        lines.append(
+            t(
+                "strategy_list_item_horizon",
+                lang,
+                symbol=symbol,
+                horizon=_horizon_label(strategy.holding_horizon, lang),
+                preview=preview,
+            )
+        )
+
+
 def format_strategy_list(
     portfolio: Portfolio,
     strategies: dict[str, TickerStrategy],
@@ -960,19 +1068,34 @@ def format_strategy_list(
         return t("strategy_portfolio_empty", lang)
 
     localized = display_by_ticker or {}
+    long_positions, short_positions = _group_positions_by_horizon(portfolio, strategies)
     lines = [t("strategy_list_header", lang), ""]
-    for position in portfolio.positions:
-        symbol = position.ticker.strip().upper()
-        strategy = strategies.get(symbol)
-        if strategy is None:
-            lines.append(t("strategy_list_missing", lang, symbol=symbol))
-            continue
-        preview = localized.get(symbol, strategy.strategy_text).replace("\n", " ").strip()
-        if len(preview) > 120:
-            preview = preview[:117].rstrip() + "..."
-        lines.append(t("strategy_list_item", lang, symbol=symbol, preview=preview))
 
-    lines.extend(["", t("strategy_list_hint", lang)])
+    if long_positions:
+        lines.append(t("portfolio_section_long", lang))
+        lines.append("")
+        _append_strategy_list_items(
+            lines,
+            long_positions,
+            strategies,
+            localized,
+            lang=lang,
+        )
+        lines.append("")
+
+    if short_positions:
+        lines.append(t("portfolio_section_short", lang))
+        lines.append("")
+        _append_strategy_list_items(
+            lines,
+            short_positions,
+            strategies,
+            localized,
+            lang=lang,
+        )
+        lines.append("")
+
+    lines.append(t("strategy_list_hint", lang))
     return truncate_message("\n".join(lines))
 
 
@@ -987,6 +1110,11 @@ def format_strategy_detail(
     body = (display_text if display_text is not None else strategy.strategy_text).strip()
     lines = [
         t("strategy_detail_header", lang, symbol=strategy.ticker),
+        t(
+            "strategy_holding_horizon",
+            lang,
+            horizon=_horizon_label(strategy.holding_horizon, lang),
+        ),
         "",
         body,
     ]

@@ -4,6 +4,8 @@ All bot modules should load/save JSON through this class rather than calling
 JsonStore directly — it keeps path handling consistent.
 """
 
+from typing import Literal
+
 from storage.json_store import JsonStore
 from storage.languages import SUPPORTED_LANGUAGES, normalize_language
 from storage.models import (
@@ -218,6 +220,7 @@ class DataRepository:
         developer_reasoning: str,
         strategy_text: str,
         shares_at_add: float | None = None,
+        holding_horizon: Literal["long", "short"] | None = None,
         strategy_text_by_language: dict[str, str] | None = None,
     ) -> TickerStrategy:
         """Create or replace the strategy record for a ticker."""
@@ -230,12 +233,16 @@ class DataRepository:
         translations = dict(strategy_text_by_language or {})
         if "en" not in translations:
             translations["en"] = strategy_text.strip()
+        horizon = holding_horizon
+        if horizon is None:
+            horizon = existing.holding_horizon if existing is not None else "long"
         record = TickerStrategy(
             ticker=symbol,
             developer_reasoning=developer_reasoning.strip(),
             strategy_text=strategy_text.strip(),
             strategy_text_by_language=translations,
             shares_at_add=shares_at_add,
+            holding_horizon=horizon,
             created_at=existing.created_at if existing is not None else now,
             updated_at=now,
         )

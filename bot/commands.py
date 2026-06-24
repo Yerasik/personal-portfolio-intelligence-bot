@@ -198,9 +198,11 @@ class BotCommands:
         """Load portfolio + state and format holdings with latest prices."""
         portfolio = self.repository.load_portfolio()
         state = self.repository.load_state()
+        strategies = self.repository.load_ticker_strategies().by_ticker
         return format_portfolio(
             portfolio,
             state,
+            strategies=strategies,
             lang=self._lang(chat_id),
             is_developer=self._is_developer(chat_id),
         )
@@ -484,6 +486,7 @@ class BotCommands:
                 developer_reasoning=strategy.developer_reasoning,
                 strategy_text=strategy.strategy_text,
                 shares_at_add=strategy.shares_at_add,
+                holding_horizon=strategy.holding_horizon,
                 strategy_text_by_language=dict(strategy.strategy_text_by_language),
             )
 
@@ -806,6 +809,7 @@ class BotCommands:
         self,
         chat_id: int,
         ticker: str,
+        holding_horizon: str,
         shares: float | None,
         reasoning: str,
     ) -> str:
@@ -857,6 +861,7 @@ class BotCommands:
             symbol,
             reasoning,
             shares=position_shares,
+            holding_horizon=holding_horizon,
             company_name=company_name,
             languages=user_languages,
             enabled=app_config.enable_llm_summaries,
@@ -876,6 +881,7 @@ class BotCommands:
             developer_reasoning=reasoning,
             strategy_text=generated.strategy_text,
             shares_at_add=shares_at_add,
+            holding_horizon=holding_horizon,  # type: ignore[arg-type]
             strategy_text_by_language=by_language,
         )
 

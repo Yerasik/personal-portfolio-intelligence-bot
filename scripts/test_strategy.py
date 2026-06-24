@@ -85,6 +85,7 @@ def run_test() -> None:
             add_message = commands.add_ticker_strategy_message(
                 111,
                 "TEST",
+                "long",
                 1.0,
                 "Developer raw notes about the idea.",
             )
@@ -179,6 +180,7 @@ def run_test() -> None:
             commands.add_ticker_strategy_message(
                 111,
                 "HOLD",
+                "long",
                 None,
                 "Reasoning that should not add shares.",
             )
