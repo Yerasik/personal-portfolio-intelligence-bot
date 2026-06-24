@@ -65,6 +65,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker_strategy <TICKER> [qty] <reasoning> — add with investment idea\n"
             "  /edit_strategy <TICKER> <text> — rewrite the stored idea\n"
             "  /sell_ticker <TICKER> [qty] <price> <reasoning> — sell and notify users\n"
+            "  /undo — reverse the last portfolio notification\n"
             "  /remove_ticker <TICKER> — remove a position\n\n"
             "User management\n"
             "  /list_users — show authorized users\n"
@@ -170,10 +171,49 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_ticker_fail": "Could not sell ticker: {message}",
         "sell_ticker_usage": (
             "Usage: /sell_ticker <TICKER> [shares] <price> <reasoning>\n"
-            "Proceeds are credited to portfolio cash (visible to developers in /portfolio).\n"
+            "If you omit the share count, the entire position is sold at <price> per share.\n"
+            "Nothing is sent to users until you tap Confirm on the preview.\n"
             "Example: /sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
             "Example: /sell_ticker AAPL 5 190.50 Trimming position ahead of product cycle"
         ),
+        "sell_ticker_not_held": "That ticker is not in the portfolio.",
+        "sell_ticker_reasoning_invalid": (
+            "Sell reasoning is missing or looks like a placeholder (e.g. \"-\").\n"
+            "Add a short real explanation users can understand.\n\n"
+            "Remember: with 3 arguments, the number is the price per share, not the share count.\n"
+            "To sell 62 shares you need 4+ arguments:\n"
+            "/sell_ticker TICKER 62 <price> <reasoning>"
+        ),
+        "sell_ticker_price_invalid": "Sell price must be a positive number.",
+        "sell_ticker_shares_invalid": "Share count must be a positive number.",
+        "sell_ticker_too_many_shares": "You cannot sell more shares than the portfolio holds.",
+        "sell_preview_header": "Sell preview — {symbol}",
+        "sell_preview_shares_all": "Shares to sell: ALL ({shares:g})",
+        "sell_preview_shares_partial": "Shares to sell: {shares:g} of {held:g} held",
+        "sell_preview_price": "Price per share: {price:g}",
+        "sell_preview_proceeds": "Estimated proceeds: {proceeds:,.2f}",
+        "sell_preview_reasoning": "User message rationale: {reasoning}",
+        "sell_preview_confirm_hint": "Tap Confirm to sell and notify users, or Cancel.",
+        "sell_warning_sells_all": (
+            "Note: you did not specify a share count, so the entire position will be sold."
+        ),
+        "sell_warning_maybe_meant_shares": (
+            "Did you mean to sell {value:g} shares? If so, use:\n"
+            "/sell_ticker {symbol} {value:g} <price> <reasoning>"
+        ),
+        "portfolio_action_confirm": "Confirm",
+        "portfolio_action_cancel": "Cancel",
+        "portfolio_action_undo": "Undo last action",
+        "portfolio_action_cancelled": "Sell cancelled — no changes made and users were not notified.",
+        "portfolio_action_confirm_mismatch": "That action is no longer available. Run the command again.",
+        "portfolio_action_undo_ok": "Undone. Portfolio restored and users notified of the correction.",
+        "portfolio_action_undo_fail": "Could not undo that action.",
+        "portfolio_action_nothing_to_undo": "Nothing to undo right now.",
+        "portfolio_action_undo_hint": "Tap Undo last action if this was a mistake.",
+        "portfolio_correction_header": "Correction",
+        "portfolio_correction_sell": "Please disregard the recent sell notice for {symbol}. The portfolio was updated in error.",
+        "portfolio_correction_add": "Please disregard the recent add notice for {symbol}. The portfolio was updated in error.",
+        "portfolio_correction_remove": "Please disregard the recent removal notice for {symbol}. The portfolio was updated in error.",
         "sell_announcement_header": "Position sold",
         "sell_announcement_sold_all": "{symbol} — sold all {shares:g} share(s) from the portfolio.",
         "sell_announcement_sold_partial": "{symbol} — sold {shares:g} share(s) from the portfolio.",
@@ -367,6 +407,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker_strategy <TICKER> [Anzahl] <Begründung> — mit Anlageidee\n"
             "  /edit_strategy <TICKER> <Text> — gespeicherte Idee überschreiben\n"
             "  /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung> — verkaufen und Benutzer benachrichtigen\n"
+            "  /undo — letzte Portfolio-Benachrichtigung rückgängig machen\n"
             "  /remove_ticker <TICKER> — Position entfernen\n\n"
             "Benutzerverwaltung\n"
             "  /list_users — autorisierte Benutzer\n"
@@ -472,10 +513,45 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_ticker_fail": "Verkauf fehlgeschlagen: {message}",
         "sell_ticker_usage": (
             "Verwendung: /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung>\n"
-            "Erlös wird dem Portfolio-Cash gutgeschrieben (für Entwickler in /portfolio sichtbar).\n"
+            "Ohne Anzahl wird die gesamte Position zum Preis <Preis> pro Anteil verkauft.\n"
+            "Benutzer werden erst nach Bestätigung benachrichtigt.\n"
             "Beispiel: /sell_ticker NVDA 150.25 Gewinnmitnahme nach Earnings-Rally\n"
             "Beispiel: /sell_ticker AAPL 5 190.50 Position vor Produktzyklus reduzieren"
         ),
+        "sell_ticker_not_held": "Dieser Ticker ist nicht im Portfolio.",
+        "sell_ticker_reasoning_invalid": (
+            "Begründung fehlt oder ist ein Platzhalter (z. B. \"-\").\n"
+            "Mit 3 Argumenten ist die Zahl der Preis pro Anteil, nicht die Anzahl.\n"
+            "Für 62 Anteile: /sell_ticker TICKER 62 <Preis> <Begründung>"
+        ),
+        "sell_ticker_price_invalid": "Verkaufspreis muss eine positive Zahl sein.",
+        "sell_ticker_shares_invalid": "Anzahl muss eine positive Zahl sein.",
+        "sell_ticker_too_many_shares": "Sie können nicht mehr Anteile verkaufen als gehalten werden.",
+        "sell_preview_header": "Verkaufsvorschau — {symbol}",
+        "sell_preview_shares_all": "Zu verkaufen: ALLE ({shares:g})",
+        "sell_preview_shares_partial": "Zu verkaufen: {shares:g} von {held:g} gehalten",
+        "sell_preview_price": "Preis pro Anteil: {price:g}",
+        "sell_preview_proceeds": "Geschätzter Erlös: {proceeds:,.2f}",
+        "sell_preview_reasoning": "Begründung für Benutzer: {reasoning}",
+        "sell_preview_confirm_hint": "Bestätigen zum Verkaufen und Benachrichtigen, oder Abbrechen.",
+        "sell_warning_sells_all": "Hinweis: ohne Anzahl wird die gesamte Position verkauft.",
+        "sell_warning_maybe_meant_shares": (
+            "Meinten Sie {value:g} Anteile? Dann:\n"
+            "/sell_ticker {symbol} {value:g} <Preis> <Begründung>"
+        ),
+        "portfolio_action_confirm": "Bestätigen",
+        "portfolio_action_cancel": "Abbrechen",
+        "portfolio_action_undo": "Letzte Aktion rückgängig",
+        "portfolio_action_cancelled": "Verkauf abgebrochen — keine Änderung, Benutzer nicht benachrichtigt.",
+        "portfolio_action_confirm_mismatch": "Diese Aktion ist nicht mehr verfügbar. Befehl erneut ausführen.",
+        "portfolio_action_undo_ok": "Rückgängig gemacht. Portfolio wiederhergestellt, Benutzer über Korrektur informiert.",
+        "portfolio_action_undo_fail": "Rückgängig machen fehlgeschlagen.",
+        "portfolio_action_nothing_to_undo": "Derzeit nichts rückgängig zu machen.",
+        "portfolio_action_undo_hint": "Bei Fehler „Letzte Aktion rückgängig“ tippen.",
+        "portfolio_correction_header": "Korrektur",
+        "portfolio_correction_sell": "Bitte die kürzliche Verkaufsmitteilung zu {symbol} ignorieren — Fehler bei der Portfolio-Aktualisierung.",
+        "portfolio_correction_add": "Bitte die kürzliche Hinzufüge-Mitteilung zu {symbol} ignorieren — Fehler bei der Portfolio-Aktualisierung.",
+        "portfolio_correction_remove": "Bitte die kürzliche Entfernen-Mitteilung zu {symbol} ignorieren — Fehler bei der Portfolio-Aktualisierung.",
         "sell_announcement_header": "Position verkauft",
         "sell_announcement_sold_all": "{symbol} — alle {shares:g} Anteile aus dem Portfolio verkauft.",
         "sell_announcement_sold_partial": "{symbol} — {shares:g} Anteile aus dem Portfolio verkauft.",
@@ -664,6 +740,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker_strategy <代码> [数量] <理由> — 添加并记录投资逻辑\n"
             "  /edit_strategy <代码> <文本> — 直接改写已保存的逻辑\n"
             "  /sell_ticker <代码> [数量] <价格> <理由> — 卖出并通知用户\n"
+            "  /undo — 撤销上一条投资组合通知\n"
             "  /remove_ticker <代码> — 移除持仓\n\n"
             "用户管理\n"
             "  /list_users — 查看授权用户\n"
@@ -766,10 +843,44 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_ticker_fail": "无法卖出：{message}",
         "sell_ticker_usage": (
             "用法：/sell_ticker <代码> [数量] <价格> <理由>\n"
-            "卖出所得计入组合现金（开发者在 /portfolio 中可见）。\n"
+            "省略数量则按每股 <价格> 卖出全部持仓。确认后才会通知用户。\n"
             "示例：/sell_ticker NVDA 150.25 财报上涨后获利了结\n"
             "示例：/sell_ticker AAPL 5 190.50 产品周期前减仓"
         ),
+        "sell_ticker_not_held": "该股票不在投资组合中。",
+        "sell_ticker_reasoning_invalid": (
+            "卖出理由缺失或为占位符（如 \"-\"）。\n"
+            "3 个参数时，数字是每股价格，不是数量。\n"
+            "卖出 62 股请用：/sell_ticker 代码 62 <价格> <理由>"
+        ),
+        "sell_ticker_price_invalid": "卖出价格必须是正数。",
+        "sell_ticker_shares_invalid": "数量必须是正数。",
+        "sell_ticker_too_many_shares": "卖出数量不能超过持仓。",
+        "sell_preview_header": "卖出预览 — {symbol}",
+        "sell_preview_shares_all": "卖出数量：全部（{shares:g} 股）",
+        "sell_preview_shares_partial": "卖出数量：{shares:g} / 持有 {held:g} 股",
+        "sell_preview_price": "每股价格：{price:g}",
+        "sell_preview_proceeds": "预计所得：{proceeds:,.2f}",
+        "sell_preview_reasoning": "用户可见理由：{reasoning}",
+        "sell_preview_confirm_hint": "点击确认后卖出并通知用户，或取消。",
+        "sell_warning_sells_all": "注意：未指定数量，将卖出全部持仓。",
+        "sell_warning_maybe_meant_shares": (
+            "是否想卖出 {value:g} 股？请使用：\n"
+            "/sell_ticker {symbol} {value:g} <价格> <理由>"
+        ),
+        "portfolio_action_confirm": "确认",
+        "portfolio_action_cancel": "取消",
+        "portfolio_action_undo": "撤销上一步",
+        "portfolio_action_cancelled": "已取消卖出，未变更且未通知用户。",
+        "portfolio_action_confirm_mismatch": "该操作已失效，请重新运行命令。",
+        "portfolio_action_undo_ok": "已撤销，投资组合已恢复，并已通知用户更正。",
+        "portfolio_action_undo_fail": "无法撤销该操作。",
+        "portfolio_action_nothing_to_undo": "当前没有可撤销的操作。",
+        "portfolio_action_undo_hint": "如有误，可点击「撤销上一步」。",
+        "portfolio_correction_header": "更正",
+        "portfolio_correction_sell": "请忽略关于 {symbol} 的近期卖出通知，系投资组合更新错误。",
+        "portfolio_correction_add": "请忽略关于 {symbol} 的近期添加通知，系投资组合更新错误。",
+        "portfolio_correction_remove": "请忽略关于 {symbol} 的近期移除通知，系投资组合更新错误。",
         "sell_announcement_header": "已卖出持仓",
         "sell_announcement_sold_all": "{symbol} — 已卖出全部 {shares:g} 股。",
         "sell_announcement_sold_partial": "{symbol} — 已卖出 {shares:g} 股。",
@@ -958,6 +1069,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /add_ticker_strategy <ТИКЕР> [кол-во] <обоснование> — добавить с идеей\n"
             "  /edit_strategy <ТИКЕР> <текст> — перезаписать сохранённую идею\n"
             "  /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование> — продать и уведомить пользователей\n"
+            "  /undo — отменить последнее уведомление о портфеле\n"
             "  /remove_ticker <ТИКЕР> — удалить позицию\n\n"
             "Управление пользователями\n"
             "  /list_users — список пользователей\n"
@@ -1063,10 +1175,44 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_ticker_fail": "Не удалось продать: {message}",
         "sell_ticker_usage": (
             "Использование: /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование>\n"
-            "Выручка зачисляется в cash портфеля (видно разработчику в /portfolio).\n"
+            "Без количества продаётся вся позиция по цене <цена> за акцию. Пользователи уведомляются после подтверждения.\n"
             "Пример: /sell_ticker NVDA 150.25 фиксация прибыли после отчёта\n"
             "Пример: /sell_ticker AAPL 5 190.50 сокращение позиции перед циклом продуктов"
         ),
+        "sell_ticker_not_held": "Этого тикера нет в портфеле.",
+        "sell_ticker_reasoning_invalid": (
+            "Нет обоснования или указан placeholder (например \"-\").\n"
+            "При 3 аргументах число — цена за акцию, а не количество.\n"
+            "Чтобы продать 62 акции: /sell_ticker ТИКЕР 62 <цена> <обоснование>"
+        ),
+        "sell_ticker_price_invalid": "Цена продажи должна быть положительным числом.",
+        "sell_ticker_shares_invalid": "Количество должно быть положительным числом.",
+        "sell_ticker_too_many_shares": "Нельзя продать больше акций, чем есть в портфеле.",
+        "sell_preview_header": "Предпросмотр продажи — {symbol}",
+        "sell_preview_shares_all": "К продаже: ВСЕ ({shares:g} акц.)",
+        "sell_preview_shares_partial": "К продаже: {shares:g} из {held:g} в портфеле",
+        "sell_preview_price": "Цена за акцию: {price:g}",
+        "sell_preview_proceeds": "Ожидаемая выручка: {proceeds:,.2f}",
+        "sell_preview_reasoning": "Обоснование для пользователей: {reasoning}",
+        "sell_preview_confirm_hint": "Подтвердите продажу и уведомление пользователей или отмените.",
+        "sell_warning_sells_all": "Внимание: количество не указано — будет продана вся позиция.",
+        "sell_warning_maybe_meant_shares": (
+            "Вы хотели продать {value:g} акций? Тогда:\n"
+            "/sell_ticker {symbol} {value:g} <цена> <обоснование>"
+        ),
+        "portfolio_action_confirm": "Подтвердить",
+        "portfolio_action_cancel": "Отмена",
+        "portfolio_action_undo": "Отменить последнее действие",
+        "portfolio_action_cancelled": "Продажа отменена — изменений нет, пользователи не уведомлены.",
+        "portfolio_action_confirm_mismatch": "Действие недоступно. Запустите команду снова.",
+        "portfolio_action_undo_ok": "Отменено. Портфель восстановлен, пользователи уведомлены об исправлении.",
+        "portfolio_action_undo_fail": "Не удалось отменить действие.",
+        "portfolio_action_nothing_to_undo": "Сейчас нечего отменять.",
+        "portfolio_action_undo_hint": "Если ошиблись, нажмите «Отменить последнее действие».",
+        "portfolio_correction_header": "Исправление",
+        "portfolio_correction_sell": "Пожалуйста, игнорируйте недавнее уведомление о продаже {symbol} — портфель обновлён по ошибке.",
+        "portfolio_correction_add": "Пожалуйста, игнорируйте недавнее уведомление о добавлении {symbol} — портфель обновлён по ошибке.",
+        "portfolio_correction_remove": "Пожалуйста, игнорируйте недавнее уведомление об удалении {symbol} — портфель обновлён по ошибке.",
         "sell_announcement_header": "Позиция продана",
         "sell_announcement_sold_all": "{symbol} — проданы все {shares:g} акц.",
         "sell_announcement_sold_partial": "{symbol} — продано {shares:g} акц.",

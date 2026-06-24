@@ -50,9 +50,10 @@ from bot.developer_portfolio import (
     undo_keyboard,
 )
 from bot.sell_args import SellParseResult, parse_sell_args
+from bot.i18n import SUPPORTED_LANGUAGES, normalize_language, t
 from bot.notifier import TelegramNotifier
 from config.settings import RuntimeSettings
-from storage.models import DeveloperPortfolioAction, TickerStrategy, UserRole
+from storage.models import DeveloperPortfolioAction, Portfolio, TickerStrategy, UserRole
 from storage.portfolio_ops import PortfolioTickerResult, normalize_ticker, portfolio_has_ticker
 from storage.repository import DataRepository
 
@@ -412,9 +413,10 @@ class BotCommands:
             is_developer=self._is_developer(chat_id),
         )
 
-    def add_ticker_message(self, chat_id: int, ticker: str, shares: float = 1.0) -> str:
+    def add_ticker_message(self, chat_id: int, ticker: str, shares: float = 1.0) -> DeveloperActionReply:
         """Validate and add a ticker to portfolio.json."""
         lang = self._lang(chat_id)
+        portfolio_before = self.repository.load_portfolio()
         result = self.repository.add_ticker_to_portfolio(ticker, shares=shares)
         if result.success:
             notified = self._notify_ordinary_portfolio_add(
@@ -425,13 +427,30 @@ class BotCommands:
             message = t("add_ticker_ok", lang, message=result.message)
             if notified:
                 message = f"{message}\n{t('users_notified', lang, count=notified)}"
-            return message
-        return t("add_ticker_fail", lang, message=result.message)
+            undo = self._record_completed_portfolio_action(
+                chat_id=chat_id,
+                action_type="add_ticker",
+                portfolio_before=portfolio_before,
+                strategy_snapshots=snapshot_strategies(self.repository, [result.ticker]),
+                payload={
+                    "ticker": result.ticker,
+                    "shares": shares,
+                    "is_new_position": result.is_new_position,
+                },
+                users_notified=notified,
+            )
+            return DeveloperActionReply(
+                text=f"{message}\n\n{undo.text}",
+                reply_markup=undo.reply_markup,
+            )
+        return DeveloperActionReply(t("add_ticker_fail", lang, message=result.message))
 
-    def remove_ticker_message(self, chat_id: int, ticker: str) -> str:
+    def remove_ticker_message(self, chat_id: int, ticker: str) -> DeveloperActionReply:
         """Remove a ticker from portfolio.json."""
         lang = self._lang(chat_id)
         symbol = normalize_ticker(ticker)
+        portfolio_before = self.repository.load_portfolio()
+        strategies_before = snapshot_strategies(self.repository, [symbol])
         result = self.repository.remove_ticker_from_portfolio(ticker)
         if result.success:
             self.repository.remove_ticker_strategy(ticker)
@@ -440,33 +459,227 @@ class BotCommands:
             message = t("remove_ticker_ok", lang, message=result.message)
             if notified:
                 message = f"{message}\n{t('users_notified', lang, count=notified)}"
-            return message
-        return t("remove_ticker_fail", lang, message=result.message)
+            undo = self._record_completed_portfolio_action(
+                chat_id=chat_id,
+                action_type="remove_ticker",
+                portfolio_before=portfolio_before,
+                strategy_snapshots=strategies_before,
+                payload={"ticker": symbol},
+                users_notified=notified,
+            )
+            return DeveloperActionReply(
+                text=f"{message}\n\n{undo.text}",
+                reply_markup=undo.reply_markup,
+            )
+        return DeveloperActionReply(t("remove_ticker_fail", lang, message=result.message))
 
-    def sell_ticker_message(
+    def _restore_strategy_snapshots(
+        self,
+        snapshots: dict[str, TickerStrategy],
+    ) -> None:
+        """Restore strategy records captured before a portfolio mutation."""
+        for symbol, strategy in snapshots.items():
+            self.repository.upsert_ticker_strategy(
+                symbol,
+                developer_reasoning=strategy.developer_reasoning,
+                strategy_text=strategy.strategy_text,
+                shares_at_add=strategy.shares_at_add,
+                strategy_text_by_language=dict(strategy.strategy_text_by_language),
+            )
+
+    def _format_sell_preview(self, parsed: SellParseResult, lang: str) -> str:
+        """Build a human-readable sell preview for developer confirmation."""
+        shares_to_sell = parsed.shares if parsed.shares is not None else parsed.held_shares
+        proceeds = shares_to_sell * parsed.price
+        if parsed.shares is None:
+            shares_line = t(
+                "sell_preview_shares_all",
+                lang,
+                symbol=parsed.ticker,
+                shares=shares_to_sell,
+            )
+        else:
+            shares_line = t(
+                "sell_preview_shares_partial",
+                lang,
+                symbol=parsed.ticker,
+                shares=shares_to_sell,
+                held=parsed.held_shares,
+            )
+        lines = [
+            t("sell_preview_header", lang, symbol=parsed.ticker),
+            "",
+            shares_line,
+            t("sell_preview_price", lang, price=parsed.price),
+            t("sell_preview_proceeds", lang, proceeds=proceeds),
+            t("sell_preview_reasoning", lang, reasoning=parsed.reasoning),
+        ]
+        for warning_key in parsed.warnings:
+            lines.extend(
+                ["", t(warning_key, lang, symbol=parsed.ticker, value=parsed.price)]
+            )
+        lines.extend(["", t("sell_preview_confirm_hint", lang)])
+        return "\n".join(lines)
+
+    def prepare_sell_ticker(
         self,
         chat_id: int,
-        ticker: str,
-        sell_price: float,
-        reasoning: str,
-        *,
-        shares: float | None = None,
-    ) -> str:
-        """Sell shares at a price, credit cash, and notify ordinary users."""
+        parsed: SellParseResult,
+    ) -> DeveloperActionReply:
+        """Validate and stage a sell for developer confirmation."""
         lang = self._lang(chat_id)
-        app_config = self.repository.load_config()
-        symbol = normalize_ticker(ticker)
+        portfolio = self.repository.load_portfolio()
+        preview = self._format_sell_preview(parsed, lang)
+        action = save_pending_action(
+            self.repository,
+            action_type="sell",
+            developer_chat_id=chat_id,
+            portfolio_before=portfolio,
+            strategy_snapshots=snapshot_strategies(self.repository, [parsed.ticker]),
+            payload={
+                "ticker": parsed.ticker,
+                "shares": parsed.shares,
+                "sell_price": parsed.price,
+                "reasoning": parsed.reasoning,
+            },
+        )
+        return DeveloperActionReply(
+            text=preview,
+            reply_markup=confirm_keyboard(
+                action.action_id,
+                confirm_label=t("portfolio_action_confirm", lang),
+                cancel_label=t("portfolio_action_cancel", lang),
+            ),
+        )
+
+    def confirm_developer_portfolio_action(
+        self,
+        chat_id: int,
+        action_id: str,
+    ) -> DeveloperActionReply:
+        """Execute a staged developer portfolio action after confirmation."""
+        lang = self._lang(chat_id)
+        action = load_action(self.repository)
+        if (
+            action is None
+            or action.action_id != action_id
+            or action.developer_chat_id != chat_id
+            or action.status != "pending_confirm"
+        ):
+            return DeveloperActionReply(t("portfolio_action_confirm_mismatch", lang))
+
+        if action.action_type == "sell":
+            reply_text, notified = self._execute_confirmed_sell(action, lang)
+        else:
+            return DeveloperActionReply(t("portfolio_action_confirm_mismatch", lang))
+
+        completed = mark_action_completed(
+            self.repository,
+            action,
+            users_notified=notified,
+        )
+        message = reply_text
+        if notified:
+            message = f"{message}\n{t('users_notified', lang, count=notified)}"
+        message = f"{message}\n\n{t('portfolio_action_undo_hint', lang)}"
+        return DeveloperActionReply(
+            text=message,
+            reply_markup=undo_keyboard(
+                completed.action_id,
+                undo_label=t("portfolio_action_undo", lang),
+            ),
+        )
+
+    def cancel_developer_portfolio_action(
+        self,
+        chat_id: int,
+        action_id: str,
+    ) -> DeveloperActionReply:
+        """Cancel a staged developer portfolio action."""
+        lang = self._lang(chat_id)
+        action = load_action(self.repository)
+        if (
+            action is None
+            or action.action_id != action_id
+            or action.developer_chat_id != chat_id
+            or action.status != "pending_confirm"
+        ):
+            return DeveloperActionReply(t("portfolio_action_confirm_mismatch", lang))
+        clear_developer_action(self.repository)
+        return DeveloperActionReply(t("portfolio_action_cancelled", lang))
+
+    def undo_developer_portfolio_action(
+        self,
+        chat_id: int,
+        action_id: str,
+    ) -> DeveloperActionReply:
+        """Reverse the last completed portfolio action and notify users."""
+        lang = self._lang(chat_id)
+        action = load_action(self.repository)
+        if action is None or action.action_id != action_id:
+            return DeveloperActionReply(t("portfolio_action_undo_fail", lang))
+        if action.developer_chat_id != chat_id:
+            return DeveloperActionReply(t("portfolio_action_undo_fail", lang))
+        if action.status != "completed":
+            return DeveloperActionReply(t("portfolio_action_undo_fail", lang))
+
+        self.repository.save_portfolio(action.portfolio_before.model_copy(deep=True))
+        self._restore_strategy_snapshots(action.strategy_snapshots)
+        if action.action_type == "add_ticker":
+            ticker = str(action.payload.get("ticker", ""))
+            if ticker and ticker not in action.strategy_snapshots:
+                self.repository.remove_ticker_strategy(ticker)
+
+        notified = 0
+        if action.users_notified:
+            notified = self._notifier().notify_portfolio_correction(
+                self.repository,
+                action_type=action.action_type,
+                payload=action.payload,
+            )
+        clear_developer_action(self.repository)
+        self._deliver_alerts_after_portfolio_change()
+
+        message = t("portfolio_action_undo_ok", lang)
+        if notified:
+            message = f"{message}\n{t('users_notified', lang, count=notified)}"
+        return DeveloperActionReply(message)
+
+    def undo_last_portfolio_action_message(self, chat_id: int) -> DeveloperActionReply:
+        """Undo the stored completed action without an inline button."""
+        lang = self._lang(chat_id)
+        action = load_action(self.repository)
+        if action is None or action.status != "completed":
+            return DeveloperActionReply(t("portfolio_action_nothing_to_undo", lang))
+        if action.developer_chat_id != chat_id:
+            return DeveloperActionReply(t("portfolio_action_undo_fail", lang))
+        return self.undo_developer_portfolio_action(chat_id, action.action_id)
+
+    def _execute_confirmed_sell(
+        self,
+        action: DeveloperPortfolioAction,
+        lang: str,
+    ) -> tuple[str, int]:
+        """Run a confirmed sell and notify ordinary users."""
+        symbol = normalize_ticker(str(action.payload.get("ticker", "")))
+        sell_price = float(action.payload.get("sell_price", 0))
+        reasoning = str(action.payload.get("reasoning", "")).strip()
+        shares_raw = action.payload.get("shares")
+        shares = float(shares_raw) if shares_raw is not None else None
+
         result = self.repository.sell_ticker_from_portfolio(
-            ticker,
+            symbol,
             sell_price=sell_price,
             shares=shares,
         )
         if not result.success:
-            return t("sell_ticker_fail", lang, message=result.message)
+            clear_developer_action(self.repository)
+            return t("sell_ticker_fail", lang, message=result.message), 0
 
         if result.fully_sold:
             self.repository.remove_ticker_strategy(symbol)
 
+        app_config = self.repository.load_config()
         state = self.repository.load_state()
         quote = state.latest_prices.get(symbol)
         company_name = quote.company_name if quote is not None else ""
@@ -492,16 +705,49 @@ class BotCommands:
             state=state,
         )
         self._deliver_alerts_after_portfolio_change()
-
         message = t(
             "sell_ticker_ok",
             lang,
             message=result.message,
             cash=result.cash_balance,
         )
-        if notified:
-            message = f"{message}\n{t('users_notified', lang, count=notified)}"
-        return message
+        return message, notified
+
+    def _record_completed_portfolio_action(
+        self,
+        *,
+        chat_id: int,
+        action_type: str,
+        portfolio_before: Portfolio,
+        strategy_snapshots: dict[str, TickerStrategy],
+        payload: dict[str, str | float | bool | None],
+        users_notified: int,
+    ) -> DeveloperActionReply:
+        """Store a completed action and return an undo button for the developer."""
+        lang = self._lang(chat_id)
+        from datetime import UTC, datetime
+
+        from bot.developer_portfolio import new_action_id
+
+        action = DeveloperPortfolioAction(
+            action_id=new_action_id(),
+            status="completed",
+            action_type=action_type,  # type: ignore[arg-type]
+            created_at=datetime.now(tz=UTC),
+            developer_chat_id=chat_id,
+            portfolio_before=portfolio_before.model_copy(deep=True),
+            strategy_snapshots=strategy_snapshots,
+            payload=payload,
+            users_notified=users_notified,
+        )
+        self.repository.set_developer_portfolio_action(action)
+        return DeveloperActionReply(
+            text=t("portfolio_action_undo_hint", lang),
+            reply_markup=undo_keyboard(
+                action.action_id,
+                undo_label=t("portfolio_action_undo", lang),
+            ),
+        )
 
     def _strategy_display_text(self, strategy: TickerStrategy, lang: str) -> str:
         """Resolve strategy copy for the user's language, caching on demand."""

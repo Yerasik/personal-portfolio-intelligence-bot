@@ -83,9 +83,11 @@ def run_test() -> None:
                     is_new_position=False,
                 ),
             ):
-                add_message = commands.add_ticker_message(111, "AAPL", 2.0)
+                add_reply = commands.add_ticker_message(111, "AAPL", 2.0)
+                add_message = add_reply.text
 
-            remove_message = commands.remove_ticker_message(111, "MSFT")
+            remove_reply = commands.remove_ticker_message(111, "MSFT")
+            remove_message = remove_reply.text
             edit_message = commands.edit_strategy_message(
                 111,
                 "AAPL",
@@ -110,7 +112,8 @@ def run_test() -> None:
             mock_client = mock_client_cls.return_value
             mock_client.__enter__.return_value = mock_client
             mock_client.post.side_effect = _mock_post
-            remove_message = commands.remove_ticker_message(111, "MSFT")
+            remove_reply = commands.remove_ticker_message(111, "MSFT")
+            remove_message = remove_reply.text
 
         if "Notified" not in remove_message and "user" not in remove_message.lower():
             raise AssertionError(f"remove_ticker should report notification: {remove_message}")

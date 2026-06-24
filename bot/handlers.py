@@ -11,12 +11,14 @@ from __future__ import annotations
 import logging
 
 from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
+from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 from bot.commands import BotCommands
+from bot.developer_portfolio import CALLBACK_PREFIX, DeveloperActionReply
 from bot.formatter import truncate_message
 from bot.i18n import normalize_language, t
 from bot.menu import main_menu_keyboard, setup_user_telegram_menu
+from bot.sell_args import parse_sell_args
 from storage.models import BotUser, UserRole
 from storage.portfolio_ops import portfolio_has_ticker
 from storage.repository import DataRepository
@@ -77,11 +79,28 @@ async def _guard_developer(
 ) -> BotUser | None:
     """Return the user when they have the developer role."""
     user = await _guard(update, context)
-    if user is None or update.message is None:
+    if user is None:
         return None
     if user.role == "developer":
         return user
-    await update.message.reply_text(t("command_unavailable", user.language))
+    if update.message is not None:
+        await update.message.reply_text(t("command_unavailable", user.language))
+    return None
+
+
+async def _guard_developer_callback(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> BotUser | None:
+    """Developer guard for inline button callbacks."""
+    repository = _repository(context)
+    if update.effective_chat is None:
+        return None
+    user = repository.find_user(update.effective_chat.id)
+    if user is None:
+        return None
+    if user.role == "developer":
+        return user
     return None
 
 
@@ -107,6 +126,27 @@ async def _reply_with_menu(
         text,
         reply_markup=main_menu_keyboard(is_developer=is_developer) if show_menu else None,
     )
+
+
+async def _reply_developer_action(
+    update: Update,
+    reply: DeveloperActionReply,
+    *,
+    user: BotUser,
+) -> None:
+    """Send a developer action response with optional inline confirm/undo buttons."""
+    if update.message is None:
+        return
+    is_developer = user.role == "developer"
+    await update.message.reply_text(
+        reply.text,
+        reply_markup=reply.reply_markup,
+    )
+    if reply.reply_markup is None:
+        await update.message.reply_text(
+            t("menu_hint_dev", user.language) if is_developer else t("menu_hint", user.language),
+            reply_markup=main_menu_keyboard(is_developer=is_developer),
+        )
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -207,50 +247,55 @@ _REMOVE_TICKER_USAGE = (
 )
 _SELL_TICKER_USAGE = (
     "Usage: /sell_ticker <SYMBOL> [shares] <price> <reasoning>\n"
-    "Sell at the given price per share; proceeds are added to portfolio cash.\n"
+    "Omitting share count sells the entire position at <price> per share.\n"
+    "You must confirm before users are notified.\n"
     "Example: /sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
     "Example: /sell_ticker AAPL 5 190.50 Trimming position ahead of product cycle"
 )
 
 
-def _parse_sell_args(args: list[str]) -> tuple[str, float | None, float, str] | None:
-    """Parse /sell_ticker <TICKER> [shares] <price> <reasoning>."""
-    if len(args) < 3:
-        return None
+async def portfolio_action_callback(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> None:
+    """Handle inline Confirm / Cancel / Undo buttons for developer portfolio edits."""
+    query = update.callback_query
+    if query is None or query.data is None:
+        return
 
-    ticker = args[0]
-    shares: float | None = None
-    price: float
-    reasoning_start: int
+    user = await _guard_developer_callback(update, context)
+    if user is None:
+        await query.answer()
+        return
 
-    if len(args) >= 4:
-        try:
-            shares = float(args[1])
-            price = float(args[2])
-            reasoning_start = 3
-        except ValueError:
-            try:
-                price = float(args[1])
-            except ValueError:
-                return None
-            shares = None
-            reasoning_start = 2
+    parts = query.data.split(":", 2)
+    if len(parts) != 3 or parts[0] != CALLBACK_PREFIX:
+        await query.answer()
+        return
+
+    _, action_name, action_id = parts
+    commands = _commands(context)
+    if action_name == "confirm":
+        reply = commands.confirm_developer_portfolio_action(user.chat_id, action_id)
+    elif action_name == "cancel":
+        reply = commands.cancel_developer_portfolio_action(user.chat_id, action_id)
+    elif action_name == "undo":
+        reply = commands.undo_developer_portfolio_action(user.chat_id, action_id)
     else:
-        try:
-            price = float(args[1])
-        except ValueError:
-            return None
-        shares = None
-        reasoning_start = 2
+        await query.answer()
+        return
 
-    reasoning = " ".join(args[reasoning_start:]).strip()
-    if not reasoning:
-        return None
-    if shares is not None and shares <= 0:
-        return None
-    if price <= 0:
-        return None
-    return ticker, shares, price, reasoning
+    await query.answer()
+    if query.message is not None:
+        await query.message.reply_text(
+            reply.text,
+            reply_markup=reply.reply_markup,
+        )
+        if reply.reply_markup is None:
+            await query.message.reply_text(
+                t("menu_hint_dev", user.language),
+                reply_markup=main_menu_keyboard(is_developer=True),
+            )
 
 
 def _parse_strategy_add_args(
@@ -394,7 +439,7 @@ async def add_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
             return
 
     message = _commands(context).add_ticker_message(user.chat_id, args[0], shares=shares)
-    await _reply_with_menu(update, message, user=user)
+    await _reply_developer_action(update, message, user=user)
 
 
 async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -409,17 +454,25 @@ async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TY
         return
 
     message = _commands(context).remove_ticker_message(user.chat_id, args[0])
-    await _reply_with_menu(update, message, user=user)
+    await _reply_developer_action(update, message, user=user)
 
 
 async def sell_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """Handle /sell_ticker — sell shares at a price and notify users."""
+    """Handle /sell_ticker — preview a sell and wait for developer confirmation."""
     user = await _guard_developer(update, context)
     if user is None:
         return
 
     args = context.args or []
-    parsed = _parse_sell_args(args)
+    portfolio = _repository(context).load_portfolio()
+    parsed, error_key = parse_sell_args(args, portfolio)
+    if error_key is not None:
+        await _reply_with_menu(
+            update,
+            t(error_key, user.language),
+            user=user,
+        )
+        return
     if parsed is None:
         await _reply_with_menu(
             update,
@@ -428,15 +481,18 @@ async def sell_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE
         )
         return
 
-    ticker, shares, sell_price, reasoning = parsed
-    message = _commands(context).sell_ticker_message(
-        user.chat_id,
-        ticker,
-        sell_price,
-        reasoning,
-        shares=shares,
-    )
-    await _reply_with_menu(update, message, user=user)
+    reply = _commands(context).prepare_sell_ticker(user.chat_id, parsed)
+    await _reply_developer_action(update, reply, user=user)
+
+
+async def undo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /undo — reverse the last completed portfolio notification."""
+    user = await _guard_developer(update, context)
+    if user is None:
+        return
+
+    reply = _commands(context).undo_last_portfolio_action_message(user.chat_id)
+    await _reply_developer_action(update, reply, user=user)
 
 
 async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -610,6 +666,7 @@ def register_handlers(
         ("edit_strategy", edit_strategy_command),
         ("remove_ticker", remove_ticker_command),
         ("sell_ticker", sell_ticker_command),
+        ("undo", undo_command),
         ("analyze", analyze_command),
         ("set_language", set_language_command),
         ("reload_config", reload_config_command),
@@ -620,6 +677,10 @@ def register_handlers(
     )
     for name, handler in command_handlers:
         application.add_handler(CommandHandler(name, handler))
+
+    application.add_handler(
+        CallbackQueryHandler(portfolio_action_callback, pattern=rf"^{CALLBACK_PREFIX}:")
+    )
 
     logger.info(
         "Registered Telegram commands: %s",

@@ -1060,6 +1060,29 @@ def format_sell_announcement(
     return truncate_message("\n".join(lines))
 
 
+def format_portfolio_correction_notification(
+    *,
+    action_type: Literal["sell", "add_ticker", "remove_ticker"],
+    payload: dict[str, str | float | bool | None],
+    lang: str = "en",
+) -> str:
+    """Format a correction after the developer undoes a portfolio notification."""
+    symbol = str(payload.get("ticker", "")).strip().upper()
+    if action_type == "sell":
+        detail = t("portfolio_correction_sell", lang, symbol=symbol)
+    elif action_type == "add_ticker":
+        detail = t("portfolio_correction_add", lang, symbol=symbol)
+    else:
+        detail = t("portfolio_correction_remove", lang, symbol=symbol)
+    lines = [
+        t("portfolio_correction_header", lang),
+        detail,
+        "",
+        t("advisory_footer", lang),
+    ]
+    return truncate_message("\n".join(lines))
+
+
 def format_portfolio_change_notification(
     *,
     change: Literal["added_new", "added_shares", "removed"],

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Smoke tests for /sell_ticker notifications."""
+"""Smoke tests for /sell_ticker confirm and undo flow."""
 
 from __future__ import annotations
 
@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from bot.commands import BotCommands
+from bot.sell_args import parse_sell_args
 from config.settings import RuntimeSettings
 from storage.models import AppConfig, BotUser, BotUsers, Portfolio, Position
 from storage.paths import resolve_data_paths
@@ -66,6 +67,14 @@ def run_test() -> None:
 
             return Response()
 
+        portfolio = repository.load_portfolio()
+        parsed, err = parse_sell_args(
+            ["NVDA", "150.25", "Taking profits after earnings run-up"],
+            portfolio,
+        )
+        if err is not None or parsed is None:
+            raise AssertionError(f"parse failed: {err}")
+
         with patch("bot.notifier.httpx.Client") as mock_client_cls, patch.object(
             commands,
             "_deliver_alerts_after_portfolio_change",
@@ -73,15 +82,20 @@ def run_test() -> None:
             mock_client = mock_client_cls.return_value
             mock_client.__enter__.return_value = mock_client
             mock_client.post.side_effect = _mock_post
-            message = commands.sell_ticker_message(
-                111,
-                "NVDA",
-                150.25,
-                "Taking profits after earnings run-up",
-            )
 
-        if "Cash balance" not in message:
-            raise AssertionError(f"developer should see cash balance: {message}")
+            preview = commands.prepare_sell_ticker(111, parsed)
+            if preview.reply_markup is None:
+                raise AssertionError("sell should require confirmation")
+            action = repository.get_developer_portfolio_action()
+            if action is None or action.status != "pending_confirm":
+                raise AssertionError("pending sell action not stored")
+
+            confirm = commands.confirm_developer_portfolio_action(111, action.action_id)
+            if "Cash balance" not in confirm.text:
+                raise AssertionError(f"developer should see cash balance: {confirm.text}")
+            if confirm.reply_markup is None:
+                raise AssertionError("confirm should offer undo")
+
         if not sent_messages:
             raise AssertionError("ordinary user should be notified")
 
@@ -89,13 +103,43 @@ def run_test() -> None:
         if not any("Position sold" in text or "Позиция продана" in text for text in texts):
             raise AssertionError(f"expected sell announcement, got: {texts}")
 
-        portfolio = repository.load_portfolio()
-        if portfolio.positions:
+        loaded = repository.load_portfolio()
+        if loaded.positions:
             raise AssertionError("full sell should remove position")
-        if portfolio.cash != 1502.5:
-            raise AssertionError(f"unexpected cash balance: {portfolio.cash}")
-        if repository.get_ticker_strategy("NVDA") is not None:
-            raise AssertionError("strategy should be removed after full sell")
+        if loaded.cash != 1502.5:
+            raise AssertionError(f"unexpected cash balance: {loaded.cash}")
+
+        action = repository.get_developer_portfolio_action()
+        if action is None or action.status != "completed":
+            raise AssertionError("completed action should be stored for undo")
+
+        sent_messages.clear()
+        with patch("bot.notifier.httpx.Client") as mock_client_cls, patch.object(
+            commands,
+            "_deliver_alerts_after_portfolio_change",
+        ):
+            mock_client = mock_client_cls.return_value
+            mock_client.__enter__.return_value = mock_client
+            mock_client.post.side_effect = _mock_post
+            undo = commands.undo_developer_portfolio_action(111, action.action_id)
+
+        if "Undone" not in undo.text and "undone" not in undo.text.lower():
+            raise AssertionError(f"undo should succeed: {undo.text}")
+        correction_texts = [payload["text"] for payload in sent_messages]
+        if not any(
+            "Correction" in text or "Исправление" in text for text in correction_texts
+        ):
+            raise AssertionError(
+                f"users should receive correction notice: {correction_texts}"
+            )
+
+        restored = repository.load_portfolio()
+        if not restored.positions or restored.positions[0].ticker != "NVDA":
+            raise AssertionError("undo should restore NVDA position")
+        if restored.cash != 0:
+            raise AssertionError(f"cash should be restored to 0, got {restored.cash}")
+        if repository.get_ticker_strategy("NVDA") is None:
+            raise AssertionError("strategy should be restored after undo")
 
         print("Sell ticker checks passed.")
     finally:

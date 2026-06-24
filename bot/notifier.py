@@ -500,6 +500,25 @@ class TelegramNotifier:
 
         return sent
 
+    def notify_portfolio_correction(
+        self,
+        repository: DataRepository,
+        *,
+        action_type: str,
+        payload: dict[str, str | float | bool | None],
+    ) -> int:
+        """Tell ordinary users that a prior portfolio notification was reversed."""
+        from bot.formatter import format_portfolio_correction_notification
+
+        return self.notify_ordinary_users(
+            repository,
+            build_message=lambda lang: format_portfolio_correction_notification(
+                action_type=action_type,  # type: ignore[arg-type]
+                payload=payload,
+                lang=lang,
+            ),
+        )
+
     def notify_ticker_sold(
         self,
         repository: DataRepository,
