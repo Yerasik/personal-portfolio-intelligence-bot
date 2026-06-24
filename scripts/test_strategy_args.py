@@ -24,9 +24,19 @@ def run_test() -> None:
         parsed_new.ticker != "NVDA"
         or parsed_new.holding_horizon != "long"
         or parsed_new.shares != 5.0
+        or parsed_new.cost_basis is not None
         or parsed_new.reasoning != "AI infrastructure"
     ):
         raise AssertionError(f"unexpected new-ticker parse: {parsed_new}")
+
+    parsed_with_cost, err = parse_strategy_add_args(
+        ["NVDA", "long", "5", "150.25", "AI", "infrastructure"],
+        ticker_already_held=False,
+    )
+    if err is not None or parsed_with_cost is None:
+        raise AssertionError(f"cost parse failed: {parsed_with_cost}, {err}")
+    if parsed_with_cost.cost_basis != 150.25 or parsed_with_cost.reasoning != "AI infrastructure":
+        raise AssertionError(f"unexpected cost parse: {parsed_with_cost}")
 
     parsed_new_default, err = parse_strategy_add_args(
         ["NVDA", "short", "AI", "infrastructure"],

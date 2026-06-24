@@ -415,11 +415,21 @@ class BotCommands:
             is_developer=self._is_developer(chat_id),
         )
 
-    def add_ticker_message(self, chat_id: int, ticker: str, shares: float = 1.0) -> DeveloperActionReply:
+    def add_ticker_message(
+        self,
+        chat_id: int,
+        ticker: str,
+        shares: float = 1.0,
+        cost_basis: float | None = None,
+    ) -> DeveloperActionReply:
         """Validate and add a ticker to portfolio.json."""
         lang = self._lang(chat_id)
         portfolio_before = self.repository.load_portfolio()
-        result = self.repository.add_ticker_to_portfolio(ticker, shares=shares)
+        result = self.repository.add_ticker_to_portfolio(
+            ticker,
+            shares=shares,
+            cost_basis=cost_basis,
+        )
         if result.success:
             notified = self._notify_ordinary_portfolio_add(
                 result,
@@ -437,6 +447,7 @@ class BotCommands:
                 payload={
                     "ticker": result.ticker,
                     "shares": shares,
+                    "cost_basis": cost_basis,
                     "is_new_position": result.is_new_position,
                 },
                 users_notified=notified,
@@ -812,6 +823,7 @@ class BotCommands:
         holding_horizon: str,
         shares: float | None,
         reasoning: str,
+        cost_basis: float | None = None,
     ) -> str:
         """Add a holding or save strategy for an existing one, then notify users."""
         lang = self._lang(chat_id)
@@ -822,7 +834,11 @@ class BotCommands:
 
         if is_new_position:
             add_shares = shares if shares is not None else 1.0
-            result = self.repository.add_ticker_to_portfolio(ticker, shares=add_shares)
+            result = self.repository.add_ticker_to_portfolio(
+                ticker,
+                shares=add_shares,
+                cost_basis=cost_basis,
+            )
             if not result.success:
                 return t("add_ticker_strategy_fail", lang, message=result.message)
             position_shares = add_shares

@@ -22,11 +22,14 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
 )
 
 DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = ORDINARY_BOT_COMMANDS + (
-    BotCommand("add_ticker", "Add shares (new or existing holding)"),
-    BotCommand("add_ticker_strategy", "Add holding with investment idea"),
+    BotCommand("add_ticker", "Add shares with optional per-share cost basis"),
+    BotCommand(
+        "add_ticker_strategy",
+        "Add holding (long/short) with idea and optional cost basis",
+    ),
     BotCommand("edit_strategy", "Rewrite a stored investment idea"),
     BotCommand("remove_ticker", "Remove a holding from the portfolio"),
-    BotCommand("sell_ticker", "Sell shares at a price and notify users"),
+    BotCommand("sell_ticker", "Sell at a price; confirm before users are notified"),
     BotCommand("undo", "Reverse the last portfolio notification"),
     BotCommand("list_users", "List authorized users"),
     BotCommand("add_user", "Authorize a Telegram user"),

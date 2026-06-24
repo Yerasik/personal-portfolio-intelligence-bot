@@ -178,18 +178,32 @@ Healthy startup logs include:
 
 ### 6. Talk to the bot
 
-Message your bot in Telegram (from the configured chat id only):
+Message your bot in Telegram (from a chat id listed in `data/users.json`):
+
+**Everyone**
 
 - `/start` — welcome (shows the tap-to-run menu keyboard)
 - `/menu` — show the reply keyboard menu again
-- `/help` — commands
-- `/portfolio` — holdings and latest prices
+- `/help` — command reference
+- `/portfolio` — holdings grouped by long/short horizon, with prices and P/L when cost basis is set
+- `/strategy` — investment idea behind each holding
+- `/strategy <SYMBOL>` — full idea for one ticker
 - `/industries` — tracked industries (config + portfolio map) and cached news counts per industry
 - `/news_summary` — LLM summaries of cached news by sector and by portfolio ticker
-- `/add_ticker <SYMBOL> [shares]` — add a holding (format + market validation)
-- `/remove_ticker <SYMBOL>` — remove a holding
 - `/analyze` — rules + optional LLM portfolio advisory
 - `/analyze <ticker>` — explain a ticker's recent price move using ticker-tagged news (e.g. `/analyze AAPL`)
+- `/set_language <code>` — change reply language (`en`, `de`, `zh`, `ru`)
+
+**Developers only** (portfolio edits notify ordinary users; sells require confirmation)
+
+- `/add_ticker <SYMBOL> [shares [cost_basis]]` — add or increase a holding with optional per-share cost basis (blended when adding to an existing position)
+- `/add_ticker_strategy <SYMBOL> <long|short> [shares [cost_basis]] <reasoning>` — add a holding with investment idea; for one share with cost use `1 <cost> <reasoning>`
+- `/edit_strategy <SYMBOL> <text>` — hard-overwrite the stored strategy text
+- `/sell_ticker <SYMBOL> [shares] <price> <reasoning>` — sell at price per share; omit shares to sell the full position; confirm before users are notified
+- `/undo` — reverse the last completed add/remove/sell notification
+- `/remove_ticker <SYMBOL>` — remove a holding and its strategy
+- `/list_users` · `/add_user <chat_id> [role] [lang]` · `/remove_user <chat_id>` — manage access
+- `/reload_config` · `/debug_state` — diagnostics
 
 ## Volume behavior
 
@@ -299,7 +313,7 @@ Also check:
 - Authorized users live in `data/users.json` with `chat_id`, `language` (`en`, `de`, `zh`, `ru`), and `role` (`developer` or `ordinary`)
 - On first run with an empty user list, the bot seeds one **developer** from `TELEGRAM_CHAT_ID`
 - All authorized users share the same portfolio; alerts and daily summaries fan out to every user in their language
-- Developer-only commands: `/reload_config`, `/debug_state`, `/list_users`, `/add_user`, `/remove_user`
+- Developer-only commands: `/add_ticker`, `/add_ticker_strategy`, `/edit_strategy`, `/sell_ticker`, `/undo`, `/remove_ticker`, `/reload_config`, `/debug_state`, `/list_users`, `/add_user`, `/remove_user`
 - Any authorized user: `/set_language <code>` to change reply language
 
 ### Ollama / LLM warnings but bot runs

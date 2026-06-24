@@ -84,11 +84,29 @@ def _portfolio_has_ticker(portfolio: Portfolio, symbol: str) -> bool:
     return portfolio_has_ticker(portfolio, symbol)
 
 
+def _blend_cost_basis(
+    old_shares: float,
+    old_cost: float | None,
+    new_shares: float,
+    new_cost: float | None,
+) -> float | None:
+    """Compute weighted average cost when adding shares."""
+    if new_cost is None:
+        return old_cost
+    if old_cost is None or old_shares <= 0:
+        return new_cost
+    total_shares = old_shares + new_shares
+    if total_shares <= 0:
+        return new_cost
+    return (old_shares * old_cost + new_shares * new_cost) / total_shares
+
+
 def add_ticker_to_portfolio(
     portfolio: Portfolio,
     symbol: str,
     *,
     shares: float = 1.0,
+    cost_basis: float | None = None,
 ) -> tuple[Portfolio, PortfolioTickerResult]:
     """Add shares for a ticker, creating a new position or increasing an existing one."""
     normalized = normalize_ticker(symbol)
@@ -103,6 +121,13 @@ def add_ticker_to_portfolio(
             normalized,
         )
 
+    if cost_basis is not None and cost_basis <= 0:
+        return portfolio, PortfolioTickerResult(
+            False,
+            "Cost basis must be greater than zero.",
+            normalized,
+        )
+
     if _portfolio_has_ticker(portfolio, normalized):
         new_positions: list[Position] = []
         updated = False
@@ -110,8 +135,16 @@ def add_ticker_to_portfolio(
         for position in portfolio.positions:
             if normalize_ticker(position.ticker) == normalized:
                 new_total = position.shares + shares
+                blended_cost = _blend_cost_basis(
+                    position.shares,
+                    position.cost_basis,
+                    shares,
+                    cost_basis,
+                )
                 new_positions.append(
-                    position.model_copy(update={"shares": new_total})
+                    position.model_copy(
+                        update={"shares": new_total, "cost_basis": blended_cost}
+                    )
                 )
                 updated = True
             else:
@@ -123,11 +156,16 @@ def add_ticker_to_portfolio(
                 normalized,
             )
         updated_portfolio = portfolio.model_copy(update={"positions": new_positions})
+        cost_note = (
+            f"; average cost {blended_cost:g}"
+            if blended_cost is not None
+            else ""
+        )
         return updated_portfolio, PortfolioTickerResult(
             True,
             (
                 f"Added {shares:g} share(s) to {normalized}; "
-                f"now holding {new_total:g} share(s)."
+                f"now holding {new_total:g} share(s){cost_note}."
             ),
             normalized,
             is_new_position=False,
@@ -137,13 +175,14 @@ def add_ticker_to_portfolio(
         update={
             "positions": [
                 *portfolio.positions,
-                Position(ticker=normalized, shares=shares),
+                Position(ticker=normalized, shares=shares, cost_basis=cost_basis),
             ]
         }
     )
+    cost_note = f" at cost {cost_basis:g}" if cost_basis is not None else ""
     return updated, PortfolioTickerResult(
         True,
-        f"Added {normalized} ({shares:g} share(s)) to the portfolio.",
+        f"Added {normalized} ({shares:g} share(s){cost_note}) to the portfolio.",
         normalized,
         is_new_position=True,
     )

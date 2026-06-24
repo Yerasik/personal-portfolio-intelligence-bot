@@ -39,6 +39,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Developer tools\n"
             "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — edit holdings\n"
             "  /edit_strategy — rewrite a stored investment idea\n"
+            "  /undo — reverse the last portfolio notification\n"
             "  /list_users · /add_user · /remove_user — manage access\n"
             "  /reload_config · /debug_state — diagnostics"
         ),
@@ -61,8 +62,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "Portfolio edits\n"
-            "  /add_ticker <TICKER> [qty] — add or increase a position\n"
-            "  /add_ticker_strategy <TICKER> <long|short> [qty] <reasoning> — add with investment idea\n"
+            "  /add_ticker <TICKER> [qty [cost_basis]] — add or increase a position\n"
+            "  /add_ticker_strategy <TICKER> <long|short> [qty [cost_basis]] <reasoning> — add with investment idea\n"
             "  /edit_strategy <TICKER> <text> — rewrite the stored idea\n"
             "  /sell_ticker <TICKER> [qty] <price> <reasoning> — sell and notify users\n"
             "  /undo — reverse the last portfolio notification\n"
@@ -84,25 +85,42 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint_dev": (
             "Developer menu is active.\n\n"
-            "User management buttons:\n"
+            "User management:\n"
             "/list_users — show authorized users\n"
             "/add_user <chat_id> [role] [lang] — authorize a user\n"
             "/remove_user <chat_id> — revoke access\n\n"
             "Portfolio edits, e.g.:\n"
-            "/add_ticker_strategy NVDA long 5 AI infrastructure thesis\n"
+            "/add_ticker AAPL 5 150.25\n"
+            "/add_ticker_strategy NVDA long 5 150.25 AI infrastructure thesis\n"
             "/edit_strategy NVDA updated thesis text\n"
             "/sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
-            "/remove_ticker MSFT"
+            "/remove_ticker MSFT\n"
+            "/undo — reverse the last portfolio notification"
         ),
         "add_user_usage": (
-            "Usage: /add_user <chat_id> [role] [lang]\n"
-            "Example: /add_user 456 ordinary ru"
+            "How to use /add_user\n\n"
+            "Syntax: /add_user <chat_id> [role] [lang]\n\n"
+            "Arguments:\n"
+            "• chat_id — Telegram numeric chat id\n"
+            "• role — optional: developer or ordinary (default: ordinary)\n"
+            "• lang — optional: en, de, zh, ru (default: en)\n\n"
+            "Examples:\n"
+            "/add_user 456789012\n"
+            "/add_user 456789012 ordinary de"
         ),
-        "remove_user_usage": "Usage: /remove_user <chat_id>",
+        "remove_user_usage": (
+            "How to use /remove_user\n\n"
+            "Syntax: /remove_user <chat_id>\n\n"
+            "Revokes bot access for that chat id. You cannot remove your own developer account.\n\n"
+            "Example: /remove_user 456789012"
+        ),
         "add_user_invalid_id": "Invalid chat id: {value!r}",
         "language_current": "Your current language: {language}.",
         "portfolio_empty": "Portfolio is empty.",
-        "portfolio_empty_dev": "Portfolio is empty. Use /add_ticker to add a position.",
+        "portfolio_empty_dev": (
+            "Portfolio is empty. Use /add_ticker to add a position, "
+            "e.g. /add_ticker AAPL 10 150.25"
+        ),
         "portfolio_header": "Portfolio ({count} position(s))",
         "portfolio_shares": "{symbol} — {shares:g} shares",
         "portfolio_shares_horizon": "{symbol} — {shares:g} shares · {horizon}",
@@ -170,16 +188,47 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty_user": "AI explanation could not be generated.",
         "add_ticker_ok": "Added: {message}",
         "add_ticker_fail": "Could not add ticker: {message}",
+        "add_ticker_usage": (
+            "How to use /add_ticker\n\n"
+            "Syntax: /add_ticker <TICKER> [shares [cost_basis]]\n\n"
+            "Arguments:\n"
+            "• TICKER — symbol (e.g. AAPL, 1810.HK); new tickers are market-validated\n"
+            "• shares — optional, default 1\n"
+            "• cost_basis — optional per-share cost; blended when adding to an existing holding\n\n"
+            "Examples:\n"
+            "/add_ticker AAPL\n"
+            "/add_ticker AAPL 5\n"
+            "/add_ticker AAPL 5 150.25"
+        ),
+        "add_ticker_shares_invalid": "Share count must be a positive number.",
+        "add_ticker_cost_invalid": "Cost basis must be a positive number.",
         "remove_ticker_ok": "Removed: {message}",
         "remove_ticker_fail": "Could not remove ticker: {message}",
+        "remove_ticker_usage": (
+            "How to use /remove_ticker\n\n"
+            "Syntax: /remove_ticker <TICKER>\n\n"
+            "Removes the holding and its saved strategy. Ordinary users are notified.\n"
+            "You can undo with /undo or the Undo button on the confirmation message.\n\n"
+            "Example: /remove_ticker TSLA"
+        ),
         "sell_ticker_ok": "Sold: {message}\nCash balance: {cash:,.2f}",
         "sell_ticker_fail": "Could not sell ticker: {message}",
         "sell_ticker_usage": (
-            "Usage: /sell_ticker <TICKER> [shares] <price> <reasoning>\n"
-            "If you omit the share count, the entire position is sold at <price> per share.\n"
-            "Nothing is sent to users until you tap Confirm on the preview.\n"
-            "Example: /sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
-            "Example: /sell_ticker AAPL 5 190.50 Trimming position ahead of product cycle"
+            "How to use /sell_ticker\n\n"
+            "Syntax: /sell_ticker <TICKER> [shares] <price> <reasoning>\n\n"
+            "Arguments:\n"
+            "• TICKER — symbol in the portfolio\n"
+            "• shares — optional; omit to sell the entire position\n"
+            "• price — sell price per share (required)\n"
+            "• reasoning — short explanation users will see (required; not \"-\")\n\n"
+            "Important:\n"
+            "• With 3 arguments, the number is the price per share, not the share count\n"
+            "• To sell N shares: /sell_ticker TICKER N <price> <reasoning>\n"
+            "• Users are notified only after you tap Confirm on the preview\n"
+            "• Undo with /undo or the Undo button after completion\n\n"
+            "Examples:\n"
+            "/sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
+            "/sell_ticker AAPL 5 190.50 Trimming position ahead of product cycle"
         ),
         "sell_ticker_not_held": "That ticker is not in the portfolio.",
         "sell_ticker_reasoning_invalid": (
@@ -247,21 +296,41 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "Added {symbol} and saved the investment strategy.",
         "add_ticker_strategy_fail": "Could not add ticker strategy: {message}",
         "add_ticker_strategy_usage": (
-            "Usage: /add_ticker_strategy <TICKER> <long|short> [shares] <reasoning>\n"
-            "If the ticker is already held, only the strategy is saved "
-            "(use /add_ticker to add shares).\n"
-            "Example: /add_ticker_strategy NVDA long 5 US AI chip leader with data-center exposure\n"
-            "Example: /add_ticker_strategy TSLA short 2 Earnings momentum trade"
+            "How to use /add_ticker_strategy\n\n"
+            "Syntax: /add_ticker_strategy <TICKER> <long|short> [shares [cost_basis]] <reasoning>\n\n"
+            "Arguments:\n"
+            "1. TICKER — symbol (e.g. NVDA, 1810.HK)\n"
+            "2. long or short — holding horizon (required):\n"
+            "   • long — multi-year / structural thesis (\"Long-term holdings\" in /portfolio)\n"
+            "   • short — tactical / near-term trade (\"Short-term holdings\" in /portfolio)\n"
+            "3. shares — optional when adding a NEW ticker (default: 1)\n"
+            "4. cost_basis — optional per-share cost\n"
+            "5. reasoning — your investment thesis (required); users see an LLM-polished version\n\n"
+            "Already holding this ticker?\n"
+            "/add_ticker_strategy <TICKER> <long|short> <reasoning>\n"
+            "(shares and cost_basis are ignored — use /add_ticker to add shares)\n\n"
+            "One share with cost basis:\n"
+            "/add_ticker_strategy NVDA long 1 150.25 My thesis here\n\n"
+            "Examples:\n"
+            "/add_ticker_strategy NVDA long 5 150.25 US AI chip leader with data-center exposure\n"
+            "/add_ticker_strategy TSLA short 2 180 Earnings momentum trade\n"
+            "/add_ticker_strategy 9988.HK long Updating target after Q4 earnings"
         ),
         "add_ticker_strategy_horizon_invalid": (
-            "Second argument must be long or short (holding horizon).\n\n"
-            "Example: /add_ticker_strategy NVDA long 5 AI infrastructure thesis"
+            "The second argument must be long or short.\n"
+            "• long — multi-year / structural holding\n"
+            "• short — tactical / near-term trade"
         ),
         "add_ticker_strategy_shares_invalid": "Share count must be a positive number.",
+        "add_ticker_strategy_cost_invalid": "Cost basis must be a positive number.",
         "edit_strategy_ok": "Updated strategy for {symbol}.",
         "edit_strategy_fail": "Could not update strategy: {message}",
         "edit_strategy_usage": (
-            "Usage: /edit_strategy <TICKER> <new strategy text>\n"
+            "How to use /edit_strategy\n\n"
+            "Syntax: /edit_strategy <TICKER> <new strategy text>\n\n"
+            "Hard-overwrites the stored strategy text shown to users via /strategy.\n"
+            "Does not change shares, cost basis, or holding horizon — use "
+            "/add_ticker_strategy to update horizon on an existing holding.\n\n"
             "Example: /edit_strategy NVDA Core AI infrastructure holding; monitor export policy risk."
         ),
         "edit_strategy_not_found": "No strategy saved for {symbol}.",
@@ -345,7 +414,38 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "language_set": "Language updated to {language}.",
         "language_invalid": "Unsupported language. Use: en, de, zh, ru",
-        "language_usage": "Usage: /set_language <code>\nExample: /set_language de",
+        "strategy_usage": (
+            "How to use /strategy\n\n"
+            "/strategy — list investment ideas for all holdings (grouped long/short)\n"
+            "/strategy <TICKER> — full idea for one stock\n\n"
+            "Examples:\n"
+            "/strategy\n"
+            "/strategy NVDA"
+        ),
+        "analyze_usage": (
+            "How to use /analyze\n\n"
+            "/analyze — portfolio-wide rules check + optional LLM advisory\n"
+            "/analyze <TICKER> — explain one stock's recent price move from news\n"
+            "/analyze <TICKER> pros — pros/cons style review (when enabled)\n\n"
+            "Examples:\n"
+            "/analyze\n"
+            "/analyze AAPL\n"
+            "/analyze AAPL pros"
+        ),
+        "undo_usage": (
+            "How to use /undo\n\n"
+            "Reverses the last completed add, remove, or sell that notified users.\n"
+            "Restores the portfolio and sends a correction message to users.\n\n"
+            "You can also tap \"Undo last action\" on the message after "
+            "/add_ticker, /remove_ticker, or /sell_ticker.\n\n"
+            "/undo"
+        ),
+        "language_usage": (
+            "How to use /set_language\n\n"
+            "Syntax: /set_language <code>\n\n"
+            "Supported codes: en, de, zh, ru\n\n"
+            "Example: /set_language de"
+        ),
         "reload_ok": "Configuration reloaded from disk.",
         "reload_jobs_ok": "Scheduler jobs were refreshed from the updated config.",
         "debug_state": (
@@ -394,6 +494,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Entwickler-Tools\n"
             "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — Bestände bearbeiten\n"
             "  /edit_strategy — gespeicherte Anlageidee überschreiben\n"
+            "  /undo — letzte Portfolio-Benachrichtigung rückgängig machen\n"
             "  /list_users · /add_user · /remove_user — Zugriff verwalten\n"
             "  /reload_config · /debug_state — Diagnose"
         ),
@@ -416,8 +517,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "Bestandsänderungen\n"
-            "  /add_ticker <TICKER> [Anzahl] — Position hinzufügen/erhöhen\n"
-            "  /add_ticker_strategy <TICKER> <long|short> [Anzahl] <Begründung> — mit Anlageidee\n"
+            "  /add_ticker <TICKER> [Anzahl [Kostenbasis]] — Position hinzufügen/erhöhen\n"
+            "  /add_ticker_strategy <TICKER> <long|short> [Anzahl [Kostenbasis]] <Begründung> — mit Anlageidee\n"
             "  /edit_strategy <TICKER> <Text> — gespeicherte Idee überschreiben\n"
             "  /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung> — verkaufen und Benutzer benachrichtigen\n"
             "  /undo — letzte Portfolio-Benachrichtigung rückgängig machen\n"
@@ -444,20 +545,36 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — Benutzer hinzufügen\n"
             "/remove_user <chat_id> — Zugriff entziehen\n\n"
             "Bestandsänderungen, z. B.:\n"
-            "/add_ticker_strategy NVDA 5 KI-Infrastruktur-These\n"
+            "/add_ticker AAPL 5 150.25\n"
+            "/add_ticker_strategy NVDA long 5 150.25 KI-Infrastruktur-These\n"
             "/edit_strategy NVDA aktualisierter Strategietext\n"
             "/sell_ticker NVDA 150.25 Gewinnmitnahme nach Earnings-Rally\n"
-            "/remove_ticker MSFT"
+            "/remove_ticker MSFT\n"
+            "/undo — letzte Portfolio-Benachrichtigung rückgängig machen"
         ),
         "add_user_usage": (
-            "Verwendung: /add_user <chat_id> [role] [lang]\n"
-            "Beispiel: /add_user 456 ordinary de"
+            "So verwenden Sie /add_user\n\n"
+            "Syntax: /add_user <chat_id> [role] [lang]\n\n"
+            "Argumente:\n"
+            "• chat_id — numerische Telegram-Chat-ID\n"
+            "• role — optional: developer oder ordinary (Standard: ordinary)\n"
+            "• lang — optional: en, de, zh, ru (Standard: en)\n\n"
+            "Beispiele:\n"
+            "/add_user 456789012\n"
+            "/add_user 456789012 ordinary de"
         ),
-        "remove_user_usage": "Verwendung: /remove_user <chat_id>",
+        "remove_user_usage": (
+            "So verwenden Sie /remove_user\n\n"
+            "Syntax: /remove_user <chat_id>\n\n"
+            "Entzieht den Bot-Zugriff. Sie können Ihr eigenes Entwickler-Konto nicht entfernen.\n\n"
+            "Beispiel: /remove_user 456789012"
+        ),
         "add_user_invalid_id": "Ungültige Chat-ID: {value!r}",
         "language_current": "Ihre aktuelle Sprache: {language}.",
         "portfolio_empty": "Portfolio ist leer.",
-        "portfolio_empty_dev": "Portfolio ist leer. Nutzen Sie /add_ticker.",
+        "portfolio_empty_dev": (
+            "Portfolio ist leer. Nutzen Sie /add_ticker, z. B. /add_ticker AAPL 10 150.25"
+        ),
         "portfolio_header": "Portfolio ({count} Position(en))",
         "portfolio_shares": "{symbol} — {shares:g} Anteile",
         "portfolio_shares_horizon": "{symbol} — {shares:g} Anteile · {horizon}",
@@ -525,16 +642,47 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty_user": "KI-Erklärung konnte nicht erstellt werden.",
         "add_ticker_ok": "Hinzugefügt: {message}",
         "add_ticker_fail": "Ticker nicht hinzugefügt: {message}",
+        "add_ticker_usage": (
+            "So verwenden Sie /add_ticker\n\n"
+            "Syntax: /add_ticker <TICKER> [Anzahl [Kostenbasis]]\n\n"
+            "Argumente:\n"
+            "• TICKER — Symbol (z. B. AAPL, 1810.HK); neue Ticker werden marktseitig geprüft\n"
+            "• Anzahl — optional, Standard 1\n"
+            "• Kostenbasis — optional pro Anteil; bei bestehender Position gemischt\n\n"
+            "Beispiele:\n"
+            "/add_ticker AAPL\n"
+            "/add_ticker AAPL 5\n"
+            "/add_ticker AAPL 5 150.25"
+        ),
+        "add_ticker_shares_invalid": "Die Anzahl muss eine positive Zahl sein.",
+        "add_ticker_cost_invalid": "Die Kostenbasis muss eine positive Zahl sein.",
         "remove_ticker_ok": "Entfernt: {message}",
         "remove_ticker_fail": "Ticker nicht entfernt: {message}",
+        "remove_ticker_usage": (
+            "So verwenden Sie /remove_ticker\n\n"
+            "Syntax: /remove_ticker <TICKER>\n\n"
+            "Entfernt die Position und die gespeicherte Strategie. Benutzer werden benachrichtigt.\n"
+            "Rückgängig mit /undo oder der Schaltfläche „Letzte Aktion rückgängig“.\n\n"
+            "Beispiel: /remove_ticker TSLA"
+        ),
         "sell_ticker_ok": "Verkauft: {message}\nCash-Bestand: {cash:,.2f}",
         "sell_ticker_fail": "Verkauf fehlgeschlagen: {message}",
         "sell_ticker_usage": (
-            "Verwendung: /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung>\n"
-            "Ohne Anzahl wird die gesamte Position zum Preis <Preis> pro Anteil verkauft.\n"
-            "Benutzer werden erst nach Bestätigung benachrichtigt.\n"
-            "Beispiel: /sell_ticker NVDA 150.25 Gewinnmitnahme nach Earnings-Rally\n"
-            "Beispiel: /sell_ticker AAPL 5 190.50 Position vor Produktzyklus reduzieren"
+            "So verwenden Sie /sell_ticker\n\n"
+            "Syntax: /sell_ticker <TICKER> [Anzahl] <Preis> <Begründung>\n\n"
+            "Argumente:\n"
+            "• TICKER — Symbol im Portfolio\n"
+            "• Anzahl — optional; weglassen = gesamte Position verkaufen\n"
+            "• Preis — Verkaufspreis pro Anteil (Pflicht)\n"
+            "• Begründung — kurze Erklärung für Benutzer (Pflicht; nicht \"-\")\n\n"
+            "Wichtig:\n"
+            "• Bei 3 Argumenten ist die Zahl der Preis pro Anteil, nicht die Anzahl\n"
+            "• N Anteile verkaufen: /sell_ticker TICKER N <Preis> <Begründung>\n"
+            "• Benutzer werden erst nach Bestätigung benachrichtigt\n"
+            "• Rückgängig mit /undo oder der Undo-Schaltfläche\n\n"
+            "Beispiele:\n"
+            "/sell_ticker NVDA 150.25 Gewinnmitnahme nach Earnings-Rally\n"
+            "/sell_ticker AAPL 5 190.50 Position vor Produktzyklus reduzieren"
         ),
         "sell_ticker_not_held": "Dieser Ticker ist nicht im Portfolio.",
         "sell_ticker_reasoning_invalid": (
@@ -598,23 +746,70 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "{symbol} hinzugefügt und Anlageidee gespeichert.",
         "add_ticker_strategy_fail": "Ticker-Strategie nicht hinzugefügt: {message}",
         "add_ticker_strategy_usage": (
-            "Verwendung: /add_ticker_strategy <TICKER> <long|short> [Anzahl] <Begründung>\n"
-            "Beispiel: /add_ticker_strategy NVDA long 5 US-KI-Chipführer mit Rechenzentrum-Exposure\n"
-            "Beispiel: /add_ticker_strategy TSLA short 2 Earnings-Momentum-Trade"
+            "So verwenden Sie /add_ticker_strategy\n\n"
+            "Syntax: /add_ticker_strategy <TICKER> <long|short> [Anzahl [Kostenbasis]] <Begründung>\n\n"
+            "Argumente:\n"
+            "1. TICKER — Symbol (z. B. NVDA, 1810.HK)\n"
+            "2. long oder short — Anlagehorizont (Pflicht):\n"
+            "   • long — mehrjährige/strukturelle These („Langfristige Positionen“ in /portfolio)\n"
+            "   • short — taktischer/kurzfristiger Trade („Kurzfristige Positionen“)\n"
+            "3. Anzahl — optional bei NEUEM Ticker (Standard: 1)\n"
+            "4. Kostenbasis — optional pro Anteil\n"
+            "5. Begründung — Ihre Anlagethese (Pflicht); Benutzer sehen eine LLM-Version\n\n"
+            "Ticker bereits im Portfolio?\n"
+            "/add_ticker_strategy <TICKER> <long|short> <Begründung>\n"
+            "(Anzahl und Kostenbasis werden ignoriert — Anteile mit /add_ticker hinzufügen)\n\n"
+            "Ein Anteil mit Kostenbasis:\n"
+            "/add_ticker_strategy NVDA long 1 150.25 Meine These\n\n"
+            "Beispiele:\n"
+            "/add_ticker_strategy NVDA long 5 150.25 US-KI-Chipführer mit Rechenzentrum-Exposure\n"
+            "/add_ticker_strategy TSLA short 2 180 Earnings-Momentum-Trade\n"
+            "/add_ticker_strategy 9988.HK long Kursziel nach Q4-Ergebnis anpassen"
         ),
         "add_ticker_strategy_horizon_invalid": (
-            "Das zweite Argument muss long oder short sein (Anlagehorizont).\n\n"
-            "Beispiel: /add_ticker_strategy NVDA long 5 KI-Infrastruktur-These"
+            "Das zweite Argument muss long oder short sein.\n"
+            "• long — langfristige/strukturelle Position\n"
+            "• short — taktischer/kurzfristiger Trade"
         ),
         "add_ticker_strategy_shares_invalid": "Die Anzahl muss eine positive Zahl sein.",
+        "add_ticker_strategy_cost_invalid": "Die Kostenbasis muss eine positive Zahl sein.",
         "edit_strategy_ok": "Strategie für {symbol} aktualisiert.",
         "edit_strategy_fail": "Strategie nicht aktualisiert: {message}",
         "edit_strategy_usage": (
-            "Verwendung: /edit_strategy <TICKER> <neuer Strategietext>\n"
+            "So verwenden Sie /edit_strategy\n\n"
+            "Syntax: /edit_strategy <TICKER> <neuer Strategietext>\n\n"
+            "Überschreibt den gespeicherten Strategietext für /strategy.\n"
+            "Ändert nicht Anzahl, Kostenbasis oder Horizont — Horizont mit "
+            "/add_ticker_strategy auf bestehender Position aktualisieren.\n\n"
             "Beispiel: /edit_strategy NVDA Kern-KI-Infrastruktur; Exportrisiko beobachten."
         ),
         "edit_strategy_not_found": "Keine Strategie für {symbol} gespeichert.",
         "edit_strategy_empty": "Strategietext darf nicht leer sein.",
+        "strategy_usage": (
+            "So verwenden Sie /strategy\n\n"
+            "/strategy — Anlageideen aller Positionen (nach long/short gruppiert)\n"
+            "/strategy <TICKER> — vollständige Idee zu einer Aktie\n\n"
+            "Beispiele:\n"
+            "/strategy\n"
+            "/strategy NVDA"
+        ),
+        "analyze_usage": (
+            "So verwenden Sie /analyze\n\n"
+            "/analyze — Portfolio-Regelprüfung + optionale LLM-Beratung\n"
+            "/analyze <TICKER> — Kursbewegung anhand von Nachrichten erklären\n"
+            "/analyze <TICKER> pros — Pro/Contra-Überblick (wenn aktiviert)\n\n"
+            "Beispiele:\n"
+            "/analyze\n"
+            "/analyze AAPL\n"
+            "/analyze AAPL pros"
+        ),
+        "undo_usage": (
+            "So verwenden Sie /undo\n\n"
+            "Macht den letzten abgeschlossenen Add/Remove/Sell rückgängig, der Benutzer benachrichtigt hat.\n"
+            "Stellt das Portfolio wieder her und sendet eine Korrektur an Benutzer.\n\n"
+            "Oder Schaltfläche „Letzte Aktion rückgängig“ nach /add_ticker, /remove_ticker oder /sell_ticker.\n\n"
+            "/undo"
+        ),
         "urgent_alert": "DRINGENDE WARNUNG",
         "target": "Ziel",
         "suggested": "Empfehlung",
@@ -692,7 +887,12 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "language_set": "Sprache auf {language} geändert.",
         "language_invalid": "Sprache nicht unterstützt. Verwenden: en, de, zh, ru",
-        "language_usage": "Verwendung: /set_language <code>\nBeispiel: /set_language de",
+        "language_usage": (
+            "So verwenden Sie /set_language\n\n"
+            "Syntax: /set_language <code>\n\n"
+            "Unterstützte Codes: en, de, zh, ru\n\n"
+            "Beispiel: /set_language de"
+        ),
         "reload_ok": "Konfiguration von der Festplatte neu geladen.",
         "reload_jobs_ok": "Geplante Aufgaben wurden aus der aktualisierten Konfiguration neu geladen.",
         "debug_state": (
@@ -740,6 +940,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "开发者工具\n"
             "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — 编辑持仓\n"
             "  /edit_strategy — 直接改写已保存的投资逻辑\n"
+            "  /undo — 撤销上一条投资组合通知\n"
             "  /list_users · /add_user · /remove_user — 管理访问权限\n"
             "  /reload_config · /debug_state — 诊断"
         ),
@@ -762,8 +963,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "编辑持仓\n"
-            "  /add_ticker <代码> [数量] — 添加或增加持仓\n"
-            "  /add_ticker_strategy <代码> <long|short> [数量] <理由> — 添加并记录投资逻辑\n"
+            "  /add_ticker <代码> [数量 [成本价]] — 添加或增加持仓\n"
+            "  /add_ticker_strategy <代码> <long|short> [数量 [成本价]] <理由> — 添加并记录投资逻辑\n"
             "  /edit_strategy <代码> <文本> — 直接改写已保存的逻辑\n"
             "  /sell_ticker <代码> [数量] <价格> <理由> — 卖出并通知用户\n"
             "  /undo — 撤销上一条投资组合通知\n"
@@ -790,20 +991,36 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — 添加用户\n"
             "/remove_user <chat_id> — 移除访问\n\n"
             "编辑持仓示例：\n"
-            "/add_ticker_strategy NVDA 5 AI基础设施投资逻辑\n"
+            "/add_ticker AAPL 5 150.25\n"
+            "/add_ticker_strategy NVDA long 5 150.25 AI基础设施投资逻辑\n"
             "/edit_strategy NVDA 更新后的策略说明\n"
             "/sell_ticker NVDA 150.25 财报上涨后获利了结\n"
-            "/remove_ticker MSFT"
+            "/remove_ticker MSFT\n"
+            "/undo — 撤销上一条投资组合通知"
         ),
         "add_user_usage": (
-            "用法：/add_user <chat_id> [role] [lang]\n"
-            "示例：/add_user 456 ordinary zh"
+            "如何使用 /add_user\n\n"
+            "语法：/add_user <chat_id> [role] [lang]\n\n"
+            "参数：\n"
+            "• chat_id — Telegram 数字聊天 ID\n"
+            "• role — 可选：developer 或 ordinary（默认 ordinary）\n"
+            "• lang — 可选：en、de、zh、ru（默认 en）\n\n"
+            "示例：\n"
+            "/add_user 456789012\n"
+            "/add_user 456789012 ordinary zh"
         ),
-        "remove_user_usage": "用法：/remove_user <chat_id>",
+        "remove_user_usage": (
+            "如何使用 /remove_user\n\n"
+            "语法：/remove_user <chat_id>\n\n"
+            "撤销该聊天 ID 的访问权限。不能移除自己的开发者账号。\n\n"
+            "示例：/remove_user 456789012"
+        ),
         "add_user_invalid_id": "无效的 chat id：{value!r}",
         "language_current": "您当前的语言：{language}。",
         "portfolio_empty": "投资组合为空。",
-        "portfolio_empty_dev": "投资组合为空。请使用 /add_ticker 添加。",
+        "portfolio_empty_dev": (
+            "投资组合为空。请使用 /add_ticker 添加，例如 /add_ticker AAPL 10 150.25"
+        ),
         "portfolio_header": "投资组合（{count} 个持仓）",
         "portfolio_shares": "{symbol} — {shares:g} 股",
         "portfolio_shares_horizon": "{symbol} — {shares:g} 股 · {horizon}",
@@ -868,15 +1085,47 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty_user": "无法生成 AI 解释。",
         "add_ticker_ok": "已添加：{message}",
         "add_ticker_fail": "无法添加：{message}",
+        "add_ticker_usage": (
+            "如何使用 /add_ticker\n\n"
+            "语法：/add_ticker <代码> [数量 [成本价]]\n\n"
+            "参数：\n"
+            "• 代码 — 股票代码（如 AAPL、1810.HK）；新代码会校验市场是否存在\n"
+            "• 数量 — 可选，默认 1\n"
+            "• 成本价 — 可选，每股成本；增持已有持仓时按数量加权平均\n\n"
+            "示例：\n"
+            "/add_ticker AAPL\n"
+            "/add_ticker AAPL 5\n"
+            "/add_ticker AAPL 5 150.25"
+        ),
+        "add_ticker_shares_invalid": "数量必须是正数。",
+        "add_ticker_cost_invalid": "成本价必须是正数。",
         "remove_ticker_ok": "已移除：{message}",
         "remove_ticker_fail": "无法移除：{message}",
+        "remove_ticker_usage": (
+            "如何使用 /remove_ticker\n\n"
+            "语法：/remove_ticker <代码>\n\n"
+            "移除该持仓及已保存的投资逻辑，并通知普通用户。\n"
+            "可用 /undo 或确认消息上的「撤销上一步」按钮撤销。\n\n"
+            "示例：/remove_ticker TSLA"
+        ),
         "sell_ticker_ok": "已卖出：{message}\n现金余额：{cash:,.2f}",
         "sell_ticker_fail": "无法卖出：{message}",
         "sell_ticker_usage": (
-            "用法：/sell_ticker <代码> [数量] <价格> <理由>\n"
-            "省略数量则按每股 <价格> 卖出全部持仓。确认后才会通知用户。\n"
-            "示例：/sell_ticker NVDA 150.25 财报上涨后获利了结\n"
-            "示例：/sell_ticker AAPL 5 190.50 产品周期前减仓"
+            "如何使用 /sell_ticker\n\n"
+            "语法：/sell_ticker <代码> [数量] <价格> <理由>\n\n"
+            "参数：\n"
+            "• 代码 — 投资组合中的股票\n"
+            "• 数量 — 可选；省略则卖出全部持仓\n"
+            "• 价格 — 每股卖出价（必填）\n"
+            "• 理由 — 给用户看的简短说明（必填；不能是 \"-\"）\n\n"
+            "注意：\n"
+            "• 3 个参数时，数字是每股价格，不是数量\n"
+            "• 卖出 N 股：/sell_ticker 代码 N <价格> <理由>\n"
+            "• 预览后点击确认才会通知用户\n"
+            "• 完成后可用 /undo 或撤销按钮\n\n"
+            "示例：\n"
+            "/sell_ticker NVDA 150.25 财报上涨后获利了结\n"
+            "/sell_ticker AAPL 5 190.50 产品周期前减仓"
         ),
         "sell_ticker_not_held": "该股票不在投资组合中。",
         "sell_ticker_reasoning_invalid": (
@@ -940,23 +1189,69 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "已添加 {symbol} 并保存投资逻辑。",
         "add_ticker_strategy_fail": "无法添加策略：{message}",
         "add_ticker_strategy_usage": (
-            "用法：/add_ticker_strategy <代码> <long|short> [数量] <理由>\n"
-            "示例：/add_ticker_strategy NVDA long 5 美国AI芯片龙头，受益于数据中心需求\n"
-            "示例：/add_ticker_strategy TSLA short 2 财报动量交易"
+            "如何使用 /add_ticker_strategy\n\n"
+            "语法：/add_ticker_strategy <代码> <long|short> [数量 [成本价]] <理由>\n\n"
+            "参数：\n"
+            "1. 代码 — 股票代码（如 NVDA、1810.HK）\n"
+            "2. long 或 short — 持仓周期（必填）：\n"
+            "   • long — 多年/结构性投资（/portfolio 中显示为「长期持仓」）\n"
+            "   • short — 战术/短期交易（/portfolio 中显示为「短期持仓」）\n"
+            "3. 数量 — 添加新股票时可选（默认 1）\n"
+            "4. 成本价 — 可选，每股成本\n"
+            "5. 理由 — 投资逻辑（必填）；用户看到的是 LLM 润色后的版本\n\n"
+            "已持有该股票？\n"
+            "/add_ticker_strategy <代码> <long|short> <理由>\n"
+            "（忽略数量和成本价 — 增持请用 /add_ticker）\n\n"
+            "单股带成本价：\n"
+            "/add_ticker_strategy NVDA long 1 150.25 我的投资逻辑\n\n"
+            "示例：\n"
+            "/add_ticker_strategy NVDA long 5 150.25 美国AI芯片龙头，受益于数据中心需求\n"
+            "/add_ticker_strategy TSLA short 2 180 财报动量交易\n"
+            "/add_ticker_strategy 9988.HK long 财报后上调目标价"
         ),
         "add_ticker_strategy_horizon_invalid": (
-            "第二个参数必须是 long 或 short（持仓周期）。\n\n"
-            "示例：/add_ticker_strategy NVDA long 5 AI基础设施投资逻辑"
+            "第二个参数必须是 long 或 short。\n"
+            "• long — 长期/结构性持仓\n"
+            "• short — 战术/短期交易"
         ),
         "add_ticker_strategy_shares_invalid": "数量必须是正数。",
+        "add_ticker_strategy_cost_invalid": "成本价必须是正数。",
         "edit_strategy_ok": "已更新 {symbol} 的策略。",
         "edit_strategy_fail": "无法更新策略：{message}",
         "edit_strategy_usage": (
-            "用法：/edit_strategy <代码> <新策略文本>\n"
+            "如何使用 /edit_strategy\n\n"
+            "语法：/edit_strategy <代码> <新策略文本>\n\n"
+            "直接覆盖 /strategy 中向用户展示的已保存逻辑。\n"
+            "不会修改数量、成本价或持仓周期 — 更新周期请对已持仓股票使用 /add_ticker_strategy。\n\n"
             "示例：/edit_strategy NVDA 核心AI基础设施持仓；关注出口政策风险。"
         ),
         "edit_strategy_not_found": "尚未保存 {symbol} 的策略。",
         "edit_strategy_empty": "策略文本不能为空。",
+        "strategy_usage": (
+            "如何使用 /strategy\n\n"
+            "/strategy — 列出所有持仓的投资逻辑（按 long/short 分组）\n"
+            "/strategy <代码> — 查看单只股票的完整逻辑\n\n"
+            "示例：\n"
+            "/strategy\n"
+            "/strategy NVDA"
+        ),
+        "analyze_usage": (
+            "如何使用 /analyze\n\n"
+            "/analyze — 投资组合规则检查 + 可选 LLM 建议\n"
+            "/analyze <代码> — 根据新闻解释近期价格变动\n"
+            "/analyze <代码> pros — 利弊分析（如已启用）\n\n"
+            "示例：\n"
+            "/analyze\n"
+            "/analyze AAPL\n"
+            "/analyze AAPL pros"
+        ),
+        "undo_usage": (
+            "如何使用 /undo\n\n"
+            "撤销上一条已通知用户的添加、移除或卖出操作。\n"
+            "恢复投资组合并向用户发送更正说明。\n\n"
+            "也可在 /add_ticker、/remove_ticker 或 /sell_ticker 完成后的消息上点击「撤销上一步」。\n\n"
+            "/undo"
+        ),
         "urgent_alert": "紧急预警",
         "target": "目标",
         "suggested": "建议",
@@ -1033,7 +1328,12 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "language_set": "语言已更新为 {language}。",
         "language_invalid": "不支持的语言。请使用：en, de, zh, ru",
-        "language_usage": "用法：/set_language <code>\n示例：/set_language zh",
+        "language_usage": (
+            "如何使用 /set_language\n\n"
+            "语法：/set_language <code>\n\n"
+            "支持的语言代码：en、de、zh、ru\n\n"
+            "示例：/set_language zh"
+        ),
         "reload_ok": "已从磁盘重新加载配置。",
         "reload_jobs_ok": "已根据更新后的配置刷新计划任务。",
         "debug_state": (
@@ -1082,6 +1382,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Инструменты разработчика\n"
             "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — изменение портфеля\n"
             "  /edit_strategy — перезаписать сохранённую инвестиционную идею\n"
+            "  /undo — отменить последнее уведомление о портфеле\n"
             "  /list_users · /add_user · /remove_user — управление доступом\n"
             "  /reload_config · /debug_state — диагностика"
         ),
@@ -1104,8 +1405,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "Изменение портфеля\n"
-            "  /add_ticker <ТИКЕР> [кол-во] — добавить или увеличить позицию\n"
-            "  /add_ticker_strategy <ТИКЕР> <long|short> [кол-во] <обоснование> — добавить с идеей\n"
+            "  /add_ticker <ТИКЕР> [кол-во [себестоимость]] — добавить или увеличить позицию\n"
+            "  /add_ticker_strategy <ТИКЕР> <long|short> [кол-во [себестоимость]] <обоснование> — добавить с идеей\n"
             "  /edit_strategy <ТИКЕР> <текст> — перезаписать сохранённую идею\n"
             "  /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование> — продать и уведомить пользователей\n"
             "  /undo — отменить последнее уведомление о портфеле\n"
@@ -1132,20 +1433,37 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "/add_user <chat_id> [role] [lang] — добавить пользователя\n"
             "/remove_user <chat_id> — удалить доступ\n\n"
             "Примеры изменения портфеля:\n"
-            "/add_ticker_strategy NVDA 5 тезис по AI-инфраструктуре\n"
+            "/add_ticker AAPL 5 150.25\n"
+            "/add_ticker_strategy NVDA long 5 150.25 тезис по AI-инфраструктуре\n"
             "/edit_strategy NVDA обновлённый текст стратегии\n"
             "/sell_ticker NVDA 150.25 фиксация прибыли после отчёта\n"
-            "/remove_ticker MSFT"
+            "/remove_ticker MSFT\n"
+            "/undo — отменить последнее уведомление о портфеле"
         ),
         "add_user_usage": (
-            "Использование: /add_user <chat_id> [role] [lang]\n"
-            "Пример: /add_user 456 ordinary ru"
+            "Как использовать /add_user\n\n"
+            "Синтаксис: /add_user <chat_id> [role] [lang]\n\n"
+            "Аргументы:\n"
+            "• chat_id — числовой Telegram chat id\n"
+            "• role — необязательно: developer или ordinary (по умолчанию ordinary)\n"
+            "• lang — необязательно: en, de, zh, ru (по умолчанию en)\n\n"
+            "Примеры:\n"
+            "/add_user 456789012\n"
+            "/add_user 456789012 ordinary ru"
         ),
-        "remove_user_usage": "Использование: /remove_user <chat_id>",
+        "remove_user_usage": (
+            "Как использовать /remove_user\n\n"
+            "Синтаксис: /remove_user <chat_id>\n\n"
+            "Отзывает доступ к боту. Нельзя удалить свой аккаунт разработчика.\n\n"
+            "Пример: /remove_user 456789012"
+        ),
         "add_user_invalid_id": "Неверный chat id: {value!r}",
         "language_current": "Ваш текущий язык: {language}.",
         "portfolio_empty": "Портфель пуст.",
-        "portfolio_empty_dev": "Портфель пуст. Добавьте позиции через /add_ticker.",
+        "portfolio_empty_dev": (
+            "Портфель пуст. Добавьте позиции через /add_ticker, "
+            "например /add_ticker AAPL 10 150.25"
+        ),
         "portfolio_header": "Портфель ({count} поз.)",
         "portfolio_shares": "{symbol} — {shares:g} акций",
         "portfolio_shares_horizon": "{symbol} — {shares:g} акций · {horizon}",
@@ -1213,15 +1531,47 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty_user": "Не удалось сформировать ИИ-объяснение.",
         "add_ticker_ok": "Добавлено: {message}",
         "add_ticker_fail": "Не удалось добавить: {message}",
+        "add_ticker_usage": (
+            "Как использовать /add_ticker\n\n"
+            "Синтаксис: /add_ticker <ТИКЕР> [кол-во [себестоимость]]\n\n"
+            "Аргументы:\n"
+            "• ТИКЕР — символ (напр. AAPL, 1810.HK); новые тикеры проверяются на рынке\n"
+            "• кол-во — необязательно, по умолчанию 1\n"
+            "• себестоимость — необязательно, за акцию; при добавлении к позиции усредняется\n\n"
+            "Примеры:\n"
+            "/add_ticker AAPL\n"
+            "/add_ticker AAPL 5\n"
+            "/add_ticker AAPL 5 150.25"
+        ),
+        "add_ticker_shares_invalid": "Количество должно быть положительным числом.",
+        "add_ticker_cost_invalid": "Себестоимость должна быть положительным числом.",
         "remove_ticker_ok": "Удалено: {message}",
         "remove_ticker_fail": "Не удалось удалить: {message}",
+        "remove_ticker_usage": (
+            "Как использовать /remove_ticker\n\n"
+            "Синтаксис: /remove_ticker <ТИКЕР>\n\n"
+            "Удаляет позицию и сохранённую стратегию. Пользователи получают уведомление.\n"
+            "Отмена: /undo или кнопка «Отменить последнее действие».\n\n"
+            "Пример: /remove_ticker TSLA"
+        ),
         "sell_ticker_ok": "Продано: {message}\nОстаток cash: {cash:,.2f}",
         "sell_ticker_fail": "Не удалось продать: {message}",
         "sell_ticker_usage": (
-            "Использование: /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование>\n"
-            "Без количества продаётся вся позиция по цене <цена> за акцию. Пользователи уведомляются после подтверждения.\n"
-            "Пример: /sell_ticker NVDA 150.25 фиксация прибыли после отчёта\n"
-            "Пример: /sell_ticker AAPL 5 190.50 сокращение позиции перед циклом продуктов"
+            "Как использовать /sell_ticker\n\n"
+            "Синтаксис: /sell_ticker <ТИКЕР> [кол-во] <цена> <обоснование>\n\n"
+            "Аргументы:\n"
+            "• ТИКЕР — символ в портфеле\n"
+            "• кол-во — необязательно; без него продаётся вся позиция\n"
+            "• цена — цена продажи за акцию (обязательно)\n"
+            "• обоснование — краткое объяснение для пользователей (обязательно; не \"-\")\n\n"
+            "Важно:\n"
+            "• При 3 аргументах число — цена за акцию, а не количество\n"
+            "• Продать N акций: /sell_ticker ТИКЕР N <цена> <обоснование>\n"
+            "• Пользователи уведомляются только после подтверждения\n"
+            "• Отмена: /undo или кнопка Undo после завершения\n\n"
+            "Примеры:\n"
+            "/sell_ticker NVDA 150.25 фиксация прибыли после отчёта\n"
+            "/sell_ticker AAPL 5 190.50 сокращение позиции перед циклом продуктов"
         ),
         "sell_ticker_not_held": "Этого тикера нет в портфеле.",
         "sell_ticker_reasoning_invalid": (
@@ -1285,23 +1635,70 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "add_ticker_strategy_ok_no_notify": "Добавлен {symbol}, стратегия сохранена.",
         "add_ticker_strategy_fail": "Не удалось добавить стратегию: {message}",
         "add_ticker_strategy_usage": (
-            "Использование: /add_ticker_strategy <ТИКЕР> <long|short> [кол-во] <обоснование>\n"
-            "Пример: /add_ticker_strategy NVDA long 5 лидер US AI-чипов, экспозиция к дата-центрам\n"
-            "Пример: /add_ticker_strategy TSLA short 2 трейд на импульсе отчёта"
+            "Как использовать /add_ticker_strategy\n\n"
+            "Синтаксис: /add_ticker_strategy <ТИКЕР> <long|short> [кол-во [себестоимость]] <обоснование>\n\n"
+            "Аргументы:\n"
+            "1. ТИКЕР — символ (напр. NVDA, 1810.HK)\n"
+            "2. long или short — горизонт позиции (обязательно):\n"
+            "   • long — многолетний/структурный тезис («Долгосрочные позиции» в /portfolio)\n"
+            "   • short — тактическая/краткосрочная сделка («Краткосрочные позиции»)\n"
+            "3. кол-во — необязательно для НОВОГО тикера (по умолчанию 1)\n"
+            "4. себестоимость — необязательно, за акцию\n"
+            "5. обоснование — ваша инвестиционная идея (обязательно); пользователи видят LLM-версию\n\n"
+            "Тикер уже в портфеле?\n"
+            "/add_ticker_strategy <ТИКЕР> <long|short> <обоснование>\n"
+            "(кол-во и себестоимость игнорируются — доли добавляйте через /add_ticker)\n\n"
+            "Одна акция с себестоимостью:\n"
+            "/add_ticker_strategy NVDA long 1 150.25 Мой тезис\n\n"
+            "Примеры:\n"
+            "/add_ticker_strategy NVDA long 5 150.25 лидер US AI-чипов, экспозиция к дата-центрам\n"
+            "/add_ticker_strategy TSLA short 2 180 трейд на импульсе отчёта\n"
+            "/add_ticker_strategy 9988.HK long обновление цели после отчёта"
         ),
         "add_ticker_strategy_horizon_invalid": (
-            "Второй аргумент должен быть long или short (горизонт позиции).\n\n"
-            "Пример: /add_ticker_strategy NVDA long 5 тезис по AI-инфраструктуре"
+            "Второй аргумент должен быть long или short.\n"
+            "• long — долгосрочная/структурная позиция\n"
+            "• short — тактическая/краткосрочная сделка"
         ),
         "add_ticker_strategy_shares_invalid": "Количество должно быть положительным числом.",
+        "add_ticker_strategy_cost_invalid": "Себестоимость должна быть положительным числом.",
         "edit_strategy_ok": "Стратегия для {symbol} обновлена.",
         "edit_strategy_fail": "Не удалось обновить стратегию: {message}",
         "edit_strategy_usage": (
-            "Использование: /edit_strategy <ТИКЕР> <новый текст>\n"
+            "Как использовать /edit_strategy\n\n"
+            "Синтаксис: /edit_strategy <ТИКЕР> <новый текст>\n\n"
+            "Полностью перезаписывает текст стратегии для /strategy.\n"
+            "Не меняет кол-во, себестоимость или горизонт — горизонт обновляйте через "
+            "/add_ticker_strategy для существующей позиции.\n\n"
             "Пример: /edit_strategy NVDA ядро AI-инфраструктуры; следить за экспортными ограничениями."
         ),
         "edit_strategy_not_found": "Для {symbol} нет сохранённой стратегии.",
         "edit_strategy_empty": "Текст стратегии не может быть пустым.",
+        "strategy_usage": (
+            "Как использовать /strategy\n\n"
+            "/strategy — список идей по всем позициям (группы long/short)\n"
+            "/strategy <ТИКЕР> — полная идея по одной акции\n\n"
+            "Примеры:\n"
+            "/strategy\n"
+            "/strategy NVDA"
+        ),
+        "analyze_usage": (
+            "Как использовать /analyze\n\n"
+            "/analyze — проверка правил портфеля + опциональная LLM-рекомендация\n"
+            "/analyze <ТИКЕР> — объяснить недавнее движение цены по новостям\n"
+            "/analyze <ТИКЕР> pros — обзор «за / против» (если включено)\n\n"
+            "Примеры:\n"
+            "/analyze\n"
+            "/analyze AAPL\n"
+            "/analyze AAPL pros"
+        ),
+        "undo_usage": (
+            "Как использовать /undo\n\n"
+            "Отменяет последнее завершённое добавление, удаление или продажу с уведомлением пользователей.\n"
+            "Восстанавливает портфель и отправляет исправление.\n\n"
+            "Также кнопка «Отменить последнее действие» после /add_ticker, /remove_ticker или /sell_ticker.\n\n"
+            "/undo"
+        ),
         "urgent_alert": "СРОЧНОЕ ПРЕДУПРЕЖДЕНИЕ",
         "target": "Цель",
         "suggested": "Рекомендация",
@@ -1379,7 +1776,12 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "language_set": "Язык изменён на {language}.",
         "language_invalid": "Язык не поддерживается. Используйте: en, de, zh, ru",
-        "language_usage": "Использование: /set_language <code>\nПример: /set_language ru",
+        "language_usage": (
+            "Как использовать /set_language\n\n"
+            "Синтаксис: /set_language <code>\n\n"
+            "Поддерживаемые коды: en, de, zh, ru\n\n"
+            "Пример: /set_language ru"
+        ),
         "reload_ok": "Конфигурация перезагружена с диска.",
         "reload_jobs_ok": "Запланированные задачи обновлены из новой конфигурации.",
         "debug_state": (

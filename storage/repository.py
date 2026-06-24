@@ -71,6 +71,7 @@ class DataRepository:
         ticker: str,
         *,
         shares: float = 1.0,
+        cost_basis: float | None = None,
         verify_market: bool = True,
     ) -> PortfolioTickerResult:
         """Add a validated ticker to portfolio.json under a single file lock."""
@@ -93,6 +94,7 @@ class DataRepository:
                 portfolio,
                 normalized,
                 shares=shares,
+                cost_basis=cost_basis,
             )
             result_holder.append(result)
             return updated

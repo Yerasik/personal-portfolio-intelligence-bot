@@ -13,6 +13,7 @@ import logging
 from telegram import Update
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
+from bot.add_ticker_args import parse_add_ticker_args
 from bot.commands import BotCommands
 from bot.developer_portfolio import CALLBACK_PREFIX, DeveloperActionReply
 from bot.formatter import truncate_message
@@ -129,6 +130,21 @@ async def _reply_with_menu(
     )
 
 
+async def _reply_command_usage(
+    update: Update,
+    user: BotUser,
+    usage_key: str,
+    *,
+    error_key: str | None = None,
+) -> None:
+    """Show full command usage, optionally prefixed with a short validation error."""
+    if error_key is not None and error_key != usage_key:
+        text = f"{t(error_key, user.language)}\n\n{t(usage_key, user.language)}"
+    else:
+        text = t(usage_key, user.language)
+    await _reply_with_menu(update, text, user=user)
+
+
 async def _reply_developer_action(
     update: Update,
     reply: DeveloperActionReply,
@@ -236,25 +252,6 @@ async def news_summary_command(update: Update, context: ContextTypes.DEFAULT_TYP
     await update.message.reply_text(truncate_message(f"{pending}\n\n{footer}"))
 
 
-_ADD_TICKER_USAGE = (
-    "Usage: /add_ticker <SYMBOL> [shares]\n"
-    "Adds shares to an existing holding or creates a new one.\n"
-    "Example: /add_ticker AAPL\n"
-    "Example: /add_ticker AAPL 5"
-)
-_REMOVE_TICKER_USAGE = (
-    "Usage: /remove_ticker <SYMBOL>\n"
-    "Example: /remove_ticker TSLA"
-)
-_SELL_TICKER_USAGE = (
-    "Usage: /sell_ticker <SYMBOL> [shares] <price> <reasoning>\n"
-    "Omitting share count sells the entire position at <price> per share.\n"
-    "You must confirm before users are notified.\n"
-    "Example: /sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
-    "Example: /sell_ticker AAPL 5 190.50 Trimming position ahead of product cycle"
-)
-
-
 async def portfolio_action_callback(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
@@ -321,6 +318,10 @@ async def strategy_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         return
 
     args = context.args or []
+    if args and args[0].lower() in {"help", "?", "usage"}:
+        await _reply_command_usage(update, user, "strategy_usage")
+        return
+
     ticker = args[0] if args else None
     await update.message.reply_text(
         _commands(context).strategy_message(user.chat_id, ticker=ticker)
@@ -337,36 +338,36 @@ async def add_ticker_strategy_command(
         return
 
     args = context.args or []
-    ticker_already_held = False
-    if args:
-        ticker_already_held = portfolio_has_ticker(
-            _repository(context).load_portfolio(),
-            args[0],
-        )
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
+        await _reply_command_usage(update, user, "add_ticker_strategy_usage")
+        return
+
+    ticker_already_held = portfolio_has_ticker(
+        _repository(context).load_portfolio(),
+        args[0],
+    )
     parsed, error_key = parse_strategy_add_args(
         args,
         ticker_already_held=ticker_already_held,
     )
     if error_key is not None:
-        await _reply_with_menu(
+        await _reply_command_usage(
             update,
-            t(error_key, user.language),
-            user=user,
+            user,
+            "add_ticker_strategy_usage",
+            error_key=error_key,
         )
         return
     if parsed is None:
-        await _reply_with_menu(
-            update,
-            t("add_ticker_strategy_usage", user.language),
-            user=user,
-        )
+        await _reply_command_usage(update, user, "add_ticker_strategy_usage")
         return
 
     if parsed.shares is not None and parsed.shares <= 0:
-        await _reply_with_menu(
+        await _reply_command_usage(
             update,
-            f"Invalid share count.\n\n{t('add_ticker_strategy_usage', user.language)}",
-            user=user,
+            user,
+            "add_ticker_strategy_usage",
+            error_key="add_ticker_strategy_shares_invalid",
         )
         return
 
@@ -376,6 +377,7 @@ async def add_ticker_strategy_command(
         parsed.holding_horizon,
         parsed.shares,
         parsed.reasoning,
+        cost_basis=parsed.cost_basis,
     )
     await _reply_with_menu(update, message, user=user)
 
@@ -387,12 +389,11 @@ async def edit_strategy_command(update: Update, context: ContextTypes.DEFAULT_TY
         return
 
     args = context.args or []
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
+        await _reply_command_usage(update, user, "edit_strategy_usage")
+        return
     if len(args) < 2:
-        await _reply_with_menu(
-            update,
-            t("edit_strategy_usage", user.language),
-            user=user,
-        )
+        await _reply_command_usage(update, user, "edit_strategy_usage")
         return
 
     ticker = args[0]
@@ -412,23 +413,29 @@ async def add_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         return
 
     args = context.args or []
-    if not args:
-        await _reply_with_menu(update, _ADD_TICKER_USAGE, user=user)
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
+        await _reply_command_usage(update, user, "add_ticker_usage")
         return
 
-    shares = 1.0
-    if len(args) >= 2:
-        try:
-            shares = float(args[1])
-        except ValueError:
-            await _reply_with_menu(
-                update,
-                f"Invalid share count: {args[1]!r}\n\n{_ADD_TICKER_USAGE}",
-                user=user,
-            )
-            return
+    parsed, error_key = parse_add_ticker_args(args)
+    if error_key is not None:
+        await _reply_command_usage(
+            update,
+            user,
+            "add_ticker_usage",
+            error_key=error_key,
+        )
+        return
+    if parsed is None:
+        await _reply_command_usage(update, user, "add_ticker_usage")
+        return
 
-    message = _commands(context).add_ticker_message(user.chat_id, args[0], shares=shares)
+    message = _commands(context).add_ticker_message(
+        user.chat_id,
+        parsed.ticker,
+        shares=parsed.shares,
+        cost_basis=parsed.cost_basis,
+    )
     await _reply_developer_action(update, message, user=user)
 
 
@@ -439,8 +446,8 @@ async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TY
         return
 
     args = context.args or []
-    if not args:
-        await _reply_with_menu(update, _REMOVE_TICKER_USAGE, user=user)
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
+        await _reply_command_usage(update, user, "remove_ticker_usage")
         return
 
     message = _commands(context).remove_ticker_message(user.chat_id, args[0])
@@ -454,21 +461,22 @@ async def sell_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE
         return
 
     args = context.args or []
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
+        await _reply_command_usage(update, user, "sell_ticker_usage")
+        return
+
     portfolio = _repository(context).load_portfolio()
     parsed, error_key = parse_sell_args(args, portfolio)
     if error_key is not None:
-        await _reply_with_menu(
+        await _reply_command_usage(
             update,
-            t(error_key, user.language),
-            user=user,
+            user,
+            "sell_ticker_usage",
+            error_key=error_key,
         )
         return
     if parsed is None:
-        await _reply_with_menu(
-            update,
-            t("sell_ticker_usage", user.language),
-            user=user,
-        )
+        await _reply_command_usage(update, user, "sell_ticker_usage")
         return
 
     reply = _commands(context).prepare_sell_ticker(user.chat_id, parsed)
@@ -481,7 +489,20 @@ async def undo_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     if user is None:
         return
 
+    args = context.args or []
+    if args and args[0].lower() in {"help", "?", "usage"}:
+        await _reply_command_usage(update, user, "undo_usage")
+        return
+
     reply = _commands(context).undo_last_portfolio_action_message(user.chat_id)
+    if reply.text == t("portfolio_action_nothing_to_undo", user.language):
+        await _reply_command_usage(
+            update,
+            user,
+            "undo_usage",
+            error_key="portfolio_action_nothing_to_undo",
+        )
+        return
     await _reply_developer_action(update, reply, user=user)
 
 
@@ -493,6 +514,10 @@ async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
     commands = _commands(context)
     raw_args = list(context.args or [])
+    if raw_args and raw_args[0].lower() in {"help", "?", "usage"}:
+        await _reply_command_usage(update, user, "analyze_usage")
+        return
+
     pros_mode = False
     if raw_args and raw_args[0].lower() in {"pros", "--pros", "-pros"}:
         pros_mode = True
@@ -518,6 +543,9 @@ async def set_language_command(update: Update, context: ContextTypes.DEFAULT_TYP
         return
 
     args = context.args or []
+    if args and args[0].lower() in {"help", "?", "usage"}:
+        await _reply_command_usage(update, user, "language_usage")
+        return
     if not args:
         await _reply_with_menu(
             update,
@@ -574,7 +602,7 @@ async def add_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     usage = t("add_user_usage", user.language)
     args = context.args or []
-    if not args:
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
         await _reply_with_menu(update, usage, user=user)
         return
 
@@ -616,7 +644,7 @@ async def remove_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE
 
     usage = t("remove_user_usage", user.language)
     args = context.args or []
-    if not args:
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
         await _reply_with_menu(update, usage, user=user)
         return
 

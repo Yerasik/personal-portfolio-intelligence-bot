@@ -40,10 +40,32 @@ def run_test() -> None:
     aapl = next(p for p in updated.positions if p.ticker == "AAPL")
     if aapl.shares != 13:
         raise AssertionError(f"expected 13 AAPL shares, got {aapl.shares}")
+    if aapl.cost_basis != 150.0:
+        raise AssertionError(f"cost basis should stay 150 without new cost, got {aapl.cost_basis}")
 
-    updated, added = add_ticker_to_portfolio(updated, "NVDA", shares=5)
+    updated, blended = add_ticker_to_portfolio(
+        updated,
+        "AAPL",
+        shares=2,
+        cost_basis=200.0,
+    )
+    if not blended.success:
+        raise AssertionError(f"blend cost should succeed: {blended}")
+    aapl = next(p for p in updated.positions if p.ticker == "AAPL")
+    expected_cost = (13 * 150.0 + 2 * 200.0) / 15
+    if abs(aapl.cost_basis - expected_cost) > 1e-9:
+        raise AssertionError(f"unexpected blended cost {aapl.cost_basis}, want {expected_cost}")
+
+    updated, added = add_ticker_to_portfolio(updated, "NVDA", shares=5, cost_basis=120.0)
     if not added.success or len(updated.positions) != 2:
         raise AssertionError(f"add failed: {added}")
+    nvda = next(p for p in updated.positions if p.ticker == "NVDA")
+    if nvda.cost_basis != 120.0:
+        raise AssertionError(f"expected NVDA cost 120, got {nvda.cost_basis}")
+
+    _, bad_cost = add_ticker_to_portfolio(updated, "NVDA", shares=1, cost_basis=0)
+    if bad_cost.success:
+        raise AssertionError("zero cost basis should fail")
 
     updated, missing = remove_ticker_from_portfolio(updated, "TSLA")
     if missing.success:
