@@ -22,6 +22,7 @@ from storage.models import (
     BotState,
     BotUsers,
     NewsCache,
+    PerformanceHistory,
     Portfolio,
     SignalsFile,
     TickerIndustryMap,
@@ -155,6 +156,7 @@ def validate_json_documents(repository: DataRepository) -> StartupReport:
         ("state", paths.state, BotState),
         ("news_cache", paths.news_cache, NewsCache),
         ("signals", paths.signals, SignalsFile),
+        ("performance_history", paths.performance_history, PerformanceHistory),
         ("users", paths.users, BotUsers),
     )
 

@@ -14,6 +14,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("menu", "Show the tap-to-run menu"),
     BotCommand("help", "List all commands"),
     BotCommand("portfolio", "Holdings and latest prices"),
+    BotCommand("performance", "Returns, drawdown, and value chart"),
     BotCommand("strategy", "Investment idea behind each holding"),
     BotCommand("industries", "Focus industries and news counts"),
     BotCommand("news_summary", "LLM news by sector and ticker"),
@@ -47,10 +48,10 @@ TELEGRAM_BOT_COMMANDS = ORDINARY_BOT_COMMANDS
 def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
     """Persistent reply keyboard; developers get a compact row for cash + dev hub."""
     rows = [
-        [KeyboardButton("/portfolio"), KeyboardButton("/strategy")],
+        [KeyboardButton("/portfolio"), KeyboardButton("/performance")],
+        [KeyboardButton("/strategy"), KeyboardButton("/analyze")],
         [KeyboardButton("/industries"), KeyboardButton("/news_summary")],
-        [KeyboardButton("/analyze"), KeyboardButton("/set_language")],
-        [KeyboardButton("/help"), KeyboardButton("/menu")],
+        [KeyboardButton("/set_language"), KeyboardButton("/help"), KeyboardButton("/menu")],
     ]
     if is_developer:
         rows.insert(

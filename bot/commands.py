@@ -22,6 +22,8 @@ from analysis.strategy_writer import (
     localized_strategy_text,
 )
 from analysis.news_summarizer import iter_news_summary_groups
+from analysis.performance_chart import render_performance_chart_png
+from analysis.performance_metrics import compute_performance_metrics
 from analysis.portfolio_risk import estimate_portfolio_risk
 from analysis.rules import RulesEngine
 from bot.formatter import (
@@ -30,6 +32,7 @@ from bot.formatter import (
     format_industries,
     format_news_summary,
     format_news_summary_messages,
+    format_performance,
     format_portfolio,
     format_pros_cons_analysis,
     format_start,
@@ -206,6 +209,20 @@ class BotCommands:
             lang=self._lang(chat_id),
             is_developer=self._is_developer(chat_id),
         )
+
+    def performance_message(self, chat_id: int) -> str:
+        """Format return windows and max drawdown from stored snapshots."""
+        lang = self._lang(chat_id)
+        history = self.repository.load_performance_history()
+        metrics = compute_performance_metrics(history)
+        if metrics is None:
+            return t("performance_empty", lang)
+        return format_performance(metrics, lang=lang)
+
+    def performance_chart_png(self) -> bytes | None:
+        """Render portfolio value over time when enough snapshots exist."""
+        history = self.repository.load_performance_history()
+        return render_performance_chart_png(history)
 
     def industries_message(self, chat_id: int) -> str:
         """Load config + news cache and summarize focus industries."""

@@ -77,6 +77,7 @@ Edit files under `data/` on the host (mounted into the container):
 | `data/ticker_industries.json` | Static `ticker` → industry map; merged with `focus_industries` for news, rules, `/industries`, and LLM context |
 | `data/state.json` | Runtime state (prices, alerts) — usually auto-managed |
 | `data/news_cache.json` | Cached news — usually auto-managed |
+| `data/performance_history.json` | Append-only portfolio value snapshots (one per market fetch) — auto-managed |
 
 Example `data/portfolio.json`:
 
@@ -186,6 +187,7 @@ Message your bot in Telegram (from a chat id listed in `data/users.json`):
 - `/menu` — show the reply keyboard menu again
 - `/help` — command reference
 - `/portfolio` — holdings grouped by long/short horizon, with prices and P/L when cost basis is set
+- `/performance` — 7d / 30d / all-time return %, max drawdown, and a portfolio value chart (when enough snapshots exist)
 - `/strategy` — investment idea behind each holding
 - `/strategy <SYMBOL>` — full idea for one ticker
 - `/industries` — tracked industries (config + portfolio map) and cached news counts per industry

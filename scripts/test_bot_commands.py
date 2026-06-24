@@ -206,6 +206,8 @@ def run_test() -> None:
         }
         if "/strategy" not in ordinary_labels:
             raise AssertionError("ordinary keyboard should expose /strategy")
+        if "/performance" not in ordinary_labels:
+            raise AssertionError("ordinary keyboard should expose /performance")
         for cmd in ("/add_user", "/add_ticker", "/remove_ticker", "/edit_strategy"):
             if cmd in ordinary_labels:
                 raise AssertionError(f"ordinary keyboard must not expose {cmd}")

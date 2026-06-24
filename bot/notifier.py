@@ -268,6 +268,7 @@ class TelegramNotifier:
         summaries = news_summary_by_language or {}
         state = repository.load_state()
         news_cache = repository.load_news_cache()
+        performance_history = repository.load_performance_history()
         ticker_to_industry = repository.load_ticker_industries().ticker_to_industry
         delivered = False
         for user in users:
@@ -281,6 +282,7 @@ class TelegramNotifier:
                 state=state,
                 news_cache=news_cache,
                 ticker_to_industry=ticker_to_industry,
+                performance_history=performance_history,
                 lang=lang,
             )
             try:

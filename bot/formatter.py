@@ -15,6 +15,7 @@ from analysis.news_summarizer import (
     portfolio_headlines_by_ticker,
     top_important_headlines,
 )
+from analysis.performance_metrics import PerformanceMetrics
 from analysis.portfolio_risk import PortfolioRiskAssessment
 from analysis.portfolio_valuation import (
     PositionValuation,
@@ -30,6 +31,7 @@ from storage.models import (
     MarketQuote,
     NewsCache,
     PendingAlert,
+    PerformanceHistory,
     Portfolio,
     Position,
     TickerSentimentSignal,
@@ -370,6 +372,50 @@ def _append_portfolio_totals_hkd(
         lines.append(t("portfolio_total_pl_partial", lang))
 
 
+def _format_performance_pct(value: float | None, lang: str) -> str:
+    if value is None:
+        return t("performance_na", lang)
+    return f"{value:+.2f}%"
+
+
+def format_performance_lines(metrics: PerformanceMetrics, *, lang: str = "en") -> list[str]:
+    """Shared performance metrics lines for /performance and daily summary."""
+    return [
+        t("performance_line_current_value", lang, value=metrics.current_value),
+        t(
+            "performance_line_return_7d",
+            lang,
+            pct=_format_performance_pct(metrics.return_7d_pct, lang),
+        ),
+        t(
+            "performance_line_return_30d",
+            lang,
+            pct=_format_performance_pct(metrics.return_30d_pct, lang),
+        ),
+        t(
+            "performance_line_return_all_time",
+            lang,
+            pct=_format_performance_pct(metrics.return_all_time_pct, lang),
+        ),
+        t(
+            "performance_line_max_drawdown",
+            lang,
+            pct=_format_performance_pct(metrics.max_drawdown_pct, lang),
+        ),
+    ]
+
+
+def format_performance(metrics: PerformanceMetrics, *, lang: str = "en") -> str:
+    """Render portfolio return windows and max drawdown."""
+    lines = [t("performance_title", lang), ""]
+    lines.extend(format_performance_lines(metrics, lang=lang))
+    lines.append("")
+    lines.append(
+        t("performance_line_snapshots", lang, count=metrics.snapshot_count)
+    )
+    return truncate_message("\n".join(lines))
+
+
 def format_daily_summary(
     portfolio: Portfolio,
     alerts: list[AlertCandidate],
@@ -380,6 +426,7 @@ def format_daily_summary(
     state: BotState | None = None,
     news_cache: NewsCache | None = None,
     ticker_to_industry: dict[str, str] | None = None,
+    performance_history: PerformanceHistory | None = None,
     lang: str = "en",
 ) -> str:
     """Format a concise daily summary for Telegram delivery."""
@@ -413,6 +460,15 @@ def format_daily_summary(
                     pct=valuation.total_pl_pct,
                 )
             )
+
+    if performance_history is not None:
+        from analysis.performance_metrics import compute_performance_metrics
+
+        metrics = compute_performance_metrics(performance_history)
+        if metrics is not None:
+            lines.append("")
+            lines.append(t("performance_section_header", lang))
+            lines.extend(format_performance_lines(metrics, lang=lang))
 
     lines.append("")
 

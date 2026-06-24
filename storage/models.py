@@ -103,6 +103,29 @@ class SignalsFile(BaseModel):
     pros_cons_last_sentiment: dict[str, float] = Field(default_factory=dict)
 
 
+class PositionPerformancePoint(BaseModel):
+    """Per-ticker price and market value at one snapshot."""
+
+    price: float
+    value: float
+
+
+class PortfolioPerformanceSnapshot(BaseModel):
+    """Timestamped portfolio valuation record."""
+
+    timestamp: datetime
+    total_value: float
+    total_cost: float
+    daily_pnl_pct: float
+    positions: dict[str, PositionPerformancePoint] = Field(default_factory=dict)
+
+
+class PerformanceHistory(BaseModel):
+    """Append-only portfolio valuation history."""
+
+    snapshots: list[PortfolioPerformanceSnapshot] = Field(default_factory=list)
+
+
 class RiskProfile(BaseModel):
     """Client risk tolerance limits for /analyze portfolio risk."""
 

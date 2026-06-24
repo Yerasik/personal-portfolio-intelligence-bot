@@ -9,6 +9,7 @@ Each /command handler follows the same pattern:
 from __future__ import annotations
 
 import logging
+from io import BytesIO
 
 from telegram import Update
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
@@ -222,6 +223,19 @@ async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     await update.message.reply_text(
         _commands(context).portfolio_message(user.chat_id)
     )
+
+
+async def performance_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /performance — returns, drawdown, and portfolio value chart."""
+    user = await _guard(update, context)
+    if user is None or update.message is None:
+        return
+
+    commands = _commands(context)
+    await update.message.reply_text(commands.performance_message(user.chat_id))
+    chart = commands.performance_chart_png()
+    if chart is not None:
+        await update.message.reply_photo(photo=BytesIO(chart))
 
 
 async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -767,6 +781,7 @@ def register_handlers(
         ("menu", menu_command),
         ("help", help_command),
         ("portfolio", portfolio_command),
+        ("performance", performance_command),
         ("strategy", strategy_command),
         ("industries", industries_command),
         ("news_summary", news_summary_command),

@@ -271,6 +271,10 @@ class MarketDataService:
         state.last_market_fetch_at = batch.fetched_at
         repository.save_state(state)
 
+        from storage.performance_ops import save_portfolio_snapshot
+
+        save_portfolio_snapshot(repository)
+
         logger.info(
             "Updated state.json with %d quote(s); last_market_fetch_at=%s",
             batch.success_count,

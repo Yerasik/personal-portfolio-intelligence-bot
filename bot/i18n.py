@@ -48,7 +48,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Portfolio\n"
             "  /portfolio — holdings and latest prices\n"
             "  /strategy — investment idea behind each holding\n"
-            "  /strategy <TICKER> — full idea for one stock\n\n"
+            "  /strategy <TICKER> — full idea for one stock\n"
+            "  /performance — returns, drawdown, and value chart\n\n"
             "News\n"
             "  /industries — sectors and headline counts\n"
             "  /news_summary — news digest by sector and stock\n\n"
@@ -80,7 +81,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "Tap a button below or type a command.\n\n"
-            "Portfolio — /portfolio · /strategy\n"
+            "Portfolio — /portfolio · /strategy · /performance\n"
             "News — /industries · /news_summary\n"
             "Analysis — /analyze\n"
             "Settings — /set_language · /help"
@@ -379,6 +380,25 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "holdings_alerts": "Holdings: {holdings} | Active alerts: {alerts}",
         "daily_portfolio_value_hkd": "Portfolio value: HK${value:,.0f}",
         "daily_portfolio_pl_hkd": "Unrealized P/L: {amount:+,.0f} HKD ({pct:+.2f}%)",
+        "performance_title": "Portfolio performance",
+        "performance_section_header": "Performance (tracked snapshots):",
+        "performance_line_current_value": "Current value: HK${value:,.0f}",
+        "performance_line_return_7d": "7-day return: {pct}",
+        "performance_line_return_30d": "30-day return: {pct}",
+        "performance_line_return_all_time": "All-time return: {pct}",
+        "performance_line_max_drawdown": "Max drawdown: {pct}",
+        "performance_line_snapshots": "Based on {count} market snapshots.",
+        "performance_na": "n/a",
+        "performance_empty": (
+            "No performance history yet. Snapshots are recorded on each market fetch."
+        ),
+        "performance_usage": (
+            "How to use /performance\n\n"
+            "Shows portfolio return over 7 days, 30 days, and all tracked history, "
+            "plus maximum drawdown from peak value.\n\n"
+            "A chart of total portfolio value over time is sent when enough snapshots exist.\n\n"
+            "Snapshots are appended automatically whenever market prices are fetched."
+        ),
         "alerts_header": "Alerts:",
         "plus_more": "- plus {count} more",
         "advisory": "Advisory:",
@@ -540,7 +560,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Portfolio\n"
             "  /portfolio — Bestände und Kurse\n"
             "  /strategy — Anlageidee hinter jeder Position\n"
-            "  /strategy <TICKER> — vollständige Idee zu einer Aktie\n\n"
+            "  /strategy <TICKER> — vollständige Idee zu einer Aktie\n"
+            "  /performance — Rendite, Drawdown und Wertverlauf\n\n"
             "Nachrichten\n"
             "  /industries — Branchen und Schlagzeilen\n"
             "  /news_summary — Nachrichten nach Sektor und Ticker\n\n"
@@ -572,7 +593,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "Tippen Sie unten oder geben Sie einen Befehl ein.\n\n"
-            "Portfolio — /portfolio · /strategy\n"
+            "Portfolio — /portfolio · /strategy · /performance\n"
             "Nachrichten — /industries · /news_summary\n"
             "Analyse — /analyze\n"
             "Einstellungen — /set_language · /help"
@@ -885,6 +906,24 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "holdings_alerts": "Bestände: {holdings} | Aktive Warnungen: {alerts}",
         "daily_portfolio_value_hkd": "Portfoliowert: {value:,.0f} HKD",
         "daily_portfolio_pl_hkd": "Unrealisierter G/V: {amount:+,.0f} HKD ({pct:+.2f} %)",
+        "performance_title": "Portfolio-Performance",
+        "performance_section_header": "Performance (gespeicherte Snapshots):",
+        "performance_line_current_value": "Aktueller Wert: {value:,.0f} HKD",
+        "performance_line_return_7d": "7-Tage-Rendite: {pct}",
+        "performance_line_return_30d": "30-Tage-Rendite: {pct}",
+        "performance_line_return_all_time": "Gesamtrendite: {pct}",
+        "performance_line_max_drawdown": "Max. Drawdown: {pct}",
+        "performance_line_snapshots": "Basierend auf {count} Markt-Snapshots.",
+        "performance_na": "k. A.",
+        "performance_empty": (
+            "Noch keine Performance-Historie. Snapshots werden bei jedem Marktabruf gespeichert."
+        ),
+        "performance_usage": (
+            "So funktioniert /performance\n\n"
+            "Zeigt Rendite über 7 Tage, 30 Tage und die gesamte Historie sowie den maximalen Drawdown.\n\n"
+            "Bei genügend Snapshots wird ein Wertverlaufsdiagramm mitgesendet.\n\n"
+            "Snapshots werden automatisch bei jedem Marktdatenabruf angehängt."
+        ),
         "alerts_header": "Warnungen:",
         "plus_more": "- plus {count} weitere",
         "advisory": "Beratung:",
@@ -1017,7 +1056,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "投资组合\n"
             "  /portfolio — 持仓与最新价格\n"
             "  /strategy — 每只持仓的投资逻辑\n"
-            "  /strategy <代码> — 查看单只股票的完整逻辑\n\n"
+            "  /strategy <代码> — 查看单只股票的完整逻辑\n"
+            "  /performance — 收益率、回撤与价值走势图\n\n"
             "新闻\n"
             "  /industries — 行业与新闻数量\n"
             "  /news_summary — 按行业/股票的新闻摘要\n\n"
@@ -1049,7 +1089,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "点击下方按钮或输入命令。\n\n"
-            "投资组合 — /portfolio · /strategy\n"
+            "投资组合 — /portfolio · /strategy · /performance\n"
             "新闻 — /industries · /news_summary\n"
             "分析 — /analyze\n"
             "设置 — /set_language · /help"
@@ -1358,6 +1398,22 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "holdings_alerts": "持仓：{holdings} | 活跃预警：{alerts}",
         "daily_portfolio_value_hkd": "组合市值：{value:,.0f} 港元",
         "daily_portfolio_pl_hkd": "浮动盈亏：{amount:+,.0f} 港元（{pct:+.2f}%）",
+        "performance_title": "投资组合表现",
+        "performance_section_header": "表现（已记录快照）：",
+        "performance_line_current_value": "当前价值：{value:,.0f} 港元",
+        "performance_line_return_7d": "7 日收益：{pct}",
+        "performance_line_return_30d": "30 日收益：{pct}",
+        "performance_line_return_all_time": "累计收益：{pct}",
+        "performance_line_max_drawdown": "最大回撤：{pct}",
+        "performance_line_snapshots": "基于 {count} 次行情快照。",
+        "performance_na": "暂无",
+        "performance_empty": "尚无表现历史。每次拉取行情时会自动记录快照。",
+        "performance_usage": (
+            "如何使用 /performance\n\n"
+            "显示 7 日、30 日及全部跟踪期间的收益率，以及自峰值以来的最大回撤。\n\n"
+            "快照足够时会附带总价值走势图。\n\n"
+            "每次行情更新时会自动追加快照。"
+        ),
         "alerts_header": "预警：",
         "plus_more": "- 另有 {count} 条",
         "advisory": "建议：",
@@ -1490,7 +1546,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Портфель\n"
             "  /portfolio — позиции и котировки\n"
             "  /strategy — идея за каждой позицией\n"
-            "  /strategy <ТИКЕР> — полная идея по одной акции\n\n"
+            "  /strategy <ТИКЕР> — полная идея по одной акции\n"
+            "  /performance — доходность, просадка и график стоимости\n\n"
             "Новости\n"
             "  /industries — отрасли и количество новостей\n"
             "  /news_summary — сводка по секторам и тикерам\n\n"
@@ -1522,7 +1579,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint": (
             "Нажмите кнопку ниже или введите команду.\n\n"
-            "Портфель — /portfolio · /strategy\n"
+            "Портфель — /portfolio · /strategy · /performance\n"
             "Новости — /industries · /news_summary\n"
             "Анализ — /analyze\n"
             "Настройки — /set_language · /help"
@@ -1836,6 +1893,24 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "holdings_alerts": "Позиции: {holdings} | Активные предупреждения: {alerts}",
         "daily_portfolio_value_hkd": "Стоимость портфеля: {value:,.0f} HKD",
         "daily_portfolio_pl_hkd": "Нереализ. P/L: {amount:+,.0f} HKD ({pct:+.2f}%)",
+        "performance_title": "Доходность портфеля",
+        "performance_section_header": "Доходность (сохранённые снимки):",
+        "performance_line_current_value": "Текущая стоимость: {value:,.0f} HKD",
+        "performance_line_return_7d": "Доходность за 7 дн.: {pct}",
+        "performance_line_return_30d": "Доходность за 30 дн.: {pct}",
+        "performance_line_return_all_time": "Доходность за всё время: {pct}",
+        "performance_line_max_drawdown": "Макс. просадка: {pct}",
+        "performance_line_snapshots": "На основе {count} снимков рынка.",
+        "performance_na": "н/д",
+        "performance_empty": (
+            "Истории доходности пока нет. Снимки добавляются при каждом обновлении котировок."
+        ),
+        "performance_usage": (
+            "Как использовать /performance\n\n"
+            "Показывает доходность за 7 и 30 дней, за всю историю и максимальную просадку.\n\n"
+            "При достаточном числе снимков отправляется график стоимости портфеля.\n\n"
+            "Снимки добавляются автоматически при каждом обновлении рынка."
+        ),
         "alerts_header": "Предупреждения:",
         "plus_more": "- ещё {count}",
         "advisory": "Рекомендация:",

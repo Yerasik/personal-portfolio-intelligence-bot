@@ -15,7 +15,9 @@ from storage.models import (
     BotUsers,
     DeveloperPortfolioAction,
     NewsCache,
+    PerformanceHistory,
     Portfolio,
+    PortfolioPerformanceSnapshot,
     SignalsFile,
     TickerIndustryMap,
     TickerMetadata,
@@ -199,6 +201,30 @@ class DataRepository:
     def save_signals(self, signals: SignalsFile) -> None:
         """Write data/signals.json atomically."""
         self._store.write_model(self._paths.signals, signals)
+
+    def load_performance_history(self) -> PerformanceHistory:
+        """Read append-only portfolio snapshots from performance_history.json."""
+        return self._store.read_model(self._paths.performance_history, PerformanceHistory)
+
+    def save_performance_history(self, history: PerformanceHistory) -> None:
+        """Write performance_history.json atomically."""
+        self._store.write_model(self._paths.performance_history, history)
+
+    def append_performance_snapshot(
+        self,
+        snapshot: PortfolioPerformanceSnapshot,
+    ) -> PerformanceHistory:
+        """Append one snapshot under a single file lock."""
+        def _mutate(history: PerformanceHistory) -> PerformanceHistory:
+            return history.model_copy(
+                update={"snapshots": [*history.snapshots, snapshot]}
+            )
+
+        return self._store.mutate_model(
+            self._paths.performance_history,
+            PerformanceHistory,
+            _mutate,
+        )
 
     def load_ticker_industries(self) -> TickerIndustryMap:
         """Read static ticker-to-industry mappings from data/ticker_industries.json."""
