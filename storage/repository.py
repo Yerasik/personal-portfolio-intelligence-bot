@@ -11,6 +11,7 @@ from storage.models import (
     BotState,
     BotUser,
     BotUsers,
+    DeveloperPortfolioAction,
     NewsCache,
     Portfolio,
     SignalsFile,
@@ -149,6 +150,21 @@ class DataRepository:
     def save_state(self, state: BotState) -> None:
         """Write data/state.json atomically."""
         self._store.write_model(self._paths.state, state)
+
+    def get_developer_portfolio_action(self) -> DeveloperPortfolioAction | None:
+        """Return the pending or undoable developer portfolio action."""
+        return self.load_state().developer_portfolio_action
+
+    def set_developer_portfolio_action(
+        self,
+        action: DeveloperPortfolioAction | None,
+    ) -> None:
+        """Store or clear the developer portfolio confirm/undo action."""
+
+        def _mutate(state: BotState) -> BotState:
+            return state.model_copy(update={"developer_portfolio_action": action})
+
+        self._store.mutate_model(self._paths.state, BotState, _mutate)
 
     def load_news_cache(self) -> NewsCache:
         """Read cached RSS articles from data/news_cache.json."""

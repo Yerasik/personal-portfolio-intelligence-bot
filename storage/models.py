@@ -194,6 +194,24 @@ class EvaluatedAlertRecord(BaseModel):
     evaluated_at: datetime
 
 
+DeveloperPortfolioActionType = Literal["sell", "add_ticker", "remove_ticker"]
+DeveloperPortfolioActionStatus = Literal["pending_confirm", "completed"]
+
+
+class DeveloperPortfolioAction(BaseModel):
+    """Developer portfolio edit awaiting confirm or available for undo."""
+
+    action_id: str
+    status: DeveloperPortfolioActionStatus
+    action_type: DeveloperPortfolioActionType
+    created_at: datetime
+    developer_chat_id: int
+    portfolio_before: Portfolio
+    strategy_snapshots: dict[str, TickerStrategy] = Field(default_factory=dict)
+    payload: dict[str, str | float | bool | None] = Field(default_factory=dict)
+    users_notified: int = 0
+
+
 class BotState(BaseModel):
     """Operational state persisted in state.json."""
 
@@ -208,6 +226,7 @@ class BotState(BaseModel):
     last_evaluated_alerts: list[EvaluatedAlertRecord] = Field(default_factory=list)
     pending_alerts: list[PendingAlert] = Field(default_factory=list)
     price_alert_regime: dict[str, Literal["drop", "rise"]] = Field(default_factory=dict)
+    developer_portfolio_action: DeveloperPortfolioAction | None = None
 
 
 class NewsItem(BaseModel):
