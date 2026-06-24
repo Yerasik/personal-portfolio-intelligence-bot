@@ -791,28 +791,27 @@ def _format_analyze_sentiment_lines(
     *,
     lang: str,
 ) -> list[str]:
-    """Build optional news-sentiment section for /analyze."""
-    if portfolio is None or not sentiment_by_ticker:
+    """Build news-sentiment section for /analyze (one line per holding)."""
+    if portfolio is None or not portfolio.positions:
         return []
 
+    sentiment = sentiment_by_ticker or {}
     lines: list[str] = []
     for position in portfolio.positions:
         symbol = normalize_ticker(position.ticker)
-        record = sentiment_by_ticker.get(symbol)
+        record = sentiment.get(symbol)
         if record is None:
-            continue
-        lines.append(
-            t(
-                "analyze_sentiment_line",
-                lang,
-                symbol=symbol,
-                score=record.score,
-                count=record.article_count,
+            lines.append(t("analyze_sentiment_line_none", lang, symbol=symbol))
+        else:
+            lines.append(
+                t(
+                    "analyze_sentiment_line",
+                    lang,
+                    symbol=symbol,
+                    score=record.score,
+                    count=record.article_count,
+                )
             )
-        )
-
-    if not lines:
-        return []
 
     return [t("analyze_sentiment_header", lang), *lines]
 
