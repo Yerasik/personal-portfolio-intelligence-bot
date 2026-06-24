@@ -22,6 +22,7 @@ from bot.formatter import (
     format_strategy_announcement,
     format_strategy_update_notification,
     format_urgent_alert,
+    format_weekly_summary,
     truncate_message,
 )
 from config.settings import RuntimeSettings
@@ -68,6 +69,23 @@ class TelegramNotifier:
 
         with httpx.Client(timeout=TELEGRAM_API_TIMEOUT_SECONDS) as client:
             response = client.post(url, json=payload)
+            response.raise_for_status()
+
+        body = response.json()
+        if not isinstance(body, dict) or not body.get("ok"):
+            raise RuntimeError(f"Telegram API returned failure: {body!r}")
+
+    def send_photo(self, chat_id: int | str, photo: bytes, *, filename: str = "chart.png") -> None:
+        """Send a photo via the Telegram Bot API."""
+        if not self.is_configured:
+            raise RuntimeError("Telegram notifier is not configured")
+
+        url = f"https://api.telegram.org/bot{self._token}/sendPhoto"
+        data = {"chat_id": str(chat_id)}
+        files = {"photo": (filename, photo, "image/png")}
+
+        with httpx.Client(timeout=TELEGRAM_API_TIMEOUT_SECONDS) as client:
+            response = client.post(url, data=data, files=files)
             response.raise_for_status()
 
         body = response.json()
@@ -295,6 +313,49 @@ class TelegramNotifier:
                 continue
             delivered = True
             logger.info("Daily summary delivered to chat_id=%s (lang=%s)", user.chat_id, lang)
+
+        return delivered
+
+    def deliver_weekly_summary(
+        self,
+        *,
+        repository: DataRepository,
+        portfolio,
+        state,
+        performance_history,
+        chart_png: bytes | None = None,
+    ) -> bool:
+        """Send the Monday weekly summary and optional performance chart."""
+        if not self.is_configured:
+            logger.warning("Telegram notifier not configured; skipping weekly summary send")
+            return False
+
+        users = self._authorized_users(repository)
+        if not users:
+            logger.warning("No authorized users; skipping weekly summary send")
+            return False
+
+        delivered = False
+        for user in users:
+            lang = user.language
+            message = format_weekly_summary(
+                portfolio,
+                state=state,
+                performance_history=performance_history,
+                lang=lang,
+            )
+            try:
+                self.send_text(user.chat_id, message)
+                if chart_png is not None:
+                    self.send_photo(user.chat_id, chart_png, filename="weekly_performance.png")
+            except Exception:
+                logger.exception(
+                    "Failed to send weekly summary to chat_id=%s",
+                    user.chat_id,
+                )
+                continue
+            delivered = True
+            logger.info("Weekly summary delivered to chat_id=%s (lang=%s)", user.chat_id, lang)
 
         return delivered
 

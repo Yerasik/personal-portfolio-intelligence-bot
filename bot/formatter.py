@@ -416,6 +416,54 @@ def format_performance(metrics: PerformanceMetrics, *, lang: str = "en") -> str:
     return truncate_message("\n".join(lines))
 
 
+def format_weekly_summary(
+    portfolio: Portfolio,
+    *,
+    state: BotState | None = None,
+    performance_history: PerformanceHistory | None = None,
+    lang: str = "en",
+) -> str:
+    """Format the Monday weekly summary focused on portfolio performance."""
+    lines = [t("weekly_summary_title", lang), ""]
+
+    if state is not None and (portfolio.positions or portfolio.cash > 0):
+        lines.append(
+            t("weekly_summary_holdings", lang, holdings=len(portfolio.positions))
+        )
+        if portfolio.positions:
+            valuation = build_portfolio_valuation(portfolio, state)
+            total_value = valuation.total_market_value_hkd + portfolio.cash
+            lines.append(
+                t("daily_portfolio_value_hkd", lang, value=total_value)
+            )
+            if valuation.total_pl_hkd is not None and valuation.total_pl_pct is not None:
+                lines.append(
+                    t(
+                        "daily_portfolio_pl_hkd",
+                        lang,
+                        amount=valuation.total_pl_hkd,
+                        pct=valuation.total_pl_pct,
+                    )
+                )
+        elif portfolio.cash > 0:
+            lines.append(
+                t("daily_portfolio_value_hkd", lang, value=portfolio.cash)
+            )
+
+    if performance_history is not None:
+        from analysis.performance_metrics import compute_performance_metrics
+
+        metrics = compute_performance_metrics(performance_history)
+        if metrics is not None:
+            lines.append("")
+            lines.append(t("weekly_performance_header", lang))
+            lines.extend(format_performance_lines(metrics, lang=lang))
+
+    lines.append("")
+    lines.append(t("advisory_footer", lang))
+    return truncate_message("\n".join(lines))
+
+
 def format_daily_summary(
     portfolio: Portfolio,
     alerts: list[AlertCandidate],

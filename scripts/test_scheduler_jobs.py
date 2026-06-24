@@ -19,6 +19,7 @@ from config.settings import RuntimeSettings
 from scheduler.jobs import (
     JOB_AUTO_NEWS_DISCOVERY,
     JOB_DAILY_SUMMARY,
+    JOB_WEEKLY_SUMMARY,
     JOB_DEEP_DIGEST_PREFIX,
     JOB_MARKET_FETCH,
     JOB_NEWS_FETCH,
@@ -115,6 +116,7 @@ def run_test() -> None:
             JOB_SENTIMENT_ANALYSIS,
             JOB_PROS_CONS,
             JOB_DAILY_SUMMARY,
+            JOB_WEEKLY_SUMMARY,
             f"{JOB_DEEP_DIGEST_PREFIX}06_00",
             f"{JOB_DEEP_DIGEST_PREFIX}20_00",
         }
@@ -174,6 +176,12 @@ def run_test() -> None:
         job_ids_without_summary = {job.id for job in empty_scheduler.get_jobs()}
         if JOB_DAILY_SUMMARY in job_ids_without_summary:
             raise AssertionError("daily summary job should be omitted when disabled")
+
+        repository.save_config(AppConfig(enable_weekly_summary=False))
+        empty_scheduler_weekly = BlockingScheduler(timezone="UTC")
+        register_jobs(empty_scheduler_weekly, services)
+        if JOB_WEEKLY_SUMMARY in {job.id for job in empty_scheduler_weekly.get_jobs()}:
+            raise AssertionError("weekly summary job should be omitted when disabled")
 
         repository.save_config(AppConfig(enable_deep_digest=False))
         empty_scheduler_2 = BlockingScheduler(timezone="UTC")

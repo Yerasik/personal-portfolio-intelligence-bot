@@ -229,6 +229,7 @@ Configured in `data/config.json`:
 | `news_fetch_interval_minutes` | 60 | Refresh RSS news cache, focused on portfolio industries |
 | `rule_evaluation_interval_minutes` | 60 | Evaluate rules, send urgent Telegram alerts |
 | `enable_daily_summary` + `digest_hour/minute` | 08:00 | Daily digest to Telegram |
+| `enable_weekly_summary` + `weekly_summary_hour/minute` | Monday 08:00 | Weekly performance summary + chart to Telegram |
 
 Job failures are logged and do not crash the bot process.
 

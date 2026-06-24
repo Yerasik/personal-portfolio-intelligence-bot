@@ -20,6 +20,7 @@ from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
 from analysis.deep_digest import parse_deep_digest_time, run_deep_digest
+from analysis.weekly_summary import run_weekly_summary
 from analysis.industries import build_news_fetch_industries
 from analysis.llm import LlmClient
 from analysis.pros_cons_engine import run_pros_cons_job as execute_pros_cons_analysis
@@ -47,6 +48,7 @@ JOB_RULE_EVALUATION: Final = "rule_evaluation"
 JOB_SENTIMENT_ANALYSIS: Final = "sentiment_analysis"
 JOB_PROS_CONS: Final = "pros_cons"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
+JOB_WEEKLY_SUMMARY: Final = "weekly_summary"
 JOB_DEEP_DIGEST_PREFIX: Final = "deep_digest_"
 
 _built_scheduler: AppScheduler | None = None
@@ -297,6 +299,16 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
         logger.warning("Daily summary was not sent to Telegram")
 
 
+def run_weekly_summary_job(services: SchedulerServices) -> None:
+    """Build the Monday weekly performance summary and send it to Telegram."""
+    app_config = services.load_app_config()
+    run_weekly_summary(
+        services.repository,
+        app_config,
+        services.get_notifier(),
+    )
+
+
 def run_deep_digest_job(services: SchedulerServices) -> None:
     """Build the morning/evening deep digest and send it to Telegram."""
     app_config = services.load_app_config()
@@ -397,6 +409,24 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
     else:
         try:
             scheduler.remove_job(JOB_DAILY_SUMMARY)
+        except JobLookupError:
+            pass
+
+    if app_config.enable_weekly_summary:
+        scheduler.add_job(
+            lambda: _run_job(JOB_WEEKLY_SUMMARY, lambda: run_weekly_summary_job(services)),
+            trigger=CronTrigger(
+                day_of_week="mon",
+                hour=app_config.weekly_summary_hour,
+                minute=app_config.weekly_summary_minute,
+                timezone=timezone,
+            ),
+            id=JOB_WEEKLY_SUMMARY,
+            replace_existing=True,
+        )
+    else:
+        try:
+            scheduler.remove_job(JOB_WEEKLY_SUMMARY)
         except JobLookupError:
             pass
 

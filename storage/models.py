@@ -166,6 +166,9 @@ class AppConfig(BaseModel):
     macro_sector_label: str = "Macro & Central Banks"
     daily_summary_top_headlines: int = Field(default=5, ge=1, le=15)
     enable_daily_summary: bool = True
+    enable_weekly_summary: bool = True
+    weekly_summary_hour: int = Field(default=8, ge=0, le=23)
+    weekly_summary_minute: int = Field(default=0, ge=0, le=59)
     deep_digest_times: list[str] = Field(default_factory=lambda: ["06:00", "20:00"])
     enable_deep_digest: bool = True
     deep_digest_recipients: Literal["developers", "all_users"] = "developers"
@@ -240,6 +243,7 @@ class BotState(BaseModel):
     """Operational state persisted in state.json."""
 
     last_digest_at: datetime | None = None
+    last_weekly_summary_at: datetime | None = None
     digest_sent_at: datetime | None = None
     deep_digest_price_snapshot: dict[str, float] = Field(default_factory=dict)
     deep_digest_sentiment_snapshot: dict[str, float] = Field(default_factory=dict)

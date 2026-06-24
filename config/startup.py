@@ -261,6 +261,13 @@ def log_startup_summary(
         app_config.digest_minute,
         app_config.timezone,
     )
+    logger.info(
+        "Weekly summary: %s on Mondays at %02d:%02d %s",
+        "enabled" if app_config.enable_weekly_summary else "disabled",
+        app_config.weekly_summary_hour,
+        app_config.weekly_summary_minute,
+        app_config.timezone,
+    )
     logger.info("LLM summaries: %s", "enabled" if app_config.enable_llm_summaries else "disabled")
     logger.info("Ollama endpoint: %s", ollama_base_url)
     logger.info("Ollama model: %s", ollama_model)

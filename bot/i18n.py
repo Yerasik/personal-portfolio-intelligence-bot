@@ -399,6 +399,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "A chart of total portfolio value over time is sent when enough snapshots exist.\n\n"
             "Snapshots are appended automatically whenever market prices are fetched."
         ),
+        "weekly_summary_title": "Weekly Portfolio Summary",
+        "weekly_summary_holdings": "Holdings: {holdings}",
+        "weekly_performance_header": "Weekly performance update:",
         "alerts_header": "Alerts:",
         "plus_more": "- plus {count} more",
         "advisory": "Advisory:",
@@ -924,6 +927,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Bei genügend Snapshots wird ein Wertverlaufsdiagramm mitgesendet.\n\n"
             "Snapshots werden automatisch bei jedem Marktdatenabruf angehängt."
         ),
+        "weekly_summary_title": "Wöchentliche Portfolio-Zusammenfassung",
+        "weekly_summary_holdings": "Bestände: {holdings}",
+        "weekly_performance_header": "Wöchentliches Performance-Update:",
         "alerts_header": "Warnungen:",
         "plus_more": "- plus {count} weitere",
         "advisory": "Beratung:",
@@ -1414,6 +1420,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "快照足够时会附带总价值走势图。\n\n"
             "每次行情更新时会自动追加快照。"
         ),
+        "weekly_summary_title": "每周投资组合摘要",
+        "weekly_summary_holdings": "持仓数：{holdings}",
+        "weekly_performance_header": "本周表现更新：",
         "alerts_header": "预警：",
         "plus_more": "- 另有 {count} 条",
         "advisory": "建议：",
@@ -1911,6 +1920,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "При достаточном числе снимков отправляется график стоимости портфеля.\n\n"
             "Снимки добавляются автоматически при каждом обновлении рынка."
         ),
+        "weekly_summary_title": "Еженедельная сводка по портфелю",
+        "weekly_summary_holdings": "Позиций: {holdings}",
+        "weekly_performance_header": "Еженедельное обновление доходности:",
         "alerts_header": "Предупреждения:",
         "plus_more": "- ещё {count}",
         "advisory": "Рекомендация:",
