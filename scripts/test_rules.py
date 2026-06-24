@@ -9,10 +9,13 @@ from dataclasses import asdict
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pandas as pd
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+import analysis.indicator_rules as indicator_rules_module
 from analysis.rules import AlertCandidate, RulesEngine
 from storage.models import (
     AppConfig,
@@ -62,6 +65,10 @@ def _assert_alerts(
 
 
 def run_test() -> None:
+    indicator_rules_module.fetch_ohlcv_history = (
+        lambda ticker, *, lookback_days=60: pd.DataFrame()
+    )
+
     config = AppConfig(
         alert_price_change_pct=5.0,
         alert_negative_news_count=3,

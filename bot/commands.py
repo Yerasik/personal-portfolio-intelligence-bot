@@ -26,7 +26,7 @@ from analysis.performance_chart import render_performance_chart_png
 from analysis.performance_metrics import compute_performance_metrics
 from analysis.portfolio_risk import estimate_portfolio_risk
 from analysis.portfolio_valuation import build_portfolio_valuation
-from analysis.risk_metrics import compute_risk_metrics_report
+from analysis.technical_snapshot import build_technical_snapshot
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
@@ -41,6 +41,7 @@ from bot.formatter import (
     format_start,
     format_strategy_detail,
     format_strategy_list,
+    format_technical_snapshot,
     format_ticker_analysis,
     iter_format_news_summary_messages,
     truncate_message,
@@ -60,7 +61,12 @@ from bot.i18n import SUPPORTED_LANGUAGES, normalize_language, t
 from bot.notifier import TelegramNotifier
 from config.settings import RuntimeSettings
 from storage.models import DeveloperPortfolioAction, Portfolio, TickerStrategy, UserRole
-from storage.portfolio_ops import PortfolioTickerResult, normalize_ticker, portfolio_has_ticker
+from storage.portfolio_ops import (
+    PortfolioTickerResult,
+    normalize_ticker,
+    portfolio_has_ticker,
+    validate_ticker_format,
+)
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
@@ -1081,6 +1087,19 @@ class BotCommands:
             pending=len(state.pending_alerts),
             users=len(users.users),
         )
+
+    def ta_message(self, chat_id: int, ticker: str) -> tuple[str, bool]:
+        """Build a MarkdownV2 TA snapshot or a plain-text error message."""
+        lang = self._lang(chat_id)
+        symbol = normalize_ticker(ticker)
+        validation_error = validate_ticker_format(symbol)
+        if validation_error:
+            return t("ta_invalid_ticker", lang, symbol=symbol, error=validation_error), False
+
+        snapshot = build_technical_snapshot(symbol)
+        if snapshot is None:
+            return t("ta_unavailable", lang, symbol=symbol), False
+        return format_technical_snapshot(snapshot, lang=lang), True
 
     def list_users_message(self, chat_id: int) -> str:
         """List authorized users (developer only)."""

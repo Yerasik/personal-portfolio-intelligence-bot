@@ -46,6 +46,7 @@ from datetime import UTC, datetime, timedelta
 from typing import Literal
 
 from collectors.market_data import tracked_tickers
+import analysis.indicator_rules as indicator_rules
 from storage.models import AppConfig, BotState, MarketQuote, NewsCache, NewsItem, Portfolio
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,8 @@ AlertType = Literal[
     "price_rise",
     "repeated_negative_news",
     "sector_attention",
+    "rsi_alert",
+    "macd_crossover",
 ]
 AlertUrgency = Literal["info", "warning", "urgent"]
 PriceAlertRegime = Literal["drop", "rise"]
@@ -113,6 +116,9 @@ class AlertCandidate:
         """Stable deduplication key for duplicate suppression."""
         ticker = self.ticker or ""
         industry = self.industry or ""
+        signal = self.details.get("signal")
+        if signal:
+            return f"{self.type}:{ticker}:{industry}:{signal}"
         return f"{self.type}:{ticker}:{industry}"
 
 
@@ -135,6 +141,8 @@ class RulesEngine:
         candidates: list[AlertCandidate] = []
         candidates.extend(self._price_drop_alerts(portfolio, state, evaluated_at))
         candidates.extend(self._price_rise_alerts(portfolio, state, evaluated_at))
+        candidates.extend(self._rsi_alerts(portfolio, evaluated_at))
+        candidates.extend(self._macd_crossover_alerts(portfolio, evaluated_at))
         candidates.extend(
             self._repeated_negative_news_alerts(portfolio, news_cache, evaluated_at)
         )
@@ -245,6 +253,106 @@ class RulesEngine:
                     details={
                         "change_pct": round(change_pct, 2),
                         "threshold": threshold,
+                    },
+                )
+            )
+
+        return alerts
+
+    def _rsi_alerts(
+        self,
+        portfolio: Portfolio,
+        evaluated_at: datetime,
+    ) -> list[AlertCandidate]:
+        """Alert when RSI(14) crosses above 70 or below 30."""
+        alerts: list[AlertCandidate] = []
+
+        for symbol in self._tracked_tickers(portfolio):
+            ohlcv = indicator_rules.fetch_ohlcv_history(symbol)
+            if ohlcv.empty:
+                continue
+
+            signal = indicator_rules.evaluate_rsi_signal(ohlcv)
+            if signal is None:
+                continue
+
+            rsi_value = signal.indicator_value
+            if signal.signal == "overbought":
+                title = f"{symbol} RSI overbought ({rsi_value:.1f})"
+                explanation = (
+                    f"{symbol} RSI(14) crossed above 70; current RSI is {rsi_value:.2f}."
+                )
+                urgency: AlertUrgency = "warning"
+            else:
+                title = f"{symbol} RSI oversold ({rsi_value:.1f})"
+                explanation = (
+                    f"{symbol} RSI(14) crossed below 30; current RSI is {rsi_value:.2f}."
+                )
+                urgency = "warning"
+
+            alerts.append(
+                self._build_alert(
+                    alert_type="rsi_alert",
+                    ticker=symbol,
+                    industry=None,
+                    urgency=urgency,
+                    title=title,
+                    explanation=explanation,
+                    created_at=evaluated_at,
+                    details={
+                        "signal": signal.signal,
+                        "rsi": round(rsi_value, 2),
+                    },
+                )
+            )
+
+        return alerts
+
+    def _macd_crossover_alerts(
+        self,
+        portfolio: Portfolio,
+        evaluated_at: datetime,
+    ) -> list[AlertCandidate]:
+        """Alert when the MACD line crosses the signal line."""
+        alerts: list[AlertCandidate] = []
+
+        for symbol in self._tracked_tickers(portfolio):
+            ohlcv = indicator_rules.fetch_ohlcv_history(symbol)
+            if ohlcv.empty:
+                continue
+
+            signal = indicator_rules.evaluate_macd_signal(ohlcv)
+            if signal is None:
+                continue
+
+            macd_value = signal.indicator_value
+            signal_value = signal.secondary_value or 0.0
+            if signal.signal == "bullish_cross":
+                title = f"{symbol} MACD bullish cross"
+                explanation = (
+                    f"{symbol} MACD crossed above its signal line; "
+                    f"MACD={macd_value:.4f}, signal={signal_value:.4f}."
+                )
+            else:
+                title = f"{symbol} MACD bearish cross"
+                explanation = (
+                    f"{symbol} MACD crossed below its signal line; "
+                    f"MACD={macd_value:.4f}, signal={signal_value:.4f}."
+                )
+
+            alerts.append(
+                self._build_alert(
+                    alert_type="macd_crossover",
+                    ticker=symbol,
+                    industry=None,
+                    urgency="warning",
+                    title=title,
+                    explanation=explanation,
+                    created_at=evaluated_at,
+                    details={
+                        "signal": signal.signal,
+                        "macd": round(macd_value, 4),
+                        "macd_signal": round(signal_value, 4),
                     },
                 )
             )

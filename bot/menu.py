@@ -40,6 +40,7 @@ DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = ORDINARY_BOT_COMMANDS + (
     BotCommand("remove_user", "Revoke user access"),
     BotCommand("reload_config", "Reload config.json from disk"),
     BotCommand("debug_state", "Show internal runtime counters"),
+    BotCommand("ta", "Technical analysis for one ticker"),
 )
 
 # Default slash menu for any chat without a per-user override.

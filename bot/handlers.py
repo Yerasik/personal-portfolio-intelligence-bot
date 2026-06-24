@@ -12,6 +12,7 @@ import logging
 from io import BytesIO
 
 from telegram import Update
+from telegram.constants import ParseMode
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 from bot.add_ticker_args import parse_add_ticker_args
@@ -699,6 +700,25 @@ async def debug_state_command(update: Update, context: ContextTypes.DEFAULT_TYPE
     )
 
 
+async def ta_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /ta <TICKER> — technical analysis snapshot (developer only)."""
+    user = await _guard_developer(update, context)
+    if user is None or update.message is None:
+        return
+
+    args = context.args or []
+    if not args or args[0].lower() in {"help", "?", "usage"}:
+        await _reply_command_usage(update, user, "ta_usage")
+        return
+
+    await update.message.reply_text(t("ta_fetching", user.language))
+    message, use_markdown = _commands(context).ta_message(user.chat_id, args[0])
+    if use_markdown:
+        await update.message.reply_text(message, parse_mode=ParseMode.MARKDOWN_V2)
+    else:
+        await update.message.reply_text(message)
+
+
 async def list_users_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /list_users — show authorized users (developer only)."""
     user = await _guard_developer(update, context)
@@ -810,6 +830,7 @@ def register_handlers(
         ("set_language", set_language_command),
         ("reload_config", reload_config_command),
         ("debug_state", debug_state_command),
+        ("ta", ta_command),
         ("list_users", list_users_command),
         ("add_user", add_user_command),
         ("remove_user", remove_user_command),

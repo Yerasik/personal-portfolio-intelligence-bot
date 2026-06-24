@@ -207,6 +207,7 @@ Message your bot in Telegram (from a chat id listed in `data/users.json`):
 - `/sell_ticker <SYMBOL> [shares] <price> <reasoning>` — sell at price per share; omit shares to sell the full position; confirm before users are notified
 - `/undo` — reverse the last completed add/remove/sell notification
 - `/remove_ticker <SYMBOL>` — remove a holding and its strategy
+- `/ta <TICKER>` — technical analysis snapshot (RSI, MACD, SMA, Bollinger; developer only)
 - `/list_users` · `/add_user <chat_id> [role] [lang]` · `/remove_user <chat_id>` — manage access
 - `/reload_config` · `/debug_state` — diagnostics
 
@@ -237,6 +238,7 @@ Job failures are logged and do not crash the bot process.
 When `enable_llm_summaries` is `true`:
 
 - Price-move alerts (`price_drop`/`price_rise`) are enriched with a best-effort LLM explanation (recent **ticker-tagged** news). The same explainer powers `/analyze <ticker>`.
+- Technical alerts (`rsi_alert`, `macd_crossover`) fire on RSI(14) threshold crosses and MACD/signal crossovers using 60-day yfinance OHLCV + pandas_ta; evaluated on the same rule schedule.
 - `/news_summary` and the daily digest include grounded LLM summaries of cached news **by sector** and **by portfolio ticker** (headline-only fallback when the LLM is unavailable).
 
 Large models on CPU can take several minutes per LLM request (default timeout: 300s). Use the GPU compose override on supported hardware for faster inference.

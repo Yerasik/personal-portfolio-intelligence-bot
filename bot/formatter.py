@@ -18,6 +18,7 @@ from analysis.news_summarizer import (
 from analysis.performance_metrics import PerformanceMetrics
 from analysis.portfolio_risk import PortfolioRiskAssessment
 from analysis.risk_metrics import RiskMetricsReport
+from analysis.technical_snapshot import TechnicalSnapshot
 from analysis.portfolio_valuation import (
     PositionValuation,
     PortfolioValuation,
@@ -26,6 +27,7 @@ from analysis.portfolio_valuation import (
 )
 from analysis.rules import AlertCandidate
 from bot.i18n import t
+from bot.markdown_v2 import escape_markdown_v2
 from storage.models import (
     AppConfig,
     BotState,
@@ -57,7 +59,7 @@ def truncate_message(text: str, limit: int = TELEGRAM_MESSAGE_LIMIT) -> str:
 
 
 def _suggested_action(alert: AlertCandidate, lang: str = "en") -> str:
-    if alert.type in {"price_drop", "repeated_negative_news"} and alert.ticker:
+    if alert.type in {"price_drop", "repeated_negative_news", "rsi_alert", "macd_crossover"} and alert.ticker:
         return t("review", lang, target=alert.ticker)
     if alert.type == "price_rise" and alert.ticker:
         return t("monitor", lang, target=alert.ticker)
@@ -99,6 +101,21 @@ def _localized_alert_title(alert: AlertCandidate, lang: str) -> str:
         return t("alert_negative_news_title", lang, symbol=symbol)
     if alert.type == "sector_attention" and industry:
         return t("alert_sector_title", lang, industry=industry)
+    if alert.type == "rsi_alert" and symbol and {"signal", "rsi"} <= details.keys():
+        return t(
+            "alert_rsi_title",
+            lang,
+            symbol=symbol,
+            signal=details["signal"],
+            rsi=details["rsi"],
+        )
+    if alert.type == "macd_crossover" and symbol and {"signal", "macd"} <= details.keys():
+        return t(
+            "alert_macd_title",
+            lang,
+            symbol=symbol,
+            signal=details["signal"],
+        )
     return alert.title
 
 
@@ -139,6 +156,23 @@ def _localized_alert_explanation(alert: AlertCandidate, lang: str) -> str:
             industry=industry,
             count=details["count"],
             hours=details["hours"],
+        )
+    if alert.type == "rsi_alert" and {"signal", "rsi"} <= details.keys():
+        return t(
+            "alert_rsi_explanation",
+            lang,
+            symbol=symbol,
+            signal=details["signal"],
+            rsi=details["rsi"],
+        )
+    if alert.type == "macd_crossover" and {"signal", "macd", "macd_signal"} <= details.keys():
+        return t(
+            "alert_macd_explanation",
+            lang,
+            symbol=symbol,
+            signal=details["signal"],
+            macd=details["macd"],
+            macd_signal=details["macd_signal"],
         )
     return alert.explanation
 
@@ -464,6 +498,31 @@ def format_risk_metrics(report: RiskMetricsReport, *, lang: str = "en") -> str:
         t("risk_metrics_footer", lang),
     ]
     return truncate_message("\n".join(lines))
+
+
+def format_technical_snapshot(snapshot: TechnicalSnapshot, *, lang: str = "en") -> str:
+    """Render a ticker TA snapshot for Telegram MarkdownV2."""
+    esc = escape_markdown_v2
+    symbol = esc(snapshot.ticker)
+    rsi_label = esc(t(f"ta_rsi_{snapshot.rsi_label}", lang))
+    macd_label = esc(t(f"ta_macd_{snapshot.macd_status}", lang))
+    sma_label = esc(t(f"ta_sma_{snapshot.sma_status}", lang))
+    bb_label = esc(t(f"ta_bb_{snapshot.bollinger_status}", lang))
+    close_text = esc(f"{snapshot.close_price:.2f}")
+    rsi_value = esc(f"{snapshot.rsi_value:.1f}")
+
+    return "\n".join(
+        [
+            f"*{esc('📊')} {symbol} — {esc(t('ta_title', lang))}*",
+            "",
+            f"📊 RSI\\(14\\): *{rsi_value}* \\({rsi_label}\\)",
+            f"📉 MACD: *{macd_label}*",
+            f"📈 SMA20 vs SMA50: *{sma_label}*",
+            f"🕯 Price vs Bollinger Bands: *{bb_label}*",
+            "",
+            f"_{esc(t('ta_last_close', lang))}: {close_text}_",
+        ]
+    )
 
 
 def format_weekly_summary(

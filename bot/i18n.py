@@ -78,7 +78,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /remove_user <chat_id> — revoke access\n\n"
             "Diagnostics\n"
             "  /reload_config — reload config from disk\n"
-            "  /debug_state — internal runtime counters"
+            "  /debug_state — internal runtime counters\n"
+            "  /ta <TICKER> — RSI, MACD, SMA, Bollinger snapshot"
         ),
         "menu_hint": (
             "Tap a button below or type a command.\n\n"
@@ -239,8 +240,40 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "dev_menu_diagnostics_usage": (
             "Diagnostics commands\n\n"
             "/reload_config — reload config.json from disk\n"
-            "/debug_state — internal runtime counters"
+            "/debug_state — internal runtime counters\n"
+            "/ta <TICKER> — technical analysis snapshot (RSI, MACD, SMA, Bollinger)"
         ),
+        "ta_title": "Technical Analysis",
+        "ta_last_close": "Last close",
+        "ta_fetching": "Fetching 90-day price history…",
+        "ta_unavailable": (
+            "Could not load technical analysis for {symbol}. "
+            "Check the ticker or try again later."
+        ),
+        "ta_invalid_ticker": "Invalid ticker {symbol}: {error}",
+        "ta_usage": (
+            "How to use /ta\n\n"
+            "Syntax: /ta <TICKER>\n\n"
+            "Returns a technical analysis snapshot using 90 days of daily data:\n"
+            "RSI(14), MACD crossover status, SMA20 vs SMA50, and Bollinger Bands.\n\n"
+            "Example: /ta AAPL"
+        ),
+        "ta_rsi_overbought": "overbought",
+        "ta_rsi_oversold": "oversold",
+        "ta_rsi_neutral": "neutral",
+        "ta_macd_bullish_cross": "bullish crossover",
+        "ta_macd_bearish_cross": "bearish crossover",
+        "ta_macd_bullish": "bullish (above signal)",
+        "ta_macd_bearish": "bearish (below signal)",
+        "ta_macd_neutral": "neutral",
+        "ta_sma_golden_cross": "golden cross",
+        "ta_sma_death_cross": "death cross",
+        "ta_sma_bullish": "bullish (SMA20 above SMA50)",
+        "ta_sma_bearish": "bearish (SMA20 below SMA50)",
+        "ta_sma_neutral": "neutral",
+        "ta_bb_above_upper": "above upper band",
+        "ta_bb_below_lower": "below lower band",
+        "ta_bb_inside": "inside bands",
         "remove_ticker_ok": "Removed: {message}",
         "remove_ticker_fail": "Could not remove ticker: {message}",
         "remove_ticker_usage": (
@@ -466,6 +499,15 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "{symbol} rose {pct:.2f}% since the last market fetch, "
             "breaching the {threshold:.1f}% rise threshold."
         ),
+        "alert_rsi_title": "{symbol} RSI {signal} ({rsi:.1f})",
+        "alert_rsi_explanation": (
+            "{symbol} RSI(14) crossed into {signal} territory; current RSI is {rsi:.2f}."
+        ),
+        "alert_macd_title": "{symbol} MACD {signal}",
+        "alert_macd_explanation": (
+            "{symbol} MACD line crossed the signal line ({signal}); "
+            "MACD={macd:.4f}, signal={macd_signal:.4f}."
+        ),
         "alert_negative_news_title": "Repeated negative news for {symbol}",
         "alert_negative_news_explanation": (
             "{count} negative articles tagged to {symbol} were found in "
@@ -607,7 +649,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /remove_user <chat_id> — Zugriff entziehen\n\n"
             "Diagnose\n"
             "  /reload_config — config.json neu laden\n"
-            "  /debug_state — interne Laufzeitwerte"
+            "  /debug_state — interne Laufzeitwerte\n"
+            "  /ta <TICKER> — RSI, MACD, SMA, Bollinger-Snapshot"
         ),
         "menu_hint": (
             "Tippen Sie unten oder geben Sie einen Befehl ein.\n\n"
@@ -761,8 +804,40 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "dev_menu_diagnostics_usage": (
             "Diagnose-Befehle\n\n"
             "/reload_config — config.json neu laden\n"
-            "/debug_state — interne Laufzeitwerte"
+            "/debug_state — interne Laufzeitwerte\n"
+            "/ta <TICKER> — technische Analyse (RSI, MACD, SMA, Bollinger)"
         ),
+        "ta_title": "Technische Analyse",
+        "ta_last_close": "Letzter Schlusskurs",
+        "ta_fetching": "Lade 90-Tage-Kursverlauf…",
+        "ta_unavailable": (
+            "Technische Analyse für {symbol} nicht verfügbar. "
+            "Ticker prüfen oder später erneut versuchen."
+        ),
+        "ta_invalid_ticker": "Ungültiger Ticker {symbol}: {error}",
+        "ta_usage": (
+            "So verwenden Sie /ta\n\n"
+            "Syntax: /ta <TICKER>\n\n"
+            "Technische Momentaufnahme aus 90 Tagen Tagesdaten:\n"
+            "RSI(14), MACD, SMA20 vs SMA50, Bollinger-Bänder.\n\n"
+            "Beispiel: /ta AAPL"
+        ),
+        "ta_rsi_overbought": "überkauft",
+        "ta_rsi_oversold": "überverkauft",
+        "ta_rsi_neutral": "neutral",
+        "ta_macd_bullish_cross": "bullisches Crossover",
+        "ta_macd_bearish_cross": "bärisches Crossover",
+        "ta_macd_bullish": "bullisch (über Signallinie)",
+        "ta_macd_bearish": "bärisch (unter Signallinie)",
+        "ta_macd_neutral": "neutral",
+        "ta_sma_golden_cross": "Golden Cross",
+        "ta_sma_death_cross": "Death Cross",
+        "ta_sma_bullish": "bullisch (SMA20 über SMA50)",
+        "ta_sma_bearish": "bärisch (SMA20 unter SMA50)",
+        "ta_sma_neutral": "neutral",
+        "ta_bb_above_upper": "über oberem Band",
+        "ta_bb_below_lower": "unter unterem Band",
+        "ta_bb_inside": "innerhalb der Bänder",
         "remove_ticker_ok": "Entfernt: {message}",
         "remove_ticker_fail": "Ticker nicht entfernt: {message}",
         "remove_ticker_usage": (
@@ -1008,6 +1083,15 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "{symbol} ist seit dem letzten Marktabruf um {pct:.2f}% gestiegen "
             "und hat die Schwelle von {threshold:.1f}% überschritten."
         ),
+        "alert_rsi_title": "{symbol} RSI {signal} ({rsi:.1f})",
+        "alert_rsi_explanation": (
+            "{symbol} RSI(14) ist in {signal}-Territorium gekreuzt; aktueller RSI: {rsi:.2f}."
+        ),
+        "alert_macd_title": "{symbol} MACD {signal}",
+        "alert_macd_explanation": (
+            "{symbol} MACD-Linie kreuzte die Signallinie ({signal}); "
+            "MACD={macd:.4f}, Signal={macd_signal:.4f}."
+        ),
         "alert_negative_news_title": "Wiederholte negative Nachrichten zu {symbol}",
         "alert_negative_news_explanation": (
             "{count} negative Artikel zu {symbol} in den letzten {hours} Stunde(n) gefunden."
@@ -1120,7 +1204,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /remove_user <chat_id> — 撤销访问\n\n"
             "诊断\n"
             "  /reload_config — 重新加载 config.json\n"
-            "  /debug_state — 显示内部状态"
+            "  /debug_state — 显示内部状态\n"
+            "  /ta <代码> — RSI、MACD、SMA、布林带快照"
         ),
         "menu_hint": (
             "点击下方按钮或输入命令。\n\n"
@@ -1271,8 +1356,36 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "dev_menu_diagnostics_usage": (
             "诊断命令\n\n"
             "/reload_config — 重新加载 config.json\n"
-            "/debug_state — 显示内部状态"
+            "/debug_state — 显示内部状态\n"
+            "/ta <代码> — 技术分析快照（RSI、MACD、SMA、布林带）"
         ),
+        "ta_title": "技术分析",
+        "ta_last_close": "最新收盘价",
+        "ta_fetching": "正在获取 90 日行情…",
+        "ta_unavailable": "无法加载 {symbol} 的技术分析，请检查代码或稍后重试。",
+        "ta_invalid_ticker": "无效代码 {symbol}：{error}",
+        "ta_usage": (
+            "如何使用 /ta\n\n"
+            "语法：/ta <代码>\n\n"
+            "基于 90 日日线数据返回：RSI(14)、MACD、SMA20 vs SMA50、布林带。\n\n"
+            "示例：/ta AAPL"
+        ),
+        "ta_rsi_overbought": "超买",
+        "ta_rsi_oversold": "超卖",
+        "ta_rsi_neutral": "中性",
+        "ta_macd_bullish_cross": "金叉",
+        "ta_macd_bearish_cross": "死叉",
+        "ta_macd_bullish": "看涨（高于信号线）",
+        "ta_macd_bearish": "看跌（低于信号线）",
+        "ta_macd_neutral": "中性",
+        "ta_sma_golden_cross": "金叉",
+        "ta_sma_death_cross": "死叉",
+        "ta_sma_bullish": "看涨（SMA20 高于 SMA50）",
+        "ta_sma_bearish": "看跌（SMA20 低于 SMA50）",
+        "ta_sma_neutral": "中性",
+        "ta_bb_above_upper": "高于上轨",
+        "ta_bb_below_lower": "低于下轨",
+        "ta_bb_inside": "轨道内",
         "remove_ticker_ok": "已移除：{message}",
         "remove_ticker_fail": "无法移除：{message}",
         "remove_ticker_usage": (
@@ -1513,6 +1626,14 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "自上次行情更新以来，{symbol} 上涨 {pct:.2f}%，"
             "超过 {threshold:.1f}% 的上涨阈值。"
         ),
+        "alert_rsi_title": "{symbol} RSI {signal}（{rsi:.1f}）",
+        "alert_rsi_explanation": (
+            "{symbol} RSI(14) 进入 {signal} 区域；当前 RSI 为 {rsi:.2f}。"
+        ),
+        "alert_macd_title": "{symbol} MACD {signal}",
+        "alert_macd_explanation": (
+            "{symbol} MACD 线与信号线交叉（{signal}）；MACD={macd:.4f}，信号={macd_signal:.4f}。"
+        ),
         "alert_negative_news_title": "{symbol} 重复负面新闻",
         "alert_negative_news_explanation": (
             "过去 {hours} 小时内发现 {count} 条与 {symbol} 相关的负面新闻。"
@@ -1625,7 +1746,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /remove_user <chat_id> — удалить доступ\n\n"
             "Диагностика\n"
             "  /reload_config — перезагрузить config.json\n"
-            "  /debug_state — внутреннее состояние"
+            "  /debug_state — внутреннее состояние\n"
+            "  /ta <ТИКЕР> — снимок RSI, MACD, SMA, Bollinger"
         ),
         "menu_hint": (
             "Нажмите кнопку ниже или введите команду.\n\n"
@@ -1780,8 +1902,39 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "dev_menu_diagnostics_usage": (
             "Диагностика\n\n"
             "/reload_config — перезагрузить config.json\n"
-            "/debug_state — внутреннее состояние"
+            "/debug_state — внутреннее состояние\n"
+            "/ta <ТИКЕР> — тех. анализ (RSI, MACD, SMA, Bollinger)"
         ),
+        "ta_title": "Технический анализ",
+        "ta_last_close": "Последняя цена закрытия",
+        "ta_fetching": "Загрузка 90-дневной истории…",
+        "ta_unavailable": (
+            "Не удалось загрузить тех. анализ для {symbol}. "
+            "Проверьте тикер или повторите позже."
+        ),
+        "ta_invalid_ticker": "Неверный тикер {symbol}: {error}",
+        "ta_usage": (
+            "Как использовать /ta\n\n"
+            "Синтаксис: /ta <ТИКЕР>\n\n"
+            "Снимок по 90 дням: RSI(14), MACD, SMA20 vs SMA50, полосы Боллинджера.\n\n"
+            "Пример: /ta AAPL"
+        ),
+        "ta_rsi_overbought": "перекупленность",
+        "ta_rsi_oversold": "перепроданность",
+        "ta_rsi_neutral": "нейтрально",
+        "ta_macd_bullish_cross": "бычье пересечение",
+        "ta_macd_bearish_cross": "медвежье пересечение",
+        "ta_macd_bullish": "бычий (выше сигнала)",
+        "ta_macd_bearish": "медвежий (ниже сигнала)",
+        "ta_macd_neutral": "нейтрально",
+        "ta_sma_golden_cross": "золотой крест",
+        "ta_sma_death_cross": "крест смерти",
+        "ta_sma_bullish": "бычий (SMA20 выше SMA50)",
+        "ta_sma_bearish": "медвежий (SMA20 ниже SMA50)",
+        "ta_sma_neutral": "нейтрально",
+        "ta_bb_above_upper": "выше верхней полосы",
+        "ta_bb_below_lower": "ниже нижней полосы",
+        "ta_bb_inside": "внутри полос",
         "remove_ticker_ok": "Удалено: {message}",
         "remove_ticker_fail": "Не удалось удалить: {message}",
         "remove_ticker_usage": (
@@ -2026,6 +2179,15 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "alert_price_rise_explanation": (
             "С момента последнего обновления рынка {symbol} вырос на {pct:.2f}% "
             "и превысил порог роста {threshold:.1f}%."
+        ),
+        "alert_rsi_title": "{symbol} RSI {signal} ({rsi:.1f})",
+        "alert_rsi_explanation": (
+            "{symbol} RSI(14) вошёл в зону {signal}; текущий RSI: {rsi:.2f}."
+        ),
+        "alert_macd_title": "{symbol} MACD {signal}",
+        "alert_macd_explanation": (
+            "{symbol} линия MACD пересекла сигнальную ({signal}); "
+            "MACD={macd:.4f}, сигнал={macd_signal:.4f}."
         ),
         "alert_negative_news_title": "Повторяющиеся негативные новости по {symbol}",
         "alert_negative_news_explanation": (
