@@ -25,9 +25,11 @@ from storage.models import (
 )
 from storage.paths import DataPaths
 from storage.portfolio_ops import (
+    CashDepositResult,
     PortfolioTickerResult,
     SellTickerResult,
     add_ticker_to_portfolio,
+    deposit_cash_to_portfolio,
     normalize_ticker,
     portfolio_has_ticker,
     remove_ticker_from_portfolio,
@@ -113,6 +115,18 @@ class DataRepository:
 
         def _mutate(portfolio: Portfolio) -> Portfolio:
             updated, result = remove_ticker_from_portfolio(portfolio, normalized)
+            result_holder.append(result)
+            return updated
+
+        self._store.mutate_model(self._paths.portfolio, Portfolio, _mutate)
+        return result_holder[0]
+
+    def deposit_cash_to_portfolio(self, amount: float) -> CashDepositResult:
+        """Credit cash to portfolio.json under a single file lock."""
+        result_holder: list[CashDepositResult] = []
+
+        def _mutate(portfolio: Portfolio) -> Portfolio:
+            updated, result = deposit_cash_to_portfolio(portfolio, amount)
             result_holder.append(result)
             return updated
 

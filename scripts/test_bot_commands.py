@@ -173,16 +173,30 @@ def run_test() -> None:
             for button in row
         }
         for cmd in (
-            "/list_users",
-            "/add_user",
-            "/remove_user",
-            "/add_ticker",
-            "/add_ticker_strategy",
-            "/edit_strategy",
-            "/remove_ticker",
+            "/deposit_cash",
+            "/dev_menu",
         ):
             if cmd not in dev_labels:
                 raise AssertionError(f"developer keyboard missing {cmd}")
+
+        for cmd in (
+            "/add_ticker",
+            "/add_ticker_strategy",
+            "/sell_ticker",
+        ):
+            if cmd in dev_labels:
+                raise AssertionError(f"developer keyboard should not expose {cmd} (use /dev_menu)")
+
+        for cmd in (
+            "/list_users",
+            "/add_user",
+            "/remove_user",
+            "/edit_strategy",
+            "/remove_ticker",
+            "/add_ticker",
+        ):
+            if cmd in dev_labels:
+                raise AssertionError(f"developer keyboard should not expose {cmd} (use /dev_menu)")
 
         ordinary_kb = main_menu_keyboard(is_developer=False)
         ordinary_labels = {

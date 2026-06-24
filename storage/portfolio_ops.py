@@ -221,6 +221,39 @@ def remove_ticker_from_portfolio(
     )
 
 
+@dataclass(frozen=True)
+class CashDepositResult:
+    """Result of crediting cash to the portfolio."""
+
+    success: bool
+    message: str
+    amount: float = 0.0
+    cash_balance: float = 0.0
+
+
+def deposit_cash_to_portfolio(
+    portfolio: Portfolio,
+    amount: float,
+) -> tuple[Portfolio, CashDepositResult]:
+    """Credit cash to the portfolio balance."""
+    if amount <= 0:
+        return portfolio, CashDepositResult(
+            False,
+            "Deposit amount must be greater than zero.",
+            amount,
+            portfolio.cash,
+        )
+
+    new_cash = portfolio.cash + amount
+    updated = portfolio.model_copy(update={"cash": new_cash})
+    return updated, CashDepositResult(
+        True,
+        f"Deposited {amount:g}; cash balance {new_cash:,.2f}.",
+        amount,
+        new_cash,
+    )
+
+
 def sell_ticker_from_portfolio(
     portfolio: Portfolio,
     symbol: str,

@@ -458,6 +458,46 @@ class BotCommands:
             )
         return DeveloperActionReply(t("add_ticker_fail", lang, message=result.message))
 
+    def deposit_cash_message(self, chat_id: int, amount: float, note: str | None = None) -> DeveloperActionReply:
+        """Credit cash to portfolio.json (developer bookkeeping; not shown to ordinary users)."""
+        lang = self._lang(chat_id)
+        portfolio_before = self.repository.load_portfolio()
+        result = self.repository.deposit_cash_to_portfolio(amount)
+        if not result.success:
+            return DeveloperActionReply(t("deposit_cash_fail", lang, message=result.message))
+
+        message = t(
+            "deposit_cash_ok",
+            lang,
+            message=result.message,
+            cash=result.cash_balance,
+        )
+        if note:
+            message = f"{message}\n{t('deposit_cash_note', lang, note=note)}"
+
+        undo = self._record_completed_portfolio_action(
+            chat_id=chat_id,
+            action_type="deposit_cash",
+            portfolio_before=portfolio_before,
+            strategy_snapshots={},
+            payload={"amount": amount, "note": note},
+            users_notified=0,
+        )
+        return DeveloperActionReply(
+            text=f"{message}\n\n{undo.text}",
+            reply_markup=undo.reply_markup,
+        )
+
+    def dev_menu_message(self, chat_id: int) -> DeveloperActionReply:
+        """Show the inline developer command hub."""
+        lang = self._lang(chat_id)
+        from bot.dev_menu import dev_menu_inline_keyboard
+
+        return DeveloperActionReply(
+            text=t("dev_menu_intro", lang),
+            reply_markup=dev_menu_inline_keyboard(lang=lang),
+        )
+
     def remove_ticker_message(self, chat_id: int, ticker: str) -> DeveloperActionReply:
         """Remove a ticker from portfolio.json."""
         lang = self._lang(chat_id)

@@ -17,6 +17,7 @@ from storage.models import Portfolio, Position
 from storage.paths import resolve_data_paths
 from storage.portfolio_ops import (
     add_ticker_to_portfolio,
+    deposit_cash_to_portfolio,
     normalize_ticker,
     remove_ticker_from_portfolio,
     sell_ticker_from_portfolio,
@@ -100,6 +101,14 @@ def run_test() -> None:
         raise AssertionError("position should be removed after full sell")
     if updated.cash != 5230.0:
         raise AssertionError(f"unexpected cash after full sell: {updated.cash}")
+
+    portfolio = Portfolio(positions=[], cash=100.0)
+    updated, deposited = deposit_cash_to_portfolio(portfolio, 500.0)
+    if not deposited.success or updated.cash != 600.0:
+        raise AssertionError(f"deposit failed: {deposited}")
+    _, bad_deposit = deposit_cash_to_portfolio(updated, 0)
+    if bad_deposit.success:
+        raise AssertionError("zero deposit should fail")
 
     temp_dir = Path(tempfile.mkdtemp(prefix="portfolio-edit-test-"))
     try:

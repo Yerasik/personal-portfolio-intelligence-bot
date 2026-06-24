@@ -195,7 +195,7 @@ class EvaluatedAlertRecord(BaseModel):
     evaluated_at: datetime
 
 
-DeveloperPortfolioActionType = Literal["sell", "add_ticker", "remove_ticker"]
+DeveloperPortfolioActionType = Literal["sell", "add_ticker", "remove_ticker", "deposit_cash"]
 DeveloperPortfolioActionStatus = Literal["pending_confirm", "completed"]
 
 

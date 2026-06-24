@@ -15,6 +15,8 @@ from telegram.ext import Application, CallbackQueryHandler, CommandHandler, Cont
 
 from bot.add_ticker_args import parse_add_ticker_args
 from bot.commands import BotCommands
+from bot.deposit_cash_args import parse_deposit_cash_args
+from bot.dev_menu import DEV_MENU_CALLBACK_PREFIX, dev_menu_usage_key
 from bot.developer_portfolio import CALLBACK_PREFIX, DeveloperActionReply
 from bot.formatter import truncate_message
 from bot.i18n import normalize_language, t
@@ -439,6 +441,95 @@ async def add_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     await _reply_developer_action(update, message, user=user)
 
 
+async def deposit_cash_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /deposit_cash — credit cash to the portfolio (developer only)."""
+    user = await _guard_developer(update, context)
+    if user is None:
+        return
+
+    args = context.args or []
+    if not args or (len(args) == 1 and args[0].lower() in {"help", "?", "usage"}):
+        await _reply_command_usage(update, user, "deposit_cash_usage")
+        return
+
+    parsed, error_key = parse_deposit_cash_args(args)
+    if error_key is not None:
+        await _reply_command_usage(
+            update,
+            user,
+            "deposit_cash_usage",
+            error_key=error_key,
+        )
+        return
+    if parsed is None:
+        await _reply_command_usage(update, user, "deposit_cash_usage")
+        return
+
+    reply = _commands(context).deposit_cash_message(
+        user.chat_id,
+        parsed.amount,
+        note=parsed.note,
+    )
+    await _reply_developer_action(update, reply, user=user)
+
+
+async def dev_menu_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /dev_menu — inline hub for developer portfolio edits."""
+    user = await _guard_developer(update, context)
+    if user is None:
+        return
+
+    reply = _commands(context).dev_menu_message(user.chat_id)
+    await _reply_developer_action(update, reply, user=user)
+
+
+async def dev_menu_callback(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> None:
+    """Handle inline buttons from /dev_menu."""
+    query = update.callback_query
+    if query is None or query.data is None:
+        return
+
+    user = await _guard_developer_callback(update, context)
+    if user is None:
+        await query.answer()
+        return
+
+    parts = query.data.split(":", 2)
+    if len(parts) != 3 or parts[0] != DEV_MENU_CALLBACK_PREFIX:
+        await query.answer()
+        return
+
+    _, action_kind, action_name = parts
+    await query.answer()
+
+    if action_kind == "run" and action_name == "undo":
+        reply = _commands(context).undo_last_portfolio_action_message(user.chat_id)
+        if reply.text == t("portfolio_action_nothing_to_undo", user.language):
+            text = (
+                f"{t('portfolio_action_nothing_to_undo', user.language)}\n\n"
+                f"{t('undo_usage', user.language)}"
+            )
+        else:
+            text = reply.text
+        if query.message is not None:
+            await query.message.reply_text(
+                text,
+                reply_markup=reply.reply_markup,
+            )
+        return
+
+    if action_kind == "usage":
+        usage_key = dev_menu_usage_key(action_name)
+        if usage_key is None:
+            return
+        if query.message is not None:
+            await query.message.reply_text(t(usage_key, user.language))
+        return
+
+
 async def remove_ticker_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /remove_ticker — remove a holding (developer only)."""
     user = await _guard_developer(update, context)
@@ -683,6 +774,8 @@ def register_handlers(
         ("add_ticker_strategy", add_ticker_strategy_command),
         ("edit_strategy", edit_strategy_command),
         ("remove_ticker", remove_ticker_command),
+        ("deposit_cash", deposit_cash_command),
+        ("dev_menu", dev_menu_command),
         ("sell_ticker", sell_ticker_command),
         ("undo", undo_command),
         ("analyze", analyze_command),
@@ -698,6 +791,9 @@ def register_handlers(
 
     application.add_handler(
         CallbackQueryHandler(portfolio_action_callback, pattern=rf"^{CALLBACK_PREFIX}:")
+    )
+    application.add_handler(
+        CallbackQueryHandler(dev_menu_callback, pattern=rf"^{DEV_MENU_CALLBACK_PREFIX}:")
     )
 
     logger.info(

@@ -22,6 +22,8 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
 )
 
 DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = ORDINARY_BOT_COMMANDS + (
+    BotCommand("dev_menu", "Portfolio edits and admin (inline menu)"),
+    BotCommand("deposit_cash", "Credit cash to the portfolio balance"),
     BotCommand("add_ticker", "Add shares with optional per-share cost basis"),
     BotCommand(
         "add_ticker_strategy",
@@ -43,7 +45,7 @@ TELEGRAM_BOT_COMMANDS = ORDINARY_BOT_COMMANDS
 
 
 def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
-    """Persistent reply keyboard; developers get portfolio-edit and user-management buttons."""
+    """Persistent reply keyboard; developers get a compact row for cash + dev hub."""
     rows = [
         [KeyboardButton("/portfolio"), KeyboardButton("/strategy")],
         [KeyboardButton("/industries"), KeyboardButton("/news_summary")],
@@ -52,26 +54,8 @@ def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
     ]
     if is_developer:
         rows.insert(
-            2,
-            [
-                KeyboardButton("/add_ticker_strategy"),
-                KeyboardButton("/edit_strategy"),
-            ],
-        )
-        rows.insert(
             3,
-            [
-                KeyboardButton("/add_ticker"),
-                KeyboardButton("/remove_ticker"),
-                KeyboardButton("/sell_ticker"),
-            ],
-        )
-        rows.insert(4, [KeyboardButton("/undo")])
-        rows.extend(
-            [
-                [KeyboardButton("/list_users")],
-                [KeyboardButton("/add_user"), KeyboardButton("/remove_user")],
-            ]
+            [KeyboardButton("/deposit_cash"), KeyboardButton("/dev_menu")],
         )
     return ReplyKeyboardMarkup(
         rows,

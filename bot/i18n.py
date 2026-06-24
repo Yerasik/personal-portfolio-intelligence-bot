@@ -37,8 +37,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Developer tools\n"
-            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — edit holdings\n"
-            "  /edit_strategy — rewrite a stored investment idea\n"
+            "  /dev_menu — portfolio edits (add, sell, strategy, users)\n"
+            "  /deposit_cash — credit cash balance\n"
             "  /undo — reverse the last portfolio notification\n"
             "  /list_users · /add_user · /remove_user — manage access\n"
             "  /reload_config · /debug_state — diagnostics"
@@ -62,6 +62,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "Portfolio edits\n"
+            "  /dev_menu — tap-to-open menu for all edit commands + how-to guides\n"
+            "  /deposit_cash <amount> [note] — credit cash (developer bookkeeping)\n"
             "  /add_ticker <TICKER> [qty [cost_basis]] — add or increase a position\n"
             "  /add_ticker_strategy <TICKER> <long|short> [qty [cost_basis]] <reasoning> — add with investment idea\n"
             "  /edit_strategy <TICKER> <text> — rewrite the stored idea\n"
@@ -85,17 +87,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint_dev": (
             "Developer menu is active.\n\n"
-            "User management:\n"
-            "/list_users — show authorized users\n"
-            "/add_user <chat_id> [role] [lang] — authorize a user\n"
-            "/remove_user <chat_id> — revoke access\n\n"
-            "Portfolio edits, e.g.:\n"
-            "/add_ticker AAPL 5 150.25\n"
+            "Tap /dev_menu for portfolio edits (add, sell, strategy, users) with how-to guides.\n"
+            "Tap /deposit_cash to credit cash, e.g. /deposit_cash 1000 Broker transfer\n\n"
+            "Quick examples:\n"
             "/add_ticker_strategy NVDA long 5 150.25 AI infrastructure thesis\n"
-            "/edit_strategy NVDA updated thesis text\n"
-            "/sell_ticker NVDA 150.25 Taking profits after earnings run-up\n"
-            "/remove_ticker MSFT\n"
-            "/undo — reverse the last portfolio notification"
+            "/sell_ticker NVDA 150.25 Taking profits after earnings run-up"
         ),
         "add_user_usage": (
             "How to use /add_user\n\n"
@@ -202,6 +198,46 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "Share count must be a positive number.",
         "add_ticker_cost_invalid": "Cost basis must be a positive number.",
+        "deposit_cash_ok": "Deposited: {message}\nCash balance: {cash:,.2f}",
+        "deposit_cash_fail": "Could not deposit cash: {message}",
+        "deposit_cash_note": "Note: {note}",
+        "deposit_cash_usage": (
+            "How to use /deposit_cash\n\n"
+            "Syntax: /deposit_cash <amount> [note]\n\n"
+            "Credits cash to the portfolio (shown to developers in /portfolio only; "
+            "ordinary users are not notified).\n"
+            "You can undo with /undo or the Undo button.\n\n"
+            "Examples:\n"
+            "/deposit_cash 1000\n"
+            "/deposit_cash 2500 Broker transfer from HSBC"
+        ),
+        "deposit_cash_amount_invalid": "Deposit amount must be a positive number.",
+        "dev_menu_intro": (
+            "Developer portfolio menu\n\n"
+            "Tap a button below for the full how-to guide for that command."
+        ),
+        "dev_menu_btn_add": "Add shares",
+        "dev_menu_btn_strategy": "Add w/ strategy",
+        "dev_menu_btn_sell": "Sell",
+        "dev_menu_btn_remove": "Remove",
+        "dev_menu_btn_deposit": "Deposit cash",
+        "dev_menu_btn_undo": "Undo",
+        "dev_menu_btn_edit_strategy": "Edit strategy",
+        "dev_menu_btn_users": "Users",
+        "dev_menu_btn_diagnostics": "Diagnostics",
+        "dev_menu_users_usage": (
+            "User management commands\n\n"
+            "/list_users — show authorized users\n"
+            "/add_user <chat_id> [role] [lang] — authorize a user\n"
+            "/remove_user <chat_id> — revoke access\n\n"
+            "Roles: developer | ordinary\n"
+            "Languages: en | de | zh | ru"
+        ),
+        "dev_menu_diagnostics_usage": (
+            "Diagnostics commands\n\n"
+            "/reload_config — reload config.json from disk\n"
+            "/debug_state — internal runtime counters"
+        ),
         "remove_ticker_ok": "Removed: {message}",
         "remove_ticker_fail": "Could not remove ticker: {message}",
         "remove_ticker_usage": (
@@ -492,8 +528,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Entwickler-Tools\n"
-            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — Bestände bearbeiten\n"
-            "  /edit_strategy — gespeicherte Anlageidee überschreiben\n"
+            "  /dev_menu — Portfolio-Bearbeitung (hinzufügen, verkaufen, Strategie, Benutzer)\n"
+            "  /deposit_cash — Cash gutschreiben\n"
             "  /undo — letzte Portfolio-Benachrichtigung rückgängig machen\n"
             "  /list_users · /add_user · /remove_user — Zugriff verwalten\n"
             "  /reload_config · /debug_state — Diagnose"
@@ -517,6 +553,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "Bestandsänderungen\n"
+            "  /dev_menu — Menü mit allen Bearbeitungsbefehlen und Anleitungen\n"
+            "  /deposit_cash <Betrag> [Notiz] — Cash gutschreiben\n"
             "  /add_ticker <TICKER> [Anzahl [Kostenbasis]] — Position hinzufügen/erhöhen\n"
             "  /add_ticker_strategy <TICKER> <long|short> [Anzahl [Kostenbasis]] <Begründung> — mit Anlageidee\n"
             "  /edit_strategy <TICKER> <Text> — gespeicherte Idee überschreiben\n"
@@ -540,17 +578,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint_dev": (
             "Entwickler-Menü aktiv.\n\n"
-            "Benutzerverwaltung:\n"
-            "/list_users — autorisierte Benutzer\n"
-            "/add_user <chat_id> [role] [lang] — Benutzer hinzufügen\n"
-            "/remove_user <chat_id> — Zugriff entziehen\n\n"
-            "Bestandsänderungen, z. B.:\n"
-            "/add_ticker AAPL 5 150.25\n"
-            "/add_ticker_strategy NVDA long 5 150.25 KI-Infrastruktur-These\n"
-            "/edit_strategy NVDA aktualisierter Strategietext\n"
-            "/sell_ticker NVDA 150.25 Gewinnmitnahme nach Earnings-Rally\n"
-            "/remove_ticker MSFT\n"
-            "/undo — letzte Portfolio-Benachrichtigung rückgängig machen"
+            "Tippen Sie /dev_menu für Portfolio-Bearbeitung mit Anleitungen.\n"
+            "Tippen Sie /deposit_cash, z. B. /deposit_cash 1000 Broker-Überweisung"
         ),
         "add_user_usage": (
             "So verwenden Sie /add_user\n\n"
@@ -656,6 +685,43 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "Die Anzahl muss eine positive Zahl sein.",
         "add_ticker_cost_invalid": "Die Kostenbasis muss eine positive Zahl sein.",
+        "deposit_cash_ok": "Eingezahlt: {message}\nCash-Bestand: {cash:,.2f}",
+        "deposit_cash_fail": "Einzahlung fehlgeschlagen: {message}",
+        "deposit_cash_note": "Notiz: {note}",
+        "deposit_cash_usage": (
+            "So verwenden Sie /deposit_cash\n\n"
+            "Syntax: /deposit_cash <Betrag> [Notiz]\n\n"
+            "Gutschreibt Cash (nur für Entwickler in /portfolio sichtbar; Benutzer werden nicht benachrichtigt).\n"
+            "Rückgängig mit /undo oder der Undo-Schaltfläche.\n\n"
+            "Beispiele:\n"
+            "/deposit_cash 1000\n"
+            "/deposit_cash 2500 Broker-Überweisung"
+        ),
+        "deposit_cash_amount_invalid": "Der Betrag muss eine positive Zahl sein.",
+        "dev_menu_intro": (
+            "Entwickler-Portfolio-Menü\n\n"
+            "Tippen Sie unten für die vollständige Anleitung zu einem Befehl."
+        ),
+        "dev_menu_btn_add": "Anteile hinzufügen",
+        "dev_menu_btn_strategy": "Mit Strategie",
+        "dev_menu_btn_sell": "Verkaufen",
+        "dev_menu_btn_remove": "Entfernen",
+        "dev_menu_btn_deposit": "Cash einzahlen",
+        "dev_menu_btn_undo": "Rückgängig",
+        "dev_menu_btn_edit_strategy": "Strategie bearbeiten",
+        "dev_menu_btn_users": "Benutzer",
+        "dev_menu_btn_diagnostics": "Diagnose",
+        "dev_menu_users_usage": (
+            "Benutzerverwaltung\n\n"
+            "/list_users — autorisierte Benutzer\n"
+            "/add_user <chat_id> [role] [lang] — Benutzer hinzufügen\n"
+            "/remove_user <chat_id> — Zugriff entziehen"
+        ),
+        "dev_menu_diagnostics_usage": (
+            "Diagnose-Befehle\n\n"
+            "/reload_config — config.json neu laden\n"
+            "/debug_state — interne Laufzeitwerte"
+        ),
         "remove_ticker_ok": "Entfernt: {message}",
         "remove_ticker_fail": "Ticker nicht entfernt: {message}",
         "remove_ticker_usage": (
@@ -938,8 +1004,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "开发者工具\n"
-            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — 编辑持仓\n"
-            "  /edit_strategy — 直接改写已保存的投资逻辑\n"
+            "  /dev_menu — 投资组合编辑（添加、卖出、策略、用户）\n"
+            "  /deposit_cash — 存入现金\n"
             "  /undo — 撤销上一条投资组合通知\n"
             "  /list_users · /add_user · /remove_user — 管理访问权限\n"
             "  /reload_config · /debug_state — 诊断"
@@ -963,6 +1029,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "编辑持仓\n"
+            "  /dev_menu — 所有编辑命令与用法说明的菜单\n"
+            "  /deposit_cash <金额> [备注] — 存入现金\n"
             "  /add_ticker <代码> [数量 [成本价]] — 添加或增加持仓\n"
             "  /add_ticker_strategy <代码> <long|short> [数量 [成本价]] <理由> — 添加并记录投资逻辑\n"
             "  /edit_strategy <代码> <文本> — 直接改写已保存的逻辑\n"
@@ -986,17 +1054,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint_dev": (
             "开发者菜单已启用。\n\n"
-            "用户管理：\n"
-            "/list_users — 查看授权用户\n"
-            "/add_user <chat_id> [role] [lang] — 添加用户\n"
-            "/remove_user <chat_id> — 移除访问\n\n"
-            "编辑持仓示例：\n"
-            "/add_ticker AAPL 5 150.25\n"
-            "/add_ticker_strategy NVDA long 5 150.25 AI基础设施投资逻辑\n"
-            "/edit_strategy NVDA 更新后的策略说明\n"
-            "/sell_ticker NVDA 150.25 财报上涨后获利了结\n"
-            "/remove_ticker MSFT\n"
-            "/undo — 撤销上一条投资组合通知"
+            "点击 /dev_menu 打开投资组合编辑菜单（含用法说明）。\n"
+            "点击 /deposit_cash 存入现金，例如 /deposit_cash 1000 券商转入"
         ),
         "add_user_usage": (
             "如何使用 /add_user\n\n"
@@ -1099,6 +1158,43 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "数量必须是正数。",
         "add_ticker_cost_invalid": "成本价必须是正数。",
+        "deposit_cash_ok": "已存入：{message}\n现金余额：{cash:,.2f}",
+        "deposit_cash_fail": "无法存入现金：{message}",
+        "deposit_cash_note": "备注：{note}",
+        "deposit_cash_usage": (
+            "如何使用 /deposit_cash\n\n"
+            "语法：/deposit_cash <金额> [备注]\n\n"
+            "增加投资组合现金（仅开发者在 /portfolio 中可见；不通知普通用户）。\n"
+            "可用 /undo 或撤销按钮回退。\n\n"
+            "示例：\n"
+            "/deposit_cash 1000\n"
+            "/deposit_cash 2500 券商转入"
+        ),
+        "deposit_cash_amount_invalid": "金额必须是正数。",
+        "dev_menu_intro": (
+            "开发者投资组合菜单\n\n"
+            "点击下方按钮查看该命令的完整用法说明。"
+        ),
+        "dev_menu_btn_add": "添加持仓",
+        "dev_menu_btn_strategy": "带策略添加",
+        "dev_menu_btn_sell": "卖出",
+        "dev_menu_btn_remove": "移除",
+        "dev_menu_btn_deposit": "存入现金",
+        "dev_menu_btn_undo": "撤销",
+        "dev_menu_btn_edit_strategy": "编辑策略",
+        "dev_menu_btn_users": "用户",
+        "dev_menu_btn_diagnostics": "诊断",
+        "dev_menu_users_usage": (
+            "用户管理命令\n\n"
+            "/list_users — 查看授权用户\n"
+            "/add_user <chat_id> [role] [lang] — 授权用户\n"
+            "/remove_user <chat_id> — 撤销访问"
+        ),
+        "dev_menu_diagnostics_usage": (
+            "诊断命令\n\n"
+            "/reload_config — 重新加载 config.json\n"
+            "/debug_state — 显示内部状态"
+        ),
         "remove_ticker_ok": "已移除：{message}",
         "remove_ticker_fail": "无法移除：{message}",
         "remove_ticker_usage": (
@@ -1380,8 +1476,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "welcome_dev_extra": (
             "Инструменты разработчика\n"
-            "  /add_ticker · /add_ticker_strategy · /sell_ticker · /remove_ticker — изменение портфеля\n"
-            "  /edit_strategy — перезаписать сохранённую инвестиционную идею\n"
+            "  /dev_menu — изменение портфеля (добавить, продать, стратегия, пользователи)\n"
+            "  /deposit_cash — внести cash\n"
             "  /undo — отменить последнее уведомление о портфеле\n"
             "  /list_users · /add_user · /remove_user — управление доступом\n"
             "  /reload_config · /debug_state — диагностика"
@@ -1405,6 +1501,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "help_dev_commands": (
             "Изменение портфеля\n"
+            "  /dev_menu — меню всех команд редактирования с инструкциями\n"
+            "  /deposit_cash <сумма> [примечание] — внести cash\n"
             "  /add_ticker <ТИКЕР> [кол-во [себестоимость]] — добавить или увеличить позицию\n"
             "  /add_ticker_strategy <ТИКЕР> <long|short> [кол-во [себестоимость]] <обоснование> — добавить с идеей\n"
             "  /edit_strategy <ТИКЕР> <текст> — перезаписать сохранённую идею\n"
@@ -1428,17 +1526,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "menu_hint_dev": (
             "Меню разработчика активно.\n\n"
-            "Управление пользователями:\n"
-            "/list_users — список пользователей\n"
-            "/add_user <chat_id> [role] [lang] — добавить пользователя\n"
-            "/remove_user <chat_id> — удалить доступ\n\n"
-            "Примеры изменения портфеля:\n"
-            "/add_ticker AAPL 5 150.25\n"
-            "/add_ticker_strategy NVDA long 5 150.25 тезис по AI-инфраструктуре\n"
-            "/edit_strategy NVDA обновлённый текст стратегии\n"
-            "/sell_ticker NVDA 150.25 фиксация прибыли после отчёта\n"
-            "/remove_ticker MSFT\n"
-            "/undo — отменить последнее уведомление о портфеле"
+            "Нажмите /dev_menu — редактирование портфеля с инструкциями.\n"
+            "Нажмите /deposit_cash, напр. /deposit_cash 1000 Перевод от брокера"
         ),
         "add_user_usage": (
             "Как использовать /add_user\n\n"
@@ -1545,6 +1634,43 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "Количество должно быть положительным числом.",
         "add_ticker_cost_invalid": "Себестоимость должна быть положительным числом.",
+        "deposit_cash_ok": "Внесено: {message}\nОстаток cash: {cash:,.2f}",
+        "deposit_cash_fail": "Не удалось внести cash: {message}",
+        "deposit_cash_note": "Примечание: {note}",
+        "deposit_cash_usage": (
+            "Как использовать /deposit_cash\n\n"
+            "Синтаксис: /deposit_cash <сумма> [примечание]\n\n"
+            "Увеличивает cash в портфеле (видно разработчику в /portfolio; пользователи не уведомляются).\n"
+            "Отмена: /undo или кнопка Undo.\n\n"
+            "Примеры:\n"
+            "/deposit_cash 1000\n"
+            "/deposit_cash 2500 Перевод от брокера"
+        ),
+        "deposit_cash_amount_invalid": "Сумма должна быть положительным числом.",
+        "dev_menu_intro": (
+            "Меню разработчика\n\n"
+            "Нажмите кнопку ниже для полной инструкции по команде."
+        ),
+        "dev_menu_btn_add": "Добавить акции",
+        "dev_menu_btn_strategy": "Со стратегией",
+        "dev_menu_btn_sell": "Продать",
+        "dev_menu_btn_remove": "Удалить",
+        "dev_menu_btn_deposit": "Внести cash",
+        "dev_menu_btn_undo": "Отменить",
+        "dev_menu_btn_edit_strategy": "Править стратегию",
+        "dev_menu_btn_users": "Пользователи",
+        "dev_menu_btn_diagnostics": "Диагностика",
+        "dev_menu_users_usage": (
+            "Управление пользователями\n\n"
+            "/list_users — список пользователей\n"
+            "/add_user <chat_id> [role] [lang] — добавить\n"
+            "/remove_user <chat_id> — удалить доступ"
+        ),
+        "dev_menu_diagnostics_usage": (
+            "Диагностика\n\n"
+            "/reload_config — перезагрузить config.json\n"
+            "/debug_state — внутреннее состояние"
+        ),
         "remove_ticker_ok": "Удалено: {message}",
         "remove_ticker_fail": "Не удалось удалить: {message}",
         "remove_ticker_usage": (

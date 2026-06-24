@@ -196,6 +196,8 @@ Message your bot in Telegram (from a chat id listed in `data/users.json`):
 
 **Developers only** (portfolio edits notify ordinary users; sells require confirmation)
 
+- `/dev_menu` — inline menu for all portfolio edits; each button shows the full how-to guide
+- `/deposit_cash <amount> [note]` — credit cash balance (developer-only in `/portfolio`; undo supported)
 - `/add_ticker <SYMBOL> [shares [cost_basis]]` — add or increase a holding with optional per-share cost basis (blended when adding to an existing position)
 - `/add_ticker_strategy <SYMBOL> <long|short> [shares [cost_basis]] <reasoning>` — add a holding with investment idea; for one share with cost use `1 <cost> <reasoning>`
 - `/edit_strategy <SYMBOL> <text>` — hard-overwrite the stored strategy text
@@ -313,7 +315,9 @@ Also check:
 - Authorized users live in `data/users.json` with `chat_id`, `language` (`en`, `de`, `zh`, `ru`), and `role` (`developer` or `ordinary`)
 - On first run with an empty user list, the bot seeds one **developer** from `TELEGRAM_CHAT_ID`
 - All authorized users share the same portfolio; alerts and daily summaries fan out to every user in their language
-- Developer-only commands: `/add_ticker`, `/add_ticker_strategy`, `/edit_strategy`, `/sell_ticker`, `/undo`, `/remove_ticker`, `/reload_config`, `/debug_state`, `/list_users`, `/add_user`, `/remove_user`
+The developer reply keyboard is intentionally compact: `/deposit_cash` and `/dev_menu` only. All other edit commands are reachable via `/dev_menu` inline buttons (which show usage guides) or by typing the slash command directly.
+
+- Developer-only commands: `/dev_menu`, `/deposit_cash`, `/add_ticker`, `/add_ticker_strategy`, `/edit_strategy`, `/sell_ticker`, `/undo`, `/remove_ticker`, `/reload_config`, `/debug_state`, `/list_users`, `/add_user`, `/remove_user`
 - Any authorized user: `/set_language <code>` to change reply language
 
 ### Ollama / LLM warnings but bot runs
