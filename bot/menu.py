@@ -25,7 +25,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
 
 DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = ORDINARY_BOT_COMMANDS + (
     BotCommand("dev_menu", "Portfolio edits and admin (inline menu)"),
-    BotCommand("deposit_cash", "Credit cash to the portfolio balance"),
+    BotCommand("deposit_cash", "Credit HKD, USD, or JPY cash"),
     BotCommand("add_ticker", "Add shares with optional per-share cost basis"),
     BotCommand(
         "add_ticker_strategy",

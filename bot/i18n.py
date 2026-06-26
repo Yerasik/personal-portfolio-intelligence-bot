@@ -65,7 +65,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Portfolio edits\n"
             "  /dev_menu — tap-to-open menu for all edit commands + how-to guides\n"
-            "  /deposit_cash <amount> [note] — credit cash (developer bookkeeping)\n"
+            "  /deposit_cash <amount> [HKD|USD|JPY] [note] — credit cash (developer bookkeeping)\n"
             "  /add_ticker <TICKER> [qty [cost_basis]] — add or increase a position\n"
             "  /add_ticker_strategy <TICKER> <long|short> [qty [cost_basis]] <reasoning> — add with investment idea\n"
             "  /edit_strategy <TICKER> <text> — rewrite the stored idea\n"
@@ -91,7 +91,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "menu_hint_dev": (
             "Developer menu is active.\n\n"
             "Tap /dev_menu for portfolio edits (add, sell, strategy, users) with how-to guides.\n"
-            "Tap /deposit_cash to credit cash, e.g. /deposit_cash 1000 Broker transfer\n\n"
+            "Tap /deposit_cash to credit cash (HKD default, or USD/JPY), e.g. /deposit_cash 50000 JPY\n\n"
             "Quick examples:\n"
             "/add_ticker_strategy NVDA long 5 150.25 AI infrastructure thesis\n"
             "/sell_ticker NVDA 150.25 Taking profits after earnings run-up"
@@ -640,7 +640,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Bestandsänderungen\n"
             "  /dev_menu — Menü mit allen Bearbeitungsbefehlen und Anleitungen\n"
-            "  /deposit_cash <Betrag> [Notiz] — Cash gutschreiben\n"
+            "  /deposit_cash <Betrag> [HKD|USD|JPY] [Notiz] — Cash gutschreiben\n"
             "  /add_ticker <TICKER> [Anzahl [Kostenbasis]] — Position hinzufügen/erhöhen\n"
             "  /add_ticker_strategy <TICKER> <long|short> [Anzahl [Kostenbasis]] <Begründung> — mit Anlageidee\n"
             "  /edit_strategy <TICKER> <Text> — gespeicherte Idee überschreiben\n"
@@ -666,7 +666,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "menu_hint_dev": (
             "Entwickler-Menü aktiv.\n\n"
             "Tippen Sie /dev_menu für Portfolio-Bearbeitung mit Anleitungen.\n"
-            "Tippen Sie /deposit_cash, z. B. /deposit_cash 1000 Broker-Überweisung"
+            "Tippen Sie /deposit_cash, z. B. /deposit_cash 50000 JPY oder /deposit_cash 500 USD"
         ),
         "add_user_usage": (
             "So verwenden Sie /add_user\n\n"
@@ -1199,7 +1199,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "编辑持仓\n"
             "  /dev_menu — 所有编辑命令与用法说明的菜单\n"
-            "  /deposit_cash <金额> [备注] — 存入现金\n"
+            "  /deposit_cash <金额> [HKD|USD|JPY] [备注] — 存入现金\n"
             "  /add_ticker <代码> [数量 [成本价]] — 添加或增加持仓\n"
             "  /add_ticker_strategy <代码> <long|short> [数量 [成本价]] <理由> — 添加并记录投资逻辑\n"
             "  /edit_strategy <代码> <文本> — 直接改写已保存的逻辑\n"
@@ -1225,7 +1225,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "menu_hint_dev": (
             "开发者菜单已启用。\n\n"
             "点击 /dev_menu 打开投资组合编辑菜单（含用法说明）。\n"
-            "点击 /deposit_cash 存入现金，例如 /deposit_cash 1000 券商转入"
+            "点击 /deposit_cash 存入现金（默认 HKD，也可 USD/JPY），例如 /deposit_cash 50000 JPY"
         ),
         "add_user_usage": (
             "如何使用 /add_user\n\n"
@@ -1745,7 +1745,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "help_dev_commands": (
             "Изменение портфеля\n"
             "  /dev_menu — меню всех команд редактирования с инструкциями\n"
-            "  /deposit_cash <сумма> [примечание] — внести cash\n"
+            "  /deposit_cash <сумма> [HKD|USD|JPY] [примечание] — внести cash\n"
             "  /add_ticker <ТИКЕР> [кол-во [себестоимость]] — добавить или увеличить позицию\n"
             "  /add_ticker_strategy <ТИКЕР> <long|short> [кол-во [себестоимость]] <обоснование> — добавить с идеей\n"
             "  /edit_strategy <ТИКЕР> <текст> — перезаписать сохранённую идею\n"
@@ -1771,7 +1771,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "menu_hint_dev": (
             "Меню разработчика активно.\n\n"
             "Нажмите /dev_menu — редактирование портфеля с инструкциями.\n"
-            "Нажмите /deposit_cash, напр. /deposit_cash 1000 Перевод от брокера"
+            "Нажмите /deposit_cash, напр. /deposit_cash 50000 JPY или /deposit_cash 500 USD"
         ),
         "add_user_usage": (
             "Как использовать /add_user\n\n"

@@ -200,7 +200,7 @@ Message your bot in Telegram (from a chat id listed in `data/users.json`):
 **Developers only** (portfolio edits notify ordinary users; sells require confirmation)
 
 - `/dev_menu` — inline menu for all portfolio edits; each button shows the full how-to guide
-- `/deposit_cash <amount> [note]` — credit cash balance (developer-only in `/portfolio`; undo supported)
+- `/deposit_cash <amount> [HKD|USD|JPY] [note]` — credit cash balance in HKD (default), USD, or JPY (developer-only in `/portfolio`; undo supported)
 - `/add_ticker <SYMBOL> [shares [cost_basis]]` — add or increase a holding with optional per-share cost basis (blended when adding to an existing position)
 - `/add_ticker_strategy <SYMBOL> <long|short> [shares [cost_basis]] <reasoning>` — add a holding with investment idea; for one share with cost use `1 <cost> <reasoning>`
 - `/edit_strategy <SYMBOL> <text>` — hard-overwrite the stored strategy text
