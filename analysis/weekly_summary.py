@@ -8,6 +8,7 @@ from zoneinfo import ZoneInfo
 
 from analysis.performance_chart import render_performance_chart_png
 from analysis.performance_metrics import compute_performance_metrics
+from analysis.portfolio_valuation import portfolio_cash_hkd
 from bot.formatter import format_weekly_summary
 from bot.notifier import TelegramNotifier
 from storage.models import AppConfig, BotState
@@ -64,7 +65,7 @@ def run_weekly_summary(
 
     portfolio = repository.load_portfolio()
     performance_history = repository.load_performance_history()
-    if not portfolio.positions and portfolio.cash <= 0:
+    if not portfolio.positions and portfolio_cash_hkd(portfolio) <= 0:
         logger.info("Weekly summary skipped: empty portfolio")
         return False
 

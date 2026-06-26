@@ -19,7 +19,9 @@ class Portfolio(BaseModel):
     """User portfolio persisted in portfolio.json."""
 
     positions: list[Position] = Field(default_factory=list)
-    cash: float = Field(default=0.0, ge=0)
+    cash: float = Field(default=0.0, ge=0, description="HKD cash balance")
+    cash_usd: float = Field(default=0.0, ge=0, description="USD cash balance")
+    cash_jpy: float = Field(default=0.0, ge=0, description="JPY cash balance")
     notes: str = ""
 
 
@@ -117,6 +119,7 @@ class PortfolioPerformanceSnapshot(BaseModel):
     total_value: float
     total_cost: float
     daily_pnl_pct: float
+    cash_hkd: float | None = None
     positions: dict[str, PositionPerformancePoint] = Field(default_factory=dict)
 
 

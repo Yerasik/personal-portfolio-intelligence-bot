@@ -207,13 +207,15 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "deposit_cash_note": "Note: {note}",
         "deposit_cash_usage": (
             "How to use /deposit_cash\n\n"
-            "Syntax: /deposit_cash <amount> [note]\n\n"
-            "Credits cash to the portfolio (shown to developers in /portfolio only; "
-            "ordinary users are not notified).\n"
+            "Syntax: /deposit_cash <amount> [HKD|USD|JPY] [note]\n\n"
+            "Defaults to HKD when currency is omitted. Credits cash to the portfolio "
+            "(shown to developers in /portfolio only; ordinary users are not notified).\n"
             "You can undo with /undo or the Undo button.\n\n"
             "Examples:\n"
             "/deposit_cash 1000\n"
-            "/deposit_cash 2500 Broker transfer from HSBC"
+            "/deposit_cash 500 USD\n"
+            "/deposit_cash 50000 JPY\n"
+            "/deposit_cash 2500 HKD Broker transfer from HSBC"
         ),
         "deposit_cash_amount_invalid": "Deposit amount must be a positive number.",
         "dev_menu_intro": (
@@ -343,7 +345,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_announcement_header": "Position sold",
         "sell_announcement_sold_all": "{symbol} — sold all {shares:g} share(s) from the portfolio.",
         "sell_announcement_sold_partial": "{symbol} — sold {shares:g} share(s) from the portfolio.",
-        "portfolio_cash": "Cash balance: {cash:,.2f}",
+        "portfolio_cash": "Cash balance: {cash:,.2f} HKD",
+        "portfolio_cash_multi": "Cash: {breakdown} (≈ {total_hkd:,.2f} HKD total cash)",
+        "portfolio_grand_total_hkd": "Total portfolio value: {value:,.2f} HKD",
         "strategy_list_header": "Investment ideas",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_item_horizon": "• {symbol} ({horizon}) — {preview}",
@@ -774,12 +778,14 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "deposit_cash_note": "Notiz: {note}",
         "deposit_cash_usage": (
             "So verwenden Sie /deposit_cash\n\n"
-            "Syntax: /deposit_cash <Betrag> [Notiz]\n\n"
-            "Gutschreibt Cash (nur für Entwickler in /portfolio sichtbar; Benutzer werden nicht benachrichtigt).\n"
+            "Syntax: /deposit_cash <Betrag> [HKD|USD|JPY] [Notiz]\n\n"
+            "Standardwährung ist HKD. Gutschreibt Cash (nur für Entwickler in /portfolio sichtbar).\n"
             "Rückgängig mit /undo oder der Undo-Schaltfläche.\n\n"
             "Beispiele:\n"
             "/deposit_cash 1000\n"
-            "/deposit_cash 2500 Broker-Überweisung"
+            "/deposit_cash 500 USD\n"
+            "/deposit_cash 50000 JPY\n"
+            "/deposit_cash 2500 HKD Broker-Überweisung"
         ),
         "deposit_cash_amount_invalid": "Der Betrag muss eine positive Zahl sein.",
         "dev_menu_intro": (
@@ -903,7 +909,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_announcement_header": "Position verkauft",
         "sell_announcement_sold_all": "{symbol} — alle {shares:g} Anteile aus dem Portfolio verkauft.",
         "sell_announcement_sold_partial": "{symbol} — {shares:g} Anteile aus dem Portfolio verkauft.",
-        "portfolio_cash": "Cash-Bestand: {cash:,.2f}",
+        "portfolio_cash": "Cash-Bestand: {cash:,.2f} HKD",
+        "portfolio_cash_multi": "Cash: {breakdown} (≈ {total_hkd:,.2f} HKD gesamt)",
+        "portfolio_grand_total_hkd": "Gesamtwert Portfolio: {value:,.2f} HKD",
         "strategy_list_header": "Anlageideen",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_item_horizon": "• {symbol} ({horizon}) — {preview}",
@@ -1326,11 +1334,13 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "deposit_cash_note": "备注：{note}",
         "deposit_cash_usage": (
             "如何使用 /deposit_cash\n\n"
-            "语法：/deposit_cash <金额> [备注]\n\n"
-            "增加投资组合现金（仅开发者在 /portfolio 中可见；不通知普通用户）。\n"
+            "语法：/deposit_cash <金额> [HKD|USD|JPY] [备注]\n\n"
+            "省略货币时默认为 HKD。增加投资组合现金（仅开发者在 /portfolio 中可见）。\n"
             "可用 /undo 或撤销按钮回退。\n\n"
             "示例：\n"
             "/deposit_cash 1000\n"
+            "/deposit_cash 500 USD\n"
+            "/deposit_cash 50000 JPY\n"
             "/deposit_cash 2500 券商转入"
         ),
         "deposit_cash_amount_invalid": "金额必须是正数。",
@@ -1451,7 +1461,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_announcement_header": "已卖出持仓",
         "sell_announcement_sold_all": "{symbol} — 已卖出全部 {shares:g} 股。",
         "sell_announcement_sold_partial": "{symbol} — 已卖出 {shares:g} 股。",
-        "portfolio_cash": "现金余额：{cash:,.2f}",
+        "portfolio_cash": "现金余额：{cash:,.2f} HKD",
+        "portfolio_cash_multi": "现金：{breakdown}（合计约 {total_hkd:,.2f} HKD）",
+        "portfolio_grand_total_hkd": "投资组合总值：{value:,.2f} HKD",
         "strategy_list_header": "投资逻辑",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_item_horizon": "• {symbol}（{horizon}）— {preview}",
@@ -1872,11 +1884,13 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "deposit_cash_note": "Примечание: {note}",
         "deposit_cash_usage": (
             "Как использовать /deposit_cash\n\n"
-            "Синтаксис: /deposit_cash <сумма> [примечание]\n\n"
-            "Увеличивает cash в портфеле (видно разработчику в /portfolio; пользователи не уведомляются).\n"
+            "Синтаксис: /deposit_cash <сумма> [HKD|USD|JPY] [примечание]\n\n"
+            "По умолчанию HKD. Увеличивает cash в портфеле (видно разработчику в /portfolio).\n"
             "Отмена: /undo или кнопка Undo.\n\n"
             "Примеры:\n"
             "/deposit_cash 1000\n"
+            "/deposit_cash 500 USD\n"
+            "/deposit_cash 50000 JPY\n"
             "/deposit_cash 2500 Перевод от брокера"
         ),
         "deposit_cash_amount_invalid": "Сумма должна быть положительным числом.",
@@ -2000,7 +2014,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "sell_announcement_header": "Позиция продана",
         "sell_announcement_sold_all": "{symbol} — проданы все {shares:g} акц.",
         "sell_announcement_sold_partial": "{symbol} — продано {shares:g} акц.",
-        "portfolio_cash": "Остаток cash: {cash:,.2f}",
+        "portfolio_cash": "Остаток cash: {cash:,.2f} HKD",
+        "portfolio_cash_multi": "Cash: {breakdown} (≈ {total_hkd:,.2f} HKD всего)",
+        "portfolio_grand_total_hkd": "Общая стоимость портфеля: {value:,.2f} HKD",
         "strategy_list_header": "Инвестиционные идеи",
         "strategy_list_item": "• {symbol} — {preview}",
         "strategy_list_item_horizon": "• {symbol} ({horizon}) — {preview}",

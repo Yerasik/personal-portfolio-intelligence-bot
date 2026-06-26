@@ -287,6 +287,11 @@ class TelegramNotifier:
         state = repository.load_state()
         news_cache = repository.load_news_cache()
         performance_history = repository.load_performance_history()
+        chart_png = None
+        if len(performance_history.snapshots) >= 2:
+            from analysis.performance_chart import render_performance_chart_png
+
+            chart_png = render_performance_chart_png(performance_history)
         ticker_to_industry = repository.load_ticker_industries().ticker_to_industry
         delivered = False
         for user in users:
@@ -305,6 +310,12 @@ class TelegramNotifier:
             )
             try:
                 self.send_text(user.chat_id, message)
+                if chart_png is not None:
+                    self.send_photo(
+                        user.chat_id,
+                        chart_png,
+                        filename="daily_performance.png",
+                    )
             except Exception:
                 logger.exception(
                     "Failed to send daily summary to chat_id=%s",

@@ -495,6 +495,7 @@ async def deposit_cash_command(update: Update, context: ContextTypes.DEFAULT_TYP
     reply = _commands(context).deposit_cash_message(
         user.chat_id,
         parsed.amount,
+        currency=parsed.currency,
         note=parsed.note,
     )
     await _reply_developer_action(update, reply, user=user)

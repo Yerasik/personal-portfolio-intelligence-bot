@@ -5,7 +5,11 @@ from __future__ import annotations
 import logging
 from datetime import UTC, datetime, timedelta
 
-from analysis.portfolio_valuation import build_portfolio_valuation
+from analysis.portfolio_valuation import (
+    build_portfolio_valuation,
+    portfolio_cash_hkd,
+    portfolio_total_value_hkd,
+)
 from storage.models import (
     BotState,
     PerformanceHistory,
@@ -20,6 +24,54 @@ logger = logging.getLogger(__name__)
 _DAILY_LOOKBACK = timedelta(hours=24)
 
 
+def holdings_value_hkd(snapshot: PortfolioPerformanceSnapshot) -> float:
+    """Sum position market values in HKD for one snapshot."""
+    return sum(point.value for point in snapshot.positions.values())
+
+
+def repair_performance_history(
+    history: PerformanceHistory,
+    *,
+    latest_cash_hkd: float | None = None,
+) -> PerformanceHistory:
+    """Rebuild snapshot totals from position values and optional cash."""
+    if not history.snapshots:
+        return history
+
+    snapshots = sorted(history.snapshots, key=lambda row: row.timestamp)
+    repaired: list[PortfolioPerformanceSnapshot] = []
+    changed = False
+    for index, snapshot in enumerate(snapshots):
+        holdings = holdings_value_hkd(snapshot)
+        is_latest = index == len(snapshots) - 1
+        if snapshot.cash_hkd is not None:
+            cash_hkd = snapshot.cash_hkd
+        elif is_latest and latest_cash_hkd is not None:
+            cash_hkd = latest_cash_hkd
+        else:
+            cash_hkd = 0.0
+
+        total_value = holdings + cash_hkd
+        new_cash_field = cash_hkd if snapshot.cash_hkd is not None or is_latest else None
+        if (
+            abs(total_value - snapshot.total_value) > 0.01
+            or new_cash_field != snapshot.cash_hkd
+        ):
+            changed = True
+        repaired.append(
+            snapshot.model_copy(
+                update={
+                    "total_value": total_value,
+                    "cash_hkd": new_cash_field,
+                }
+            )
+        )
+
+    if not changed:
+        return history
+    return history.model_copy(update={"snapshots": repaired})
+
+
 def build_portfolio_snapshot(
     portfolio: Portfolio,
     state: BotState,
@@ -28,16 +80,17 @@ def build_portfolio_snapshot(
     captured_at: datetime | None = None,
 ) -> PortfolioPerformanceSnapshot | None:
     """Build a snapshot from the current portfolio and cached quotes."""
-    if not portfolio.positions and portfolio.cash <= 0:
+    valuation = build_portfolio_valuation(portfolio, state)
+    cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+    if not portfolio.positions and cash_hkd <= 0:
         return None
 
     timestamp = captured_at or datetime.now(tz=UTC)
-    valuation = build_portfolio_valuation(portfolio, state)
-    total_value = valuation.total_market_value_hkd + portfolio.cash
+    total_value = portfolio_total_value_hkd(portfolio, valuation)
     total_cost = (
-        valuation.total_cost_value_hkd + portfolio.cash
+        valuation.total_cost_value_hkd + cash_hkd
         if valuation.total_cost_value_hkd is not None
-        else portfolio.cash
+        else cash_hkd
     )
 
     positions: dict[str, PositionPerformancePoint] = {}
@@ -60,6 +113,7 @@ def build_portfolio_snapshot(
         total_value=total_value,
         total_cost=total_cost,
         daily_pnl_pct=daily_pnl_pct,
+        cash_hkd=cash_hkd,
         positions=positions,
     )
 
@@ -69,6 +123,16 @@ def save_portfolio_snapshot(repository: DataRepository) -> PortfolioPerformanceS
     portfolio = repository.load_portfolio()
     state = repository.load_state()
     history = repository.load_performance_history()
+    valuation = build_portfolio_valuation(portfolio, state)
+    cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+    repaired_history = repair_performance_history(
+        history,
+        latest_cash_hkd=cash_hkd,
+    )
+    if repaired_history is not history:
+        repository.save_performance_history(repaired_history)
+        history = repaired_history
+
     snapshot = build_portfolio_snapshot(
         portfolio,
         state,

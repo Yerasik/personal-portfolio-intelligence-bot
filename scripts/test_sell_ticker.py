@@ -90,6 +90,10 @@ def run_test() -> None:
             if action is None or action.status != "pending_confirm":
                 raise AssertionError("pending sell action not stored")
 
+        with patch(
+            "analysis.portfolio_valuation.fetch_fx_rates_to_hkd",
+            return_value={"USD": 7.85, "HKD": 1.0},
+        ):
             confirm = commands.confirm_developer_portfolio_action(111, action.action_id)
             if "Cash balance" not in confirm.text:
                 raise AssertionError(f"developer should see cash balance: {confirm.text}")
@@ -106,7 +110,7 @@ def run_test() -> None:
         loaded = repository.load_portfolio()
         if loaded.positions:
             raise AssertionError("full sell should remove position")
-        if loaded.cash != 1502.5:
+        if loaded.cash != 1502.5 * 7.85:
             raise AssertionError(f"unexpected cash balance: {loaded.cash}")
 
         action = repository.get_developer_portfolio_action()

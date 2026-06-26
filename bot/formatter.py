@@ -24,6 +24,8 @@ from analysis.portfolio_valuation import (
     PortfolioValuation,
     build_portfolio_valuation,
     infer_quote_currency,
+    portfolio_cash_hkd,
+    portfolio_total_value_hkd,
 )
 from analysis.rules import AlertCandidate
 from bot.i18n import t
@@ -535,13 +537,13 @@ def format_weekly_summary(
     """Format the Monday weekly summary focused on portfolio performance."""
     lines = [t("weekly_summary_title", lang), ""]
 
-    if state is not None and (portfolio.positions or portfolio.cash > 0):
+    if state is not None and (portfolio.positions or portfolio_cash_hkd(portfolio) > 0):
         lines.append(
             t("weekly_summary_holdings", lang, holdings=len(portfolio.positions))
         )
         if portfolio.positions:
             valuation = build_portfolio_valuation(portfolio, state)
-            total_value = valuation.total_market_value_hkd + portfolio.cash
+            total_value = portfolio_total_value_hkd(portfolio, valuation)
             lines.append(
                 t("daily_portfolio_value_hkd", lang, value=total_value)
             )
@@ -554,9 +556,13 @@ def format_weekly_summary(
                         pct=valuation.total_pl_pct,
                     )
                 )
-        elif portfolio.cash > 0:
+        elif portfolio_cash_hkd(portfolio) > 0:
             lines.append(
-                t("daily_portfolio_value_hkd", lang, value=portfolio.cash)
+                t(
+                    "daily_portfolio_value_hkd",
+                    lang,
+                    value=portfolio_cash_hkd(portfolio),
+                )
             )
 
     if performance_history is not None:
@@ -601,11 +607,12 @@ def format_daily_summary(
 
     if state is not None and portfolio.positions:
         valuation = build_portfolio_valuation(portfolio, state)
+        total_value = portfolio_total_value_hkd(portfolio, valuation)
         lines.append(
             t(
                 "daily_portfolio_value_hkd",
                 lang,
-                value=valuation.total_market_value_hkd,
+                value=total_value,
             )
         )
         if valuation.total_pl_hkd is not None and valuation.total_pl_pct is not None:
@@ -836,8 +843,33 @@ def format_portfolio(
 
     lines.append("")
     _append_portfolio_totals_hkd(lines, valuation, lang)
-    if is_developer and portfolio.cash > 0:
-        lines.append(t("portfolio_cash", lang, cash=portfolio.cash))
+    cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+    if is_developer and cash_hkd > 0:
+        cash_parts: list[str] = []
+        if portfolio.cash > 0:
+            cash_parts.append(f"{portfolio.cash:,.2f} HKD")
+        if portfolio.cash_usd > 0:
+            cash_parts.append(f"{portfolio.cash_usd:,.2f} USD")
+        if portfolio.cash_jpy > 0:
+            cash_parts.append(f"{portfolio.cash_jpy:,.0f} JPY")
+        if len(cash_parts) > 1 or portfolio.cash_usd > 0 or portfolio.cash_jpy > 0:
+            lines.append(
+                t(
+                    "portfolio_cash_multi",
+                    lang,
+                    breakdown=" + ".join(cash_parts),
+                    total_hkd=cash_hkd,
+                )
+            )
+        else:
+            lines.append(t("portfolio_cash", lang, cash=portfolio.cash))
+        lines.append(
+            t(
+                "portfolio_grand_total_hkd",
+                lang,
+                value=portfolio_total_value_hkd(portfolio, valuation),
+            )
+        )
 
     if state.last_market_fetch_at:
         if is_developer:

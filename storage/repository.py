@@ -123,12 +123,21 @@ class DataRepository:
         self._store.mutate_model(self._paths.portfolio, Portfolio, _mutate)
         return result_holder[0]
 
-    def deposit_cash_to_portfolio(self, amount: float) -> CashDepositResult:
+    def deposit_cash_to_portfolio(
+        self,
+        amount: float,
+        *,
+        currency: str = "HKD",
+    ) -> CashDepositResult:
         """Credit cash to portfolio.json under a single file lock."""
         result_holder: list[CashDepositResult] = []
 
         def _mutate(portfolio: Portfolio) -> Portfolio:
-            updated, result = deposit_cash_to_portfolio(portfolio, amount)
+            updated, result = deposit_cash_to_portfolio(
+                portfolio,
+                amount,
+                currency=currency,
+            )
             result_holder.append(result)
             return updated
 
@@ -148,6 +157,7 @@ class DataRepository:
         if format_error:
             return SellTickerResult(False, format_error, normalized)
 
+        state = self.load_state()
         result_holder: list[SellTickerResult] = []
 
         def _mutate(portfolio: Portfolio) -> Portfolio:
@@ -156,6 +166,7 @@ class DataRepository:
                 normalized,
                 sell_price=sell_price,
                 shares=shares,
+                state=state,
             )
             result_holder.append(result)
             return updated

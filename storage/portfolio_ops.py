@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from storage.models import Portfolio, Position
+from storage.models import BotState, Portfolio, Position
 
 _TICKER_PATTERN = re.compile(r"^[A-Z0-9][A-Z0-9.\-]{0,14}$")
 
@@ -30,7 +30,10 @@ class SellTickerResult:
     shares_sold: float = 0.0
     sell_price: float = 0.0
     proceeds: float = 0.0
+    proceeds_currency: str = "HKD"
+    proceeds_hkd: float = 0.0
     cash_balance: float = 0.0
+    cash_balance_hkd: float = 0.0
     fully_sold: bool = False
 
 
@@ -228,29 +231,83 @@ class CashDepositResult:
     success: bool
     message: str
     amount: float = 0.0
+    currency: str = "HKD"
     cash_balance: float = 0.0
+    cash_balance_hkd: float = 0.0
 
 
 def deposit_cash_to_portfolio(
     portfolio: Portfolio,
     amount: float,
+    *,
+    currency: str = "HKD",
 ) -> tuple[Portfolio, CashDepositResult]:
-    """Credit cash to the portfolio balance."""
+    """Credit cash to the portfolio balance in HKD, USD, or JPY."""
+    from analysis.portfolio_valuation import portfolio_cash_hkd
+
     if amount <= 0:
         return portfolio, CashDepositResult(
             False,
             "Deposit amount must be greater than zero.",
             amount,
+            currency,
             portfolio.cash,
+            portfolio_cash_hkd(portfolio),
+        )
+
+    code = currency.strip().upper() or "HKD"
+    if code not in ("HKD", "USD", "JPY"):
+        return portfolio, CashDepositResult(
+            False,
+            f"Unsupported deposit currency {code}; use HKD, USD, or JPY.",
+            amount,
+            code,
+            portfolio.cash,
+            portfolio_cash_hkd(portfolio),
+        )
+
+    if code == "USD":
+        new_cash_usd = portfolio.cash_usd + amount
+        updated = portfolio.model_copy(update={"cash_usd": new_cash_usd})
+        balance_hkd = portfolio_cash_hkd(updated)
+        return updated, CashDepositResult(
+            True,
+            (
+                f"Deposited {amount:g} USD; "
+                f"USD cash {new_cash_usd:,.2f} (≈ {balance_hkd:,.2f} HKD total cash)."
+            ),
+            amount,
+            code,
+            new_cash_usd,
+            balance_hkd,
+        )
+
+    if code == "JPY":
+        new_cash_jpy = portfolio.cash_jpy + amount
+        updated = portfolio.model_copy(update={"cash_jpy": new_cash_jpy})
+        balance_hkd = portfolio_cash_hkd(updated)
+        return updated, CashDepositResult(
+            True,
+            (
+                f"Deposited {amount:g} JPY; "
+                f"JPY cash {new_cash_jpy:,.0f} (≈ {balance_hkd:,.2f} HKD total cash)."
+            ),
+            amount,
+            code,
+            new_cash_jpy,
+            balance_hkd,
         )
 
     new_cash = portfolio.cash + amount
     updated = portfolio.model_copy(update={"cash": new_cash})
+    balance_hkd = portfolio_cash_hkd(updated)
     return updated, CashDepositResult(
         True,
-        f"Deposited {amount:g}; cash balance {new_cash:,.2f}.",
+        f"Deposited {amount:g} HKD; cash balance {new_cash:,.2f} HKD (≈ {balance_hkd:,.2f} HKD total).",
         amount,
+        code,
         new_cash,
+        balance_hkd,
     )
 
 
@@ -260,8 +317,16 @@ def sell_ticker_from_portfolio(
     *,
     sell_price: float,
     shares: float | None = None,
+    state: BotState | None = None,
 ) -> tuple[Portfolio, SellTickerResult]:
-    """Sell shares at a given price, remove or reduce the position, and credit cash."""
+    """Sell shares at a given price, remove or reduce the position, and credit HKD cash."""
+    from analysis.portfolio_valuation import (
+        convert_to_hkd,
+        fetch_fx_rates_to_hkd,
+        infer_quote_currency,
+        portfolio_cash_hkd,
+    )
+
     normalized = normalize_ticker(symbol)
     format_error = validate_ticker_format(normalized)
     if format_error:
@@ -306,8 +371,12 @@ def sell_ticker_from_portfolio(
             normalized,
         )
 
-    proceeds = shares_to_sell * sell_price
-    new_cash = portfolio.cash + proceeds
+    proceeds_native = shares_to_sell * sell_price
+    quote = state.latest_prices.get(normalized) if state is not None else None
+    currency = infer_quote_currency(quote, normalized)
+    fx_rates = fetch_fx_rates_to_hkd({currency})
+    proceeds_hkd = convert_to_hkd(proceeds_native, currency, fx_rates=fx_rates)
+    new_cash = portfolio.cash + proceeds_hkd
     fully_sold = abs(shares_to_sell - position.shares) < 1e-9
 
     if fully_sold:
@@ -331,9 +400,17 @@ def sell_ticker_from_portfolio(
         update={"positions": new_positions, "cash": new_cash}
     )
     action = "Sold all" if fully_sold else f"Sold {shares_to_sell:g}"
+    if currency in ("HKD", "HK"):
+        proceeds_note = f"proceeds {proceeds_native:,.2f} HKD"
+    else:
+        proceeds_note = (
+            f"proceeds {proceeds_native:,.2f} {currency} "
+            f"(≈ {proceeds_hkd:,.2f} HKD credited)"
+        )
+    balance_hkd = portfolio_cash_hkd(updated, usd_to_hkd=fx_rates.get("USD"))
     message = (
         f"{action} share(s) of {normalized} at {sell_price:g}; "
-        f"proceeds {proceeds:,.2f} (cash balance {new_cash:,.2f})."
+        f"{proceeds_note} (cash balance ≈ {balance_hkd:,.2f} HKD)."
     )
     return updated, SellTickerResult(
         True,
@@ -341,7 +418,10 @@ def sell_ticker_from_portfolio(
         normalized,
         shares_sold=shares_to_sell,
         sell_price=sell_price,
-        proceeds=proceeds,
+        proceeds=proceeds_native,
+        proceeds_currency=currency,
+        proceeds_hkd=proceeds_hkd,
         cash_balance=new_cash,
+        cash_balance_hkd=balance_hkd,
         fully_sold=fully_sold,
     )

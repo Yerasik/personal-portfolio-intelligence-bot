@@ -12,10 +12,16 @@ logger = logging.getLogger(__name__)
 
 HKD = "HKD"
 _DEFAULT_USD_TO_HKD = 7.85
+_DEFAULT_JPY_TO_HKD = 0.052
 _FX_YAHOO_SYMBOLS = {
     "USD": "HKD=X",
+    "JPY": "JPYHKD=X",
     "CNY": "CNYHKD=X",
     "CNH": "CNYHKD=X",
+}
+_FX_DEFAULTS = {
+    "USD": _DEFAULT_USD_TO_HKD,
+    "JPY": _DEFAULT_JPY_TO_HKD,
 }
 
 
@@ -73,9 +79,7 @@ def fetch_fx_rates_to_hkd(
             logger.warning("No FX mapping for %s; using 1:1 to HKD", code)
             rates[code] = 1.0
             continue
-        rates[code] = _fetch_yahoo_last_close(yahoo_symbol) or (
-            _DEFAULT_USD_TO_HKD if code == "USD" else 1.0
-        )
+        rates[code] = _fetch_yahoo_last_close(yahoo_symbol) or _FX_DEFAULTS.get(code, 1.0)
     return rates
 
 
@@ -92,6 +96,33 @@ def _fetch_yahoo_last_close(symbol: str) -> float | None:
         return None
 
 
+def portfolio_cash_hkd(
+    portfolio: Portfolio,
+    *,
+    usd_to_hkd: float | None = None,
+    jpy_to_hkd: float | None = None,
+) -> float:
+    """Return total cash (HKD + USD + JPY buckets) converted to HKD."""
+    usd_rate = usd_to_hkd if usd_to_hkd is not None else _DEFAULT_USD_TO_HKD
+    jpy_rate = jpy_to_hkd
+    if portfolio.cash_jpy > 0 and jpy_rate is None:
+        jpy_rate = fetch_fx_rates_to_hkd({"JPY"}).get("JPY", _DEFAULT_JPY_TO_HKD)
+    elif jpy_rate is None:
+        jpy_rate = _DEFAULT_JPY_TO_HKD
+    return portfolio.cash + portfolio.cash_usd * usd_rate + portfolio.cash_jpy * jpy_rate
+
+
+def portfolio_total_value_hkd(
+    portfolio: Portfolio,
+    valuation: PortfolioValuation,
+) -> float:
+    """Return holdings plus cash, all in HKD."""
+    return valuation.total_market_value_hkd + portfolio_cash_hkd(
+        portfolio,
+        usd_to_hkd=valuation.usd_to_hkd,
+    )
+
+
 def convert_to_hkd(
     amount: float,
     currency: str,
@@ -104,7 +135,7 @@ def convert_to_hkd(
         return amount
     rate = fx_rates.get(code)
     if rate is None:
-        rate = fx_rates.get("USD", _DEFAULT_USD_TO_HKD) if code == "USD" else 1.0
+        rate = fx_rates.get("USD", _DEFAULT_USD_TO_HKD) if code == "USD" else _FX_DEFAULTS.get(code, 1.0)
     return amount * rate
 
 

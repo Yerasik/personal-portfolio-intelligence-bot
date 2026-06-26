@@ -508,11 +508,21 @@ class BotCommands:
             )
         return DeveloperActionReply(t("add_ticker_fail", lang, message=result.message))
 
-    def deposit_cash_message(self, chat_id: int, amount: float, note: str | None = None) -> DeveloperActionReply:
+    def deposit_cash_message(
+        self,
+        chat_id: int,
+        amount: float,
+        *,
+        currency: str = "HKD",
+        note: str | None = None,
+    ) -> DeveloperActionReply:
         """Credit cash to portfolio.json (developer bookkeeping; not shown to ordinary users)."""
         lang = self._lang(chat_id)
         portfolio_before = self.repository.load_portfolio()
-        result = self.repository.deposit_cash_to_portfolio(amount)
+        result = self.repository.deposit_cash_to_portfolio(
+            amount,
+            currency=currency,
+        )
         if not result.success:
             return DeveloperActionReply(t("deposit_cash_fail", lang, message=result.message))
 
@@ -520,7 +530,7 @@ class BotCommands:
             "deposit_cash_ok",
             lang,
             message=result.message,
-            cash=result.cash_balance,
+            cash=result.cash_balance_hkd,
         )
         if note:
             message = f"{message}\n{t('deposit_cash_note', lang, note=note)}"
@@ -530,7 +540,7 @@ class BotCommands:
             action_type="deposit_cash",
             portfolio_before=portfolio_before,
             strategy_snapshots={},
-            payload={"amount": amount, "note": note},
+            payload={"amount": amount, "currency": currency, "note": note},
             users_notified=0,
         )
         return DeveloperActionReply(
@@ -813,8 +823,14 @@ class BotCommands:
             "sell_ticker_ok",
             lang,
             message=result.message,
-            cash=result.cash_balance,
+            cash=result.cash_balance_hkd,
         )
+        try:
+            from storage.performance_ops import save_portfolio_snapshot
+
+            save_portfolio_snapshot(self.repository)
+        except Exception:
+            logger.exception("Failed to save performance snapshot after sell")
         return message, notified
 
     def _record_completed_portfolio_action(

@@ -25,6 +25,11 @@ from storage.portfolio_ops import (
 )
 from storage.repository import DataRepository
 
+_FX_PATCH = patch(
+    "analysis.portfolio_valuation.fetch_fx_rates_to_hkd",
+    return_value={"USD": 7.85, "HKD": 1.0},
+)
+
 
 def run_test() -> None:
     assert normalize_ticker(" aapl ") == "AAPL"
@@ -80,32 +85,51 @@ def run_test() -> None:
         positions=[Position(ticker="MSFT", shares=10, cost_basis=400.0)],
         cash=1000.0,
     )
-    updated, sold = sell_ticker_from_portfolio(
-        portfolio,
-        "MSFT",
-        sell_price=420.0,
-        shares=4.0,
-    )
+    with _FX_PATCH:
+        updated, sold = sell_ticker_from_portfolio(
+            portfolio,
+            "MSFT",
+            sell_price=420.0,
+            shares=4.0,
+        )
     if not sold.success or sold.proceeds != 1680.0:
         raise AssertionError(f"partial sell failed: {sold}")
-    if updated.cash != 2680.0:
+    expected_cash = 1000.0 + 1680.0 * 7.85
+    if abs(updated.cash - expected_cash) > 0.01:
         raise AssertionError(f"unexpected cash after partial sell: {updated.cash}")
     msft = next(p for p in updated.positions if p.ticker == "MSFT")
     if msft.shares != 6:
         raise AssertionError(f"expected 6 MSFT shares, got {msft.shares}")
 
-    updated, sold_all = sell_ticker_from_portfolio(updated, "MSFT", sell_price=425.0)
+    with _FX_PATCH:
+        updated, sold_all = sell_ticker_from_portfolio(updated, "MSFT", sell_price=425.0)
     if not sold_all.success or not sold_all.fully_sold:
         raise AssertionError(f"full sell failed: {sold_all}")
     if updated.positions:
         raise AssertionError("position should be removed after full sell")
-    if updated.cash != 5230.0:
+    expected_total_cash = expected_cash + 6 * 425.0 * 7.85
+    if abs(updated.cash - expected_total_cash) > 0.01:
         raise AssertionError(f"unexpected cash after full sell: {updated.cash}")
 
     portfolio = Portfolio(positions=[], cash=100.0)
     updated, deposited = deposit_cash_to_portfolio(portfolio, 500.0)
     if not deposited.success or updated.cash != 600.0:
-        raise AssertionError(f"deposit failed: {deposited}")
+        raise AssertionError(f"HKD deposit failed: {deposited}")
+    updated, usd_deposit = deposit_cash_to_portfolio(updated, 200.0, currency="USD")
+    if not usd_deposit.success or updated.cash_usd != 200.0:
+        raise AssertionError(f"USD deposit failed: {usd_deposit}")
+    with patch(
+        "analysis.portfolio_valuation.fetch_fx_rates_to_hkd",
+        return_value={"JPY": 0.05, "USD": 7.85, "HKD": 1.0},
+    ):
+        updated, jpy_deposit = deposit_cash_to_portfolio(updated, 10000.0, currency="JPY")
+    if not jpy_deposit.success or updated.cash_jpy != 10000.0:
+        raise AssertionError(f"JPY deposit failed: {jpy_deposit}")
+    expected_cash_hkd = 600.0 + 200.0 * 7.85 + 10000.0 * 0.05
+    if abs(jpy_deposit.cash_balance_hkd - expected_cash_hkd) > 0.01:
+        raise AssertionError(
+            f"JPY deposit HKD total wrong: {jpy_deposit.cash_balance_hkd}"
+        )
     _, bad_deposit = deposit_cash_to_portfolio(updated, 0)
     if bad_deposit.success:
         raise AssertionError("zero deposit should fail")
