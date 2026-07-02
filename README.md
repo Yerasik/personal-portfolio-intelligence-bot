@@ -77,7 +77,7 @@ Edit files under `data/` on the host (mounted into the container):
 | `data/ticker_industries.json` | Static `ticker` → industry map; merged with `focus_industries` for news, rules, `/industries`, and LLM context |
 | `data/state.json` | Runtime state (prices, alerts) — usually auto-managed |
 | `data/news_cache.json` | Cached news — usually auto-managed |
-| `data/performance_history.json` | Append-only portfolio value snapshots (one per market fetch) — auto-managed |
+| `data/performance_history.json` | Raw portfolio value snapshots (one per market fetch); pruned after `performance_history_retention_days` — auto-managed |
 
 Example `data/portfolio.json`:
 
@@ -187,7 +187,7 @@ Message your bot in Telegram (from a chat id listed in `data/users.json`):
 - `/menu` — show the reply keyboard menu again
 - `/help` — command reference
 - `/portfolio` — holdings grouped by long/short horizon, with prices and P/L when cost basis is set
-- `/performance` — 7d / 30d / all-time return %, max drawdown, and a portfolio value chart (when enough snapshots exist)
+- `/performance [week|month|all]` — 7d / 30d / all-time return %, max drawdown, and an aggregated candle chart (daily for week view, weekly for month view; default period from `performance_chart_period` in config)
 - `/risk_metrics` — 90-day Sharpe ratio, max drawdown, portfolio vs benchmark return, and alpha (benchmark: `benchmark_ticker` in config, default `SPY`)
 - `/strategy` — investment idea behind each holding
 - `/strategy <SYMBOL>` — full idea for one ticker
@@ -232,6 +232,8 @@ Configured in `data/config.json`:
 | `rule_evaluation_interval_minutes` | 60 | Evaluate rules, send urgent Telegram alerts |
 | `enable_daily_summary` + `digest_hour/minute` | 08:00 | Daily digest to Telegram |
 | `enable_weekly_summary` + `weekly_summary_hour/minute` | Monday 08:00 | Weekly performance summary + chart to Telegram |
+| `performance_history_retention_days` | 31 | Keep raw snapshots for charts/metrics (pruned on each market fetch) |
+| `performance_chart_period` | `month` | Default chart for `/performance` (`week`, `month`, or `all`) |
 
 Job failures are logged and do not crash the bot process.
 

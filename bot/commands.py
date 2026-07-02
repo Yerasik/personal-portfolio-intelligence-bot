@@ -23,6 +23,7 @@ from analysis.strategy_writer import (
 )
 from analysis.news_summarizer import iter_news_summary_groups
 from analysis.performance_chart import render_performance_chart_png
+from analysis.performance_series import ChartPeriod
 from analysis.performance_metrics import compute_performance_metrics
 from analysis.portfolio_risk import estimate_portfolio_risk
 from analysis.portfolio_valuation import build_portfolio_valuation
@@ -228,10 +229,16 @@ class BotCommands:
             return t("performance_empty", lang)
         return format_performance(metrics, lang=lang)
 
-    def performance_chart_png(self) -> bytes | None:
-        """Render portfolio value over time when enough snapshots exist."""
+    def performance_chart_png(self, period: ChartPeriod | None = None) -> bytes | None:
+        """Render aggregated portfolio value chart for the requested period."""
         history = self.repository.load_performance_history()
-        return render_performance_chart_png(history)
+        app_config = self.repository.load_config()
+        resolved: ChartPeriod = period or app_config.performance_chart_period
+        return render_performance_chart_png(
+            history,
+            period=resolved,
+            timezone=app_config.timezone,
+        )
 
     def risk_metrics_message(self, chat_id: int) -> str:
         """Fetch 90-day history and format Sharpe, drawdown, and benchmark alpha."""

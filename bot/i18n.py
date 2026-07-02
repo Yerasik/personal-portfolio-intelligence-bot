@@ -49,7 +49,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /portfolio — holdings and latest prices\n"
             "  /strategy — investment idea behind each holding\n"
             "  /strategy <TICKER> — full idea for one stock\n"
-            "  /performance — returns, drawdown, and value chart\n\n"
+            "  /performance [week|month|all] — returns, drawdown, and value chart\n\n"
             "News\n"
             "  /industries — sectors and headline counts\n"
             "  /news_summary — news digest by sector and stock\n\n"
@@ -434,7 +434,12 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "How to use /performance\n\n"
             "Shows portfolio return over 7 days, 30 days, and all tracked history, "
             "plus maximum drawdown from peak value.\n\n"
-            "A chart of total portfolio value over time is sent when enough snapshots exist.\n\n"
+            "Optional chart period:\n"
+            "  /performance week — daily candles for the last 7 days\n"
+            "  /performance month — weekly candles for the last month (default)\n"
+            "  /performance all — auto daily/weekly/monthly buckets for full history\n\n"
+            "Raw snapshots are kept for performance_history_retention_days in config.json "
+            "(default 31 days) and aggregated for charts.\n\n"
             "Snapshots are appended automatically whenever market prices are fetched."
         ),
         "weekly_summary_title": "Weekly Portfolio Summary",
@@ -624,7 +629,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /portfolio — Bestände und Kurse\n"
             "  /strategy — Anlageidee hinter jeder Position\n"
             "  /strategy <TICKER> — vollständige Idee zu einer Aktie\n"
-            "  /performance — Rendite, Drawdown und Wertverlauf\n\n"
+            "  /performance [week|month|all] — Rendite, Drawdown und Wertverlauf\n\n"
             "Nachrichten\n"
             "  /industries — Branchen und Schlagzeilen\n"
             "  /news_summary — Nachrichten nach Sektor und Ticker\n\n"
@@ -1022,8 +1027,12 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "performance_usage": (
             "So funktioniert /performance\n\n"
             "Zeigt Rendite über 7 Tage, 30 Tage und die gesamte Historie sowie den maximalen Drawdown.\n\n"
-            "Bei genügend Snapshots wird ein Wertverlaufsdiagramm mitgesendet.\n\n"
-            "Snapshots werden automatisch bei jedem Marktdatenabruf angehängt."
+            "Optionaler Diagrammzeitraum:\n"
+            "  /performance week — tägliche Kerzen der letzten 7 Tage\n"
+            "  /performance month — wöchentliche Kerzen des letzten Monats (Standard)\n"
+            "  /performance all — automatische Tages/Wochen/Monats-Aggregation\n\n"
+            "Roh-Snapshots werden performance_history_retention_days in config.json aufbewahrt "
+            "(Standard 31 Tage) und für Diagramme aggregiert."
         ),
         "weekly_summary_title": "Wöchentliche Portfolio-Zusammenfassung",
         "weekly_summary_holdings": "Bestände: {holdings}",
@@ -1183,7 +1192,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /portfolio — 持仓与最新价格\n"
             "  /strategy — 每只持仓的投资逻辑\n"
             "  /strategy <代码> — 查看单只股票的完整逻辑\n"
-            "  /performance — 收益率、回撤与价值走势图\n\n"
+            "  /performance [week|month|all] — 收益率、回撤与价值走势图\n\n"
             "新闻\n"
             "  /industries — 行业与新闻数量\n"
             "  /news_summary — 按行业/股票的新闻摘要\n\n"
@@ -1571,8 +1580,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "performance_usage": (
             "如何使用 /performance\n\n"
             "显示 7 日、30 日及全部跟踪期间的收益率，以及自峰值以来的最大回撤。\n\n"
-            "快照足够时会附带总价值走势图。\n\n"
-            "每次行情更新时会自动追加快照。"
+            "可选图表周期：\n"
+            "  /performance week — 最近 7 天每日 K 线\n"
+            "  /performance month — 最近一个月每周 K 线（默认）\n"
+            "  /performance all — 全历史自动按日/周/月聚合\n\n"
+            "原始快照保留 performance_history_retention_days（config.json，默认 31 天），图表使用聚合数据。"
         ),
         "weekly_summary_title": "每周投资组合摘要",
         "weekly_summary_holdings": "持仓数：{holdings}",
@@ -1729,7 +1741,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /portfolio — позиции и котировки\n"
             "  /strategy — идея за каждой позицией\n"
             "  /strategy <ТИКЕР> — полная идея по одной акции\n"
-            "  /performance — доходность, просадка и график стоимости\n\n"
+            "  /performance [week|month|all] — доходность, просадка и график стоимости\n\n"
             "Новости\n"
             "  /industries — отрасли и количество новостей\n"
             "  /news_summary — сводка по секторам и тикерам\n\n"
@@ -2127,8 +2139,12 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "performance_usage": (
             "Как использовать /performance\n\n"
             "Показывает доходность за 7 и 30 дней, за всю историю и максимальную просадку.\n\n"
-            "При достаточном числе снимков отправляется график стоимости портфеля.\n\n"
-            "Снимки добавляются автоматически при каждом обновлении рынка."
+            "Необязательный период графика:\n"
+            "  /performance week — дневные свечи за 7 дней\n"
+            "  /performance month — недельные свечи за месяц (по умолчанию)\n"
+            "  /performance all — авто-агрегация по дням/неделям/месяцам\n\n"
+            "Сырые снимки хранятся performance_history_retention_days в config.json "
+            "(по умолчанию 31 день) и агрегируются для графиков."
         ),
         "weekly_summary_title": "Еженедельная сводка по портфелю",
         "weekly_summary_holdings": "Позиций: {holdings}",

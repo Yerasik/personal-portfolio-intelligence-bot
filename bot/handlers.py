@@ -16,6 +16,7 @@ from telegram.constants import ParseMode
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 from bot.add_ticker_args import parse_add_ticker_args
+from analysis.performance_series import ChartPeriod
 from bot.commands import BotCommands
 from bot.deposit_cash_args import parse_deposit_cash_args
 from bot.dev_menu import DEV_MENU_CALLBACK_PREFIX, dev_menu_usage_key
@@ -233,8 +234,13 @@ async def performance_command(update: Update, context: ContextTypes.DEFAULT_TYPE
         return
 
     commands = _commands(context)
+    args = [item.lower() for item in (context.args or [])]
+    period: ChartPeriod | None = None
+    if args and args[0] in {"week", "month", "all"}:
+        period = args[0]  # type: ignore[assignment]
+
     await update.message.reply_text(commands.performance_message(user.chat_id))
-    chart = commands.performance_chart_png()
+    chart = commands.performance_chart_png(period=period)
     if chart is not None:
         await update.message.reply_photo(photo=BytesIO(chart))
 

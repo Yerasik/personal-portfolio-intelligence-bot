@@ -72,6 +72,42 @@ def repair_performance_history(
     return history.model_copy(update={"snapshots": repaired})
 
 
+def prune_performance_history(
+    history: PerformanceHistory,
+    *,
+    retention_days: int,
+    now: datetime | None = None,
+) -> PerformanceHistory:
+    """Drop raw snapshots older than retention_days; always keep the latest."""
+    if not history.snapshots or retention_days <= 0:
+        return history
+
+    evaluated_at = now or datetime.now(tz=UTC)
+    if evaluated_at.tzinfo is None:
+        evaluated_at = evaluated_at.replace(tzinfo=UTC)
+    cutoff = evaluated_at - timedelta(days=retention_days)
+
+    ordered = sorted(history.snapshots, key=lambda row: row.timestamp)
+    kept = [
+        row
+        for row in ordered
+        if _snapshot_ts(row) >= cutoff
+    ]
+    if len(kept) == len(ordered):
+        return history
+    if not kept:
+        kept = [ordered[-1]]
+
+    return history.model_copy(update={"snapshots": kept})
+
+
+def _snapshot_ts(snapshot: PortfolioPerformanceSnapshot) -> datetime:
+    ts = snapshot.timestamp
+    if ts.tzinfo is None:
+        return ts.replace(tzinfo=UTC)
+    return ts.astimezone(UTC)
+
+
 def build_portfolio_snapshot(
     portfolio: Portfolio,
     state: BotState,
@@ -122,9 +158,19 @@ def save_portfolio_snapshot(repository: DataRepository) -> PortfolioPerformanceS
     """Append a timestamped valuation record to performance_history.json."""
     portfolio = repository.load_portfolio()
     state = repository.load_state()
+    app_config = repository.load_config()
     history = repository.load_performance_history()
     valuation = build_portfolio_valuation(portfolio, state)
     cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+
+    pruned_history = prune_performance_history(
+        history,
+        retention_days=app_config.performance_history_retention_days,
+    )
+    if pruned_history is not history:
+        repository.save_performance_history(pruned_history)
+        history = pruned_history
+
     repaired_history = repair_performance_history(
         history,
         latest_cash_hkd=cash_hkd,

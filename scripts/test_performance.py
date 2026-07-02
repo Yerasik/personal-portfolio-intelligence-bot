@@ -72,7 +72,7 @@ def run_test() -> None:
     if "7-day return" not in report:
         raise AssertionError("formatted report missing 7-day return")
 
-    chart = render_performance_chart_png(history)
+    chart = render_performance_chart_png(history, period="month", timezone="Asia/Hong_Kong")
     if chart is None or len(chart) < 100:
         raise AssertionError("expected non-trivial PNG chart bytes")
 

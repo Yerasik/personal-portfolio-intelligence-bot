@@ -287,11 +287,16 @@ class TelegramNotifier:
         state = repository.load_state()
         news_cache = repository.load_news_cache()
         performance_history = repository.load_performance_history()
+        app_config = repository.load_config()
         chart_png = None
         if len(performance_history.snapshots) >= 2:
             from analysis.performance_chart import render_performance_chart_png
 
-            chart_png = render_performance_chart_png(performance_history)
+            chart_png = render_performance_chart_png(
+                performance_history,
+                period="week",
+                timezone=app_config.timezone,
+            )
         ticker_to_industry = repository.load_ticker_industries().ticker_to_industry
         delivered = False
         for user in users:

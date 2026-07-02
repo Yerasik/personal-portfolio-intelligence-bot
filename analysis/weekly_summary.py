@@ -69,7 +69,11 @@ def run_weekly_summary(
         logger.info("Weekly summary skipped: empty portfolio")
         return False
 
-    chart = render_performance_chart_png(performance_history)
+    chart = render_performance_chart_png(
+        performance_history,
+        period="month",
+        timezone=app_config.timezone,
+    )
     metrics = compute_performance_metrics(performance_history)
     if metrics is None and chart is None:
         logger.info("Weekly summary skipped: no performance history yet")

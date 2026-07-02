@@ -50,6 +50,8 @@
   "enable_weekly_summary": true,
   "weekly_summary_hour": 8,
   "weekly_summary_minute": 0,
+  "performance_history_retention_days": 31,
+  "performance_chart_period": "month",
   "deep_digest_times": ["06:00", "20:00"],
   "enable_deep_digest": true,
   "deep_digest_recipients": "developers",

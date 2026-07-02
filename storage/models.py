@@ -172,6 +172,8 @@ class AppConfig(BaseModel):
     enable_weekly_summary: bool = True
     weekly_summary_hour: int = Field(default=8, ge=0, le=23)
     weekly_summary_minute: int = Field(default=0, ge=0, le=59)
+    performance_history_retention_days: int = Field(default=31, ge=7, le=365)
+    performance_chart_period: Literal["week", "month", "all"] = "month"
     deep_digest_times: list[str] = Field(default_factory=lambda: ["06:00", "20:00"])
     enable_deep_digest: bool = True
     deep_digest_recipients: Literal["developers", "all_users"] = "developers"
