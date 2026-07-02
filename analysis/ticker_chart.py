@@ -6,8 +6,6 @@ import io
 import logging
 from typing import Literal
 
-import pandas as pd
-
 from analysis.indicator_rules import fetch_ohlcv_history
 
 logger = logging.getLogger(__name__)

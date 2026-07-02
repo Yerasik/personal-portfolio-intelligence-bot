@@ -15,6 +15,7 @@ from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
+from bot.add_ticker_args import parse_add_ticker_args
 from bot.chart_args import parse_chart_args
 from analysis.performance_series import ChartPeriod
 from bot.commands import BotCommands
