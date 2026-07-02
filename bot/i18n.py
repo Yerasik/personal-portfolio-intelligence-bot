@@ -127,7 +127,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_section_short": "Short-term holdings",
         "horizon_label_long": "long-term",
         "horizon_label_short": "short-term",
-        "portfolio_cost_basis": "  Cost basis: {value:.2f}",
+        "portfolio_cost_basis": "  Blended cost (avg): {value:.2f}",
         "portfolio_price_unavailable": "  Price: unavailable",
         "portfolio_last_price": "  Last price: {price:.2f} ({change})",
         "portfolio_last_price_ccy": "  Last price: {price:.2f} {currency} ({change})",
@@ -194,7 +194,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Arguments:\n"
             "• TICKER — symbol (e.g. AAPL, 1810.HK); new tickers are market-validated\n"
             "• shares — optional, default 1\n"
-            "• cost_basis — optional per-share cost; blended when adding to an existing holding\n\n"
+            "• cost_basis — optional per-share cost for the new lot\n\n"
             "Examples:\n"
             "/add_ticker AAPL\n"
             "/add_ticker AAPL 5\n"
@@ -703,7 +703,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_section_short": "Kurzfristige Positionen",
         "horizon_label_long": "langfristig",
         "horizon_label_short": "kurzfristig",
-        "portfolio_cost_basis": "  Einstand: {value:.2f}",
+        "portfolio_cost_basis": "  Blended cost (avg): {value:.2f}",
         "portfolio_price_unavailable": "  Kurs: nicht verfügbar",
         "portfolio_last_price": "  Letzter Kurs: {price:.2f} ({change})",
         "portfolio_last_price_ccy": "  Letzter Kurs: {price:.2f} {currency} ({change})",
@@ -1266,7 +1266,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_section_short": "短期持仓",
         "horizon_label_long": "长期",
         "horizon_label_short": "短期",
-        "portfolio_cost_basis": "  成本：{value:.2f}",
+        "portfolio_cost_basis": "  混合成本（均价）：{value:.2f}",
         "portfolio_price_unavailable": "  价格：不可用",
         "portfolio_last_price": "  最新价：{price:.2f}（{change}）",
         "portfolio_last_price_ccy": "  最新价：{price:.2f} {currency}（{change}）",
@@ -1816,7 +1816,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_section_short": "Краткосрочные позиции",
         "horizon_label_long": "долгосрочная",
         "horizon_label_short": "краткосрочная",
-        "portfolio_cost_basis": "  Средняя цена: {value:.2f}",
+        "portfolio_cost_basis": "  Средняя цена (смеш.): {value:.2f}",
         "portfolio_price_unavailable": "  Цена: недоступна",
         "portfolio_last_price": "  Последняя цена: {price:.2f} ({change})",
         "portfolio_last_price_ccy": "  Последняя цена: {price:.2f} {currency} ({change})",

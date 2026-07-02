@@ -21,7 +21,15 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 MAX_NEWS_IN_PROMPT = 6
+_ANALYZE_HEADLINES = 5
 _SUMMARY_CLIP = 160
+
+_LANGUAGE_LABELS = {
+    "en": "English",
+    "de": "German",
+    "zh": "Chinese",
+    "ru": "Russian",
+}
 
 Sentiment = Literal["positive", "negative", "mixed", "uncertain"]
 ExplanationSource = Literal["llm", "fallback"]
@@ -124,6 +132,99 @@ def recent_news_titles_for_ticker(
     return titles
 
 
+@dataclass(frozen=True)
+class AnalyzeTickerContext:
+    """Inputs for the /analyze <ticker> LLM prompt."""
+
+    ticker: str
+    price: float | None
+    change_pct: float | None
+    week_52_low: float | None
+    week_52_high: float | None
+    cost_basis: float | None
+    pnl_pct: float | None
+    rsi: float | None
+    headlines: list[str]
+    language: str = "en"
+
+
+def fetch_fifty_two_week_range(ticker: str) -> tuple[float | None, float | None]:
+    """Return the 52-week low and high from yfinance, when available."""
+    symbol = ticker.strip().upper()
+    if not symbol:
+        return None, None
+    try:
+        import yfinance as yf
+
+        info = yf.Ticker(symbol).info or {}
+        low = _coerce_optional_float(info.get("fiftyTwoWeekLow"))
+        high = _coerce_optional_float(info.get("fiftyTwoWeekHigh"))
+        return low, high
+    except Exception as exc:
+        logger.debug("52-week range fetch failed for %s: %s", symbol, exc)
+        return None, None
+
+
+def _coerce_optional_float(value: Any) -> float | None:
+    try:
+        if value is None:
+            return None
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _format_price(value: float | None, *, currency: str = "") -> str:
+    if value is None:
+        return "n/a"
+    suffix = f" {currency}".rstrip()
+    return f"{value:,.2f}{suffix}" if suffix else f"{value:,.2f}"
+
+
+def _format_pct(value: float | None) -> str:
+    if value is None:
+        return "n/a"
+    return f"{value:+.2f}%"
+
+
+def _numbered_headlines(headlines: list[str], *, limit: int = _ANALYZE_HEADLINES) -> str:
+    if not headlines:
+        return "1. (none available)"
+    return "\n   ".join(
+        f"{index}. {headline}"
+        for index, headline in enumerate(headlines[:limit], start=1)
+    )
+
+
+def build_analyze_ticker_prompt(context: AnalyzeTickerContext) -> str:
+    """Build the /analyze <ticker> prompt for Ollama (qwen3:30b via HTTP API)."""
+    from storage.languages import normalize_language
+
+    language = _LANGUAGE_LABELS.get(
+        normalize_language(context.language),
+        "English",
+    )
+    symbol = context.ticker.strip().upper()
+    return (
+        f"System: You are a concise financial analyst. Respond in {language}. "
+        f"Be specific, grounded, and under 150 words.\n\n"
+        f"User context:\n"
+        f"  - Ticker: {symbol}\n"
+        f"  - Current price: {_format_price(context.price)}, "
+        f"Change today: {_format_pct(context.change_pct)}\n"
+        f"  - 52-week range: {_format_price(context.week_52_low)} - "
+        f"{_format_price(context.week_52_high)}\n"
+        f"  - Cost basis: {_format_price(context.cost_basis)}, "
+        f"Unrealized P&L: {_format_pct(context.pnl_pct)}\n"
+        f"  - RSI(14): {_format_price(context.rsi)}\n"
+        f"  - Recent headlines (last 5, ticker-tagged):\n"
+        f"   {_numbered_headlines(context.headlines)}\n\n"
+        f"Instruction: Explain the price move in 3 bullet points. "
+        f"Reference specific headlines where relevant. "
+        f"End with one actionable observation (not a trade recommendation)."
+    )
+
+
 def build_price_move_explanation_prompt(
     ticker: str,
     direction: str,
@@ -221,6 +322,88 @@ def _fallback_explanation(
         assessment="",
         source="fallback",
         error=error,
+    )
+
+
+def _parse_analyze_response(text: str) -> tuple[list[str], str]:
+    """Parse bullet points and a closing observation from model prose."""
+    lines: list[str] = []
+    for raw in text.splitlines():
+        stripped = raw.strip()
+        if not stripped:
+            continue
+        stripped = re.sub(r"^[-*•]\s*", "", stripped)
+        stripped = re.sub(r"^\d+\.\s*", "", stripped)
+        if stripped:
+            lines.append(stripped)
+
+    if not lines:
+        return [], ""
+
+    if len(lines) >= 4:
+        return lines[:3], lines[3]
+    if len(lines) == 3:
+        return lines[:3], ""
+    if len(lines) == 2:
+        return [lines[0]], lines[1]
+    return lines, ""
+
+
+def explain_ticker_for_analyze(
+    llm: LlmClient,
+    context: AnalyzeTickerContext,
+    *,
+    window: str = "today",
+) -> PriceMoveExplanation:
+    """Call Ollama with the /analyze prompt and return a structured explanation."""
+    direction = direction_for_change(context.change_pct or 0.0)
+    magnitude = abs(context.change_pct or 0.0)
+
+    if not getattr(llm, "is_configured", False):
+        return _fallback_explanation(
+            context.ticker,
+            direction,
+            magnitude,
+            window,
+            error="LLM is not configured",
+        )
+
+    prompt = build_analyze_ticker_prompt(context)
+    try:
+        raw_response = llm.generate(prompt)
+        drivers, assessment = _parse_analyze_response(raw_response)
+    except Exception as exc:
+        logger.warning(
+            "Analyze ticker explanation failed for %s: %s",
+            context.ticker,
+            exc,
+        )
+        return _fallback_explanation(
+            context.ticker,
+            direction,
+            magnitude,
+            window,
+            error=str(exc),
+        )
+
+    if not drivers and not assessment:
+        return _fallback_explanation(
+            context.ticker,
+            direction,
+            magnitude,
+            window,
+            error="empty model response",
+        )
+
+    return PriceMoveExplanation(
+        ticker=context.ticker.strip().upper(),
+        direction=direction,
+        magnitude=magnitude,
+        window=window,
+        drivers=drivers,
+        sentiment="uncertain",
+        assessment=assessment,
+        source="llm",
     )
 
 

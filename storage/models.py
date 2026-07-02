@@ -1,18 +1,90 @@
 """Pydantic models for JSON documents stored under /app/data."""
 
 from datetime import datetime
-from typing import Literal
+from typing import Any, Literal, Self
 
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+
+class PositionLot(BaseModel):
+    """One purchase lot for a portfolio holding."""
+
+    shares: float = Field(gt=0)
+    cost: float | None = Field(default=None, gt=0)
+    date: str = "unknown"
 
 
 class Position(BaseModel):
-    """A single portfolio holding."""
+    """A single portfolio holding with per-lot cost tracking."""
 
     ticker: str = Field(min_length=1)
-    shares: float = Field(gt=0)
-    cost_basis: float | None = None
+    lots: list[PositionLot] = Field(default_factory=list)
     notes: str = ""
+
+    @model_validator(mode="before")
+    @classmethod
+    def migrate_legacy_format(cls, data: Any) -> Any:
+        """Convert legacy shares/cost_basis rows into a single lot on load."""
+        if not isinstance(data, dict):
+            return data
+        if data.get("lots"):
+            cleaned = {key: value for key, value in data.items() if key not in {"shares", "cost_basis"}}
+            return cleaned
+
+        shares = data.pop("shares", None)
+        cost_basis = data.pop("cost_basis", None)
+        if shares is None:
+            return data
+
+        lot: dict[str, Any] = {
+            "shares": shares,
+            "date": "unknown",
+        }
+        if cost_basis is not None:
+            lot["cost"] = cost_basis
+        data["lots"] = [lot]
+        return data
+
+    @model_validator(mode="after")
+    def validate_lots(self) -> Self:
+        if not self.lots:
+            raise ValueError("position must have at least one lot")
+        if self.shares <= 0:
+            raise ValueError("total shares must be positive")
+        return self
+
+    @property
+    def shares(self) -> float:
+        """Total shares across all lots."""
+        return sum(lot.shares for lot in self.lots)
+
+    @property
+    def blended_cost_basis(self) -> float | None:
+        """Weighted average cost per share from lots with a known cost."""
+        priced = [lot for lot in self.lots if lot.cost is not None]
+        if not priced:
+            return None
+        total_shares = sum(lot.shares for lot in priced)
+        if total_shares <= 0:
+            return None
+        weighted = sum(lot.shares * lot.cost for lot in priced if lot.cost is not None)
+        return weighted / total_shares
+
+    @property
+    def cost_basis(self) -> float | None:
+        """Backward-compatible alias for blended_cost_basis."""
+        return self.blended_cost_basis
+
+    def total_cost_in_listing_currency(self) -> float | None:
+        """Sum of lot shares × cost for lots with a known per-share cost."""
+        priced = [
+            lot.shares * lot.cost
+            for lot in self.lots
+            if lot.cost is not None
+        ]
+        if not priced:
+            return None
+        return sum(priced)
 
 
 class Portfolio(BaseModel):

@@ -734,8 +734,10 @@ def _append_portfolio_position_lines(
             horizon=_horizon_label(horizon, lang),
         )
     )
-    if position.cost_basis is not None:
-        lines.append(t("portfolio_cost_basis", lang, value=position.cost_basis))
+    if position.blended_cost_basis is not None:
+        lines.append(
+            t("portfolio_cost_basis", lang, value=position.blended_cost_basis)
+        )
 
     quote = state.latest_prices.get(symbol)
     position_value = by_ticker.get(symbol)

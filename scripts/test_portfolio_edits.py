@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import json
 import shutil
 import sys
 import tempfile
@@ -13,7 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from storage.models import Portfolio, Position
+from storage.models import Portfolio, Position, PositionLot
 from storage.paths import resolve_data_paths
 from storage.portfolio_ops import (
     add_ticker_to_portfolio,
@@ -37,37 +38,51 @@ def run_test() -> None:
     assert validate_ticker_format("") is not None
     assert validate_ticker_format("bad ticker") is not None
 
-    portfolio = Portfolio(
-        positions=[Position(ticker="AAPL", shares=10, cost_basis=150.0)]
+    legacy = Position.model_validate(
+        {"ticker": "AAPL", "shares": 10, "cost_basis": 150.0, "notes": ""}
     )
+    if len(legacy.lots) != 1 or legacy.lots[0].cost != 150.0:
+        raise AssertionError("legacy position should migrate to one lot")
+    if legacy.lots[0].date != "unknown":
+        raise AssertionError("legacy lot date should be unknown")
+    if legacy.blended_cost_basis != 150.0:
+        raise AssertionError("blended cost should match migrated lot")
+
+    portfolio = Portfolio(positions=[legacy])
     updated, duplicate = add_ticker_to_portfolio(portfolio, "AAPL", shares=3)
     if not duplicate.success:
         raise AssertionError(f"increment existing should succeed: {duplicate}")
     aapl = next(p for p in updated.positions if p.ticker == "AAPL")
     if aapl.shares != 13:
         raise AssertionError(f"expected 13 AAPL shares, got {aapl.shares}")
-    if aapl.cost_basis != 150.0:
-        raise AssertionError(f"cost basis should stay 150 without new cost, got {aapl.cost_basis}")
+    if len(aapl.lots) != 2:
+        raise AssertionError(f"expected 2 lots after add, got {len(aapl.lots)}")
+    if aapl.blended_cost_basis != 150.0:
+        raise AssertionError("blended cost should stay 150 when new lot has no cost")
 
-    updated, blended = add_ticker_to_portfolio(
+    updated, added_lot = add_ticker_to_portfolio(
         updated,
         "AAPL",
         shares=2,
         cost_basis=200.0,
     )
-    if not blended.success:
-        raise AssertionError(f"blend cost should succeed: {blended}")
+    if not added_lot.success:
+        raise AssertionError(f"lot add should succeed: {added_lot}")
     aapl = next(p for p in updated.positions if p.ticker == "AAPL")
-    expected_cost = (13 * 150.0 + 2 * 200.0) / 15
-    if abs(aapl.cost_basis - expected_cost) > 1e-9:
-        raise AssertionError(f"unexpected blended cost {aapl.cost_basis}, want {expected_cost}")
+    if len(aapl.lots) != 3:
+        raise AssertionError(f"expected 3 lots, got {len(aapl.lots)}")
+    expected_cost = (10 * 150.0 + 2 * 200.0) / 12
+    if abs(aapl.blended_cost_basis - expected_cost) > 1e-9:
+        raise AssertionError(
+            f"unexpected blended cost {aapl.blended_cost_basis}, want {expected_cost}"
+        )
 
     updated, added = add_ticker_to_portfolio(updated, "NVDA", shares=5, cost_basis=120.0)
     if not added.success or len(updated.positions) != 2:
         raise AssertionError(f"add failed: {added}")
     nvda = next(p for p in updated.positions if p.ticker == "NVDA")
-    if nvda.cost_basis != 120.0:
-        raise AssertionError(f"expected NVDA cost 120, got {nvda.cost_basis}")
+    if nvda.blended_cost_basis != 120.0:
+        raise AssertionError(f"expected NVDA cost 120, got {nvda.blended_cost_basis}")
 
     _, bad_cost = add_ticker_to_portfolio(updated, "NVDA", shares=1, cost_basis=0)
     if bad_cost.success:
@@ -82,7 +97,12 @@ def run_test() -> None:
         raise AssertionError(f"remove failed: {removed}")
 
     portfolio = Portfolio(
-        positions=[Position(ticker="MSFT", shares=10, cost_basis=400.0)],
+        positions=[
+            Position(
+                ticker="MSFT",
+                lots=[PositionLot(shares=10, cost=400.0, date="unknown")],
+            )
+        ],
         cash=1000.0,
     )
     with _FX_PATCH:
@@ -138,13 +158,22 @@ def run_test() -> None:
     try:
         paths = resolve_data_paths(temp_dir)
         repo = DataRepository(paths)
-        repo.save_portfolio(Portfolio(positions=[Position(ticker="MSFT", shares=2)]))
+        repo.save_portfolio(
+            Portfolio(
+                positions=[
+                    Position(
+                        ticker="MSFT",
+                        lots=[PositionLot(shares=2, cost=300.0, date="2026-01-01")],
+                    )
+                ]
+            )
+        )
 
         with patch(
             "storage.portfolio_ops.verify_ticker_exists",
             return_value=None,
         ):
-            result = repo.add_ticker_to_portfolio("GOOG", shares=3)
+            result = repo.add_ticker_to_portfolio("GOOG", shares=3, cost_basis=140.0)
         if not result.success:
             raise AssertionError(f"repository add failed: {result.message}")
 
@@ -152,6 +181,13 @@ def run_test() -> None:
         tickers = {position.ticker for position in loaded.positions}
         if tickers != {"MSFT", "GOOG"}:
             raise AssertionError(f"unexpected tickers after add: {tickers}")
+
+        raw = json.loads(paths.portfolio.read_text(encoding="utf-8"))
+        msft_row = raw["positions"][0]
+        if "shares" in msft_row or "cost_basis" in msft_row:
+            raise AssertionError("persisted portfolio should store lots, not legacy fields")
+        if "lots" not in msft_row:
+            raise AssertionError("persisted portfolio missing lots")
 
         removed_repo = repo.remove_ticker_from_portfolio("MSFT")
         if not removed_repo.success:

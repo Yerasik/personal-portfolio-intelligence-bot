@@ -161,9 +161,10 @@ def value_position_hkd(
     cost_value_hkd: float | None = None
     pl_hkd: float | None = None
     pl_pct: float | None = None
-    if position.cost_basis is not None:
+    total_cost = position.total_cost_in_listing_currency()
+    if total_cost is not None:
         cost_value_hkd = convert_to_hkd(
-            position.cost_basis * position.shares,
+            total_cost,
             currency,
             fx_rates=fx_rates,
         )

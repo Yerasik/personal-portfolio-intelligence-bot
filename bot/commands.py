@@ -12,10 +12,15 @@ from dataclasses import dataclass
 from analysis.industries import build_news_fetch_industries, build_news_focus_industries
 from analysis.llm import LlmAdvisoryResult, LlmClient
 from analysis.move_explainer import (
+    AnalyzeTickerContext,
     PriceMoveExplanation,
+    build_analyze_ticker_prompt,
     explain_price_move,
+    explain_ticker_for_analyze,
+    fetch_fifty_two_week_range,
     recent_news_titles_for_ticker,
 )
+from analysis.technical_snapshot import build_technical_snapshot
 from analysis.strategy_writer import (
     build_strategy_text_by_language,
     generate_sell_announcement_from_reasoning,
@@ -444,21 +449,34 @@ class BotCommands:
         position_value = valuation_for_ticker(portfolio, state, symbol)
 
         explanation: PriceMoveExplanation | None = None
-        if (
-            app_config.enable_llm_summaries
-            and quote is not None
-            and quote.change_pct is not None
-        ):
-            news = recent_news_titles_for_ticker(news_cache, symbol)
-            explanation = explain_price_move(
-                self.llm,
-                symbol,
-                quote.change_pct,
-                window,
-                news,
-                company_name=quote.company_name,
-                sector=quote.sector,
+        if app_config.enable_llm_summaries and quote is not None:
+            position = next(
+                (
+                    item
+                    for item in portfolio.positions
+                    if item.ticker.strip().upper() == symbol
+                ),
+                None,
+            )
+            week_low, week_high = fetch_fifty_two_week_range(symbol)
+            ta_snapshot = build_technical_snapshot(symbol)
+            news = recent_news_titles_for_ticker(news_cache, symbol, limit=5)
+            context = AnalyzeTickerContext(
+                ticker=symbol,
+                price=quote.price,
+                change_pct=quote.change_pct,
+                week_52_low=week_low,
+                week_52_high=week_high,
+                cost_basis=position.cost_basis if position is not None else None,
+                pnl_pct=position_value.pl_pct if position_value is not None else None,
+                rsi=ta_snapshot.rsi_value if ta_snapshot is not None else None,
+                headlines=news,
                 language=lang,
+            )
+            explanation = explain_ticker_for_analyze(
+                self.llm,
+                context,
+                window=window,
             )
 
         return format_ticker_analysis(

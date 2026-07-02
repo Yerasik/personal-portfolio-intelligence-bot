@@ -15,8 +15,11 @@ if str(ROOT) not in sys.path:
 
 import scheduler.jobs as jobs_module
 from analysis.move_explainer import (
+    AnalyzeTickerContext,
+    build_analyze_ticker_prompt,
     build_price_move_explanation_prompt,
     explain_price_move,
+    explain_ticker_for_analyze,
 )
 from bot.formatter import format_urgent_alert
 from config.settings import RuntimeSettings
@@ -49,6 +52,67 @@ class FakeLlm:
         if isinstance(self.response, Exception):
             raise self.response
         return self.response
+
+
+def test_analyze_ticker_prompt() -> None:
+    prompt = build_analyze_ticker_prompt(
+        AnalyzeTickerContext(
+            ticker="AAPL",
+            price=190.25,
+            change_pct=-2.4,
+            week_52_low=164.0,
+            week_52_high=220.5,
+            cost_basis=175.0,
+            pnl_pct=8.7,
+            rsi=58.3,
+            headlines=["Apple faces demand headwinds", "Services revenue beats"],
+            language="en",
+        )
+    )
+    for needle in (
+        "System: You are a concise financial analyst",
+        "Respond in English",
+        "Ticker: AAPL",
+        "Current price: 190.25",
+        "Change today: -2.40%",
+        "52-week range: 164.00 - 220.50",
+        "Cost basis: 175.00",
+        "Unrealized P&L: +8.70%",
+        "RSI(14): 58.30",
+        "1. Apple faces demand headwinds",
+        "3 bullet points",
+        "actionable observation",
+    ):
+        if needle not in prompt:
+            raise AssertionError(f"analyze prompt missing {needle!r}:\n{prompt}")
+
+
+def test_analyze_ticker_helper() -> None:
+    good_llm = FakeLlm(
+        "- Demand concerns weighed on the stock.\n"
+        "- Services growth partially offset hardware softness.\n"
+        "- RSI remains neutral, suggesting no extreme positioning.\n"
+        "Watch the next product-cycle commentary before reassessing exposure."
+    )
+    context = AnalyzeTickerContext(
+        ticker="AAPL",
+        price=190.0,
+        change_pct=-2.0,
+        week_52_low=164.0,
+        week_52_high=220.0,
+        cost_basis=None,
+        pnl_pct=None,
+        rsi=55.0,
+        headlines=["Apple faces demand headwinds"],
+        language="en",
+    )
+    result = explain_ticker_for_analyze(good_llm, context, window="today")
+    if result.source != "llm" or len(result.drivers) != 3:
+        raise AssertionError(f"unexpected analyze result: {result}")
+    if not result.assessment:
+        raise AssertionError("expected closing actionable observation")
+    if "concise financial analyst" not in good_llm.prompts[0]:
+        raise AssertionError("analyze path should use the new prompt template")
 
 
 def test_prompt_builder() -> None:
@@ -208,6 +272,8 @@ def test_alert_pipeline_and_delivery_explanation() -> None:
 
 
 def run_test() -> None:
+    test_analyze_ticker_prompt()
+    test_analyze_ticker_helper()
     test_prompt_builder()
     test_helper_success_and_fallback()
     test_alert_pipeline_and_delivery_explanation()

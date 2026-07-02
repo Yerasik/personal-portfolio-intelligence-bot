@@ -57,6 +57,14 @@ def run_tests() -> None:
         repo.save_portfolio(portfolio)
         loaded = repo.load_portfolio()
         _assert(loaded.positions[0].ticker == "AAPL", "portfolio round-trip")
+        _assert(loaded.positions[0].shares == 10, "migrated shares")
+        _assert(loaded.positions[0].blended_cost_basis == 150.0, "migrated cost")
+        _assert(len(loaded.positions[0].lots) == 1, "single lot after migration")
+        _assert(loaded.positions[0].lots[0].date == "unknown", "legacy lot date")
+
+        raw = paths.portfolio.read_text(encoding="utf-8")
+        _assert('"lots"' in raw, "portfolio persisted with lots")
+        _assert('"cost_basis"' not in raw, "legacy cost_basis not persisted")
 
         state = BotState(last_digest_at=datetime.now(tz=UTC))
         repo.save_state(state)

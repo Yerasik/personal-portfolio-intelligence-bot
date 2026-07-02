@@ -5,7 +5,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from storage.models import BotState, Portfolio, Position
+from storage.models import BotState, Portfolio, Position, PositionLot
 
 _TICKER_PATTERN = re.compile(r"^[A-Z0-9][A-Z0-9.\-]{0,14}$")
 
@@ -87,21 +87,38 @@ def _portfolio_has_ticker(portfolio: Portfolio, symbol: str) -> bool:
     return portfolio_has_ticker(portfolio, symbol)
 
 
-def _blend_cost_basis(
-    old_shares: float,
-    old_cost: float | None,
-    new_shares: float,
-    new_cost: float | None,
-) -> float | None:
-    """Compute weighted average cost when adding shares."""
-    if new_cost is None:
-        return old_cost
-    if old_cost is None or old_shares <= 0:
-        return new_cost
-    total_shares = old_shares + new_shares
-    if total_shares <= 0:
-        return new_cost
-    return (old_shares * old_cost + new_shares * new_cost) / total_shares
+def _reduce_lots_fifo(
+    lots: list[PositionLot],
+    shares_to_sell: float,
+) -> list[PositionLot]:
+    """Consume shares from oldest lots first (FIFO)."""
+    remaining = shares_to_sell
+    updated: list[PositionLot] = []
+    for lot in lots:
+        if remaining <= 1e-9:
+            updated.append(lot)
+            continue
+        if lot.shares <= remaining + 1e-9:
+            remaining -= lot.shares
+            continue
+        updated.append(lot.model_copy(update={"shares": lot.shares - remaining}))
+        remaining = 0.0
+    if remaining > 1e-9:
+        raise ValueError("cannot sell more shares than held in lots")
+    return updated
+
+
+def _new_lot(
+    shares: float,
+    cost: float | None,
+    *,
+    lot_date: str | None = None,
+) -> PositionLot:
+    """Build a purchase lot for /add_ticker."""
+    from datetime import UTC, datetime
+
+    purchased_on = lot_date or datetime.now(tz=UTC).date().isoformat()
+    return PositionLot(shares=shares, cost=cost, date=purchased_on)
 
 
 def add_ticker_to_portfolio(
@@ -135,20 +152,14 @@ def add_ticker_to_portfolio(
         new_positions: list[Position] = []
         updated = False
         new_total = 0.0
+        blended_cost: float | None = None
         for position in portfolio.positions:
             if normalize_ticker(position.ticker) == normalized:
-                new_total = position.shares + shares
-                blended_cost = _blend_cost_basis(
-                    position.shares,
-                    position.cost_basis,
-                    shares,
-                    cost_basis,
-                )
-                new_positions.append(
-                    position.model_copy(
-                        update={"shares": new_total, "cost_basis": blended_cost}
-                    )
-                )
+                new_lots = [*position.lots, _new_lot(shares, cost_basis)]
+                updated_position = position.model_copy(update={"lots": new_lots})
+                new_total = updated_position.shares
+                blended_cost = updated_position.blended_cost_basis
+                new_positions.append(updated_position)
                 updated = True
             else:
                 new_positions.append(position)
@@ -160,25 +171,29 @@ def add_ticker_to_portfolio(
             )
         updated_portfolio = portfolio.model_copy(update={"positions": new_positions})
         cost_note = (
-            f"; average cost {blended_cost:g}"
+            f"; blended cost {blended_cost:g}"
             if blended_cost is not None
             else ""
         )
         return updated_portfolio, PortfolioTickerResult(
             True,
             (
-                f"Added {shares:g} share(s) to {normalized}; "
-                f"now holding {new_total:g} share(s){cost_note}."
+                f"Added lot of {shares:g} share(s) to {normalized}; "
+                f"now holding {new_total:g} share(s) in {len(updated_position.lots)} lot(s){cost_note}."
             ),
             normalized,
             is_new_position=False,
         )
 
+    new_position = Position(
+        ticker=normalized,
+        lots=[_new_lot(shares, cost_basis)],
+    )
     updated = portfolio.model_copy(
         update={
             "positions": [
                 *portfolio.positions,
-                Position(ticker=normalized, shares=shares, cost_basis=cost_basis),
+                new_position,
             ]
         }
     )
@@ -386,10 +401,10 @@ def sell_ticker_from_portfolio(
             if normalize_ticker(item.ticker) != normalized
         ]
     else:
-        remaining = position.shares - shares_to_sell
+        remaining_lots = _reduce_lots_fifo(position.lots, shares_to_sell)
         new_positions = [
             (
-                item.model_copy(update={"shares": remaining})
+                item.model_copy(update={"lots": remaining_lots})
                 if normalize_ticker(item.ticker) == normalized
                 else item
             )
