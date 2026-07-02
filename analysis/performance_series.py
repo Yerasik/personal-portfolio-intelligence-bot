@@ -47,7 +47,12 @@ def aggregate_performance_bars(
             for row in ordered
             if _local_date(row.timestamp, tz) >= start_local
         ]
-        return _bars_from_buckets(filtered, granularity="day", tz=tz)
+        return _bars_from_buckets(
+            filtered,
+            granularity="day",
+            tz=tz,
+            reference=evaluated_at.astimezone(tz),
+        )
 
     if period == "month":
         start_local = evaluated_at.astimezone(tz).date() - timedelta(days=29)
@@ -56,10 +61,20 @@ def aggregate_performance_bars(
             for row in ordered
             if _local_date(row.timestamp, tz) >= start_local
         ]
-        return _bars_from_buckets(filtered, granularity="week", tz=tz)
+        return _bars_from_buckets(
+            filtered,
+            granularity="week",
+            tz=tz,
+            reference=evaluated_at.astimezone(tz),
+        )
 
     granularity = _auto_granularity(ordered, tz)
-    return _bars_from_buckets(ordered, granularity=granularity, tz=tz)
+    return _bars_from_buckets(
+        ordered,
+        granularity=granularity,
+        tz=tz,
+        reference=evaluated_at.astimezone(tz),
+    )
 
 
 def _auto_granularity(
@@ -82,6 +97,7 @@ def _bars_from_buckets(
     *,
     granularity: BucketGranularity,
     tz: ZoneInfo,
+    reference: datetime | None = None,
 ) -> list[ValueBar]:
     """Group snapshots and build OHLC bars in chronological order."""
     buckets: dict[date | tuple[int, int], list[PortfolioPerformanceSnapshot]] = {}
@@ -115,7 +131,7 @@ def _bars_from_buckets(
                 high=high,
                 low=low,
                 close=close,
-                label=_bucket_label(start, granularity),
+                label=_bucket_label(start, granularity, reference=reference),
             )
         )
     return bars
@@ -130,11 +146,30 @@ def _ohlc(
     return values[0], max(values), min(values), values[-1]
 
 
-def _bucket_label(start_local: datetime, granularity: BucketGranularity) -> str:
+def _bucket_label(
+    start_local: datetime,
+    granularity: BucketGranularity,
+    *,
+    reference: datetime | None = None,
+) -> str:
+    """Human-friendly axis label for one chart bucket."""
     if granularity == "day":
-        return start_local.strftime("%a %m-%d")
+        bar_date = start_local.date()
+        if reference is not None:
+            ref_date = reference.astimezone(start_local.tzinfo).date()
+            if bar_date == ref_date:
+                return "Today"
+            if bar_date == ref_date - timedelta(days=1):
+                return "Yesterday"
+        weekday = start_local.strftime("%a")
+        return f"{weekday}\n{start_local.strftime('%-d %b')}"
+
     if granularity == "week":
-        return start_local.strftime("W%V %m-%d")
+        week_end = start_local.date() + timedelta(days=6)
+        if start_local.month == week_end.month:
+            return f"{start_local.strftime('%-d')}–{week_end.strftime('%-d %b')}"
+        return f"{start_local.strftime('%-d %b')}–\n{week_end.strftime('%-d %b')}"
+
     return start_local.strftime("%b %Y")
 
 
