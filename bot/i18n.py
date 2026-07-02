@@ -56,6 +56,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Analysis\n"
             "  /analyze — portfolio review\n"
             "  /analyze <TICKER> — explain a price move\n"
+            "  /chart <TICKER> [7d|30d|90d] — candlestick price chart\n"
             "  /risk_metrics — Sharpe, drawdown, vs benchmark\n\n"
             "Settings\n"
             "  /set_language <code> — language (en, de, zh, ru)\n"
@@ -259,6 +260,25 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Returns a technical analysis snapshot using 90 days of daily data:\n"
             "RSI(14), MACD crossover status, SMA20 vs SMA50, and Bollinger Bands.\n\n"
             "Example: /ta AAPL"
+        ),
+        "chart_fetching": "Fetching price history and rendering chart…",
+        "chart_invalid_ticker": "Invalid ticker {symbol}: {error}",
+        "chart_invalid_period": (
+            "Unsupported period. Use 7d, 30d, or 90d.\n\n"
+            "Example: /chart AAPL 30d"
+        ),
+        "chart_unavailable": (
+            "Could not load a price chart for {symbol} ({period}). "
+            "Check the ticker or try again later."
+        ),
+        "chart_usage": (
+            "How to use /chart\n\n"
+            "Syntax: /chart <TICKER> [7d|30d|90d]\n\n"
+            "Renders a candlestick chart with volume and SMA overlays "
+            "(20-day and 50-day where the period allows). Default period: 30d.\n\n"
+            "Examples:\n"
+            "/chart AAPL\n"
+            "/chart NVDA 90d"
         ),
         "ta_rsi_overbought": "overbought",
         "ta_rsi_oversold": "oversold",
@@ -636,6 +656,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Analyse\n"
             "  /analyze — Portfolio-Beratung\n"
             "  /analyze <TICKER> — Kursbewegung erklären\n"
+            "  /chart <TICKER> [7d|30d|90d] — Kerzenchart\n"
             "  /risk_metrics — Sharpe, Drawdown, vs. Benchmark\n\n"
             "Einstellungen\n"
             "  /set_language <code> — Sprache (en, de, zh, ru)\n"
@@ -832,6 +853,25 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Technische Momentaufnahme aus 90 Tagen Tagesdaten:\n"
             "RSI(14), MACD, SMA20 vs SMA50, Bollinger-Bänder.\n\n"
             "Beispiel: /ta AAPL"
+        ),
+        "chart_fetching": "Kursdaten werden geladen und Chart erstellt…",
+        "chart_invalid_ticker": "Ungültiger Ticker {symbol}: {error}",
+        "chart_invalid_period": (
+            "Ungültiger Zeitraum. Verwenden Sie 7d, 30d oder 90d.\n\n"
+            "Beispiel: /chart AAPL 30d"
+        ),
+        "chart_unavailable": (
+            "Kein Kurschart für {symbol} ({period}) verfügbar. "
+            "Ticker prüfen oder später erneut versuchen."
+        ),
+        "chart_usage": (
+            "So verwenden Sie /chart\n\n"
+            "Syntax: /chart <TICKER> [7d|30d|90d]\n\n"
+            "Kerzenchart mit Volumen und SMA-Overlays "
+            "(20- und 50-Tage, soweit der Zeitraum es erlaubt). Standard: 30d.\n\n"
+            "Beispiele:\n"
+            "/chart AAPL\n"
+            "/chart NVDA 90d"
         ),
         "ta_rsi_overbought": "überkauft",
         "ta_rsi_oversold": "überverkauft",
@@ -1199,6 +1239,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "分析\n"
             "  /analyze — 投资组合建议\n"
             "  /analyze <代码> — 解释价格变动\n"
+            "  /chart <代码> [7d|30d|90d] — K线价格图\n"
             "  /risk_metrics — 夏普比率、回撤、相对基准\n\n"
             "设置\n"
             "  /set_language <code> — 语言 (en, de, zh, ru)\n"
@@ -1388,6 +1429,23 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "语法：/ta <代码>\n\n"
             "基于 90 日日线数据返回：RSI(14)、MACD、SMA20 vs SMA50、布林带。\n\n"
             "示例：/ta AAPL"
+        ),
+        "chart_fetching": "正在获取行情并生成图表…",
+        "chart_invalid_ticker": "无效代码 {symbol}：{error}",
+        "chart_invalid_period": (
+            "不支持的周期。请使用 7d、30d 或 90d。\n\n"
+            "示例：/chart AAPL 30d"
+        ),
+        "chart_unavailable": (
+            "无法加载 {symbol}（{period}）的价格图，请检查代码或稍后重试。"
+        ),
+        "chart_usage": (
+            "如何使用 /chart\n\n"
+            "语法：/chart <代码> [7d|30d|90d]\n\n"
+            "生成带成交量与均线（周期允许时显示 20 日与 50 日 SMA）的 K 线图。默认 30d。\n\n"
+            "示例：\n"
+            "/chart AAPL\n"
+            "/chart NVDA 90d"
         ),
         "ta_rsi_overbought": "超买",
         "ta_rsi_oversold": "超卖",
@@ -1748,6 +1806,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Анализ\n"
             "  /analyze — обзор портфеля\n"
             "  /analyze <ТИКЕР> — объяснить движение цены\n"
+            "  /chart <ТИКЕР> [7d|30d|90d] — свечной график\n"
             "  /risk_metrics — Шарп, просадка, vs бенчмарк\n\n"
             "Настройки\n"
             "  /set_language <code> — язык (en, de, zh, ru)\n"
@@ -1944,6 +2003,25 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Синтаксис: /ta <ТИКЕР>\n\n"
             "Снимок по 90 дням: RSI(14), MACD, SMA20 vs SMA50, полосы Боллинджера.\n\n"
             "Пример: /ta AAPL"
+        ),
+        "chart_fetching": "Загрузка истории и построение графика…",
+        "chart_invalid_ticker": "Неверный тикер {symbol}: {error}",
+        "chart_invalid_period": (
+            "Неподдерживаемый период. Используйте 7d, 30d или 90d.\n\n"
+            "Пример: /chart AAPL 30d"
+        ),
+        "chart_unavailable": (
+            "Не удалось построить график для {symbol} ({period}). "
+            "Проверьте тикер или повторите позже."
+        ),
+        "chart_usage": (
+            "Как использовать /chart\n\n"
+            "Синтаксис: /chart <ТИКЕР> [7d|30d|90d]\n\n"
+            "Свечной график с объёмом и SMA (20 и 50 дней, где период позволяет). "
+            "По умолчанию: 30d.\n\n"
+            "Примеры:\n"
+            "/chart AAPL\n"
+            "/chart NVDA 90d"
         ),
         "ta_rsi_overbought": "перекупленность",
         "ta_rsi_oversold": "перепроданность",

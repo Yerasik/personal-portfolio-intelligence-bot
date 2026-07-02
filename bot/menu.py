@@ -20,6 +20,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("industries", "Focus industries and news counts"),
     BotCommand("news_summary", "LLM news by sector and ticker"),
     BotCommand("analyze", "Portfolio advisory or /analyze AAPL"),
+    BotCommand("chart", "Candlestick chart for a ticker"),
     BotCommand("set_language", "Set your language (en, de, zh, ru)"),
 )
 

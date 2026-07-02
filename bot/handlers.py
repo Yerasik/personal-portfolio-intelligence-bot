@@ -15,7 +15,7 @@ from telegram import Update
 from telegram.constants import ParseMode
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
-from bot.add_ticker_args import parse_add_ticker_args
+from bot.chart_args import parse_chart_args
 from analysis.performance_series import ChartPeriod
 from bot.commands import BotCommands
 from bot.deposit_cash_args import parse_deposit_cash_args
@@ -707,6 +707,34 @@ async def debug_state_command(update: Update, context: ContextTypes.DEFAULT_TYPE
     )
 
 
+async def chart_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /chart <TICKER> [7d|30d|90d] — candlestick price chart."""
+    user = await _guard(update, context)
+    if user is None or update.message is None:
+        return
+
+    args = context.args or []
+    if not args or args[0].lower() in {"help", "?", "usage"}:
+        await _reply_command_usage(update, user, "chart_usage")
+        return
+
+    parsed, error_key = parse_chart_args(args)
+    if error_key is not None or parsed is None:
+        await update.message.reply_text(t(error_key or "chart_usage", user.language))
+        return
+
+    await update.message.reply_text(t("chart_fetching", user.language))
+    png, error_message = _commands(context).chart_png(
+        user.chat_id,
+        parsed.ticker,
+        period=parsed.period,
+    )
+    if png is None:
+        await update.message.reply_text(error_message)
+        return
+    await update.message.reply_photo(photo=BytesIO(png))
+
+
 async def ta_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /ta <TICKER> — technical analysis snapshot (developer only)."""
     user = await _guard_developer(update, context)
@@ -834,6 +862,7 @@ def register_handlers(
         ("sell_ticker", sell_ticker_command),
         ("undo", undo_command),
         ("analyze", analyze_command),
+        ("chart", chart_command),
         ("set_language", set_language_command),
         ("reload_config", reload_config_command),
         ("debug_state", debug_state_command),

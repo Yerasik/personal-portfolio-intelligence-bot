@@ -28,6 +28,7 @@ from analysis.strategy_writer import (
 )
 from analysis.news_summarizer import iter_news_summary_groups
 from analysis.performance_chart import render_performance_chart_png
+from analysis.ticker_chart import ChartPeriod as TickerChartPeriod, render_ticker_chart_png
 from analysis.performance_series import ChartPeriod
 from analysis.performance_metrics import compute_performance_metrics
 from analysis.portfolio_risk import estimate_portfolio_risk
@@ -1141,6 +1142,25 @@ class BotCommands:
         if snapshot is None:
             return t("ta_unavailable", lang, symbol=symbol), False
         return format_technical_snapshot(snapshot, lang=lang), True
+
+    def chart_png(
+        self,
+        chat_id: int,
+        ticker: str,
+        *,
+        period: TickerChartPeriod = "30d",
+    ) -> tuple[bytes | None, str]:
+        """Render a candlestick chart PNG or return an error message."""
+        lang = self._lang(chat_id)
+        symbol = normalize_ticker(ticker)
+        validation_error = validate_ticker_format(symbol)
+        if validation_error:
+            return None, t("chart_invalid_ticker", lang, symbol=symbol, error=validation_error)
+
+        png = render_ticker_chart_png(symbol, period=period)
+        if png is None:
+            return None, t("chart_unavailable", lang, symbol=symbol, period=period)
+        return png, ""
 
     def list_users_message(self, chat_id: int) -> str:
         """List authorized users (developer only)."""
