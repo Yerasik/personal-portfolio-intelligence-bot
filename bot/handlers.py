@@ -8,6 +8,7 @@ Each /command handler follows the same pattern:
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from io import BytesIO
 
@@ -653,12 +654,31 @@ async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         raw_args = raw_args[:-1]
 
     ticker = raw_args[0] if raw_args else None
-    if pros_mode:
-        message = commands.analyze_pros_message(user.chat_id, ticker=ticker)
-    elif ticker:
-        message = commands.analyze_ticker_message(user.chat_id, ticker)
-    else:
-        message = commands.analyze_message(user.chat_id)
+    await update.message.reply_text(
+        "Running analysis now. This can take a while when AI summaries are enabled."
+    )
+    try:
+        if pros_mode:
+            message = await asyncio.to_thread(
+                commands.analyze_pros_message,
+                user.chat_id,
+                ticker=ticker,
+            )
+        elif ticker:
+            message = await asyncio.to_thread(
+                commands.analyze_ticker_message,
+                user.chat_id,
+                ticker,
+            )
+        else:
+            message = await asyncio.to_thread(commands.analyze_message, user.chat_id)
+    except Exception:
+        logger.exception("Analyze command failed for chat_id=%s", user.chat_id)
+        await update.message.reply_text(
+            "Analysis failed unexpectedly. Please try again in a moment."
+        )
+        return
+
     await update.message.reply_text(message)
 
 
