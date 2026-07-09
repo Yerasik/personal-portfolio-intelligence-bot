@@ -11,6 +11,10 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "unauthorized": "This bot is restricted to authorized users only.",
         "developer_only": "This command is available to developers only.",
         "command_unavailable": "This command is not available.",
+        "callback_expired": (
+            "That button has expired (for example after a bot restart). "
+            "Run the command again and use the new Confirm / Cancel / Undo buttons."
+        ),
         "welcome_title": "Portfolio Intelligence Bot",
         "welcome_greeting": (
             "Welcome! I help you follow a shared investment portfolio — "
@@ -175,8 +179,19 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_llm_header": "LLM advisory ({source}, {urgency}):",
         "analyze_suggested": "Suggested actions: {actions}",
         "analyze_llm_note": "LLM note: {note}",
+        "analyze_fetching": (
+            "Running portfolio analysis now. "
+            "This can take a while when AI summaries are enabled."
+        ),
+        "analyze_ticker_fetching": (
+            "Fetching the latest price and running ticker analysis. "
+            "This can take a while when AI summaries are enabled."
+        ),
         "ticker_header": "Analysis: {symbol}",
-        "ticker_no_price": "No cached price available. Run a market fetch first, then retry.",
+        "ticker_no_price": (
+            "Could not load a live price for this ticker. "
+            "Check the symbol and try again."
+        ),
         "ticker_company": "Company: {name}",
         "ticker_last_price": "Last price: {price:.2f} ({change}) over {window}",
         "ticker_last_price_ccy": "Last price: {price:.2f} {currency} ({change}) over {window}",
@@ -195,7 +210,9 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Arguments:\n"
             "• TICKER — symbol (e.g. AAPL, 1810.HK); new tickers are market-validated\n"
             "• shares — optional, default 1\n"
-            "• cost_basis — optional per-share cost for the new lot\n\n"
+            "• cost_basis — optional per-share cost for the new lot; debits portfolio cash when set\n\n"
+            "Cash is credited only via /deposit_cash and debited when you add shares. "
+            "New positions without cost_basis use a cached quote price if available.\n\n"
             "Examples:\n"
             "/add_ticker AAPL\n"
             "/add_ticker AAPL 5\n"
@@ -400,8 +417,10 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "   • long — multi-year / structural thesis (\"Long-term holdings\" in /portfolio)\n"
             "   • short — tactical / near-term trade (\"Short-term holdings\" in /portfolio)\n"
             "3. shares — optional when adding a NEW ticker (default: 1)\n"
-            "4. cost_basis — optional per-share cost\n"
+            "4. cost_basis — optional per-share cost; debits portfolio cash for new buys\n"
             "5. reasoning — your investment thesis (required); users see an LLM-polished version\n\n"
+            "Cash is credited via /deposit_cash and debited when adding shares. "
+            "Deposit enough cash in the listing currency (or HKD) before buying.\n\n"
             "Already holding this ticker?\n"
             "/add_ticker_strategy <TICKER> <long|short> <reasoning>\n"
             "(shares and cost_basis are ignored — use /add_ticker to add shares)\n\n"
@@ -611,6 +630,10 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "unauthorized": "Dieser Bot ist nur für autorisierte Benutzer.",
         "developer_only": "Dieser Befehl ist nur für Entwickler verfügbar.",
         "command_unavailable": "Dieser Befehl ist nicht verfügbar.",
+        "callback_expired": (
+            "Diese Schaltfläche ist abgelaufen (z. B. nach einem Bot-Neustart). "
+            "Befehl erneut ausführen und die neuen Bestätigen / Abbrechen / Rückgängig-Buttons verwenden."
+        ),
         "welcome_title": "Portfolio Intelligence Bot",
         "welcome_greeting": (
             "Willkommen! Ich helfe Ihnen, ein gemeinsames Portfolio zu verfolgen — "
@@ -1195,6 +1218,10 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "unauthorized": "此机器人仅限授权用户使用。",
         "developer_only": "此命令仅开发者可用。",
         "command_unavailable": "此命令不可用。",
+        "callback_expired": (
+            "该按钮已过期（例如机器人重启后）。"
+            "请重新运行命令，并使用新的确认 / 取消 / 撤销按钮。"
+        ),
         "welcome_title": "投资组合智能助手",
         "welcome_greeting": (
             "欢迎！我帮助您跟踪共享投资组合——价格、新闻和预警——仅提供建议，不执行交易。"
@@ -1761,6 +1788,10 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "unauthorized": "Этот бот доступен только авторизованным пользователям.",
         "developer_only": "Эта команда доступна только разработчикам.",
         "command_unavailable": "Эта команда недоступна.",
+        "callback_expired": (
+            "Срок действия кнопки истёк (например, после перезапуска бота). "
+            "Запустите команду снова и используйте новые кнопки Подтвердить / Отмена / Отменить."
+        ),
         "welcome_title": "Portfolio Intelligence Bot",
         "welcome_greeting": (
             "Добро пожаловать! Я помогаю следить за общим портфелем — "

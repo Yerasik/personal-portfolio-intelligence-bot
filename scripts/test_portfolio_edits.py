@@ -48,7 +48,7 @@ def run_test() -> None:
     if legacy.blended_cost_basis != 150.0:
         raise AssertionError("blended cost should match migrated lot")
 
-    portfolio = Portfolio(positions=[legacy])
+    portfolio = Portfolio(positions=[legacy], cash_usd=10_000.0)
     updated, duplicate = add_ticker_to_portfolio(portfolio, "AAPL", shares=3)
     if not duplicate.success:
         raise AssertionError(f"increment existing should succeed: {duplicate}")
@@ -80,6 +80,11 @@ def run_test() -> None:
     updated, added = add_ticker_to_portfolio(updated, "NVDA", shares=5, cost_basis=120.0)
     if not added.success or len(updated.positions) != 2:
         raise AssertionError(f"add failed: {added}")
+    expected_usd = 10_000.0 - 5 * 120.0
+    if abs(updated.cash_usd - expected_usd) > 1e-9:
+        raise AssertionError(f"expected USD cash {expected_usd}, got {updated.cash_usd}")
+    if "debited" not in added.message.lower():
+        raise AssertionError(f"add message should mention cash debit: {added.message}")
     nvda = next(p for p in updated.positions if p.ticker == "NVDA")
     if nvda.blended_cost_basis != 120.0:
         raise AssertionError(f"expected NVDA cost 120, got {nvda.blended_cost_basis}")
@@ -154,6 +159,39 @@ def run_test() -> None:
     if bad_deposit.success:
         raise AssertionError("zero deposit should fail")
 
+    with _FX_PATCH:
+        cash_portfolio = Portfolio(positions=[], cash=50_000.0)
+        updated_hk, hk_buy = add_ticker_to_portfolio(
+            cash_portfolio,
+            "1810.HK",
+            shares=100,
+            cost_basis=25.0,
+        )
+    if not hk_buy.success or updated_hk.cash != 50_000.0 - 100 * 25.0:
+        raise AssertionError(f"HKD buy should debit cash: {hk_buy}")
+
+    with _FX_PATCH:
+        usd_portfolio = Portfolio(positions=[], cash=10_000.0, cash_usd=100.0)
+        _, insufficient = add_ticker_to_portfolio(
+            usd_portfolio,
+            "MU",
+            shares=1,
+            cost_basis=943.31,
+        )
+    if insufficient.success:
+        raise AssertionError("buy should fail when cash is insufficient")
+
+    with _FX_PATCH:
+        usd_portfolio = Portfolio(positions=[], cash=10_000.0, cash_usd=1_000.0)
+        updated_mu, mu_buy = add_ticker_to_portfolio(
+            usd_portfolio,
+            "MU",
+            shares=1,
+            cost_basis=943.31,
+        )
+    if not mu_buy.success or abs(updated_mu.cash_usd - (1_000.0 - 943.31)) > 1e-9:
+        raise AssertionError(f"USD buy should debit cash_usd: {mu_buy}")
+
     temp_dir = Path(tempfile.mkdtemp(prefix="portfolio-edit-test-"))
     try:
         paths = resolve_data_paths(temp_dir)
@@ -165,7 +203,8 @@ def run_test() -> None:
                         ticker="MSFT",
                         lots=[PositionLot(shares=2, cost=300.0, date="2026-01-01")],
                     )
-                ]
+                ],
+                cash_usd=1_000.0,
             )
         )
 

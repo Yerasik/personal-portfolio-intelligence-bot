@@ -12,8 +12,9 @@ import asyncio
 import logging
 from io import BytesIO
 
-from telegram import Update
+from telegram import CallbackQuery, Update
 from telegram.constants import ParseMode
+from telegram.error import BadRequest
 from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
 
 from bot.add_ticker_args import parse_add_ticker_args
@@ -33,6 +34,37 @@ from storage.portfolio_ops import portfolio_has_ticker
 from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
+
+_STALE_CALLBACK_MARKERS = ("query is too old", "query id is invalid")
+
+
+async def _safe_answer_callback_query(
+    query: CallbackQuery,
+    *,
+    text: str | None = None,
+    show_alert: bool = False,
+) -> bool:
+    """Acknowledge an inline button tap; return False when Telegram rejects it as stale."""
+    try:
+        await query.answer(text=text, show_alert=show_alert)
+        return True
+    except BadRequest as exc:
+        message = str(exc).lower()
+        if any(marker in message for marker in _STALE_CALLBACK_MARKERS):
+            logger.warning("Ignoring stale callback query: %s", exc)
+            return False
+        raise
+
+
+async def _reply_stale_callback(
+    query: CallbackQuery,
+    *,
+    lang: str,
+) -> None:
+    """Tell the user to rerun the command when an inline button has expired."""
+    if query.message is None:
+        return
+    await query.message.reply_text(t("callback_expired", lang))
 
 
 def is_authorized(update: Update, repository: DataRepository) -> bool:
@@ -300,27 +332,31 @@ async def portfolio_action_callback(
 
     user = await _guard_developer_callback(update, context)
     if user is None:
-        await query.answer()
+        await _safe_answer_callback_query(query)
         return
 
     parts = query.data.split(":", 2)
     if len(parts) != 3 or parts[0] != CALLBACK_PREFIX:
-        await query.answer()
+        await _safe_answer_callback_query(query)
         return
 
     _, action_name, action_id = parts
+    if action_name not in {"confirm", "cancel", "undo"}:
+        await _safe_answer_callback_query(query)
+        return
+
+    if not await _safe_answer_callback_query(query):
+        await _reply_stale_callback(query, lang=user.language)
+        return
+
     commands = _commands(context)
     if action_name == "confirm":
         reply = commands.confirm_developer_portfolio_action(user.chat_id, action_id)
     elif action_name == "cancel":
         reply = commands.cancel_developer_portfolio_action(user.chat_id, action_id)
-    elif action_name == "undo":
-        reply = commands.undo_developer_portfolio_action(user.chat_id, action_id)
     else:
-        await query.answer()
-        return
+        reply = commands.undo_developer_portfolio_action(user.chat_id, action_id)
 
-    await query.answer()
     if query.message is not None:
         await query.message.reply_text(
             reply.text,
@@ -530,16 +566,18 @@ async def dev_menu_callback(
 
     user = await _guard_developer_callback(update, context)
     if user is None:
-        await query.answer()
+        await _safe_answer_callback_query(query)
         return
 
     parts = query.data.split(":", 2)
     if len(parts) != 3 or parts[0] != DEV_MENU_CALLBACK_PREFIX:
-        await query.answer()
+        await _safe_answer_callback_query(query)
         return
 
     _, action_kind, action_name = parts
-    await query.answer()
+    if not await _safe_answer_callback_query(query):
+        await _reply_stale_callback(query, lang=user.language)
+        return
 
     if action_kind == "run" and action_name == "undo":
         reply = _commands(context).undo_last_portfolio_action_message(user.chat_id)
@@ -654,9 +692,10 @@ async def analyze_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         raw_args = raw_args[:-1]
 
     ticker = raw_args[0] if raw_args else None
-    await update.message.reply_text(
-        "Running analysis now. This can take a while when AI summaries are enabled."
-    )
+    if ticker:
+        await update.message.reply_text(t("analyze_ticker_fetching", user.language))
+    else:
+        await update.message.reply_text(t("analyze_fetching", user.language))
     try:
         if pros_mode:
             message = await asyncio.to_thread(

@@ -18,6 +18,9 @@ class PortfolioTickerResult:
     message: str
     ticker: str = ""
     is_new_position: bool = False
+    purchase_cost: float = 0.0
+    purchase_currency: str = ""
+    cash_balance_hkd: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -121,12 +124,159 @@ def _new_lot(
     return PositionLot(shares=shares, cost=cost, date=purchased_on)
 
 
+def _resolve_purchase_price(
+    cost_basis: float | None,
+    quote_price: float | None,
+) -> float | None:
+    """Return per-share purchase price from explicit cost or a cached quote."""
+    if cost_basis is not None:
+        return cost_basis
+    if quote_price is not None and quote_price > 0:
+        return quote_price
+    return None
+
+
+def _deduct_purchase_cash(
+    portfolio: Portfolio,
+    amount: float,
+    currency: str,
+    *,
+    fx_rates: dict[str, float],
+) -> tuple[Portfolio | None, str]:
+    """Debit a purchase from cash buckets (native currency first, then HKD for USD/JPY)."""
+    from analysis.portfolio_valuation import convert_to_hkd, portfolio_cash_hkd
+
+    if amount <= 0:
+        return portfolio, ""
+
+    code = currency.strip().upper()
+    cash = portfolio.cash
+    cash_usd = portfolio.cash_usd
+    cash_jpy = portfolio.cash_jpy
+
+    if code in ("HKD", "HK"):
+        if cash + 1e-9 < amount:
+            return None, (
+                f"Insufficient HKD cash: need {amount:,.2f}, have {cash:,.2f}."
+            )
+        cash -= amount
+        debit_note = f"debited {amount:,.2f} HKD"
+    elif code == "USD":
+        if cash_usd >= amount - 1e-9:
+            cash_usd -= amount
+            debit_note = f"debited {amount:,.2f} USD"
+        else:
+            remaining_usd = amount - cash_usd
+            cash_usd = 0.0
+            hkd_needed = convert_to_hkd(remaining_usd, "USD", fx_rates=fx_rates)
+            if cash + 1e-9 < hkd_needed:
+                total_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=fx_rates.get("USD"))
+                need_hkd = convert_to_hkd(amount, "USD", fx_rates=fx_rates)
+                return None, (
+                    f"Insufficient cash for purchase: need {amount:,.2f} USD "
+                    f"(≈ {need_hkd:,.2f} HKD); available ≈ {total_hkd:,.2f} HKD total."
+                )
+            cash -= hkd_needed
+            debit_note = (
+                f"debited {amount:,.2f} USD "
+                f"(including {hkd_needed:,.2f} HKD after USD cash was used)"
+            )
+    elif code == "JPY":
+        if cash_jpy >= amount - 1e-9:
+            cash_jpy -= amount
+            debit_note = f"debited {amount:,.0f} JPY"
+        else:
+            remaining_jpy = amount - cash_jpy
+            cash_jpy = 0.0
+            hkd_needed = convert_to_hkd(remaining_jpy, "JPY", fx_rates=fx_rates)
+            if cash + 1e-9 < hkd_needed:
+                total_hkd = portfolio_cash_hkd(
+                    portfolio,
+                    usd_to_hkd=fx_rates.get("USD"),
+                    jpy_to_hkd=fx_rates.get("JPY"),
+                )
+                need_hkd = convert_to_hkd(amount, "JPY", fx_rates=fx_rates)
+                return None, (
+                    f"Insufficient cash for purchase: need {amount:,.0f} JPY "
+                    f"(≈ {need_hkd:,.2f} HKD); available ≈ {total_hkd:,.2f} HKD total."
+                )
+            cash -= hkd_needed
+            debit_note = (
+                f"debited {amount:,.0f} JPY "
+                f"(including {hkd_needed:,.2f} HKD after JPY cash was used)"
+            )
+    else:
+        hkd_needed = convert_to_hkd(amount, code, fx_rates=fx_rates)
+        if cash + 1e-9 < hkd_needed:
+            total_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=fx_rates.get("USD"))
+            return None, (
+                f"Insufficient HKD cash: need ≈ {hkd_needed:,.2f} HKD "
+                f"for {amount:,.2f} {code}; available ≈ {total_hkd:,.2f} HKD total."
+            )
+        cash -= hkd_needed
+        debit_note = f"debited {amount:,.2f} {code} (≈ {hkd_needed:,.2f} HKD)"
+
+    updated = portfolio.model_copy(
+        update={"cash": cash, "cash_usd": cash_usd, "cash_jpy": cash_jpy}
+    )
+    balance_hkd = portfolio_cash_hkd(
+        updated,
+        usd_to_hkd=fx_rates.get("USD"),
+        jpy_to_hkd=fx_rates.get("JPY"),
+    )
+    return updated, f"{debit_note} (cash balance ≈ {balance_hkd:,.2f} HKD)"
+
+
+def _apply_purchase_cash_debit(
+    portfolio: Portfolio,
+    symbol: str,
+    shares: float,
+    cost_basis: float | None,
+    *,
+    state: BotState | None,
+) -> tuple[Portfolio | None, str, float | None, float, str]:
+    """Debit cash for a buy when a per-share price is known; return lot cost to use."""
+    from analysis.portfolio_valuation import fetch_fx_rates_to_hkd, infer_quote_currency
+
+    quote = state.latest_prices.get(symbol) if state is not None else None
+    quote_price = quote.price if quote is not None else None
+    purchase_price = _resolve_purchase_price(cost_basis, quote_price)
+    if purchase_price is None:
+        return None, "", None, 0.0, ""
+
+    currency = infer_quote_currency(quote, symbol)
+    purchase_total = shares * purchase_price
+    currencies = {currency}
+    if currency not in ("HKD", "HK"):
+        currencies.update({"USD", "JPY"})
+    fx_rates = fetch_fx_rates_to_hkd(currencies)
+
+    updated, note = _deduct_purchase_cash(
+        portfolio,
+        purchase_total,
+        currency,
+        fx_rates=fx_rates,
+    )
+    if updated is None:
+        return None, note, purchase_price, purchase_total, currency
+
+    from analysis.portfolio_valuation import portfolio_cash_hkd
+
+    balance_hkd = portfolio_cash_hkd(
+        updated,
+        usd_to_hkd=fx_rates.get("USD"),
+        jpy_to_hkd=fx_rates.get("JPY"),
+    )
+    return updated, note, purchase_price, purchase_total, currency
+
+
 def add_ticker_to_portfolio(
     portfolio: Portfolio,
     symbol: str,
     *,
     shares: float = 1.0,
     cost_basis: float | None = None,
+    state: BotState | None = None,
 ) -> tuple[Portfolio, PortfolioTickerResult]:
     """Add shares for a ticker, creating a new position or increasing an existing one."""
     normalized = normalize_ticker(symbol)
@@ -148,14 +298,54 @@ def add_ticker_to_portfolio(
             normalized,
         )
 
-    if _portfolio_has_ticker(portfolio, normalized):
+    is_new_position = not _portfolio_has_ticker(portfolio, normalized)
+    lot_cost = cost_basis
+    cash_note = ""
+    purchase_cost = 0.0
+    purchase_currency = ""
+    cash_balance_hkd = 0.0
+
+    should_debit_cash = is_new_position or cost_basis is not None
+    if should_debit_cash:
+        updated_cash, debit_note, resolved_cost, purchase_total, currency = (
+            _apply_purchase_cash_debit(
+                portfolio,
+                normalized,
+                shares,
+                cost_basis,
+                state=state,
+            )
+        )
+        if is_new_position and resolved_cost is None:
+            return portfolio, PortfolioTickerResult(
+                False,
+                (
+                    "Cost basis is required to debit cash for a new purchase. "
+                    "Provide cost per share or ensure a cached market price exists."
+                ),
+                normalized,
+            )
+        if resolved_cost is not None:
+            if updated_cash is None:
+                return portfolio, PortfolioTickerResult(False, debit_note, normalized)
+            portfolio = updated_cash
+            lot_cost = resolved_cost
+            cash_note = debit_note
+            purchase_cost = purchase_total
+            purchase_currency = currency
+            from analysis.portfolio_valuation import portfolio_cash_hkd
+
+            cash_balance_hkd = portfolio_cash_hkd(portfolio)
+
+    if not is_new_position:
         new_positions: list[Position] = []
         updated = False
         new_total = 0.0
         blended_cost: float | None = None
+        updated_position: Position | None = None
         for position in portfolio.positions:
             if normalize_ticker(position.ticker) == normalized:
-                new_lots = [*position.lots, _new_lot(shares, cost_basis)]
+                new_lots = [*position.lots, _new_lot(shares, lot_cost)]
                 updated_position = position.model_copy(update={"lots": new_lots})
                 new_total = updated_position.shares
                 blended_cost = updated_position.blended_cost_basis
@@ -163,7 +353,7 @@ def add_ticker_to_portfolio(
                 updated = True
             else:
                 new_positions.append(position)
-        if not updated:
+        if not updated or updated_position is None:
             return portfolio, PortfolioTickerResult(
                 False,
                 f"{normalized} is not in the portfolio.",
@@ -175,19 +365,24 @@ def add_ticker_to_portfolio(
             if blended_cost is not None
             else ""
         )
+        cash_suffix = f"; {cash_note}" if cash_note else ""
         return updated_portfolio, PortfolioTickerResult(
             True,
             (
                 f"Added lot of {shares:g} share(s) to {normalized}; "
-                f"now holding {new_total:g} share(s) in {len(updated_position.lots)} lot(s){cost_note}."
+                f"now holding {new_total:g} share(s) in {len(updated_position.lots)} lot(s)"
+                f"{cost_note}{cash_suffix}."
             ),
             normalized,
             is_new_position=False,
+            purchase_cost=purchase_cost,
+            purchase_currency=purchase_currency,
+            cash_balance_hkd=cash_balance_hkd,
         )
 
     new_position = Position(
         ticker=normalized,
-        lots=[_new_lot(shares, cost_basis)],
+        lots=[_new_lot(shares, lot_cost)],
     )
     updated = portfolio.model_copy(
         update={
@@ -197,12 +392,19 @@ def add_ticker_to_portfolio(
             ]
         }
     )
-    cost_note = f" at cost {cost_basis:g}" if cost_basis is not None else ""
+    cost_note = f" at cost {lot_cost:g}" if lot_cost is not None else ""
+    cash_suffix = f"; {cash_note}" if cash_note else ""
     return updated, PortfolioTickerResult(
         True,
-        f"Added {normalized} ({shares:g} share(s){cost_note}) to the portfolio.",
+        (
+            f"Added {normalized} ({shares:g} share(s){cost_note}) to the portfolio"
+            f"{cash_suffix}."
+        ),
         normalized,
         is_new_position=True,
+        purchase_cost=purchase_cost,
+        purchase_currency=purchase_currency,
+        cash_balance_hkd=cash_balance_hkd,
     )
 
 

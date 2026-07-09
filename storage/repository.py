@@ -91,6 +91,7 @@ class DataRepository:
                 if market_error:
                     return PortfolioTickerResult(False, market_error, normalized)
 
+        state = self.load_state()
         result_holder: list[PortfolioTickerResult] = []
 
         def _mutate(portfolio: Portfolio) -> Portfolio:
@@ -99,6 +100,7 @@ class DataRepository:
                 normalized,
                 shares=shares,
                 cost_basis=cost_basis,
+                state=state,
             )
             result_holder.append(result)
             return updated

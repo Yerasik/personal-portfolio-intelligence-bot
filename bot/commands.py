@@ -11,6 +11,7 @@ from dataclasses import dataclass
 
 from analysis.industries import build_news_fetch_industries, build_news_focus_industries
 from analysis.llm import LlmAdvisoryResult, LlmClient
+from collectors.market_data import ensure_cached_quote
 from analysis.move_explainer import (
     AnalyzeTickerContext,
     PriceMoveExplanation,
@@ -32,7 +33,7 @@ from analysis.ticker_chart import ChartPeriod as TickerChartPeriod, render_ticke
 from analysis.performance_series import ChartPeriod
 from analysis.performance_metrics import compute_performance_metrics
 from analysis.portfolio_risk import estimate_portfolio_risk
-from analysis.portfolio_valuation import build_portfolio_valuation
+from analysis.portfolio_valuation import build_portfolio_valuation, valuation_for_ticker
 from analysis.technical_snapshot import build_technical_snapshot
 from analysis.rules import RulesEngine
 from bot.formatter import (
@@ -447,6 +448,10 @@ class BotCommands:
         news_cache = self.repository.load_news_cache()
 
         quote = state.latest_prices.get(symbol)
+        if quote is None or quote.price is None:
+            quote = ensure_cached_quote(self.repository, symbol)
+            state = self.repository.load_state()
+
         position_value = valuation_for_ticker(portfolio, state, symbol)
 
         explanation: PriceMoveExplanation | None = None

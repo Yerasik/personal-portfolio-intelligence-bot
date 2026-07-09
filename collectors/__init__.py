@@ -5,6 +5,7 @@ from collectors.market_data import (
     MarketDataBatchResult,
     MarketDataCollector,
     MarketDataService,
+    ensure_cached_quote,
     fetch_quote,
     portfolio_tickers,
 )
@@ -21,6 +22,7 @@ __all__ = [
     "NewsDataService",
     "NewsFetchBatchResult",
     "SectorDataCollector",
+    "ensure_cached_quote",
     "fetch_quote",
     "portfolio_tickers",
 ]

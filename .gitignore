@@ -19,3 +19,4 @@ data/*.tmp
 .mypy_cache/
 .ruff_cache/
 local_scripts/
+.cursor/

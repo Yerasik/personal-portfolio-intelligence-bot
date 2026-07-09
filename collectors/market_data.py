@@ -155,6 +155,34 @@ def _load_company_info(symbol: str) -> dict[str, object]:
     return {}
 
 
+def ensure_cached_quote(repository: DataRepository, symbol: str) -> MarketQuote | None:
+    """Return a cached quote, fetching and persisting on demand when missing."""
+    normalized = symbol.strip().upper()
+    if not normalized:
+        return None
+
+    state = repository.load_state()
+    existing = state.latest_prices.get(normalized)
+    if existing is not None and existing.price is not None:
+        return existing
+
+    try:
+        quote = fetch_quote(normalized)
+    except Exception as exc:
+        logger.warning(
+            "On-demand market fetch failed for %s: %s",
+            normalized,
+            exc,
+        )
+        return None
+
+    state.latest_prices[normalized] = quote
+    state.last_market_fetch_at = quote.fetched_at
+    repository.save_state(state)
+    logger.info("On-demand quote cached for %s", normalized)
+    return quote
+
+
 def fetch_quote(ticker: str, fetched_at: datetime | None = None) -> MarketQuote:
     """Fetch a normalized quote for one ticker via yfinance."""
     symbol = ticker.strip().upper()
