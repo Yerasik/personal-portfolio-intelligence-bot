@@ -39,6 +39,7 @@ from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
     format_catalyst_calendar,
+    format_change_briefing,
     format_help,
     format_industries,
     format_news_summary,
@@ -325,6 +326,21 @@ class BotCommands:
             lang=lang,
             timezone_label=app_config.timezone,
         )
+
+    def changes_message(self, chat_id: int, *, force: bool = False) -> str:
+        """Build the what-changed-since-yesterday briefing on demand."""
+        from analysis.change_briefing import assemble_change_briefing
+
+        lang = self._lang(chat_id)
+        app_config = self.repository.load_config()
+        if not force and not app_config.enable_change_briefing:
+            return t("change_brief_disabled", lang)
+        content = assemble_change_briefing(
+            self.repository,
+            self.llm,
+            language=lang,
+        )
+        return format_change_briefing(content, lang=lang)
 
     def analyze_message(self, chat_id: int) -> str:
         """Run rules (and optional LLM) and format an on-demand advisory."""

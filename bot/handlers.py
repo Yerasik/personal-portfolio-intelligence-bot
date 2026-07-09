@@ -319,6 +319,26 @@ async def calendar_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     await update.message.reply_text(message)
 
 
+async def changes_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /changes — what changed since yesterday briefing."""
+    user = await _guard(update, context)
+    if user is None or update.message is None:
+        return
+
+    await update.message.reply_text(t("change_brief_fetching", user.language))
+    try:
+        message = await asyncio.to_thread(
+            _commands(context).changes_message,
+            user.chat_id,
+            force=True,
+        )
+    except Exception:
+        logger.exception("changes command failed for chat_id=%s", user.chat_id)
+        await update.message.reply_text(t("change_brief_fail", user.language))
+        return
+    await update.message.reply_text(message)
+
+
 async def news_summary_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /news_summary — refresh news, then stream LLM summaries."""
     user = await _guard(update, context)
@@ -931,6 +951,7 @@ def register_handlers(
         ("strategy", strategy_command),
         ("industries", industries_command),
         ("calendar", calendar_command),
+        ("changes", changes_command),
         ("news_summary", news_summary_command),
         ("add_ticker", add_ticker_command),
         ("add_ticker_strategy", add_ticker_strategy_command),

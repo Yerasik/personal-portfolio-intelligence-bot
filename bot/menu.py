@@ -19,6 +19,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("strategy", "Investment idea behind each holding"),
     BotCommand("industries", "Focus industries and news counts"),
     BotCommand("calendar", "Upcoming earnings, macro, and policy dates"),
+    BotCommand("changes", "What changed since yesterday"),
     BotCommand("news_summary", "LLM news by sector and ticker"),
     BotCommand("analyze", "Portfolio advisory or /analyze AAPL"),
     BotCommand("chart", "Candlestick chart for a ticker"),

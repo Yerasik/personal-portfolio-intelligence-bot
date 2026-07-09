@@ -280,6 +280,9 @@ class AppConfig(BaseModel):
     catalyst_post_event_move_pct: float = Field(default=2.0, gt=0, le=50)
     catalyst_calendar_days_ahead: int = Field(default=45, ge=7, le=180)
     manual_catalyst_events: list[ManualCatalystEvent] = Field(default_factory=list)
+    enable_change_briefing: bool = True
+    change_briefing_hour: int = Field(default=7, ge=0, le=23)
+    change_briefing_minute: int = Field(default=30, ge=0, le=59)
 
 
 class CatalystEvent(BaseModel):
@@ -391,6 +394,9 @@ class BotState(BaseModel):
     developer_portfolio_action: DeveloperPortfolioAction | None = None
     catalyst_reminders_sent: list[CatalystReminderRecord] = Field(default_factory=list)
     catalyst_price_snapshots: dict[str, dict[str, float]] = Field(default_factory=dict)
+    last_change_brief_at: datetime | None = None
+    change_brief_alert_keys: list[str] = Field(default_factory=list)
+    change_brief_risk_score: float | None = None
 
 
 class NewsItem(BaseModel):

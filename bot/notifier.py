@@ -420,6 +420,44 @@ class TelegramNotifier:
 
         return delivered
 
+    def deliver_change_briefing(
+        self,
+        repository: DataRepository,
+        messages_by_language: dict[str, str],
+    ) -> bool:
+        """Send the what-changed-since-yesterday briefing to all authorized users."""
+        if not self.is_configured:
+            logger.warning("Telegram notifier not configured; skipping change briefing")
+            return False
+
+        users = self._authorized_users(repository)
+        if not users:
+            logger.warning("No authorized users; skipping change briefing")
+            return False
+
+        delivered = False
+        for user in users:
+            message = messages_by_language.get(user.language)
+            if not message:
+                message = messages_by_language.get("en", "")
+            if not message:
+                continue
+            try:
+                self.send_text(user.chat_id, truncate_message(message))
+            except Exception:
+                logger.exception(
+                    "Failed to send change briefing to chat_id=%s",
+                    user.chat_id,
+                )
+                continue
+            delivered = True
+            logger.info(
+                "Change briefing delivered to chat_id=%s (lang=%s)",
+                user.chat_id,
+                user.language,
+            )
+        return delivered
+
     def _developer_users(self, repository: DataRepository) -> list[BotUser]:
         return [
             user

@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from datetime import datetime
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from collections.abc import Iterator
 
@@ -44,6 +44,9 @@ from storage.models import (
     TickerStrategy,
 )
 from storage.portfolio_ops import normalize_ticker
+
+if TYPE_CHECKING:
+    from analysis.change_briefing import ChangeBriefingContent
 
 TELEGRAM_MESSAGE_LIMIT = 4096
 
@@ -1616,6 +1619,104 @@ def format_catalyst_post_event(
         lines.append(t("catalyst_post_explanation_header", lang))
         for block in explanations[:3]:
             lines.append(block)
+
+    lines.extend(["", t("advisory_footer", lang)])
+    return truncate_message("\n".join(lines))
+
+
+def format_change_briefing(
+    content: ChangeBriefingContent,
+    *,
+    lang: str = "en",
+) -> str:
+    """Format the what-changed-since-yesterday briefing."""
+    lines = [t("change_brief_header", lang)]
+
+    if content.portfolio_daily_pnl_pct is not None:
+        lines.append(
+            t(
+                "change_brief_portfolio_move",
+                lang,
+                pct=content.portfolio_daily_pnl_pct,
+            )
+        )
+    if content.portfolio_value_delta_hkd is not None:
+        sign = "+" if content.portfolio_value_delta_hkd >= 0 else ""
+        lines.append(
+            t(
+                "change_brief_portfolio_delta",
+                lang,
+                delta=f"{sign}{content.portfolio_value_delta_hkd:,.0f}",
+            )
+        )
+
+    lines.append("")
+    lines.append(t("change_brief_pl_header", lang))
+    if content.pl_drivers:
+        for driver in content.pl_drivers:
+            price_part = ""
+            if driver.price_change_pct is not None:
+                sign = "+" if driver.price_change_pct >= 0 else ""
+                price_part = f", {sign}{driver.price_change_pct:.1f}%"
+            sign = "+" if driver.value_delta_hkd >= 0 else ""
+            lines.append(
+                t(
+                    "change_brief_pl_line",
+                    lang,
+                    ticker=driver.ticker,
+                    delta=f"{sign}{driver.value_delta_hkd:,.0f}",
+                    price_part=price_part,
+                    contribution=driver.contribution_pct,
+                )
+            )
+    else:
+        lines.append(t("change_brief_pl_empty", lang))
+
+    lines.append("")
+    lines.append(t("change_brief_risks_header", lang))
+    if content.new_risks:
+        for alert in content.new_risks[:5]:
+            lines.append(_localized_alert_line(alert, lang))
+    else:
+        lines.append(t("change_brief_risks_empty", lang))
+
+    if content.risk_assessment is not None:
+        lines.append(
+            t(
+                "change_brief_risk_level",
+                lang,
+                level=t(f"risk_level_{content.risk_assessment.level}", lang),
+                score=content.risk_assessment.score,
+            )
+        )
+        if content.risk_score_delta is not None and abs(content.risk_score_delta) >= 0.5:
+            sign = "+" if content.risk_score_delta >= 0 else ""
+            lines.append(
+                t(
+                    "change_brief_risk_delta",
+                    lang,
+                    delta=f"{sign}{content.risk_score_delta:.1f}",
+                )
+            )
+
+    lines.append("")
+    lines.append(t("change_brief_thesis_header", lang))
+    if content.thesis_breaks:
+        for item in content.thesis_breaks[:5]:
+            lines.append(f"• {item}")
+    else:
+        lines.append(t("change_brief_thesis_empty", lang))
+
+    lines.append("")
+    lines.append(t("change_brief_queue_header", lang))
+    if content.review_queue:
+        for index, action in enumerate(content.review_queue, start=1):
+            lines.append(t("change_brief_queue_item", lang, index=index, action=action))
+    else:
+        lines.append(t("change_brief_queue_empty", lang))
+
+    if content.llm_summary.strip():
+        lines.extend(["", t("change_brief_llm_summary", lang), content.llm_summary.strip()])
 
     lines.extend(["", t("advisory_footer", lang)])
     return truncate_message("\n".join(lines))

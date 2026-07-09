@@ -57,6 +57,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "News\n"
             "  /industries — sectors and headline counts\n"
             "  /calendar — upcoming earnings, macro, and policy catalysts\n"
+            "  /changes — what changed since yesterday (P/L, risks, thesis)\n"
             "  /news_summary — news digest by sector and stock\n\n"
             "Analysis\n"
             "  /analyze — portfolio review\n"
@@ -529,6 +530,25 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "catalyst_post_move_line": "• {ticker}: {change}%",
         "catalyst_post_no_moves": "No material price moves detected yet for held tickers.",
         "catalyst_post_explanation_header": "Hypothetical explanations:",
+        "change_brief_fetching": "Building what-changed-since-yesterday briefing…",
+        "change_brief_fail": "Could not build the change briefing. Try again later.",
+        "change_brief_disabled": "Change briefing is disabled in config.",
+        "change_brief_header": "What changed since yesterday",
+        "change_brief_portfolio_move": "Portfolio (24h): {pct:+.2f}%",
+        "change_brief_portfolio_delta": "Value change (24h): {delta} HKD",
+        "change_brief_pl_header": "Top P/L drivers",
+        "change_brief_pl_line": "• {ticker}: {delta} HKD{price_part} ({contribution:.0f}% of move)",
+        "change_brief_pl_empty": "No material per-ticker moves in performance history yet.",
+        "change_brief_risks_header": "New risks",
+        "change_brief_risks_empty": "No new rule alerts since the last briefing.",
+        "change_brief_risk_level": "Portfolio risk: {level} ({score:.0f}/100)",
+        "change_brief_risk_delta": "Risk score vs yesterday: {delta} pts",
+        "change_brief_thesis_header": "Thesis pressure",
+        "change_brief_thesis_empty": "No thesis breaks flagged from price, news, or rules.",
+        "change_brief_queue_header": "Recommended review queue",
+        "change_brief_queue_item": "{index}. {action}",
+        "change_brief_queue_empty": "No urgent reviews — continue monitoring.",
+        "change_brief_llm_summary": "Summary",
         "daily_news_brief_title": "Key headlines for your holdings",
         "daily_news_digest_title": "Holdings digest",
         "portfolio_headlines_header": "Top headlines for your holdings",

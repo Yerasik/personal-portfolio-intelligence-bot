@@ -19,6 +19,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
+from analysis.change_briefing import run_change_briefing
 from analysis.catalyst_reminders import run_catalyst_reminder_job
 from analysis.deep_digest import parse_deep_digest_time, run_deep_digest
 from analysis.weekly_summary import run_weekly_summary
@@ -50,6 +51,7 @@ JOB_RULE_EVALUATION: Final = "rule_evaluation"
 JOB_SENTIMENT_ANALYSIS: Final = "sentiment_analysis"
 JOB_PROS_CONS: Final = "pros_cons"
 JOB_CATALYST_CALENDAR: Final = "catalyst_calendar"
+JOB_CHANGE_BRIEFING: Final = "change_briefing"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
 JOB_WEEKLY_SUMMARY: Final = "weekly_summary"
 JOB_DEEP_DIGEST_PREFIX: Final = "deep_digest_"
@@ -374,6 +376,18 @@ def run_catalyst_calendar_job(services: SchedulerServices) -> None:
     )
 
 
+def run_change_briefing_job(services: SchedulerServices) -> None:
+    """Deliver the what-changed-since-yesterday briefing."""
+    app_config = services.load_app_config()
+    llm = LlmClient(settings=services.runtime, app_config=app_config)
+    run_change_briefing(
+        services.repository,
+        app_config,
+        services.get_notifier(),
+        llm,
+    )
+
+
 def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> None:
     """Register all scheduled jobs using intervals from config.json."""
     app_config = services.load_app_config()
@@ -448,6 +462,26 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
     else:
         try:
             scheduler.remove_job(JOB_CATALYST_CALENDAR)
+        except JobLookupError:
+            pass
+
+    if app_config.enable_change_briefing:
+        scheduler.add_job(
+            lambda: _run_job(
+                JOB_CHANGE_BRIEFING,
+                lambda: run_change_briefing_job(services),
+            ),
+            trigger=CronTrigger(
+                hour=app_config.change_briefing_hour,
+                minute=app_config.change_briefing_minute,
+                timezone=timezone,
+            ),
+            id=JOB_CHANGE_BRIEFING,
+            replace_existing=True,
+        )
+    else:
+        try:
+            scheduler.remove_job(JOB_CHANGE_BRIEFING)
         except JobLookupError:
             pass
 
