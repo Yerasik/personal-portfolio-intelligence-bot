@@ -13,6 +13,7 @@ from storage.models import (
     BotState,
     BotUser,
     BotUsers,
+    CatalystEventsFile,
     DeveloperPortfolioAction,
     NewsCache,
     PerformanceHistory,
@@ -206,6 +207,14 @@ class DataRepository:
     def save_news_cache(self, cache: NewsCache) -> None:
         """Write data/news_cache.json atomically."""
         self._store.write_model(self._paths.news_cache, cache)
+
+    def load_catalyst_events(self) -> CatalystEventsFile:
+        """Read cached catalyst calendar from data/catalyst_events.json."""
+        return self._store.read_model(self._paths.catalyst_events, CatalystEventsFile)
+
+    def save_catalyst_events(self, events: CatalystEventsFile) -> None:
+        """Write data/catalyst_events.json atomically."""
+        self._store.write_model(self._paths.catalyst_events, events)
 
     def load_signals(self) -> SignalsFile:
         """Read derived signals from data/signals.json."""

@@ -38,6 +38,7 @@ from analysis.technical_snapshot import build_technical_snapshot
 from analysis.rules import RulesEngine
 from bot.formatter import (
     format_analyze,
+    format_catalyst_calendar,
     format_help,
     format_industries,
     format_news_summary,
@@ -289,6 +290,40 @@ class BotCommands:
             news_cache,
             lang=lang,
             is_developer=is_developer,
+        )
+
+    def refresh_catalyst_calendar(self) -> str:
+        """Fetch earnings and merge manual catalyst events into catalyst_events.json."""
+        from collectors.base import CollectorContext
+        from collectors.catalyst_calendar import CatalystCalendarCollector
+
+        app_config = self.repository.load_config()
+        portfolio = self.repository.load_portfolio()
+        context = CollectorContext(
+            repository=self.repository,
+            app_config=app_config,
+            portfolio=portfolio,
+        )
+        result = CatalystCalendarCollector().run(context)
+        if not result.success:
+            return result.message
+        return result.message
+
+    def calendar_message(self, chat_id: int) -> str:
+        """Show upcoming earnings, macro, and policy catalysts."""
+        from analysis.catalyst_reminders import upcoming_events
+
+        lang = self._lang(chat_id)
+        app_config = self.repository.load_config()
+        events_file = self.repository.load_catalyst_events()
+        events = upcoming_events(
+            events_file,
+            days_ahead=min(30, app_config.catalyst_calendar_days_ahead),
+        )
+        return format_catalyst_calendar(
+            events,
+            lang=lang,
+            timezone_label=app_config.timezone,
         )
 
     def analyze_message(self, chat_id: int) -> str:

@@ -66,5 +66,36 @@
   },
   "ollama_base_url": "",
   "ollama_model": "qwen3:30b",
-  "enable_llm_summaries": false
+  "enable_llm_summaries": false,
+  "enable_catalyst_reminders": true,
+  "catalyst_fetch_interval_minutes": 60,
+  "catalyst_reminder_hours_before": [24, 2],
+  "catalyst_post_event_hours": 6,
+  "catalyst_post_event_move_pct": 2.0,
+  "catalyst_calendar_days_ahead": 45,
+  "manual_catalyst_events": [
+    {
+      "title": "FOMC rate decision",
+      "event_type": "macro",
+      "event_at": "2026-07-30T20:00:00",
+      "sectors": ["Macro & Central Banks"],
+      "watch_items": [
+        "Statement vs expectations",
+        "Dot plot / forward guidance",
+        "USD and rates reaction"
+      ]
+    },
+    {
+      "title": "US semiconductor export control update (BIS)",
+      "event_type": "policy",
+      "event_at": "2026-08-15",
+      "sectors": ["China-US Relations", "US Semiconductors"],
+      "tickers": ["MU", "1810.HK"],
+      "watch_items": [
+        "Scope of restricted nodes / chips",
+        "China response headlines",
+        "Supply-chain commentary from fabs"
+      ]
+    }
+  ]
 }

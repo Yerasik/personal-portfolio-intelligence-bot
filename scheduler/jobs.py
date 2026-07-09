@@ -19,6 +19,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from apscheduler.triggers.interval import IntervalTrigger
 
+from analysis.catalyst_reminders import run_catalyst_reminder_job
 from analysis.deep_digest import parse_deep_digest_time, run_deep_digest
 from analysis.weekly_summary import run_weekly_summary
 from analysis.industries import build_news_fetch_industries
@@ -30,6 +31,7 @@ from analysis.summarizer import Summarizer
 from scheduler.alert_delivery import evaluate_and_deliver_alerts
 from collectors.base import CollectorContext
 from collectors.auto_news_discovery import AutoNewsDiscovery
+from collectors.catalyst_calendar import CatalystCalendarCollector
 from collectors.market_data import MarketDataCollector
 from collectors.news_data import NewsDataCollector
 from config.loader import ConfigurationBundle
@@ -47,6 +49,7 @@ JOB_AUTO_NEWS_DISCOVERY: Final = "auto_news_discovery"
 JOB_RULE_EVALUATION: Final = "rule_evaluation"
 JOB_SENTIMENT_ANALYSIS: Final = "sentiment_analysis"
 JOB_PROS_CONS: Final = "pros_cons"
+JOB_CATALYST_CALENDAR: Final = "catalyst_calendar"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
 JOB_WEEKLY_SUMMARY: Final = "weekly_summary"
 JOB_DEEP_DIGEST_PREFIX: Final = "deep_digest_"
@@ -335,6 +338,42 @@ def _remove_deep_digest_jobs(scheduler: BlockingScheduler) -> None:
                 pass
 
 
+def run_catalyst_calendar_job(services: SchedulerServices) -> None:
+    """Refresh catalyst_events.json and deliver due pre/post reminders."""
+    app_config = services.load_app_config()
+    portfolio = services.repository.load_portfolio()
+    context = CollectorContext(
+        repository=services.repository,
+        app_config=app_config,
+        portfolio=portfolio,
+    )
+    fetch_result = CatalystCalendarCollector().run(context)
+    logger.info(
+        "Catalyst calendar refresh finished (success=%s): %s",
+        fetch_result.success,
+        fetch_result.message,
+    )
+    if not fetch_result.success:
+        raise RuntimeError(fetch_result.message)
+
+    if not app_config.enable_catalyst_reminders:
+        logger.info("Catalyst reminders disabled in config.json")
+        return
+
+    llm = LlmClient(settings=services.runtime, app_config=app_config)
+    reminder_result = run_catalyst_reminder_job(
+        services.repository,
+        services.get_notifier(),
+        llm=llm,
+    )
+    logger.info(
+        "Catalyst reminders finished: pre_sent=%d post_sent=%d skipped=%d",
+        reminder_result.pre_sent,
+        reminder_result.post_sent,
+        reminder_result.skipped,
+    )
+
+
 def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> None:
     """Register all scheduled jobs using intervals from config.json."""
     app_config = services.load_app_config()
@@ -394,6 +433,23 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
         replace_existing=True,
         next_run_time=now,
     )
+
+    if app_config.enable_catalyst_reminders:
+        scheduler.add_job(
+            lambda: _run_job(
+                JOB_CATALYST_CALENDAR,
+                lambda: run_catalyst_calendar_job(services),
+            ),
+            trigger=IntervalTrigger(minutes=app_config.catalyst_fetch_interval_minutes),
+            id=JOB_CATALYST_CALENDAR,
+            replace_existing=True,
+            next_run_time=now,
+        )
+    else:
+        try:
+            scheduler.remove_job(JOB_CATALYST_CALENDAR)
+        except JobLookupError:
+            pass
 
     if app_config.enable_daily_summary:
         scheduler.add_job(

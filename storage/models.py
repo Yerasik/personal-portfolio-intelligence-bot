@@ -212,6 +212,25 @@ class RiskProfile(BaseModel):
     include_sentiment_in_score: bool = True
 
 
+CatalystEventType = Literal["earnings", "macro", "policy"]
+CatalystReminderPhase = Literal["pre", "post"]
+
+
+class ManualCatalystEvent(BaseModel):
+    """Operator-curated macro or policy date stored in config.json."""
+
+    title: str = Field(min_length=1)
+    event_type: CatalystEventType = "macro"
+    event_at: str = Field(
+        min_length=1,
+        description="ISO date or datetime in config timezone",
+    )
+    tickers: list[str] = Field(default_factory=list)
+    sectors: list[str] = Field(default_factory=list)
+    watch_items: list[str] = Field(default_factory=list)
+    notes: str = ""
+
+
 class AppConfig(BaseModel):
     """Bot behavior and watch settings persisted in config.json."""
 
@@ -254,6 +273,43 @@ class AppConfig(BaseModel):
     ollama_base_url: str = ""
     ollama_model: str = ""
     enable_llm_summaries: bool = False
+    enable_catalyst_reminders: bool = True
+    catalyst_fetch_interval_minutes: int = Field(default=60, ge=15, le=1440)
+    catalyst_reminder_hours_before: list[int] = Field(default_factory=lambda: [24, 2])
+    catalyst_post_event_hours: float = Field(default=6.0, gt=0, le=72)
+    catalyst_post_event_move_pct: float = Field(default=2.0, gt=0, le=50)
+    catalyst_calendar_days_ahead: int = Field(default=45, ge=7, le=180)
+    manual_catalyst_events: list[ManualCatalystEvent] = Field(default_factory=list)
+
+
+class CatalystEvent(BaseModel):
+    """One scheduled catalyst (earnings, macro, or policy)."""
+
+    event_id: str
+    title: str
+    event_type: CatalystEventType
+    event_at: datetime
+    tickers: list[str] = Field(default_factory=list)
+    sectors: list[str] = Field(default_factory=list)
+    watch_items: list[str] = Field(default_factory=list)
+    source: str = ""
+    notes: str = ""
+
+
+class CatalystEventsFile(BaseModel):
+    """Cached catalyst calendar persisted in catalyst_events.json."""
+
+    events: list[CatalystEvent] = Field(default_factory=list)
+    updated_at: datetime | None = None
+
+
+class CatalystReminderRecord(BaseModel):
+    """Tracks a delivered pre- or post-event catalyst reminder."""
+
+    event_id: str
+    phase: CatalystReminderPhase
+    hours_before: int | None = None
+    sent_at: datetime
 
 
 class PendingAlert(BaseModel):
@@ -333,6 +389,8 @@ class BotState(BaseModel):
     pending_alerts: list[PendingAlert] = Field(default_factory=list)
     price_alert_regime: dict[str, Literal["drop", "rise"]] = Field(default_factory=dict)
     developer_portfolio_action: DeveloperPortfolioAction | None = None
+    catalyst_reminders_sent: list[CatalystReminderRecord] = Field(default_factory=list)
+    catalyst_price_snapshots: dict[str, dict[str, float]] = Field(default_factory=dict)
 
 
 class NewsItem(BaseModel):

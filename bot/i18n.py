@@ -56,6 +56,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /performance [week|month|all] — returns, drawdown, and value chart\n\n"
             "News\n"
             "  /industries — sectors and headline counts\n"
+            "  /calendar — upcoming earnings, macro, and policy catalysts\n"
             "  /news_summary — news digest by sector and stock\n\n"
             "Analysis\n"
             "  /analyze — portfolio review\n"
@@ -505,6 +506,29 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "news_by_ticker": "News by ticker",
         "news_summary_title": "News summary",
         "news_summary_empty": "No sector or ticker news to summarize right now.",
+        "calendar_fetching": "Refreshing catalyst calendar…",
+        "calendar_fail": "Could not load the catalyst calendar. Try again later.",
+        "calendar_empty": "No upcoming catalyst events in the next 30 days.",
+        "calendar_header": "Catalyst calendar",
+        "calendar_timezone_note": "Times shown in {timezone}.",
+        "calendar_section_earnings": "Earnings",
+        "calendar_section_macro": "Macro",
+        "calendar_section_policy": "Policy",
+        "calendar_event_line": "{when} — {title} (tickers: {tickers}; sectors: {sectors})",
+        "calendar_watch_label": "What to watch:",
+        "catalyst_pre_header": "Catalyst reminder",
+        "catalyst_pre_title": "{title} — {when}",
+        "catalyst_pre_countdown": "In about {hours} hour(s).",
+        "catalyst_watch_header": "What to watch:",
+        "catalyst_related_tickers": "Related tickers: {tickers}",
+        "catalyst_related_sectors": "Related sectors: {sectors}",
+        "catalyst_llm_watch": "Additional context:",
+        "catalyst_post_header": "Post-event impact check",
+        "catalyst_post_title": "{title} — {when}",
+        "catalyst_post_moves_header": "Price moves since the reminder snapshot:",
+        "catalyst_post_move_line": "• {ticker}: {change}%",
+        "catalyst_post_no_moves": "No material price moves detected yet for held tickers.",
+        "catalyst_post_explanation_header": "Hypothetical explanations:",
         "daily_news_brief_title": "Key headlines for your holdings",
         "daily_news_digest_title": "Holdings digest",
         "portfolio_headlines_header": "Top headlines for your holdings",

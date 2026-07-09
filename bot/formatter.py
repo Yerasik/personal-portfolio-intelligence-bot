@@ -33,6 +33,7 @@ from bot.markdown_v2 import escape_markdown_v2
 from storage.models import (
     AppConfig,
     BotState,
+    CatalystEvent,
     MarketQuote,
     NewsCache,
     PendingAlert,
@@ -1499,4 +1500,122 @@ def format_strategy_update_notification(
         "",
         t("advisory_footer", lang),
     ]
+    return truncate_message("\n".join(lines))
+
+
+def _format_catalyst_event_time(event_at: datetime, lang: str) -> str:
+    """Human-readable catalyst timestamp."""
+    _ = lang
+    return _format_user_date(event_at)
+
+
+def format_catalyst_calendar(
+    events: list[CatalystEvent],
+    *,
+    lang: str = "en",
+    timezone_label: str = "",
+) -> str:
+    """Format upcoming catalyst events for /calendar."""
+    if not events:
+        return t("calendar_empty", lang)
+
+    lines = [t("calendar_header", lang)]
+    if timezone_label:
+        lines.append(t("calendar_timezone_note", lang, timezone=timezone_label))
+    lines.append("")
+
+    current_type = ""
+    for event in events:
+        if event.event_type != current_type:
+            current_type = event.event_type
+            lines.append(t(f"calendar_section_{current_type}", lang))
+        when = _format_catalyst_event_time(event.event_at, lang)
+        tickers = ", ".join(event.tickers) if event.tickers else "—"
+        sectors = ", ".join(event.sectors) if event.sectors else "—"
+        lines.append(
+            t(
+                "calendar_event_line",
+                lang,
+                when=when,
+                title=event.title,
+                tickers=tickers,
+                sectors=sectors,
+            )
+        )
+        watch_items = event.watch_items[:4]
+        if watch_items:
+            lines.append(t("calendar_watch_label", lang))
+            for item in watch_items:
+                lines.append(f"  • {item}")
+        lines.append("")
+
+    lines.append(t("advisory_footer", lang))
+    return truncate_message("\n".join(lines))
+
+
+def format_catalyst_pre_event(
+    event: CatalystEvent,
+    *,
+    hours_before: int,
+    watch_items: list[str],
+    llm_note: str = "",
+    lang: str = "en",
+) -> str:
+    """Format a pre-event catalyst reminder."""
+    when = _format_catalyst_event_time(event.event_at, lang)
+    lines = [
+        t("catalyst_pre_header", lang),
+        t("catalyst_pre_title", lang, title=event.title, when=when),
+        t("catalyst_pre_countdown", lang, hours=hours_before),
+        "",
+        t("catalyst_watch_header", lang),
+    ]
+    for item in watch_items[:6]:
+        lines.append(f"• {item}")
+    if event.tickers:
+        lines.extend(["", t("catalyst_related_tickers", lang, tickers=", ".join(event.tickers))])
+    if event.sectors:
+        lines.append(t("catalyst_related_sectors", lang, sectors=", ".join(event.sectors)))
+    if llm_note.strip():
+        lines.extend(["", t("catalyst_llm_watch", lang), llm_note.strip()])
+    lines.extend(["", t("advisory_footer", lang)])
+    return truncate_message("\n".join(lines))
+
+
+def format_catalyst_post_event(
+    event: CatalystEvent,
+    *,
+    moves: list[tuple[str, float]],
+    explanations: list[str],
+    lang: str = "en",
+) -> str:
+    """Format a post-event impact check."""
+    when = _format_catalyst_event_time(event.event_at, lang)
+    lines = [
+        t("catalyst_post_header", lang),
+        t("catalyst_post_title", lang, title=event.title, when=when),
+        "",
+        t("catalyst_post_moves_header", lang),
+    ]
+    if moves:
+        for ticker, pct_change in moves:
+            sign = "+" if pct_change >= 0 else ""
+            lines.append(
+                t(
+                    "catalyst_post_move_line",
+                    lang,
+                    ticker=ticker,
+                    change=f"{sign}{pct_change:.2f}",
+                )
+            )
+    else:
+        lines.append(t("catalyst_post_no_moves", lang))
+
+    if explanations:
+        lines.append("")
+        lines.append(t("catalyst_post_explanation_header", lang))
+        for block in explanations[:3]:
+            lines.append(block)
+
+    lines.extend(["", t("advisory_footer", lang)])
     return truncate_message("\n".join(lines))

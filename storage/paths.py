@@ -50,6 +50,10 @@ class DataPaths:
     def performance_history(self) -> Path:
         return self.root / "performance_history.json"
 
+    @property
+    def catalyst_events(self) -> Path:
+        return self.root / "catalyst_events.json"
+
 
 def resolve_data_paths(data_dir: str | Path) -> DataPaths:
     """Build path helpers for the configured data directory."""

@@ -301,6 +301,24 @@ async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     )
 
 
+async def calendar_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /calendar — refresh and show upcoming catalyst events."""
+    user = await _guard(update, context)
+    if user is None or update.message is None:
+        return
+
+    await update.message.reply_text(t("calendar_fetching", user.language))
+    commands = _commands(context)
+    try:
+        await asyncio.to_thread(commands.refresh_catalyst_calendar)
+        message = await asyncio.to_thread(commands.calendar_message, user.chat_id)
+    except Exception:
+        logger.exception("calendar command failed for chat_id=%s", user.chat_id)
+        await update.message.reply_text(t("calendar_fail", user.language))
+        return
+    await update.message.reply_text(message)
+
+
 async def news_summary_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /news_summary — refresh news, then stream LLM summaries."""
     user = await _guard(update, context)
@@ -912,6 +930,7 @@ def register_handlers(
         ("risk_metrics", risk_metrics_command),
         ("strategy", strategy_command),
         ("industries", industries_command),
+        ("calendar", calendar_command),
         ("news_summary", news_summary_command),
         ("add_ticker", add_ticker_command),
         ("add_ticker_strategy", add_ticker_strategy_command),
