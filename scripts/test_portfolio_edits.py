@@ -80,7 +80,7 @@ def run_test() -> None:
     updated, added = add_ticker_to_portfolio(updated, "NVDA", shares=5, cost_basis=120.0)
     if not added.success or len(updated.positions) != 2:
         raise AssertionError(f"add failed: {added}")
-    expected_usd = 10_000.0 - 5 * 120.0
+    expected_usd = 10_000.0 - 2 * 200.0 - 5 * 120.0
     if abs(updated.cash_usd - expected_usd) > 1e-9:
         raise AssertionError(f"expected USD cash {expected_usd}, got {updated.cash_usd}")
     if "debited" not in added.message.lower():
@@ -171,7 +171,7 @@ def run_test() -> None:
         raise AssertionError(f"HKD buy should debit cash: {hk_buy}")
 
     with _FX_PATCH:
-        usd_portfolio = Portfolio(positions=[], cash=10_000.0, cash_usd=100.0)
+        usd_portfolio = Portfolio(positions=[], cash=0.0, cash_usd=100.0)
         _, insufficient = add_ticker_to_portfolio(
             usd_portfolio,
             "MU",

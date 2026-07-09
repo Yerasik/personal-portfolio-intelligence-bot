@@ -9,6 +9,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 
+from analysis.cash_balances import format_cash_balance_text
 from analysis.industries import build_news_fetch_industries, build_news_focus_industries
 from analysis.llm import LlmAdvisoryResult, LlmClient
 from collectors.market_data import ensure_cached_quote
@@ -569,6 +570,14 @@ class BotCommands:
             )
             self._deliver_alerts_after_portfolio_change()
             message = t("add_ticker_ok", lang, message=result.message)
+            if result.purchase_cost > 0:
+                portfolio_after = self.repository.load_portfolio()
+                cash_summary = format_cash_balance_text(
+                    portfolio_after,
+                    lang=lang,
+                    include_bookkeeping_note=True,
+                )
+                message = f"{message}\n\n{cash_summary}"
             if notified:
                 message = f"{message}\n{t('users_notified', lang, count=notified)}"
             undo = self._record_completed_portfolio_action(
@@ -608,11 +617,17 @@ class BotCommands:
         if not result.success:
             return DeveloperActionReply(t("deposit_cash_fail", lang, message=result.message))
 
+        portfolio_after = self.repository.load_portfolio()
+        cash_summary = format_cash_balance_text(
+            portfolio_after,
+            lang=lang,
+            include_bookkeeping_note=True,
+        )
         message = t(
             "deposit_cash_ok",
             lang,
             message=result.message,
-            cash=result.cash_balance_hkd,
+            cash_summary=cash_summary,
         )
         if note:
             message = f"{message}\n{t('deposit_cash_note', lang, note=note)}"
@@ -901,11 +916,17 @@ class BotCommands:
             state=state,
         )
         self._deliver_alerts_after_portfolio_change()
+        portfolio_after = self.repository.load_portfolio()
+        cash_summary = format_cash_balance_text(
+            portfolio_after,
+            lang=lang,
+            include_bookkeeping_note=True,
+        )
         message = t(
             "sell_ticker_ok",
             lang,
             message=result.message,
-            cash=result.cash_balance_hkd,
+            cash_summary=cash_summary,
         )
         try:
             from storage.performance_ops import save_portfolio_snapshot

@@ -7,6 +7,10 @@ from typing import TYPE_CHECKING, Literal
 
 from collections.abc import Iterator
 
+from analysis.cash_balances import (
+    build_portfolio_cash_balances,
+    format_cash_balance_lines,
+)
 from analysis.llm import LlmAdvisoryResult
 from analysis.move_explainer import PriceMoveExplanation
 from analysis.news_summarizer import (
@@ -561,13 +565,9 @@ def format_weekly_summary(
                     )
                 )
         elif portfolio_cash_hkd(portfolio) > 0:
-            lines.append(
-                t(
-                    "daily_portfolio_value_hkd",
-                    lang,
-                    value=portfolio_cash_hkd(portfolio),
-                )
-            )
+            balances = build_portfolio_cash_balances(portfolio)
+            lines.append("")
+            lines.extend(format_cash_balance_lines(balances, lang=lang))
 
     if performance_history is not None:
         from analysis.performance_metrics import compute_performance_metrics
@@ -807,6 +807,17 @@ def format_portfolio(
 ) -> str:
     """Render portfolio holdings with latest market quotes."""
     if not portfolio.positions:
+        balances = build_portfolio_cash_balances(portfolio)
+        if is_developer and balances.total_hkd > 0:
+            lines = [t("portfolio_cash_only_header", lang), ""]
+            lines.extend(
+                format_cash_balance_lines(
+                    balances,
+                    lang=lang,
+                    include_bookkeeping_note=True,
+                )
+            )
+            return "\n".join(lines)
         key = "portfolio_empty_dev" if is_developer else "portfolio_empty"
         return t(key, lang)
 
@@ -851,24 +862,10 @@ def format_portfolio(
     _append_portfolio_totals_hkd(lines, valuation, lang)
     cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
     if is_developer and cash_hkd > 0:
-        cash_parts: list[str] = []
-        if portfolio.cash > 0:
-            cash_parts.append(f"{portfolio.cash:,.2f} HKD")
-        if portfolio.cash_usd > 0:
-            cash_parts.append(f"{portfolio.cash_usd:,.2f} USD")
-        if portfolio.cash_jpy > 0:
-            cash_parts.append(f"{portfolio.cash_jpy:,.0f} JPY")
-        if len(cash_parts) > 1 or portfolio.cash_usd > 0 or portfolio.cash_jpy > 0:
-            lines.append(
-                t(
-                    "portfolio_cash_multi",
-                    lang,
-                    breakdown=" + ".join(cash_parts),
-                    total_hkd=cash_hkd,
-                )
-            )
-        else:
-            lines.append(t("portfolio_cash", lang, cash=portfolio.cash))
+        fx_rates: dict[str, float] = {"USD": valuation.usd_to_hkd}
+        balances = build_portfolio_cash_balances(portfolio, fx_rates=fx_rates)
+        lines.append("")
+        lines.extend(format_cash_balance_lines(balances, lang=lang))
         lines.append(
             t(
                 "portfolio_grand_total_hkd",

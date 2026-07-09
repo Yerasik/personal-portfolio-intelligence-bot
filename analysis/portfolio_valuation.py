@@ -103,13 +103,13 @@ def portfolio_cash_hkd(
     jpy_to_hkd: float | None = None,
 ) -> float:
     """Return total cash (HKD + USD + JPY buckets) converted to HKD."""
-    usd_rate = usd_to_hkd if usd_to_hkd is not None else _DEFAULT_USD_TO_HKD
-    jpy_rate = jpy_to_hkd
-    if portfolio.cash_jpy > 0 and jpy_rate is None:
-        jpy_rate = fetch_fx_rates_to_hkd({"JPY"}).get("JPY", _DEFAULT_JPY_TO_HKD)
-    elif jpy_rate is None:
-        jpy_rate = _DEFAULT_JPY_TO_HKD
-    return portfolio.cash + portfolio.cash_usd * usd_rate + portfolio.cash_jpy * jpy_rate
+    from analysis.cash_balances import portfolio_cash_total_hkd
+
+    return portfolio_cash_total_hkd(
+        portfolio,
+        usd_to_hkd=usd_to_hkd,
+        jpy_to_hkd=jpy_to_hkd,
+    )
 
 
 def portfolio_total_value_hkd(
