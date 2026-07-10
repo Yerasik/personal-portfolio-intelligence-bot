@@ -246,6 +246,15 @@ class StressScenario(BaseModel):
         default=None,
         description="Percent change applied to the baseline USD/HKD rate",
     )
+    jpy_to_hkd: float | None = Field(
+        default=None,
+        gt=0,
+        description="Absolute shocked JPY/HKD rate",
+    )
+    jpy_to_hkd_change_pct: float | None = Field(
+        default=None,
+        description="Percent change applied to the baseline JPY/HKD rate",
+    )
     sector_return_pct: dict[str, float] = Field(default_factory=dict)
     ticker_return_pct: dict[str, float] = Field(default_factory=dict)
     market_return_pct: float | None = Field(

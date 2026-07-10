@@ -71,7 +71,14 @@
   "change_briefing_hour": 7,
   "change_briefing_minute": 30,
   "enable_detailed_cash_display": true,
-  "stress_scenarios": [],
+  "stress_scenarios": [
+    {
+      "scenario_id": "jpy_weaker",
+      "title": "JPY weakens vs HKD (−8%)",
+      "description": "Custom yen stress — overrides the built-in −10% preset.",
+      "jpy_to_hkd_change_pct": -8.0
+    }
+  ],
   "enable_catalyst_reminders": true,
   "catalyst_fetch_interval_minutes": 60,
   "catalyst_reminder_hours_before": [24, 2],

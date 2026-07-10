@@ -6,6 +6,7 @@ from dataclasses import dataclass
 
 from analysis.portfolio_valuation import (
     HKD,
+    _DEFAULT_JPY_TO_HKD,
     build_portfolio_valuation,
     portfolio_total_value_hkd,
 )
@@ -13,64 +14,141 @@ from storage.models import AppConfig, BotState, Portfolio, StressScenario
 
 DEFAULT_STRESS_SCENARIOS: tuple[StressScenario, ...] = (
     StressScenario(
-        scenario_id="usdhkd_up",
-        title="USD/HKD +3% (HKD weakens)",
+        scenario_id="us_listed_selloff",
+        title="US equities sell-off (HKD peg intact)",
         description=(
-            "US dollar strengthens vs Hong Kong dollar. USD-listed holdings and "
-            "USD cash revalue higher in HKD terms."
+            "US earnings miss, guidance cut, or rates scare hits NYSE/Nasdaq names. "
+            "HKD–USD peg assumed unchanged — impact is from USD share prices, not FX."
         ),
-        usd_to_hkd_change_pct=3.0,
-    ),
-    StressScenario(
-        scenario_id="rate_spike",
-        title="Rate spike (risk-off)",
-        description=(
-            "Higher-for-longer rates: broad equity drawdown as discount rates rise "
-            "and growth multiples compress."
-        ),
-        market_return_pct=-5.0,
+        market_return_pct=-3.0,
         sector_return_pct={
-            "Macro & Central Banks": -3.0,
-        },
-    ),
-    StressScenario(
-        scenario_id="china_tech_selloff",
-        title="China tech selloff",
-        description=(
-            "Regulatory/geopolitical risk repricing across China-exposed tech "
-            "and HK listings."
-        ),
-        sector_return_pct={
-            "China-US Relations": -18.0,
-            "Consumer Electronics": -12.0,
-            "Software - Infrastructure": -10.0,
+            "electrical equipment": -9.0,
+            "hong kong equities": -4.0,
+            "other industrial metals & mining": -7.0,
         },
         ticker_return_pct={
-            "9988.HK": -20.0,
-            "1810.HK": -15.0,
-            "0700.HK": -15.0,
-            "BABA": -18.0,
-            "3690.HK": -16.0,
+            "VRT": -9.0,
+            "GLDM": 2.5,
+            "XYL": -5.5,
+            "MP": -8.0,
+            "1810.HK": -4.0,
+            "0100.HK": -5.0,
+        },
+    ),
+    StressScenario(
+        scenario_id="fed_higher_for_longer",
+        title="Fed higher-for-longer (yields spike)",
+        description=(
+            "CPI surprises to the upside; markets price fewer cuts and higher terminal "
+            "rates. Growth/long-duration assets sell off; gold gets modest haven bid."
+        ),
+        market_return_pct=-3.5,
+        sector_return_pct={
+            "consumer electronics": -7.0,
+            "software": -6.0,
+            "us semiconductors": -9.0,
+            "semiconductors": -8.0,
+            "electrical equipment": -11.0,
+            "hong kong equities": -5.0,
+        },
+        ticker_return_pct={
+            "VRT": -12.0,
+            "GLDM": 4.5,
+            "1810.HK": -6.0,
+            "0100.HK": -7.0,
+            "XYL": -3.5,
+        },
+    ),
+    StressScenario(
+        scenario_id="china_hk_risk_off",
+        title="China / HK risk-off",
+        description=(
+            "Geopolitical or regulatory headline shock — tariffs, export controls, weak "
+            "China data, or HK liquidity concerns. HK tech and China-linked names reprice."
+        ),
+        sector_return_pct={
+            "china-us relations": -12.0,
+            "consumer electronics": -11.0,
+            "hong kong equities": -9.0,
+            "internet content": -14.0,
+            "software": -8.0,
+        },
+        ticker_return_pct={
+            "1810.HK": -13.0,
+            "0100.HK": -15.0,
+            "0700.HK": -12.0,
+            "9988.HK": -14.0,
+            "BABA": -13.0,
+            "3690.HK": -14.0,
         },
     ),
     StressScenario(
         scenario_id="ai_capex_slowdown",
-        title="AI capex slowdown",
+        title="AI / datacenter capex scare",
         description=(
-            "Hyperscaler capex cuts and slower AI infrastructure build-out hit "
-            "semis and AI beneficiaries."
+            "Hyperscaler capex guidance disappoints or GPU lead times shorten. "
+            "Semis and datacenter power/cooling vendors hit hardest; broad tech softer."
         ),
+        market_return_pct=-2.5,
         sector_return_pct={
-            "AI": -22.0,
-            "US Semiconductors": -18.0,
+            "ai": -14.0,
+            "us semiconductors": -12.0,
+            "semiconductors": -10.0,
+            "electrical equipment": -15.0,
         },
         ticker_return_pct={
-            "NVDA": -25.0,
-            "AMD": -20.0,
-            "MU": -18.0,
-            "AVGO": -15.0,
-            "TSM": -14.0,
+            "NVDA": -16.0,
+            "AMD": -14.0,
+            "MU": -13.0,
+            "AVGO": -11.0,
+            "TSM": -10.0,
+            "VRT": -18.0,
         },
+    ),
+    StressScenario(
+        scenario_id="rare_earth_supply_shock",
+        title="Rare-earth / magnet supply shock",
+        description=(
+            "China tightens rare-earth or magnet exports; EV/defence supply-chain fears "
+            "flare. Critical-mineral miners volatile; downstream users reprice demand risk."
+        ),
+        ticker_return_pct={
+            "MP": -17.0,
+        },
+        sector_return_pct={
+            "other industrial metals & mining": -12.0,
+            "basic materials": -6.0,
+            "china-us relations": -8.0,
+        },
+    ),
+    StressScenario(
+        scenario_id="global_risk_off",
+        title="Global risk-off week",
+        description=(
+            "Sudden macro shock — bank stress, recession scare, or geopolitical "
+            "escalation. Broad equity drawdown; gold ETF tends to outperform as ballast."
+        ),
+        market_return_pct=-6.5,
+        sector_return_pct={
+            "hong kong equities": -8.0,
+            "consumer electronics": -7.0,
+        },
+        ticker_return_pct={
+            "GLDM": 7.0,
+            "XYL": -4.0,
+            "1810.HK": -9.0,
+            "VRT": -10.0,
+            "MP": -11.0,
+        },
+    ),
+    StressScenario(
+        scenario_id="jpy_weaker",
+        title="JPY weakens vs HKD (−10%)",
+        description=(
+            "BoJ stays dovish, carry-trade unwind, or Japan fiscal concerns — yen falls "
+            "vs HKD. JPY cash loses HKD value; USD/HKD peg unchanged."
+        ),
+        jpy_to_hkd_change_pct=-10.0,
     ),
 )
 
@@ -176,26 +254,63 @@ def resolve_position_shock_pct(
     return 0.0
 
 
+def _portfolio_total_hkd(
+    portfolio: Portfolio,
+    valuation,
+    *,
+    fx_rates: dict[str, float] | None = None,
+) -> float:
+    """Total portfolio value in HKD including multi-currency cash at given FX rates."""
+    from analysis.cash_balances import portfolio_cash_total_hkd
+
+    rates = dict(fx_rates or {})
+    if "USD" not in rates:
+        rates["USD"] = valuation.usd_to_hkd
+    cash_hkd = portfolio_cash_total_hkd(
+        portfolio,
+        usd_to_hkd=rates.get("USD"),
+        jpy_to_hkd=rates.get("JPY"),
+    )
+    return valuation.total_market_value_hkd + cash_hkd
+
+
 def _resolve_fx_rates(
     baseline_usd_to_hkd: float,
     scenario: StressScenario,
+    *,
+    baseline_jpy_to_hkd: float | None = None,
 ) -> tuple[dict[str, float], str]:
     """Build shocked FX map and a human-readable FX note."""
     fx_rates = {HKD: 1.0, "USD": baseline_usd_to_hkd}
-    fx_note = ""
+    fx_parts: list[str] = []
 
     if scenario.usd_to_hkd is not None:
         shocked = scenario.usd_to_hkd
         fx_rates["USD"] = shocked
-        fx_note = f"USD/HKD {baseline_usd_to_hkd:.4f} → {shocked:.4f}"
+        fx_parts.append(f"USD/HKD {baseline_usd_to_hkd:.4f} → {shocked:.4f}")
     elif scenario.usd_to_hkd_change_pct is not None:
         shocked = baseline_usd_to_hkd * (1.0 + scenario.usd_to_hkd_change_pct / 100.0)
         fx_rates["USD"] = shocked
-        fx_note = (
+        fx_parts.append(
             f"USD/HKD {baseline_usd_to_hkd:.4f} → {shocked:.4f} "
             f"({scenario.usd_to_hkd_change_pct:+.1f}%)"
         )
 
+    base_jpy = baseline_jpy_to_hkd if baseline_jpy_to_hkd is not None else _DEFAULT_JPY_TO_HKD
+    fx_rates["JPY"] = base_jpy
+    if scenario.jpy_to_hkd is not None:
+        shocked_jpy = scenario.jpy_to_hkd
+        fx_rates["JPY"] = shocked_jpy
+        fx_parts.append(f"JPY/HKD {base_jpy:.6f} → {shocked_jpy:.6f}")
+    elif scenario.jpy_to_hkd_change_pct is not None:
+        shocked_jpy = base_jpy * (1.0 + scenario.jpy_to_hkd_change_pct / 100.0)
+        fx_rates["JPY"] = shocked_jpy
+        fx_parts.append(
+            f"JPY/HKD {base_jpy:.6f} → {shocked_jpy:.6f} "
+            f"({scenario.jpy_to_hkd_change_pct:+.1f}%)"
+        )
+
+    fx_note = " · ".join(fx_parts)
     return fx_rates, fx_note
 
 
@@ -289,11 +404,30 @@ def run_stress_scenario(
     if baseline_valuation is None:
         baseline_valuation = build_portfolio_valuation(portfolio, state)
 
-    if not portfolio.positions and portfolio.cash <= 0 and portfolio.cash_usd <= 0:
+    if (
+        not portfolio.positions
+        and portfolio.cash <= 0
+        and portfolio.cash_usd <= 0
+        and portfolio.cash_jpy <= 0
+    ):
         return None
 
-    baseline_total = portfolio_total_value_hkd(portfolio, baseline_valuation)
-    fx_rates, fx_note = _resolve_fx_rates(baseline_valuation.usd_to_hkd, scenario)
+    from analysis.cash_balances import build_portfolio_cash_balances
+
+    cash_balances = build_portfolio_cash_balances(
+        portfolio,
+        fx_rates={"USD": baseline_valuation.usd_to_hkd},
+    )
+    baseline_total = _portfolio_total_hkd(
+        portfolio,
+        baseline_valuation,
+        fx_rates={"USD": baseline_valuation.usd_to_hkd, "JPY": cash_balances.jpy_to_hkd},
+    )
+    fx_rates, fx_note = _resolve_fx_rates(
+        baseline_valuation.usd_to_hkd,
+        scenario,
+        baseline_jpy_to_hkd=cash_balances.jpy_to_hkd,
+    )
     shocked_state = _build_shocked_state(
         state,
         portfolio,
@@ -305,7 +439,11 @@ def run_stress_scenario(
         shocked_state,
         fx_rates=fx_rates,
     )
-    stressed_total = portfolio_total_value_hkd(portfolio, stressed_valuation)
+    stressed_total = _portfolio_total_hkd(
+        portfolio,
+        stressed_valuation,
+        fx_rates=fx_rates,
+    )
     delta_hkd = stressed_total - baseline_total
     delta_pct = (delta_hkd / baseline_total * 100.0) if baseline_total > 0 else 0.0
     impacts = _position_impacts(

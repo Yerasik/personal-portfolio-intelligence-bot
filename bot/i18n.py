@@ -532,7 +532,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "stress_fetching": "Running stress scenarios…",
         "stress_empty": "Portfolio is empty — add holdings to run stress tests.",
-        "stress_not_found": "Unknown scenario {scenario_id!r}. Run /stress for all presets.",
+        "stress_not_found": (
+            "Unknown scenario {scenario_id!r}. Run /stress for all presets "
+            "(us_listed_selloff, fed_higher_for_longer, china_hk_risk_off, ai_capex_slowdown, "
+            "rare_earth_supply_shock, global_risk_off, jpy_weaker)."
+        ),
         "alerts_header": "Alerts:",
         "plus_more": "- plus {count} more",
         "advisory": "Advisory:",
