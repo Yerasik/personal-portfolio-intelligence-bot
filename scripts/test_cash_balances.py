@@ -40,15 +40,34 @@ def test_format_shows_native_and_hkd() -> None:
         portfolio,
         fx_rates={"USD": 7.85},
         include_fx_note=True,
+        detailed=True,
     )
     for token in ("HKD", "USD", "7.85", "494"):
         if token not in text:
             raise AssertionError(f"missing {token!r} in:\n{text}")
 
 
+def test_format_simple_total_only() -> None:
+    portfolio = Portfolio(cash=1000.0, cash_usd=63.0)
+    text = format_cash_balance_text(
+        portfolio,
+        fx_rates={"USD": 7.85},
+        detailed=False,
+    )
+    if "@" in text or "FX rates" in text:
+        raise AssertionError(f"simple format should not include FX detail:\n{text}")
+    if "1,494" not in text and "1494" not in text.replace(",", ""):
+        raise AssertionError(f"expected HKD total in:\n{text}")
+
+
 def test_cash_only_portfolio_view() -> None:
     portfolio = Portfolio(cash_usd=200.0)
-    text = format_portfolio(portfolio, BotState(), is_developer=True)
+    text = format_portfolio(
+        portfolio,
+        BotState(),
+        is_developer=True,
+        detailed_cash_display=True,
+    )
     if "cash only" not in text.lower() and "nur cash" not in text.lower():
         if "no positions" not in text.lower():
             raise AssertionError(f"expected cash-only header in:\n{text}")
@@ -56,11 +75,25 @@ def test_cash_only_portfolio_view() -> None:
         raise AssertionError(f"expected USD bucket in:\n{text}")
 
 
+def test_cash_only_legacy_shows_empty() -> None:
+    portfolio = Portfolio(cash_usd=200.0)
+    text = format_portfolio(
+        portfolio,
+        BotState(),
+        is_developer=True,
+        detailed_cash_display=False,
+    )
+    if "empty" not in text.lower() and "leer" not in text.lower():
+        raise AssertionError(f"legacy mode should show empty portfolio:\n{text}")
+
+
 def main() -> None:
     test_multi_currency_totals()
     test_portfolio_cash_hkd_wrapper()
     test_format_shows_native_and_hkd()
+    test_format_simple_total_only()
     test_cash_only_portfolio_view()
+    test_cash_only_legacy_shows_empty()
     print("test_cash_balances: OK")
 
 

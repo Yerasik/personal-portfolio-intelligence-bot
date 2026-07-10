@@ -222,7 +222,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "Share count must be a positive number.",
         "add_ticker_cost_invalid": "Cost basis must be a positive number.",
-        "deposit_cash_ok": "Deposited: {message}\n\n{cash_summary}",
+        "deposit_cash_ok": "Deposited: {message}\nCash balance: {cash:,.2f}",
+        "deposit_cash_ok_detailed": "Deposited: {message}\n\n{cash_summary}",
         "deposit_cash_fail": "Could not deposit cash: {message}",
         "deposit_cash_note": "Note: {note}",
         "deposit_cash_usage": (
@@ -324,7 +325,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "You can undo with /undo or the Undo button on the confirmation message.\n\n"
             "Example: /remove_ticker TSLA"
         ),
-        "sell_ticker_ok": "Sold: {message}\n\n{cash_summary}",
+        "sell_ticker_ok": "Sold: {message}\nCash balance: {cash:,.2f}",
+        "sell_ticker_ok_detailed": "Sold: {message}\n\n{cash_summary}",
         "sell_ticker_fail": "Could not sell ticker: {message}",
         "sell_ticker_usage": (
             "How to use /sell_ticker\n\n"
@@ -388,6 +390,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash_multi": "Cash: {breakdown} (≈ {total_hkd:,.2f} HKD total cash)",
         "portfolio_cash_only_header": "Portfolio (no positions — cash only)",
         "cash_empty": "Cash balance: 0.00 HKD",
+        "cash_simple_total": "Cash balance: {total_hkd:,.2f} HKD",
         "cash_header_total": "Cash (≈ {total_hkd:,.2f} HKD total)",
         "cash_fx_note": "FX rates: USD/HKD {usd_rate:.4f}, JPY/HKD {jpy_rate:.6f}",
         "cash_bucket_hkd": "• HKD: {native} (= {hkd:,.2f} HKD)",
@@ -873,7 +876,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "Die Anzahl muss eine positive Zahl sein.",
         "add_ticker_cost_invalid": "Die Kostenbasis muss eine positive Zahl sein.",
-        "deposit_cash_ok": "Eingezahlt: {message}\n\n{cash_summary}",
+        "deposit_cash_ok": "Eingezahlt: {message}\nCash-Bestand: {cash:,.2f}",
+        "deposit_cash_ok_detailed": "Eingezahlt: {message}\n\n{cash_summary}",
         "deposit_cash_fail": "Einzahlung fehlgeschlagen: {message}",
         "deposit_cash_note": "Notiz: {note}",
         "deposit_cash_usage": (
@@ -972,7 +976,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Rückgängig mit /undo oder der Schaltfläche „Letzte Aktion rückgängig“.\n\n"
             "Beispiel: /remove_ticker TSLA"
         ),
-        "sell_ticker_ok": "Verkauft: {message}\n\n{cash_summary}",
+        "sell_ticker_ok": "Verkauft: {message}\nCash-Bestand: {cash:,.2f}",
+        "sell_ticker_ok_detailed": "Verkauft: {message}\n\n{cash_summary}",
         "sell_ticker_fail": "Verkauf fehlgeschlagen: {message}",
         "sell_ticker_usage": (
             "So verwenden Sie /sell_ticker\n\n"
@@ -1032,6 +1037,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash_multi": "Cash: {breakdown} (≈ {total_hkd:,.2f} HKD gesamt)",
         "portfolio_cash_only_header": "Portfolio (keine Positionen — nur Cash)",
         "cash_empty": "Cash-Bestand: 0,00 HKD",
+        "cash_simple_total": "Cash-Bestand: {total_hkd:,.2f} HKD",
         "cash_header_total": "Cash (≈ {total_hkd:,.2f} HKD gesamt)",
         "cash_fx_note": "Wechselkurse: USD/HKD {usd_rate:.4f}, JPY/HKD {jpy_rate:.6f}",
         "cash_bucket_hkd": "• HKD: {native} (= {hkd:,.2f} HKD)",
@@ -1464,7 +1470,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "数量必须是正数。",
         "add_ticker_cost_invalid": "成本价必须是正数。",
-        "deposit_cash_ok": "已存入：{message}\n\n{cash_summary}",
+        "deposit_cash_ok": "已存入：{message}\n现金余额：{cash:,.2f}",
+        "deposit_cash_ok_detailed": "已存入：{message}\n\n{cash_summary}",
         "deposit_cash_fail": "无法存入现金：{message}",
         "deposit_cash_note": "备注：{note}",
         "deposit_cash_usage": (
@@ -1557,7 +1564,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "可用 /undo 或确认消息上的「撤销上一步」按钮撤销。\n\n"
             "示例：/remove_ticker TSLA"
         ),
-        "sell_ticker_ok": "已卖出：{message}\n\n{cash_summary}",
+        "sell_ticker_ok": "已卖出：{message}\n现金余额：{cash:,.2f}",
+        "sell_ticker_ok_detailed": "已卖出：{message}\n\n{cash_summary}",
         "sell_ticker_fail": "无法卖出：{message}",
         "sell_ticker_usage": (
             "如何使用 /sell_ticker\n\n"
@@ -1617,6 +1625,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash_multi": "现金：{breakdown}（合计约 {total_hkd:,.2f} HKD）",
         "portfolio_cash_only_header": "投资组合（无持仓，仅现金）",
         "cash_empty": "现金余额：0.00 HKD",
+        "cash_simple_total": "现金余额：{total_hkd:,.2f} HKD",
         "cash_header_total": "现金（合计约 {total_hkd:,.2f} HKD）",
         "cash_fx_note": "汇率：USD/HKD {usd_rate:.4f}，JPY/HKD {jpy_rate:.6f}",
         "cash_bucket_hkd": "• HKD：{native}（= {hkd:,.2f} HKD）",
@@ -2046,7 +2055,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_ticker_shares_invalid": "Количество должно быть положительным числом.",
         "add_ticker_cost_invalid": "Себестоимость должна быть положительным числом.",
-        "deposit_cash_ok": "Внесено: {message}\n\n{cash_summary}",
+        "deposit_cash_ok": "Внесено: {message}\nОстаток cash: {cash:,.2f}",
+        "deposit_cash_ok_detailed": "Внесено: {message}\n\n{cash_summary}",
         "deposit_cash_fail": "Не удалось внести cash: {message}",
         "deposit_cash_note": "Примечание: {note}",
         "deposit_cash_usage": (
@@ -2144,7 +2154,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Отмена: /undo или кнопка «Отменить последнее действие».\n\n"
             "Пример: /remove_ticker TSLA"
         ),
-        "sell_ticker_ok": "Продано: {message}\n\n{cash_summary}",
+        "sell_ticker_ok": "Продано: {message}\nОстаток cash: {cash:,.2f}",
+        "sell_ticker_ok_detailed": "Продано: {message}\n\n{cash_summary}",
         "sell_ticker_fail": "Не удалось продать: {message}",
         "sell_ticker_usage": (
             "Как использовать /sell_ticker\n\n"
@@ -2204,6 +2215,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "portfolio_cash_multi": "Cash: {breakdown} (≈ {total_hkd:,.2f} HKD всего)",
         "portfolio_cash_only_header": "Портфель (без позиций — только cash)",
         "cash_empty": "Остаток cash: 0,00 HKD",
+        "cash_simple_total": "Остаток cash: {total_hkd:,.2f} HKD",
         "cash_header_total": "Cash (≈ {total_hkd:,.2f} HKD всего)",
         "cash_fx_note": "Курсы: USD/HKD {usd_rate:.4f}, JPY/HKD {jpy_rate:.6f}",
         "cash_bucket_hkd": "• HKD: {native} (= {hkd:,.2f} HKD)",

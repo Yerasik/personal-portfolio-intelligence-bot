@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING, Literal
 from collections.abc import Iterator
 
 from analysis.cash_balances import (
+    append_portfolio_cash_lines,
     build_portfolio_cash_balances,
     format_cash_balance_lines,
 )
@@ -541,6 +542,7 @@ def format_weekly_summary(
     state: BotState | None = None,
     performance_history: PerformanceHistory | None = None,
     lang: str = "en",
+    detailed_cash_display: bool = False,
 ) -> str:
     """Format the Monday weekly summary focused on portfolio performance."""
     lines = [t("weekly_summary_title", lang), ""]
@@ -565,9 +567,18 @@ def format_weekly_summary(
                     )
                 )
         elif portfolio_cash_hkd(portfolio) > 0:
-            balances = build_portfolio_cash_balances(portfolio)
-            lines.append("")
-            lines.extend(format_cash_balance_lines(balances, lang=lang))
+            if detailed_cash_display:
+                lines.append("")
+                balances = build_portfolio_cash_balances(portfolio)
+                lines.extend(format_cash_balance_lines(balances, lang=lang))
+            else:
+                lines.append(
+                    t(
+                        "daily_portfolio_value_hkd",
+                        lang,
+                        value=portfolio_cash_hkd(portfolio),
+                    )
+                )
 
     if performance_history is not None:
         from analysis.performance_metrics import compute_performance_metrics
@@ -804,11 +815,12 @@ def format_portfolio(
     strategies: dict[str, TickerStrategy] | None = None,
     lang: str = "en",
     is_developer: bool = False,
+    detailed_cash_display: bool = False,
 ) -> str:
     """Render portfolio holdings with latest market quotes."""
     if not portfolio.positions:
         balances = build_portfolio_cash_balances(portfolio)
-        if is_developer and balances.total_hkd > 0:
+        if is_developer and balances.total_hkd > 0 and detailed_cash_display:
             lines = [t("portfolio_cash_only_header", lang), ""]
             lines.extend(
                 format_cash_balance_lines(
@@ -862,10 +874,14 @@ def format_portfolio(
     _append_portfolio_totals_hkd(lines, valuation, lang)
     cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
     if is_developer and cash_hkd > 0:
-        fx_rates: dict[str, float] = {"USD": valuation.usd_to_hkd}
-        balances = build_portfolio_cash_balances(portfolio, fx_rates=fx_rates)
         lines.append("")
-        lines.extend(format_cash_balance_lines(balances, lang=lang))
+        append_portfolio_cash_lines(
+            lines,
+            portfolio,
+            lang=lang,
+            usd_to_hkd=valuation.usd_to_hkd,
+            detailed=detailed_cash_display,
+        )
         lines.append(
             t(
                 "portfolio_grand_total_hkd",

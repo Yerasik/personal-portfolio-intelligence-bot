@@ -352,6 +352,7 @@ class TelegramNotifier:
             return False
 
         delivered = False
+        app_config = repository.load_config()
         for user in users:
             lang = user.language
             message = format_weekly_summary(
@@ -359,6 +360,7 @@ class TelegramNotifier:
                 state=state,
                 performance_history=performance_history,
                 lang=lang,
+                detailed_cash_display=app_config.enable_detailed_cash_display,
             )
             try:
                 self.send_text(user.chat_id, message)

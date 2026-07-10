@@ -70,6 +70,7 @@
   "enable_change_briefing": true,
   "change_briefing_hour": 7,
   "change_briefing_minute": 30,
+  "enable_detailed_cash_display": false,
   "enable_catalyst_reminders": true,
   "catalyst_fetch_interval_minutes": 60,
   "catalyst_reminder_hours_before": [24, 2],

@@ -222,12 +222,14 @@ class BotCommands:
         portfolio = self.repository.load_portfolio()
         state = self.repository.load_state()
         strategies = self.repository.load_ticker_strategies().by_ticker
+        app_config = self.repository.load_config()
         return format_portfolio(
             portfolio,
             state,
             strategies=strategies,
             lang=self._lang(chat_id),
             is_developer=self._is_developer(chat_id),
+            detailed_cash_display=app_config.enable_detailed_cash_display,
         )
 
     def performance_message(self, chat_id: int) -> str:
@@ -564,18 +566,20 @@ class BotCommands:
             cost_basis=cost_basis,
         )
         if result.success:
+            app_config = self.repository.load_config()
             notified = self._notify_ordinary_portfolio_add(
                 result,
                 shares_added=shares,
             )
             self._deliver_alerts_after_portfolio_change()
             message = t("add_ticker_ok", lang, message=result.message)
-            if result.purchase_cost > 0:
+            if result.purchase_cost > 0 and app_config.enable_detailed_cash_display:
                 portfolio_after = self.repository.load_portfolio()
                 cash_summary = format_cash_balance_text(
                     portfolio_after,
                     lang=lang,
                     include_bookkeeping_note=True,
+                    detailed=True,
                 )
                 message = f"{message}\n\n{cash_summary}"
             if notified:
@@ -617,18 +621,28 @@ class BotCommands:
         if not result.success:
             return DeveloperActionReply(t("deposit_cash_fail", lang, message=result.message))
 
-        portfolio_after = self.repository.load_portfolio()
-        cash_summary = format_cash_balance_text(
-            portfolio_after,
-            lang=lang,
-            include_bookkeeping_note=True,
-        )
-        message = t(
-            "deposit_cash_ok",
-            lang,
-            message=result.message,
-            cash_summary=cash_summary,
-        )
+        app_config = self.repository.load_config()
+        if app_config.enable_detailed_cash_display:
+            portfolio_after = self.repository.load_portfolio()
+            cash_summary = format_cash_balance_text(
+                portfolio_after,
+                lang=lang,
+                include_bookkeeping_note=True,
+                detailed=True,
+            )
+            message = t(
+                "deposit_cash_ok_detailed",
+                lang,
+                message=result.message,
+                cash_summary=cash_summary,
+            )
+        else:
+            message = t(
+                "deposit_cash_ok",
+                lang,
+                message=result.message,
+                cash=result.cash_balance_hkd,
+            )
         if note:
             message = f"{message}\n{t('deposit_cash_note', lang, note=note)}"
 
@@ -916,18 +930,27 @@ class BotCommands:
             state=state,
         )
         self._deliver_alerts_after_portfolio_change()
-        portfolio_after = self.repository.load_portfolio()
-        cash_summary = format_cash_balance_text(
-            portfolio_after,
-            lang=lang,
-            include_bookkeeping_note=True,
-        )
-        message = t(
-            "sell_ticker_ok",
-            lang,
-            message=result.message,
-            cash_summary=cash_summary,
-        )
+        if app_config.enable_detailed_cash_display:
+            portfolio_after = self.repository.load_portfolio()
+            cash_summary = format_cash_balance_text(
+                portfolio_after,
+                lang=lang,
+                include_bookkeeping_note=True,
+                detailed=True,
+            )
+            message = t(
+                "sell_ticker_ok_detailed",
+                lang,
+                message=result.message,
+                cash_summary=cash_summary,
+            )
+        else:
+            message = t(
+                "sell_ticker_ok",
+                lang,
+                message=result.message,
+                cash=result.cash_balance_hkd,
+            )
         try:
             from storage.performance_ops import save_portfolio_snapshot
 

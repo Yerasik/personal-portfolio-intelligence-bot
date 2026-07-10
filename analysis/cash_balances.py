@@ -189,9 +189,14 @@ def format_cash_balance_text(
     fx_rates: dict[str, float] | None = None,
     include_fx_note: bool = True,
     include_bookkeeping_note: bool = False,
+    detailed: bool = True,
 ) -> str:
-    """Return a multi-line cash summary for messages and commands."""
+    """Return a cash summary for messages; detailed=False shows HKD total only."""
+    from bot.i18n import t
+
     balances = build_portfolio_cash_balances(portfolio, fx_rates=fx_rates)
+    if not detailed:
+        return t("cash_simple_total", lang, total_hkd=balances.total_hkd)
     return "\n".join(
         format_cash_balance_lines(
             balances,
@@ -200,3 +205,53 @@ def format_cash_balance_text(
             include_bookkeeping_note=include_bookkeeping_note,
         )
     )
+
+
+def append_portfolio_cash_lines(
+    lines: list[str],
+    portfolio: Portfolio,
+    *,
+    lang: str = "en",
+    usd_to_hkd: float | None = None,
+    detailed: bool = False,
+    include_bookkeeping_note: bool = False,
+) -> None:
+    """Append portfolio cash lines using detailed or legacy formatting."""
+    from bot.i18n import t
+
+    cash_hkd = portfolio_cash_total_hkd(portfolio, usd_to_hkd=usd_to_hkd)
+    if cash_hkd <= 0:
+        return
+
+    if detailed:
+        fx_rates: dict[str, float] | None = None
+        if usd_to_hkd is not None:
+            fx_rates = {"USD": usd_to_hkd}
+        balances = build_portfolio_cash_balances(portfolio, fx_rates=fx_rates)
+        lines.extend(
+            format_cash_balance_lines(
+                balances,
+                lang=lang,
+                include_bookkeeping_note=include_bookkeeping_note,
+            )
+        )
+        return
+
+    cash_parts: list[str] = []
+    if portfolio.cash > 0:
+        cash_parts.append(f"{portfolio.cash:,.2f} HKD")
+    if portfolio.cash_usd > 0:
+        cash_parts.append(f"{portfolio.cash_usd:,.2f} USD")
+    if portfolio.cash_jpy > 0:
+        cash_parts.append(f"{portfolio.cash_jpy:,.0f} JPY")
+    if len(cash_parts) > 1 or portfolio.cash_usd > 0 or portfolio.cash_jpy > 0:
+        lines.append(
+            t(
+                "portfolio_cash_multi",
+                lang,
+                breakdown=" + ".join(cash_parts),
+                total_hkd=cash_hkd,
+            )
+        )
+    else:
+        lines.append(t("portfolio_cash", lang, cash=portfolio.cash))

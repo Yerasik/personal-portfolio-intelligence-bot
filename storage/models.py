@@ -283,6 +283,7 @@ class AppConfig(BaseModel):
     enable_change_briefing: bool = True
     change_briefing_hour: int = Field(default=7, ge=0, le=23)
     change_briefing_minute: int = Field(default=30, ge=0, le=59)
+    enable_detailed_cash_display: bool = False
 
 
 class CatalystEvent(BaseModel):
