@@ -35,6 +35,8 @@ from analysis.performance_series import ChartPeriod
 from analysis.performance_metrics import compute_performance_metrics
 from analysis.portfolio_risk import estimate_portfolio_risk
 from analysis.portfolio_valuation import build_portfolio_valuation, valuation_for_ticker
+from analysis.risk_metrics import compute_risk_metrics_report
+from analysis.scenario_stress import effective_stress_scenarios, run_stress_report
 from analysis.technical_snapshot import build_technical_snapshot
 from analysis.rules import RulesEngine
 from bot.formatter import (
@@ -49,6 +51,7 @@ from bot.formatter import (
     format_portfolio,
     format_pros_cons_analysis,
     format_risk_metrics,
+    format_stress_report,
     format_start,
     format_strategy_detail,
     format_strategy_list,
@@ -275,6 +278,33 @@ class BotCommands:
         if report is None:
             return t("risk_metrics_unavailable", lang)
         return format_risk_metrics(report, lang=lang)
+
+    def stress_message(self, chat_id: int, scenario_id: str | None = None) -> str:
+        """Run configured stress scenarios and format portfolio impact."""
+        lang = self._lang(chat_id)
+        portfolio = self.repository.load_portfolio()
+        if not portfolio.positions:
+            return t("stress_empty", lang)
+
+        app_config = self.repository.load_config()
+        scenarios = effective_stress_scenarios(app_config)
+        if scenario_id:
+            needle = scenario_id.strip().lower()
+            scenarios = [item for item in scenarios if item.scenario_id.lower() == needle]
+            if not scenarios:
+                return t("stress_not_found", lang, scenario_id=scenario_id)
+
+        state = self.repository.load_state()
+        ticker_map = self.repository.load_ticker_industries().ticker_to_industry
+        report = run_stress_report(
+            portfolio,
+            state,
+            scenarios,
+            ticker_to_industry=ticker_map,
+        )
+        if report is None:
+            return t("stress_empty", lang)
+        return format_stress_report(report, lang=lang)
 
     def industries_message(self, chat_id: int) -> str:
         """Load config + news cache and summarize focus industries."""
@@ -573,6 +603,11 @@ class BotCommands:
             )
             self._deliver_alerts_after_portfolio_change()
             message = t("add_ticker_ok", lang, message=result.message)
+            if result.industry_seeded:
+                message = (
+                    f"{message}\n"
+                    f"{t('add_ticker_industry_seeded', lang, industry=result.industry_seeded)}"
+                )
             if result.purchase_cost > 0 and app_config.enable_detailed_cash_display:
                 portfolio_after = self.repository.load_portfolio()
                 cash_summary = format_cash_balance_text(
@@ -1134,6 +1169,32 @@ class BotCommands:
         )
 
         notified = 0
+        cash_suffix = ""
+        industry_suffix = ""
+        if is_new_position and result.industry_seeded:
+            industry_suffix = (
+                "\n"
+                + t(
+                    "add_ticker_industry_seeded",
+                    lang,
+                    industry=result.industry_seeded,
+                )
+            )
+        if (
+            is_new_position
+            and result.purchase_cost > 0
+            and app_config.enable_detailed_cash_display
+        ):
+            portfolio_after = self.repository.load_portfolio()
+            cash_suffix = (
+                "\n\n"
+                + format_cash_balance_text(
+                    portfolio_after,
+                    lang=lang,
+                    include_bookkeeping_note=True,
+                    detailed=True,
+                )
+            )
         if is_new_position:
             localized_for_notify = by_language.get("en", generated.strategy_text)
             notified = self._notify_ordinary_strategy_announcement(
@@ -1149,7 +1210,7 @@ class BotCommands:
                 else "add_ticker_strategy_ok_no_notify"
             )
             self._deliver_alerts_after_portfolio_change()
-            return t(key, lang, symbol=symbol, count=notified)
+            return t(key, lang, symbol=symbol, count=notified) + industry_suffix + cash_suffix
 
         notified += self._notifier().notify_strategy_content(
             self.repository,

@@ -23,6 +23,7 @@ from analysis.news_summarizer import (
 from analysis.performance_metrics import PerformanceMetrics
 from analysis.portfolio_risk import PortfolioRiskAssessment
 from analysis.risk_metrics import RiskMetricsReport
+from analysis.scenario_stress import StressReport
 from analysis.technical_snapshot import TechnicalSnapshot
 from analysis.portfolio_valuation import (
     PositionValuation,
@@ -508,6 +509,69 @@ def format_risk_metrics(report: RiskMetricsReport, *, lang: str = "en") -> str:
         "",
         t("risk_metrics_footer", lang),
     ]
+    return truncate_message("\n".join(lines))
+
+
+def format_stress_report(report: StressReport, *, lang: str = "en") -> str:
+    """Render scenario stress test results with worst contributors."""
+    lines = [
+        t("stress_title", lang),
+        t("stress_baseline", lang, value=report.baseline_total_hkd),
+        "",
+    ]
+
+    for scenario in report.scenarios:
+        lines.append(t("stress_scenario_header", lang, title=scenario.title))
+        if scenario.description:
+            lines.append(t("stress_scenario_desc", lang, description=scenario.description))
+        lines.append(
+            t(
+                "stress_scenario_delta",
+                lang,
+                delta_hkd=scenario.delta_hkd,
+                delta_pct=scenario.delta_pct,
+                stressed_total=scenario.stressed_total_hkd,
+            )
+        )
+        if scenario.fx_note:
+            lines.append(t("stress_scenario_fx", lang, fx_note=scenario.fx_note))
+
+        losers = [item for item in scenario.impacts if item.delta_hkd < -0.01]
+        if losers:
+            lines.append(t("stress_worst_header", lang))
+            for impact in losers[:5]:
+                lines.append(
+                    t(
+                        "stress_impact_line",
+                        lang,
+                        ticker=impact.ticker,
+                        delta_hkd=impact.delta_hkd,
+                        shock_pct=impact.shock_pct,
+                        industry=impact.industry,
+                    )
+                )
+        else:
+            gainers = [item for item in scenario.impacts if item.delta_hkd > 0.01]
+            if gainers:
+                lines.append(t("stress_best_header", lang))
+                for impact in sorted(gainers, key=lambda i: i.delta_hkd, reverse=True)[:3]:
+                    lines.append(
+                        t(
+                            "stress_impact_line",
+                            lang,
+                            ticker=impact.ticker,
+                            delta_hkd=impact.delta_hkd,
+                            shock_pct=impact.shock_pct,
+                            industry=impact.industry,
+                        )
+                    )
+            elif scenario.impacts:
+                lines.append(t("stress_no_position_impacts", lang))
+            else:
+                lines.append(t("stress_no_impacts", lang))
+        lines.append("")
+
+    lines.append(t("stress_footer", lang))
     return truncate_message("\n".join(lines))
 
 

@@ -231,6 +231,29 @@ class ManualCatalystEvent(BaseModel):
     notes: str = ""
 
 
+class StressScenario(BaseModel):
+    """Configurable portfolio shock scenario for /stress."""
+
+    scenario_id: str = Field(min_length=1)
+    title: str = Field(min_length=1)
+    description: str = ""
+    usd_to_hkd: float | None = Field(
+        default=None,
+        gt=0,
+        description="Absolute shocked USD/HKD rate",
+    )
+    usd_to_hkd_change_pct: float | None = Field(
+        default=None,
+        description="Percent change applied to the baseline USD/HKD rate",
+    )
+    sector_return_pct: dict[str, float] = Field(default_factory=dict)
+    ticker_return_pct: dict[str, float] = Field(default_factory=dict)
+    market_return_pct: float | None = Field(
+        default=None,
+        description="Fallback equity return shock for unmatched holdings",
+    )
+
+
 class AppConfig(BaseModel):
     """Bot behavior and watch settings persisted in config.json."""
 
@@ -283,7 +306,8 @@ class AppConfig(BaseModel):
     enable_change_briefing: bool = True
     change_briefing_hour: int = Field(default=7, ge=0, le=23)
     change_briefing_minute: int = Field(default=30, ge=0, le=59)
-    enable_detailed_cash_display: bool = False
+    enable_detailed_cash_display: bool = True
+    stress_scenarios: list[StressScenario] = Field(default_factory=list)
 
 
 class CatalystEvent(BaseModel):

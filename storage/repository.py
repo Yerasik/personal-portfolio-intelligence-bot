@@ -4,6 +4,8 @@ All bot modules should load/save JSON through this class rather than calling
 JsonStore directly — it keeps path handling consistent.
 """
 
+import logging
+from collections.abc import Callable
 from typing import Literal
 
 from storage.json_store import JsonStore
@@ -40,6 +42,8 @@ from storage.portfolio_ops import (
     validate_ticker_format,
     verify_ticker_exists,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class DataRepository:
@@ -107,7 +111,28 @@ class DataRepository:
             return updated
 
         self._store.mutate_model(self._paths.portfolio, Portfolio, _mutate)
-        return result_holder[0]
+        result = result_holder[0]
+        if result.success and result.is_new_position:
+            try:
+                from analysis.industries import seed_ticker_industry_if_missing
+
+                seeded = seed_ticker_industry_if_missing(self, normalized)
+            except Exception:
+                logger.exception("Failed to seed industry mapping for %s", normalized)
+                seeded = ""
+            else:
+                if seeded:
+                    result = PortfolioTickerResult(
+                        success=result.success,
+                        message=result.message,
+                        ticker=result.ticker,
+                        is_new_position=result.is_new_position,
+                        purchase_cost=result.purchase_cost,
+                        purchase_currency=result.purchase_currency,
+                        cash_balance_hkd=result.cash_balance_hkd,
+                        industry_seeded=seeded,
+                    )
+        return result
 
     def remove_ticker_from_portfolio(self, ticker: str) -> PortfolioTickerResult:
         """Remove a ticker from portfolio.json under a single file lock."""
@@ -255,6 +280,17 @@ class DataRepository:
     def save_ticker_industries(self, mapping: TickerIndustryMap) -> None:
         """Write data/ticker_industries.json atomically."""
         self._store.write_model(self._paths.ticker_industries, mapping)
+
+    def mutate_ticker_industries(
+        self,
+        mutator: Callable[[TickerIndustryMap], TickerIndustryMap],
+    ) -> TickerIndustryMap:
+        """Read-modify-write ticker_industries.json under a file lock."""
+        return self._store.mutate_model(
+            self._paths.ticker_industries,
+            TickerIndustryMap,
+            mutator,
+        )
 
     def load_ticker_metadata(self) -> TickerMetadata:
         """Read cached company names from data/ticker_metadata.json."""

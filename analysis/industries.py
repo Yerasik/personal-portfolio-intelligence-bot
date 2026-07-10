@@ -8,10 +8,11 @@ from typing import TYPE_CHECKING
 logger = logging.getLogger(__name__)
 
 from collectors.market_data import portfolio_tickers
-from storage.models import Portfolio
+from storage.models import MarketQuote, Portfolio, TickerIndustryMap
 
 if TYPE_CHECKING:
     from analysis.llm import LlmClient
+    from storage.repository import DataRepository
 
 
 def _normalize_industry(label: str) -> str:
@@ -85,6 +86,60 @@ def build_news_fetch_industries(
     if label and label.lower() not in {industry.lower() for industry in focus}:
         return [label, *focus]
     return focus
+
+
+def industry_label_from_quote(quote: MarketQuote | None) -> str | None:
+    """Pick a display industry label from a yfinance quote (industry preferred over sector)."""
+    if quote is None:
+        return None
+    for raw in (quote.industry, quote.sector):
+        label = _normalize_industry(raw)
+        if label:
+            return label
+    return None
+
+
+def seed_ticker_industry_if_missing(
+    repository: DataRepository,
+    ticker: str,
+    *,
+    quote: MarketQuote | None = None,
+) -> str | None:
+    """Persist yfinance industry/sector for a ticker when not already mapped."""
+    symbol = ticker.strip().upper()
+    if not symbol:
+        return None
+
+    current = repository.load_ticker_industries()
+    if _normalize_mapping(current.ticker_to_industry).get(symbol):
+        return None
+
+    resolved_quote = quote
+    if industry_label_from_quote(resolved_quote) is None:
+        state = repository.load_state()
+        resolved_quote = state.latest_prices.get(symbol)
+    if industry_label_from_quote(resolved_quote) is None:
+        from collectors.market_data import ensure_cached_quote
+
+        resolved_quote = ensure_cached_quote(repository, symbol)
+
+    label = industry_label_from_quote(resolved_quote)
+    if label is None:
+        logger.info("No yfinance industry/sector available to seed for %s", symbol)
+        return None
+
+    seeded_label = label
+
+    def _mutate(mapping: TickerIndustryMap) -> TickerIndustryMap:
+        updated = dict(mapping.ticker_to_industry)
+        if _normalize_mapping(updated).get(symbol):
+            return mapping
+        updated[symbol] = seeded_label
+        return mapping.model_copy(update={"ticker_to_industry": updated})
+
+    repository.mutate_ticker_industries(_mutate)
+    logger.info("Seeded ticker_industries.json: %s → %s", symbol, seeded_label)
+    return seeded_label
 
 
 def guess_industry_with_llm(

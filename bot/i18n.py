@@ -63,7 +63,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /analyze — portfolio review\n"
             "  /analyze <TICKER> — explain a price move\n"
             "  /chart <TICKER> [7d|30d|90d] — candlestick price chart\n"
-            "  /risk_metrics — Sharpe, drawdown, vs benchmark\n\n"
+            "  /risk_metrics — Sharpe, drawdown, vs benchmark\n"
+            "  /stress [scenario_id] — scenario shocks and worst contributors\n\n"
             "Settings\n"
             "  /set_language <code> — language (en, de, zh, ru)\n"
             "  /menu — show keyboard\n"
@@ -92,7 +93,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Tap a button below or type a command.\n\n"
             "Portfolio — /portfolio · /strategy · /performance\n"
             "News — /industries · /news_summary\n"
-            "Analysis — /analyze · /risk_metrics\n"
+            "Analysis — /analyze · /risk_metrics · /stress\n"
             "Settings — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -205,6 +206,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty": "LLM explanation: unavailable.",
         "ticker_llm_empty_user": "AI explanation could not be generated.",
         "add_ticker_ok": "Added: {message}",
+        "add_ticker_industry_seeded": "Industry mapped: {industry} (saved to ticker_industries.json)",
         "add_ticker_fail": "Could not add ticker: {message}",
         "add_ticker_usage": (
             "How to use /add_ticker\n\n"
@@ -509,6 +511,28 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "risk_metrics_unavailable": (
             "Could not compute risk metrics. Check tickers and try again after market hours."
         ),
+        "stress_title": "Scenario stress test",
+        "stress_baseline": "Current portfolio value: {value:,.2f} HKD",
+        "stress_scenario_header": "▸ {title}",
+        "stress_scenario_desc": "  {description}",
+        "stress_scenario_delta": (
+            "  Impact: {delta_hkd:+,.0f} HKD ({delta_pct:+.2f}%) → {stressed_total:,.0f} HKD"
+        ),
+        "stress_scenario_fx": "  FX: {fx_note}",
+        "stress_worst_header": "  Worst contributors:",
+        "stress_best_header": "  Largest gains:",
+        "stress_impact_line": (
+            "  • {ticker}: {delta_hkd:+,.0f} HKD ({shock_pct:+.0f}% shock) · {industry}"
+        ),
+        "stress_no_impacts": "  No priced holdings to shock in this scenario.",
+        "stress_no_position_impacts": "  Holdings unchanged (cash/FX only in this scenario).",
+        "stress_footer": (
+            "Advisory only — hypothetical shocks using current quotes and industry tags. "
+            "Override scenarios in config.json → stress_scenarios."
+        ),
+        "stress_fetching": "Running stress scenarios…",
+        "stress_empty": "Portfolio is empty — add holdings to run stress tests.",
+        "stress_not_found": "Unknown scenario {scenario_id!r}. Run /stress for all presets.",
         "alerts_header": "Alerts:",
         "plus_more": "- plus {count} more",
         "advisory": "Advisory:",
@@ -734,7 +758,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /analyze — Portfolio-Beratung\n"
             "  /analyze <TICKER> — Kursbewegung erklären\n"
             "  /chart <TICKER> [7d|30d|90d] — Kerzenchart\n"
-            "  /risk_metrics — Sharpe, Drawdown, vs. Benchmark\n\n"
+            "  /risk_metrics — Sharpe, Drawdown, vs. Benchmark\n"
+            "  /stress [scenario_id] — Szenario-Schocks und größte Verlierer\n\n"
             "Einstellungen\n"
             "  /set_language <code> — Sprache (en, de, zh, ru)\n"
             "  /menu — Tastatur anzeigen\n"
@@ -763,7 +788,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Tippen Sie unten oder geben Sie einen Befehl ein.\n\n"
             "Portfolio — /portfolio · /strategy · /performance\n"
             "Nachrichten — /industries · /news_summary\n"
-            "Analyse — /analyze · /risk_metrics\n"
+            "Analyse — /analyze · /risk_metrics · /stress\n"
             "Einstellungen — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -861,6 +886,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty": "LLM-Erklärung: nicht verfügbar.",
         "ticker_llm_empty_user": "KI-Erklärung konnte nicht erstellt werden.",
         "add_ticker_ok": "Hinzugefügt: {message}",
+        "add_ticker_industry_seeded": "Branche zugeordnet: {industry} (in ticker_industries.json gespeichert)",
         "add_ticker_fail": "Ticker nicht hinzugefügt: {message}",
         "add_ticker_usage": (
             "So verwenden Sie /add_ticker\n\n"
@@ -1177,6 +1203,28 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "risk_metrics_unavailable": (
             "Risikokennzahlen konnten nicht berechnet werden. Ticker prüfen und später erneut versuchen."
         ),
+        "stress_title": "Szenario-Stresstest",
+        "stress_baseline": "Aktueller Portfoliowert: {value:,.2f} HKD",
+        "stress_scenario_header": "▸ {title}",
+        "stress_scenario_desc": "  {description}",
+        "stress_scenario_delta": (
+            "  Effekt: {delta_hkd:+,.0f} HKD ({delta_pct:+.2f}%) → {stressed_total:,.0f} HKD"
+        ),
+        "stress_scenario_fx": "  FX: {fx_note}",
+        "stress_worst_header": "  Größte Verlierer:",
+        "stress_best_header": "  Größte Gewinner:",
+        "stress_impact_line": (
+            "  • {ticker}: {delta_hkd:+,.0f} HKD ({shock_pct:+.0f}% Schock) · {industry}"
+        ),
+        "stress_no_impacts": "  Keine bewerteten Positionen für dieses Szenario.",
+        "stress_no_position_impacts": "  Positionen unverändert (nur Cash/FX in diesem Szenario).",
+        "stress_footer": (
+            "Nur zur Information — hypothetische Schocks mit aktuellen Kursen und Branchen-Tags. "
+            "Szenarien in config.json → stress_scenarios anpassen."
+        ),
+        "stress_fetching": "Szenario-Stresstests laufen…",
+        "stress_empty": "Portfolio ist leer — Bestände hinzufügen für Stresstests.",
+        "stress_not_found": "Unbekanntes Szenario {scenario_id!r}. /stress für alle Presets.",
         "alerts_header": "Warnungen:",
         "plus_more": "- plus {count} weitere",
         "advisory": "Beratung:",
@@ -1331,7 +1379,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /analyze — 投资组合建议\n"
             "  /analyze <代码> — 解释价格变动\n"
             "  /chart <代码> [7d|30d|90d] — K线价格图\n"
-            "  /risk_metrics — 夏普比率、回撤、相对基准\n\n"
+            "  /risk_metrics — 夏普比率、回撤、相对基准\n"
+            "  /stress [scenario_id] — 情景冲击与最大拖累项\n\n"
             "设置\n"
             "  /set_language <code> — 语言 (en, de, zh, ru)\n"
             "  /menu — 显示键盘\n"
@@ -1360,7 +1409,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "点击下方按钮或输入命令。\n\n"
             "投资组合 — /portfolio · /strategy · /performance\n"
             "新闻 — /industries · /news_summary\n"
-            "分析 — /analyze · /risk_metrics\n"
+            "分析 — /analyze · /risk_metrics · /stress\n"
             "设置 — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -1455,6 +1504,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty": "LLM 解释：不可用。",
         "ticker_llm_empty_user": "无法生成 AI 解释。",
         "add_ticker_ok": "已添加：{message}",
+        "add_ticker_industry_seeded": "已映射行业：{industry}（已写入 ticker_industries.json）",
         "add_ticker_fail": "无法添加：{message}",
         "add_ticker_usage": (
             "如何使用 /add_ticker\n\n"
@@ -1759,6 +1809,28 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "risk_metrics_fetching": "正在获取 90 日行情…",
         "risk_metrics_empty": "投资组合为空 — 请先添加持仓。",
         "risk_metrics_unavailable": "无法计算风险指标。请检查代码并在交易时段后重试。",
+        "stress_title": "情景压力测试",
+        "stress_baseline": "当前投资组合价值：{value:,.2f} HKD",
+        "stress_scenario_header": "▸ {title}",
+        "stress_scenario_desc": "  {description}",
+        "stress_scenario_delta": (
+            "  影响：{delta_hkd:+,.0f} HKD（{delta_pct:+.2f}%）→ {stressed_total:,.0f} HKD"
+        ),
+        "stress_scenario_fx": "  汇率：{fx_note}",
+        "stress_worst_header": "  最大拖累：",
+        "stress_best_header": "  最大受益：",
+        "stress_impact_line": (
+            "  • {ticker}：{delta_hkd:+,.0f} HKD（{shock_pct:+.0f}% 冲击）· {industry}"
+        ),
+        "stress_no_impacts": "  本情景下无可定价持仓。",
+        "stress_no_position_impacts": "  持仓价格未变（本情景仅现金/汇率影响）。",
+        "stress_footer": (
+            "仅供参考 — 基于当前报价与行业标签的假设冲击。"
+            "可在 config.json → stress_scenarios 中自定义情景。"
+        ),
+        "stress_fetching": "正在运行情景压力测试…",
+        "stress_empty": "投资组合为空 — 请先添加持仓。",
+        "stress_not_found": "未知情景 {scenario_id!r}。运行 /stress 查看全部预设。",
         "alerts_header": "预警：",
         "plus_more": "- 另有 {count} 条",
         "advisory": "建议：",
@@ -1912,7 +1984,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /analyze — обзор портфеля\n"
             "  /analyze <ТИКЕР> — объяснить движение цены\n"
             "  /chart <ТИКЕР> [7d|30d|90d] — свечной график\n"
-            "  /risk_metrics — Шарп, просадка, vs бенчмарк\n\n"
+            "  /risk_metrics — Шарп, просадка, vs бенчмарк\n"
+            "  /stress [scenario_id] — сценарные шоки и худшие вкладчики\n\n"
             "Настройки\n"
             "  /set_language <code> — язык (en, de, zh, ru)\n"
             "  /menu — показать клавиатуру\n"
@@ -1941,7 +2014,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Нажмите кнопку ниже или введите команду.\n\n"
             "Портфель — /portfolio · /strategy · /performance\n"
             "Новости — /industries · /news_summary\n"
-            "Анализ — /analyze · /risk_metrics\n"
+            "Анализ — /analyze · /risk_metrics · /stress\n"
             "Настройки — /set_language · /help"
         ),
         "menu_hint_dev": (
@@ -2040,6 +2113,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "ticker_llm_empty": "LLM-объяснение: недоступно.",
         "ticker_llm_empty_user": "Не удалось сформировать ИИ-объяснение.",
         "add_ticker_ok": "Добавлено: {message}",
+        "add_ticker_industry_seeded": "Отрасль: {industry} (сохранено в ticker_industries.json)",
         "add_ticker_fail": "Не удалось добавить: {message}",
         "add_ticker_usage": (
             "Как использовать /add_ticker\n\n"
@@ -2355,6 +2429,28 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "risk_metrics_unavailable": (
             "Не удалось рассчитать метрики. Проверьте тикеры и повторите позже."
         ),
+        "stress_title": "Сценарный стресс-тест",
+        "stress_baseline": "Текущая стоимость портфеля: {value:,.2f} HKD",
+        "stress_scenario_header": "▸ {title}",
+        "stress_scenario_desc": "  {description}",
+        "stress_scenario_delta": (
+            "  Эффект: {delta_hkd:+,.0f} HKD ({delta_pct:+.2f}%) → {stressed_total:,.0f} HKD"
+        ),
+        "stress_scenario_fx": "  FX: {fx_note}",
+        "stress_worst_header": "  Худшие вкладчики:",
+        "stress_best_header": "  Наибольший рост:",
+        "stress_impact_line": (
+            "  • {ticker}: {delta_hkd:+,.0f} HKD ({shock_pct:+.0f}% шок) · {industry}"
+        ),
+        "stress_no_impacts": "  Нет оценённых позиций для этого сценария.",
+        "stress_no_position_impacts": "  Цены позиций без изменений (только cash/FX в этом сценарии).",
+        "stress_footer": (
+            "Только справочно — гипотетические шоки по текущим котировкам и отраслям. "
+            "Настройка: config.json → stress_scenarios."
+        ),
+        "stress_fetching": "Запуск сценариев стресс-теста…",
+        "stress_empty": "Портфель пуст — добавьте позиции для стресс-теста.",
+        "stress_not_found": "Неизвестный сценарий {scenario_id!r}. /stress — все пресеты.",
         "alerts_header": "Предупреждения:",
         "plus_more": "- ещё {count}",
         "advisory": "Рекомендация:",

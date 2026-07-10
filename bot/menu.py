@@ -16,6 +16,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("portfolio", "Holdings and latest prices"),
     BotCommand("performance", "Returns, drawdown, and value chart"),
     BotCommand("risk_metrics", "Sharpe, drawdown, vs benchmark"),
+    BotCommand("stress", "Scenario shocks and worst contributors"),
     BotCommand("strategy", "Investment idea behind each holding"),
     BotCommand("industries", "Focus industries and news counts"),
     BotCommand("calendar", "Upcoming earnings, macro, and policy dates"),
@@ -55,6 +56,7 @@ def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
     rows = [
         [KeyboardButton("/portfolio"), KeyboardButton("/performance")],
         [KeyboardButton("/analyze"), KeyboardButton("/risk_metrics")],
+        [KeyboardButton("/stress"), KeyboardButton("/changes")],
         [KeyboardButton("/strategy"), KeyboardButton("/news_summary")],
         [KeyboardButton("/industries"), KeyboardButton("/set_language")],
         [KeyboardButton("/help"), KeyboardButton("/menu")],

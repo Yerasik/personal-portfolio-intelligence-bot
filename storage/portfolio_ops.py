@@ -21,6 +21,7 @@ class PortfolioTickerResult:
     purchase_cost: float = 0.0
     purchase_currency: str = ""
     cash_balance_hkd: float = 0.0
+    industry_seeded: str = ""
 
 
 @dataclass(frozen=True)

@@ -291,6 +291,19 @@ async def risk_metrics_command(update: Update, context: ContextTypes.DEFAULT_TYP
     )
 
 
+async def stress_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /stress — simulate portfolio impact under macro/sector shocks."""
+    user = await _guard(update, context)
+    if user is None or update.message is None:
+        return
+
+    scenario_id = context.args[0] if context.args else None
+    await update.message.reply_text(t("stress_fetching", user.language))
+    await update.message.reply_text(
+        _commands(context).stress_message(user.chat_id, scenario_id=scenario_id)
+    )
+
+
 async def industries_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /industries — show focus industries and related news counts."""
     user = await _guard(update, context)
@@ -948,6 +961,7 @@ def register_handlers(
         ("portfolio", portfolio_command),
         ("performance", performance_command),
         ("risk_metrics", risk_metrics_command),
+        ("stress", stress_command),
         ("strategy", strategy_command),
         ("industries", industries_command),
         ("calendar", calendar_command),
