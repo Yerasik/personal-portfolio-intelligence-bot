@@ -9,7 +9,7 @@ from analysis.portfolio_valuation import (
     _DEFAULT_JPY_TO_HKD,
     _DEFAULT_USD_TO_HKD,
 )
-from storage.models import Portfolio
+from storage.models import BotState, Portfolio
 
 
 @dataclass(frozen=True)
@@ -55,9 +55,10 @@ def build_portfolio_cash_balances(
     portfolio: Portfolio,
     *,
     fx_rates: dict[str, float] | None = None,
+    state: BotState | None = None,
 ) -> PortfolioCashBalances:
-    """Build native cash buckets with HKD equivalents using live or cached FX."""
-    from analysis.portfolio_valuation import fetch_fx_rates_to_hkd
+    """Build native cash buckets with HKD equivalents using cached or live FX."""
+    from analysis.portfolio_valuation import fetch_fx_rates_to_hkd, resolve_fx_rates
 
     natives = _native_amounts(portfolio)
     if not natives:
@@ -68,9 +69,12 @@ def build_portfolio_cash_balances(
             jpy_to_hkd=_DEFAULT_JPY_TO_HKD,
         )
 
-    rates = dict(fx_rates or {})
-    if "USD" not in rates:
-        rates.update(fetch_fx_rates_to_hkd({"USD", "JPY"}))
+    if fx_rates is not None:
+        rates = dict(fx_rates)
+    elif state is not None:
+        rates = resolve_fx_rates(state, portfolio)
+    else:
+        rates = fetch_fx_rates_to_hkd({"USD", "JPY"})
     usd_rate = rates.get("USD", _DEFAULT_USD_TO_HKD)
     jpy_rate = rates.get("JPY", _DEFAULT_JPY_TO_HKD)
 
@@ -213,21 +217,27 @@ def append_portfolio_cash_lines(
     *,
     lang: str = "en",
     usd_to_hkd: float | None = None,
+    fx_rates: dict[str, float] | None = None,
     detailed: bool = False,
     include_bookkeeping_note: bool = False,
 ) -> None:
     """Append portfolio cash lines using detailed or legacy formatting."""
     from bot.i18n import t
 
-    cash_hkd = portfolio_cash_total_hkd(portfolio, usd_to_hkd=usd_to_hkd)
+    resolved_fx = dict(fx_rates or {})
+    if usd_to_hkd is not None:
+        resolved_fx.setdefault("USD", usd_to_hkd)
+
+    cash_hkd = portfolio_cash_total_hkd(
+        portfolio,
+        usd_to_hkd=resolved_fx.get("USD"),
+        jpy_to_hkd=resolved_fx.get("JPY"),
+    )
     if cash_hkd <= 0:
         return
 
     if detailed:
-        fx_rates: dict[str, float] | None = None
-        if usd_to_hkd is not None:
-            fx_rates = {"USD": usd_to_hkd}
-        balances = build_portfolio_cash_balances(portfolio, fx_rates=fx_rates)
+        balances = build_portfolio_cash_balances(portfolio, fx_rates=resolved_fx or None)
         lines.extend(
             format_cash_balance_lines(
                 balances,

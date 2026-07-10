@@ -11,14 +11,54 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from analysis.portfolio_valuation import build_portfolio_valuation
+from analysis.portfolio_valuation import (
+    build_portfolio_valuation,
+    refresh_fx_rates,
+    resolve_fx_rates,
+)
 from storage.models import BotState, MarketQuote, Portfolio, Position
+from storage.paths import resolve_data_paths
+from storage.repository import DataRepository
+from unittest.mock import patch
 
 NOW = datetime(2026, 6, 16, 12, 0, tzinfo=UTC)
-FX = {"USD": 7.8, "HKD": 1.0}
+FX = {"USD": 7.8, "HKD": 1.0, "JPY": 0.052}
+
+
+def test_cached_fx_rates() -> None:
+    state = BotState(fx_rates_to_hkd={"USD": 7.75, "JPY": 0.05})
+    rates = resolve_fx_rates(state, fetch_missing=False)
+    if rates["USD"] != 7.75 or rates["JPY"] != 0.05:
+        raise AssertionError(f"unexpected cached FX rates: {rates}")
+    print("Cached FX resolution: ok")
+
+
+def test_refresh_fx_rates_persists_state() -> None:
+    import tempfile
+
+    temp_dir = Path(tempfile.mkdtemp(prefix="fx-refresh-test-"))
+    repository = DataRepository(resolve_data_paths(temp_dir))
+    portfolio = Portfolio(positions=[Position(ticker="VRT", shares=1.0)], cash_usd=100.0)
+
+    with patch(
+        "analysis.portfolio_valuation.fetch_fx_rates_to_hkd",
+        return_value={"USD": 7.81, "JPY": 0.051},
+    ):
+        rates = refresh_fx_rates(repository, portfolio)
+
+    state = repository.load_state()
+    if state.last_fx_fetch_at is None:
+        raise AssertionError("last_fx_fetch_at was not set")
+    if state.fx_rates_to_hkd.get("USD") != 7.81:
+        raise AssertionError(f"USD rate not persisted: {state.fx_rates_to_hkd}")
+    if rates.get("USD") != 7.81:
+        raise AssertionError(f"refresh return mismatch: {rates}")
+    print("FX refresh persistence: ok")
 
 
 def run_test() -> None:
+    test_cached_fx_rates()
+    test_refresh_fx_rates_persists_state()
     portfolio = Portfolio(
         positions=[
             Position(ticker="VRT", shares=3.0, cost_basis=318.2),

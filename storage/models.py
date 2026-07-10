@@ -419,6 +419,8 @@ class BotState(BaseModel):
     deep_digest_price_snapshot: dict[str, float] = Field(default_factory=dict)
     deep_digest_sentiment_snapshot: dict[str, float] = Field(default_factory=dict)
     last_market_fetch_at: datetime | None = None
+    last_fx_fetch_at: datetime | None = None
+    fx_rates_to_hkd: dict[str, float] = Field(default_factory=dict)
     last_news_fetch_at: datetime | None = None
     latest_prices: dict[str, MarketQuote] = Field(default_factory=dict)
     last_sent_alerts: list[SentAlertRecord] = Field(default_factory=list)

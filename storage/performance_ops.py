@@ -117,7 +117,11 @@ def build_portfolio_snapshot(
 ) -> PortfolioPerformanceSnapshot | None:
     """Build a snapshot from the current portfolio and cached quotes."""
     valuation = build_portfolio_valuation(portfolio, state)
-    cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+    cash_hkd = portfolio_cash_hkd(
+        portfolio,
+        usd_to_hkd=valuation.usd_to_hkd,
+        jpy_to_hkd=valuation.jpy_to_hkd,
+    )
     if not portfolio.positions and cash_hkd <= 0:
         return None
 
@@ -161,7 +165,11 @@ def save_portfolio_snapshot(repository: DataRepository) -> PortfolioPerformanceS
     app_config = repository.load_config()
     history = repository.load_performance_history()
     valuation = build_portfolio_valuation(portfolio, state)
-    cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+    cash_hkd = portfolio_cash_hkd(
+        portfolio,
+        usd_to_hkd=valuation.usd_to_hkd,
+        jpy_to_hkd=valuation.jpy_to_hkd,
+    )
 
     pruned_history = prune_performance_history(
         history,

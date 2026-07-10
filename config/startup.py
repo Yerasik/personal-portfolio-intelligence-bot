@@ -290,6 +290,12 @@ def log_startup_summary(
     logger.info("Ollama model: %s", ollama_model)
     if report.ollama_message:
         logger.info("Ollama status: %s", report.ollama_message)
+    if state.fx_rates_to_hkd:
+        logger.info(
+            "Cached FX rates: %s (last_fx_fetch_at=%s)",
+            {key: round(value, 6) for key, value in state.fx_rates_to_hkd.items()},
+            state.last_fx_fetch_at.isoformat() if state.last_fx_fetch_at else "n/a",
+        )
 
     created_defaults = [
         doc.name for doc in report.json_documents if not doc.existed_before_load

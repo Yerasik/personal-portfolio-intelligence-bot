@@ -49,7 +49,14 @@ def run_test() -> None:
         repository.save_portfolio(portfolio)
 
         service = MarketDataService()
-        with patch.object(market_data_module, "fetch_quote", side_effect=_fetch_quote_or_fail):
+        fx_patch = {"USD": 7.82, "JPY": 0.051}
+        with (
+            patch.object(market_data_module, "fetch_quote", side_effect=_fetch_quote_or_fail),
+            patch(
+                "analysis.portfolio_valuation.refresh_fx_rates",
+                return_value=fx_patch,
+            ) as refresh_fx,
+        ):
             batch = service.run(repository, portfolio)
 
         print(f"Tickers requested: {portfolio_tickers(portfolio)}")
@@ -61,6 +68,8 @@ def run_test() -> None:
             raise AssertionError("last_market_fetch_at was not updated")
         if "AAPL" not in state.latest_prices:
             raise AssertionError("AAPL quote missing from state.latest_prices")
+        if not refresh_fx.called:
+            raise AssertionError("refresh_fx_rates should run after market fetch")
 
         aapl = state.latest_prices["AAPL"]
         print(

@@ -936,14 +936,22 @@ def format_portfolio(
 
     lines.append("")
     _append_portfolio_totals_hkd(lines, valuation, lang)
-    cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+    cash_hkd = portfolio_cash_hkd(
+        portfolio,
+        usd_to_hkd=valuation.usd_to_hkd,
+        jpy_to_hkd=valuation.jpy_to_hkd,
+    )
     if is_developer and cash_hkd > 0:
         lines.append("")
         append_portfolio_cash_lines(
             lines,
             portfolio,
             lang=lang,
-            usd_to_hkd=valuation.usd_to_hkd,
+            fx_rates={
+                "HKD": 1.0,
+                "USD": valuation.usd_to_hkd,
+                "JPY": valuation.jpy_to_hkd,
+            },
             detailed=detailed_cash_display,
         )
         lines.append(

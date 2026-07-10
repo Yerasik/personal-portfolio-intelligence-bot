@@ -299,6 +299,10 @@ class MarketDataService:
         state.last_market_fetch_at = batch.fetched_at
         repository.save_state(state)
 
+        from analysis.portfolio_valuation import refresh_fx_rates
+
+        refresh_fx_rates(repository, portfolio, fetched_at=batch.fetched_at)
+
         from storage.performance_ops import save_portfolio_snapshot
 
         save_portfolio_snapshot(repository)

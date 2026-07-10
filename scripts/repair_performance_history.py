@@ -25,7 +25,11 @@ def main() -> int:
     state = repo.load_state()
     history = repo.load_performance_history()
     valuation = build_portfolio_valuation(portfolio, state)
-    cash_hkd = portfolio_cash_hkd(portfolio, usd_to_hkd=valuation.usd_to_hkd)
+    cash_hkd = portfolio_cash_hkd(
+        portfolio,
+        usd_to_hkd=valuation.usd_to_hkd,
+        jpy_to_hkd=valuation.jpy_to_hkd,
+    )
     repaired = repair_performance_history(history, latest_cash_hkd=cash_hkd)
     if repaired is history:
         print("Performance history already consistent; no changes written.")

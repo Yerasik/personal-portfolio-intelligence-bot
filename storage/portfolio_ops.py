@@ -237,7 +237,7 @@ def _apply_purchase_cash_debit(
     state: BotState | None,
 ) -> tuple[Portfolio | None, str, float | None, float, str]:
     """Debit cash for a buy when a per-share price is known; return lot cost to use."""
-    from analysis.portfolio_valuation import fetch_fx_rates_to_hkd, infer_quote_currency
+    from analysis.portfolio_valuation import infer_quote_currency, resolve_fx_rates
 
     quote = state.latest_prices.get(symbol) if state is not None else None
     quote_price = quote.price if quote is not None else None
@@ -247,10 +247,19 @@ def _apply_purchase_cash_debit(
 
     currency = infer_quote_currency(quote, symbol)
     purchase_total = shares * purchase_price
-    currencies = {currency}
-    if currency not in ("HKD", "HK"):
-        currencies.update({"USD", "JPY"})
-    fx_rates = fetch_fx_rates_to_hkd(currencies)
+    if state is not None:
+        fx_rates = resolve_fx_rates(
+            state,
+            portfolio,
+            extra_currencies={currency},
+        )
+    else:
+        from analysis.portfolio_valuation import fetch_fx_rates_to_hkd
+
+        currencies = {currency}
+        if currency not in ("HKD", "HK"):
+            currencies.update({"USD", "JPY"})
+        fx_rates = fetch_fx_rates_to_hkd(currencies)
 
     updated, note = _deduct_purchase_cash(
         portfolio,
@@ -540,9 +549,9 @@ def sell_ticker_from_portfolio(
     """Sell shares at a given price, remove or reduce the position, and credit HKD cash."""
     from analysis.portfolio_valuation import (
         convert_to_hkd,
-        fetch_fx_rates_to_hkd,
         infer_quote_currency,
         portfolio_cash_hkd,
+        resolve_fx_rates,
     )
 
     normalized = normalize_ticker(symbol)
@@ -592,7 +601,12 @@ def sell_ticker_from_portfolio(
     proceeds_native = shares_to_sell * sell_price
     quote = state.latest_prices.get(normalized) if state is not None else None
     currency = infer_quote_currency(quote, normalized)
-    fx_rates = fetch_fx_rates_to_hkd({currency})
+    if state is not None:
+        fx_rates = resolve_fx_rates(state, portfolio, extra_currencies={currency})
+    else:
+        from analysis.portfolio_valuation import fetch_fx_rates_to_hkd
+
+        fx_rates = fetch_fx_rates_to_hkd({currency})
     proceeds_hkd = convert_to_hkd(proceeds_native, currency, fx_rates=fx_rates)
     new_cash = portfolio.cash + proceeds_hkd
     fully_sold = abs(shares_to_sell - position.shares) < 1e-9

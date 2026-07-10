@@ -4,9 +4,13 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
+from typing import TYPE_CHECKING
 
 from storage.models import BotState, MarketQuote, Portfolio, Position
+
+if TYPE_CHECKING:
+    from storage.repository import DataRepository
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +54,71 @@ class PortfolioValuation:
     total_pl_hkd: float | None
     total_pl_pct: float | None
     usd_to_hkd: float
+    jpy_to_hkd: float
+
+
+def required_fx_currencies(portfolio: Portfolio, state: BotState) -> set[str]:
+    """Return FX codes needed for cash buckets and listed holdings."""
+    currencies: set[str] = set()
+    if portfolio.cash_usd > 0:
+        currencies.add("USD")
+    if portfolio.cash_jpy > 0:
+        currencies.add("JPY")
+    for position in portfolio.positions:
+        symbol = position.ticker.strip().upper()
+        quote = state.latest_prices.get(symbol)
+        currencies.add(infer_quote_currency(quote, symbol))
+    currencies.discard(HKD)
+    currencies.discard("HK")
+    return currencies
+
+
+def resolve_fx_rates(
+    state: BotState,
+    portfolio: Portfolio | None = None,
+    *,
+    extra_currencies: set[str] | None = None,
+    fetch_missing: bool = True,
+) -> dict[str, float]:
+    """Use cached state FX rates and optionally fetch any missing currencies."""
+    rates: dict[str, float] = {HKD: 1.0, "HK": 1.0}
+    rates.update(state.fx_rates_to_hkd)
+
+    needed: set[str] = set()
+    if portfolio is not None:
+        needed.update(required_fx_currencies(portfolio, state))
+    if extra_currencies:
+        needed.update(code.strip().upper() for code in extra_currencies if code.strip())
+
+    missing = {code for code in needed if code not in rates}
+    if missing and fetch_missing:
+        rates.update(fetch_fx_rates_to_hkd(missing))
+    return rates
+
+
+def refresh_fx_rates(
+    repository: DataRepository,
+    portfolio: Portfolio,
+    *,
+    fetched_at: datetime | None = None,
+) -> dict[str, float]:
+    """Fetch FX rates for the portfolio and persist them in state.json."""
+    when = fetched_at or datetime.now(tz=UTC)
+    state = repository.load_state()
+    currencies = required_fx_currencies(portfolio, state) | {"USD", "JPY"}
+    fresh = fetch_fx_rates_to_hkd(currencies)
+    merged = dict(state.fx_rates_to_hkd)
+    merged.update(fresh)
+    state.fx_rates_to_hkd = merged
+    state.last_fx_fetch_at = when
+    repository.save_state(state)
+    logged = {
+        code: round(rate, 6)
+        for code, rate in fresh.items()
+        if code not in (HKD, "HK")
+    }
+    logger.info("Updated FX rates in state.json: %s", logged)
+    return merged
 
 
 def infer_quote_currency(quote: MarketQuote | None, ticker: str) -> str:
@@ -120,6 +189,7 @@ def portfolio_total_value_hkd(
     return valuation.total_market_value_hkd + portfolio_cash_hkd(
         portfolio,
         usd_to_hkd=valuation.usd_to_hkd,
+        jpy_to_hkd=valuation.jpy_to_hkd,
     )
 
 
@@ -193,17 +263,11 @@ def build_portfolio_valuation(
     fx_rates: dict[str, float] | None = None,
 ) -> PortfolioValuation:
     """Value all holdings in HKD and compute weights and total P/L."""
-    currencies: set[str] = set()
-    for position in portfolio.positions:
-        symbol = position.ticker.strip().upper()
-        quote = state.latest_prices.get(symbol)
-        currencies.add(infer_quote_currency(quote, symbol))
-
-    resolved_fx = dict(fx_rates or {})
-    resolved_fx.setdefault(HKD, 1.0)
-    missing = {code for code in currencies if code not in resolved_fx and code not in (HKD, "HK")}
-    if missing:
-        resolved_fx.update(fetch_fx_rates_to_hkd(missing))
+    if fx_rates is None:
+        resolved_fx = resolve_fx_rates(state, portfolio)
+    else:
+        resolved_fx = dict(fx_rates)
+        resolved_fx.setdefault(HKD, 1.0)
 
     positions = [
         value_position_hkd(
@@ -248,6 +312,7 @@ def build_portfolio_valuation(
         total_pl_pct = (total_pl_hkd / total_cost) * 100.0
 
     usd_to_hkd = resolved_fx.get("USD", _DEFAULT_USD_TO_HKD)
+    jpy_to_hkd = resolved_fx.get("JPY", _DEFAULT_JPY_TO_HKD)
     return PortfolioValuation(
         positions=weighted_positions,
         total_market_value_hkd=total_market,
@@ -255,6 +320,7 @@ def build_portfolio_valuation(
         total_pl_hkd=total_pl_hkd,
         total_pl_pct=total_pl_pct,
         usd_to_hkd=usd_to_hkd,
+        jpy_to_hkd=jpy_to_hkd,
     )
 
 
