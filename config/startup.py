@@ -14,6 +14,7 @@ import httpx
 from pydantic import ValidationError
 
 from config.loader import ConfigurationBundle
+from config.hku_api import resolve_hku_api_settings
 from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.json_store import JsonStorageError, JsonStore
@@ -237,6 +238,9 @@ def log_startup_summary(
     state = configuration.state
     news_cache = configuration.news_cache
     ollama_base_url, ollama_model = resolve_ollama_settings(runtime, app_config)
+    hku_base_url, hku_api_key, hku_claude_models, hku_openai_models, _ = resolve_hku_api_settings(
+        runtime
+    )
 
     logger.info("Portfolio intelligence bot starting")
     logger.info("Process model: single Python process with background scheduler thread")
@@ -273,6 +277,15 @@ def log_startup_summary(
         app_config.timezone,
     )
     logger.info("LLM summaries: %s", "enabled" if app_config.enable_llm_summaries else "disabled")
+    if hku_api_key:
+        logger.info(
+            "HKU GenAI: enabled at %s (claude=%s, openai=%s)",
+            hku_base_url,
+            ", ".join(hku_claude_models),
+            ", ".join(hku_openai_models),
+        )
+    else:
+        logger.info("HKU GenAI: not configured (set HKU_API_KEY to enable)")
     logger.info("Ollama endpoint: %s", ollama_base_url)
     logger.info("Ollama model: %s", ollama_model)
     if report.ollama_message:

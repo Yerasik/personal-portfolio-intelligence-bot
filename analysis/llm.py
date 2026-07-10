@@ -1,8 +1,8 @@
-"""Ollama-backed portfolio advisory summaries.
+"""Portfolio advisory summaries via HKU GenAI APIs with Ollama fallback.
 
 When enable_llm_summaries is true, builds a prompt from portfolio + news + alerts,
-calls Ollama /api/generate, and parses JSON advice. On any failure, falls back to
-deterministic text built from rule alerts (build_fallback_advisory).
+tries HKU Claude Sonnet first, then GPT-5.5, then local Ollama. On any
+failure, falls back to deterministic text built from rule alerts.
 """
 
 from __future__ import annotations
@@ -17,9 +17,11 @@ from typing import Any, Literal
 import httpx
 from pydantic import BaseModel, Field, ValidationError
 
+from analysis.hku_backends import call_hku_claude_converse, call_hku_openai_chat
 from analysis.industries import build_news_focus_industries
 from analysis.rules import AlertCandidate
 from collectors.market_data import portfolio_tickers
+from config.hku_api import resolve_hku_api_settings
 from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
 from storage.models import AppConfig, BotState, NewsCache, NewsItem, Portfolio
@@ -32,7 +34,7 @@ DEFAULT_REQUEST_TIMEOUT_SECONDS = 300.0
 MAX_NEWS_IN_PROMPT = 6
 
 AdvisoryUrgency = Literal["info", "warning", "urgent"]
-AdvisorySource = Literal["ollama", "fallback"]
+AdvisorySource = Literal["hku_claude", "hku_openai", "ollama", "fallback"]
 
 _URGENCY_RANK = {"info": 0, "warning": 1, "urgent": 2}
 
@@ -219,7 +221,7 @@ def build_fallback_advisory(
     *,
     error: str | None = None,
 ) -> LlmAdvisoryResult:
-    """Return a deterministic advisory when Ollama is unavailable."""
+    """Return a deterministic advisory when all LLM backends are unavailable."""
     if alerts:
         urgency = max(alerts, key=lambda alert: _URGENCY_RANK[alert.urgency]).urgency
         summary = "; ".join(alert.title for alert in alerts[:3])
@@ -261,8 +263,12 @@ def _fallback_actions(
     return list(dict.fromkeys(actions))
 
 
+class LlmGenerationError(RuntimeError):
+    """Raised when every configured LLM backend fails."""
+
+
 class LlmClient:
-    """Thin wrapper around the local Ollama HTTP API."""
+    """LLM client with Sonnet → GPT → Ollama fallback."""
 
     def __init__(
         self,
@@ -271,32 +277,108 @@ class LlmClient:
         *,
         timeout_seconds: float = DEFAULT_REQUEST_TIMEOUT_SECONDS,
     ) -> None:
-        """Resolve Ollama URL/model from env + config and store HTTP timeout."""
-        self._base_url, self._model = resolve_ollama_settings(settings, app_config)
+        """Resolve HKU and Ollama settings and store HTTP timeout."""
+        (
+            self._hku_base_url,
+            self._hku_api_key,
+            self._hku_claude_models,
+            self._hku_openai_models,
+            self._hku_openai_api_version,
+        ) = resolve_hku_api_settings(settings)
+        self._ollama_base_url, self._ollama_model = resolve_ollama_settings(
+            settings,
+            app_config,
+        )
         self._timeout = timeout_seconds
+        self._last_source: AdvisorySource | None = None
 
     @property
     def base_url(self) -> str:
-        return self._base_url
+        return self._ollama_base_url
 
     @property
     def model(self) -> str:
-        return self._model
+        return self._ollama_model
+
+    @property
+    def last_source(self) -> AdvisorySource | None:
+        return self._last_source
 
     @property
     def is_configured(self) -> bool:
-        return bool(self._base_url and self._model)
+        return bool(self._hku_api_key) or bool(
+            self._ollama_base_url and self._ollama_model
+        )
 
     def generate(self, prompt: str) -> str:
+        """Generate text using HKU APIs first, then Ollama."""
+        text, source = self._generate_with_fallback(prompt)
+        self._last_source = source
+        return text
+
+    def _generate_with_fallback(self, prompt: str) -> tuple[str, AdvisorySource]:
+        """Try Claude Sonnet, GPT, then Ollama."""
+        errors: list[str] = []
+
+        if self._hku_api_key:
+            for claude_model in self._hku_claude_models:
+                try:
+                    with httpx.Client(timeout=self._timeout) as client:
+                        text = call_hku_claude_converse(
+                            client=client,
+                            base_url=self._hku_base_url,
+                            api_key=self._hku_api_key,
+                            model=claude_model,
+                            prompt=prompt,
+                        )
+                    return text, "hku_claude"
+                except Exception as exc:
+                    message = f"HKU Claude ({claude_model}): {exc}"
+                    logger.warning(message)
+                    errors.append(message)
+
+            for openai_model in self._hku_openai_models:
+                try:
+                    with httpx.Client(timeout=self._timeout) as client:
+                        text = call_hku_openai_chat(
+                            client=client,
+                            base_url=self._hku_base_url,
+                            api_key=self._hku_api_key,
+                            model=openai_model,
+                            api_version=self._hku_openai_api_version,
+                            prompt=prompt,
+                        )
+                    return text, "hku_openai"
+                except Exception as exc:
+                    message = f"HKU OpenAI ({openai_model}): {exc}"
+                    logger.warning(message)
+                    errors.append(message)
+
+        if self._ollama_base_url and self._ollama_model:
+            try:
+                text = self._generate_ollama(prompt)
+                return text, "ollama"
+            except Exception as exc:
+                message = f"Ollama ({self._ollama_model}): {exc}"
+                logger.warning(message)
+                errors.append(message)
+
+        raise LlmGenerationError("; ".join(errors) if errors else "No LLM backend configured")
+
+    def _generate_ollama(self, prompt: str) -> str:
         """Send a prompt to the Ollama generate API and return the response text."""
-        url = f"{self._base_url}/api/generate"
+        url = f"{self._ollama_base_url}/api/generate"
         payload = {
-            "model": self._model,
+            "model": self._ollama_model,
             "prompt": prompt,
             "stream": False,
         }
 
-        logger.info("Calling Ollama model=%s at %s", self._model, self._base_url)
+        logger.info(
+            "Calling Ollama model=%s at %s",
+            self._ollama_model,
+            self._ollama_base_url,
+        )
         with httpx.Client(timeout=self._timeout) as client:
             response = client.post(url, json=payload)
             response.raise_for_status()
@@ -321,12 +403,12 @@ class LlmClient:
         ticker_to_industry: dict[str, str] | None = None,
         language: str = "en",
     ) -> LlmAdvisoryResult:
-        """Build a prompt, call Ollama, and return structured advisory output."""
+        """Build a prompt, call the LLM chain, and return structured advisory output."""
         if not self.is_configured:
             return build_fallback_advisory(
                 alerts,
                 portfolio,
-                error="Ollama is not configured",
+                error="No LLM backend is configured",
             )
 
         prompt = build_advisory_prompt(
@@ -340,35 +422,43 @@ class LlmClient:
         )
 
         try:
-            raw_response = self.generate(prompt)
+            raw_response, source = self._generate_with_fallback(prompt)
+            self._last_source = source
             parsed = parse_advisory_response(raw_response)
         except httpx.TimeoutException as exc:
-            logger.warning("Ollama request timed out: %s", exc)
+            logger.warning("LLM request timed out: %s", exc)
             return build_fallback_advisory(
                 alerts,
                 portfolio,
-                error="Ollama request timed out",
+                error="LLM request timed out",
             )
         except httpx.HTTPError as exc:
-            logger.warning("Ollama connection failed: %s", exc)
+            logger.warning("LLM connection failed: %s", exc)
             return build_fallback_advisory(
                 alerts,
                 portfolio,
-                error=f"Ollama connection failed: {exc}",
+                error=f"LLM connection failed: {exc}",
+            )
+        except LlmGenerationError as exc:
+            logger.warning("All LLM backends failed: %s", exc)
+            return build_fallback_advisory(
+                alerts,
+                portfolio,
+                error=str(exc),
             )
         except (ValueError, ValidationError, json.JSONDecodeError) as exc:
-            logger.warning("Invalid Ollama response: %s", exc)
+            logger.warning("Invalid LLM response: %s", exc)
             return build_fallback_advisory(
                 alerts,
                 portfolio,
-                error=f"Invalid Ollama response: {exc}",
+                error=f"Invalid LLM response: {exc}",
             )
         except Exception as exc:
-            logger.exception("Unexpected Ollama error")
+            logger.exception("Unexpected LLM error")
             return build_fallback_advisory(
                 alerts,
                 portfolio,
-                error=f"Unexpected Ollama error: {exc}",
+                error=f"Unexpected LLM error: {exc}",
             )
 
         actions = [action.strip() for action in parsed.suggested_actions if action.strip()]
@@ -379,5 +469,5 @@ class LlmClient:
             urgency=parsed.urgency,
             summary=parsed.summary.strip(),
             suggested_actions=actions,
-            source="ollama",
+            source=self._last_source or "fallback",
         )

@@ -18,6 +18,7 @@ if str(ROOT) not in sys.path:
 
 from analysis.llm import (
     LlmClient,
+    LlmGenerationError,
     build_advisory_prompt,
     build_fallback_advisory,
     parse_advisory_response,
@@ -126,10 +127,10 @@ def test_fallback_on_connection_error() -> None:
     news_cache = NewsCache()
     alerts = [_sample_alert()]
 
-    def _raise_connection_error(*args, **kwargs):
-        raise httpx.ConnectError("connection refused", request=httpx.Request("POST", "http://ollama/api/generate"))
+    def _raise_generation_error(*args, **kwargs):
+        raise LlmGenerationError("all backends failed")
 
-    with patch.object(client, "generate", side_effect=_raise_connection_error):
+    with patch.object(client, "_generate_with_fallback", side_effect=_raise_generation_error):
         result = client.synthesize_advisory(portfolio, config, state, news_cache, alerts)
 
     if result.source != "fallback":
@@ -159,7 +160,11 @@ def test_successful_ollama_response() -> None:
         '"suggested_actions":["review","monitor"]}'
     )
 
-    with patch.object(client, "generate", return_value=mock_response):
+    with patch.object(
+        client,
+        "_generate_with_fallback",
+        return_value=(mock_response, "ollama"),
+    ):
         result = client.synthesize_advisory(portfolio, config, state, news_cache, alerts)
 
     if result.source != "ollama":
@@ -170,11 +175,122 @@ def test_successful_ollama_response() -> None:
     print(json.dumps(asdict(result), indent=2, default=str))
 
 
+def test_hku_claude_preferred_over_ollama() -> None:
+    settings = RuntimeSettings(
+        telegram_bot_token="token",
+        telegram_chat_id="chat",
+        hku_api_key="test-key",
+        ollama_base_url="http://ollama:11434",
+        ollama_model="qwen3:30b",
+    )
+    client = LlmClient(settings=settings)
+    mock_response = (
+        '{"urgency":"info","summary":"HKU Claude advisory.",'
+        '"suggested_actions":["monitor"]}'
+    )
+
+    with patch(
+        "analysis.llm.call_hku_claude_converse",
+        return_value=mock_response,
+    ) as claude_call:
+        text, source = client._generate_with_fallback("test prompt")
+
+    if source != "hku_claude":
+        raise AssertionError(f"expected hku_claude, got {source}")
+    if text != mock_response:
+        raise AssertionError("unexpected response text")
+    if not claude_call.called:
+        raise AssertionError("expected HKU Claude to be called")
+    print("HKU Claude preferred result:")
+    print(json.dumps({"source": source, "text": text}, indent=2))
+
+
+def test_ollama_fallback_when_hku_fails() -> None:
+    settings = RuntimeSettings(
+        telegram_bot_token="token",
+        telegram_chat_id="chat",
+        hku_api_key="test-key",
+        ollama_base_url="http://ollama:11434",
+        ollama_model="qwen3:30b",
+    )
+    client = LlmClient(settings=settings)
+
+    with (
+        patch(
+            "analysis.llm.call_hku_claude_converse",
+            side_effect=httpx.HTTPStatusError(
+                "quota",
+                request=httpx.Request("POST", "https://api.hku.hk/claude"),
+                response=httpx.Response(429),
+            ),
+        ),
+        patch(
+            "analysis.llm.call_hku_openai_chat",
+            side_effect=httpx.HTTPStatusError(
+                "quota",
+                request=httpx.Request("POST", "https://api.hku.hk/openai"),
+                response=httpx.Response(429),
+            ),
+        ),
+        patch.object(client, "_generate_ollama", return_value="ollama text"),
+    ):
+        text, source = client._generate_with_fallback("test prompt")
+
+    if source != "ollama":
+        raise AssertionError(f"expected ollama fallback, got {source}")
+    if text != "ollama text":
+        raise AssertionError("unexpected ollama fallback text")
+    print("Ollama fallback after HKU failure: ok")
+
+
+def test_fallback_order_sonnet_gpt_ollama() -> None:
+    settings = RuntimeSettings(
+        telegram_bot_token="token",
+        telegram_chat_id="chat",
+        hku_api_key="test-key",
+        ollama_base_url="http://ollama:11434",
+        ollama_model="qwen3:30b",
+    )
+    client = LlmClient(settings=settings)
+    if client._hku_claude_models != ("claude-sonnet-4.6",):
+        raise AssertionError(f"unexpected Claude models: {client._hku_claude_models}")
+    if client._hku_openai_models != ("gpt-5.5",):
+        raise AssertionError(f"unexpected OpenAI models: {client._hku_openai_models}")
+
+    with (
+        patch(
+            "analysis.llm.call_hku_claude_converse",
+            side_effect=httpx.HTTPStatusError(
+                "quota",
+                request=httpx.Request("POST", "https://api.hku.hk/claude"),
+                response=httpx.Response(429),
+            ),
+        ),
+        patch(
+            "analysis.llm.call_hku_openai_chat",
+            side_effect=httpx.HTTPStatusError(
+                "quota",
+                request=httpx.Request("POST", "https://api.hku.hk/openai"),
+                response=httpx.Response(429),
+            ),
+        ),
+        patch.object(client, "_generate_ollama", return_value="ollama text"),
+    ):
+        text, source = client._generate_with_fallback("test prompt")
+
+    if source != "ollama" or text != "ollama text":
+        raise AssertionError(f"expected Ollama fallback, got source={source} text={text}")
+    print("Fallback order Sonnet → GPT → Ollama: ok")
+
+
 def run_test() -> None:
     test_resolve_settings()
     test_prompt_and_parse()
     test_fallback_on_connection_error()
     test_successful_ollama_response()
+    test_hku_claude_preferred_over_ollama()
+    test_ollama_fallback_when_hku_fails()
+    test_fallback_order_sonnet_gpt_ollama()
     print("LLM integration checks passed.")
 
 
