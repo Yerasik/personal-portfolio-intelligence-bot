@@ -243,8 +243,9 @@ def _optional_llm_summary(
     queue = "; ".join(content.review_queue[:4]) or "none"
 
     prompt = (
-        "You are a cautious portfolio assistant. Write ONE concise paragraph (max 4 sentences) "
-        "summarizing what changed since yesterday for the holder. Advisory only; no trades.\n\n"
+        "Write ONE concise briefing (max 4 sentences) with blank lines between "
+        "distinct points. Use • bullets when listing multiple items. "
+        "Advisory only; no trades.\n\n"
         f"P/L drivers: {drivers}\n"
         f"New risks: {risks}\n"
         f"Thesis pressure: {breaks}\n"
@@ -252,7 +253,9 @@ def _optional_llm_summary(
         f"{llm_language_clause(language)}"
     )
     try:
-        return llm.generate(prompt).strip()[:700]
+        from analysis.llm_format import format_llm_text
+
+        return format_llm_text(llm.generate(prompt).strip())[:700]
     except Exception as exc:
         logger.warning("Change briefing LLM summary failed: %s", exc)
         return ""

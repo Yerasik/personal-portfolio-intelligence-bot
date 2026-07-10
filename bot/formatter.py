@@ -35,6 +35,7 @@ from analysis.portfolio_valuation import (
 )
 from analysis.rules import AlertCandidate
 from bot.i18n import t
+from analysis.llm_format import extend_formatted_llm_lines, format_llm_text
 from bot.markdown_v2 import escape_markdown_v2
 from storage.models import (
     AppConfig,
@@ -217,7 +218,8 @@ def format_urgent_alert(
         _localized_alert_explanation(alert, lang),
     ]
     if explanation_text:
-        lines.extend(["", explanation_text])
+        lines.append("")
+        extend_formatted_llm_lines(lines, explanation_text)
     lines.append(f"{t('suggested', lang)}: {_suggested_action(alert, lang)}.")
     return truncate_message("\n".join(lines))
 
@@ -236,7 +238,8 @@ def format_informational_alert(alert: AlertCandidate, *, lang: str = "en") -> st
         _localized_alert_explanation(alert, lang),
     ]
     if alert.llm_explanation:
-        lines.extend(["", alert.llm_explanation])
+        lines.append("")
+        extend_formatted_llm_lines(lines, alert.llm_explanation)
     return truncate_message("\n".join(lines))
 
 
@@ -251,14 +254,14 @@ def _append_news_summary_sections(
         lines.extend([t("news_by_sector", lang), ""])
         for sector, summary in news_summary.sector_summaries.items():
             lines.append(f"{sector}:")
-            lines.append(summary)
+            extend_formatted_llm_lines(lines, summary)
             lines.append("")
 
     if news_summary.ticker_summaries:
         lines.extend([t("news_by_ticker", lang), ""])
         for ticker, summary in news_summary.ticker_summaries.items():
             lines.append(f"{ticker}:")
-            lines.append(summary)
+            extend_formatted_llm_lines(lines, summary)
             lines.append("")
 
 
@@ -295,7 +298,7 @@ def format_daily_news_brief(
         lines.extend([t("daily_news_digest_title", lang), ""])
         for ticker, summary in news_summary.ticker_summaries.items():
             lines.append(f"{ticker}:")
-            lines.append(summary.strip())
+            extend_formatted_llm_lines(lines, summary)
             lines.append("")
 
     return "\n".join(lines).strip()
@@ -303,7 +306,8 @@ def format_daily_news_brief(
 
 def _format_news_group_message(label: str, summary: str) -> str:
     """Format one sector or ticker summary block."""
-    return truncate_message(f"{label}:\n{summary}")
+    body = format_llm_text(summary)
+    return truncate_message(f"{label}:\n{body}" if body else label)
 
 
 def iter_format_news_summary_messages(
@@ -1096,22 +1100,22 @@ def format_analyze(
             lines.append(t(key, lang))
         else:
             if is_developer:
-                lines.extend(
-                    [
-                        t(
-                            "analyze_llm_header",
-                            lang,
-                            source=advisory.source,
-                            urgency=advisory.urgency,
-                        ),
-                        advisory.summary,
-                    ]
+                lines.append(
+                    t(
+                        "analyze_llm_header",
+                        lang,
+                        source=advisory.source,
+                        urgency=advisory.urgency,
+                    ),
                 )
+                extend_formatted_llm_lines(lines, advisory.summary)
             else:
-                lines.extend([t("advisory", lang), advisory.summary])
+                lines.append(t("advisory", lang))
+                extend_formatted_llm_lines(lines, advisory.summary)
             if advisory.suggested_actions:
-                actions = "; ".join(advisory.suggested_actions)
-                lines.append(t("analyze_suggested", lang, actions=actions))
+                lines.append(t("analyze_suggested_header", lang))
+                for action in advisory.suggested_actions:
+                    lines.append(f"• {action.strip()}")
             if advisory.error and is_developer:
                 lines.append(t("analyze_llm_note", lang, note=advisory.error))
     else:
@@ -1238,7 +1242,9 @@ def format_pros_cons_analysis(
 
     lines = [t("analyze_pros_header", lang), ""]
     for symbol in sorted(memos_by_ticker):
-        lines.extend([f"{symbol}:", memos_by_ticker[symbol].strip(), ""])
+        lines.append(f"{symbol}:")
+        extend_formatted_llm_lines(lines, memos_by_ticker[symbol])
+        lines.append("")
 
     if generated_for:
         lines.append(t("analyze_pros_generated", lang, symbol=generated_for))
@@ -1665,7 +1671,9 @@ def format_catalyst_pre_event(
     if event.sectors:
         lines.append(t("catalyst_related_sectors", lang, sectors=", ".join(event.sectors)))
     if llm_note.strip():
-        lines.extend(["", t("catalyst_llm_watch", lang), llm_note.strip()])
+        lines.append("")
+        lines.append(t("catalyst_llm_watch", lang))
+        extend_formatted_llm_lines(lines, llm_note)
     lines.extend(["", t("advisory_footer", lang)])
     return truncate_message("\n".join(lines))
 
@@ -1801,7 +1809,9 @@ def format_change_briefing(
         lines.append(t("change_brief_queue_empty", lang))
 
     if content.llm_summary.strip():
-        lines.extend(["", t("change_brief_llm_summary", lang), content.llm_summary.strip()])
+        lines.append("")
+        lines.append(t("change_brief_llm_summary", lang))
+        extend_formatted_llm_lines(lines, content.llm_summary)
 
     lines.extend(["", t("advisory_footer", lang)])
     return truncate_message("\n".join(lines))

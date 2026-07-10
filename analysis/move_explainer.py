@@ -83,13 +83,16 @@ class PriceMoveExplanation:
     def reason_text(self, lang: str = "en") -> str:
         """Human-readable drivers + sentiment block (without the label/header)."""
         from bot.i18n import t
+        from analysis.llm_format import format_llm_text
 
         lines: list[str] = []
         if self.drivers:
-            lines.extend(f"- {driver}" for driver in self.drivers)
+            lines.extend(f"• {format_llm_text(driver)}" for driver in self.drivers)
         else:
             lines.append(f"- {t('move_explanation_fallback', lang)}")
-        assessment = self.assessment or t("move_explanation_uncertain_assessment", lang)
+        assessment = format_llm_text(self.assessment) or t(
+            "move_explanation_uncertain_assessment", lang
+        )
         lines.append(
             t(
                 "move_explanation_sentiment",

@@ -28,6 +28,8 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from analysis.llm_format import format_llm_text
+
 DEFAULT_BASE_URL = "https://api.hku.hk"
 DEFAULT_API = "claude"
 DEFAULT_MODEL = "claude-sonnet-4.6"
@@ -285,7 +287,7 @@ def run_interactive_chat(
             print(f"Error: {exc}", file=sys.stderr)
             continue
 
-        print(f"\nClaude: {reply}\n")
+        print(f"\nClaude: {format_llm_text(reply)}\n")
         print_usage(args.api, payload.get("usage") or {})
         print()
 
@@ -357,7 +359,8 @@ def main() -> int:
 
     usage = payload.get("usage") or {}
     print("SUCCESS — API key works.")
-    print(f"Model reply: {reply}")
+    print("Model reply:")
+    print(format_llm_text(reply))
     print_usage(args.api, usage)
     return 0
 

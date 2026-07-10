@@ -20,6 +20,7 @@ from pydantic import BaseModel, Field, ValidationError
 from analysis.hku_backends import call_hku_claude_converse, call_hku_openai_chat
 from analysis.industries import build_news_focus_industries
 from analysis.rules import AlertCandidate
+from analysis.llm_format import format_llm_text
 from collectors.market_data import portfolio_tickers
 from config.hku_api import resolve_hku_api_settings
 from config.ollama import resolve_ollama_settings
@@ -186,7 +187,8 @@ def build_advisory_prompt(
         f"Triggered rule alerts:\n{_format_alerts(alerts)}\n\n"
         f"{llm_language_clause(language)}\n\n"
         "Respond with JSON only using this schema:\n"
-        '{"urgency":"info|warning|urgent","summary":"one concise paragraph",'
+        '{"urgency":"info|warning|urgent",'
+        '"summary":"2-4 short paragraphs separated by \\n\\n; use • bullets for lists",'
         '"suggested_actions":["review","hold","investigate","monitor"]}'
     )
 
@@ -467,7 +469,7 @@ class LlmClient:
 
         return LlmAdvisoryResult(
             urgency=parsed.urgency,
-            summary=parsed.summary.strip(),
+            summary=format_llm_text(parsed.summary.strip()),
             suggested_actions=actions,
             source=self._last_source or "fallback",
         )

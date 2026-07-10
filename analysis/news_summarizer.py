@@ -263,7 +263,9 @@ def build_ticker_summary_prompt(
 
 
 def _clip_summary(text: str, *, max_chars: int = MAX_SUMMARY_CHARS) -> str:
-    cleaned = text.strip()
+    from analysis.llm_format import format_llm_text
+
+    cleaned = format_llm_text(text)
     if len(cleaned) <= max_chars:
         return cleaned
     return cleaned[: max_chars - 20].rstrip() + "\n…(truncated)"

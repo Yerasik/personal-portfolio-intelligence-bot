@@ -181,6 +181,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_llm_empty_user": "AI summary could not be generated.",
         "analyze_llm_header": "LLM advisory ({source}, {urgency}):",
         "analyze_suggested": "Suggested actions: {actions}",
+        "analyze_suggested_header": "Suggested actions:",
         "analyze_llm_note": "LLM note: {note}",
         "analyze_fetching": (
             "Running portfolio analysis now. "
@@ -876,6 +877,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_llm_empty_user": "KI-Zusammenfassung konnte nicht erstellt werden.",
         "analyze_llm_header": "LLM-Beratung ({source}, {urgency}):",
         "analyze_suggested": "Empfohlene Aktionen: {actions}",
+        "analyze_suggested_header": "Empfohlene Aktionen:",
         "analyze_llm_note": "LLM-Hinweis: {note}",
         "ticker_header": "Analyse: {symbol}",
         "ticker_no_price": "Kein Kurs im Cache. Marktdaten abrufen und erneut versuchen.",
@@ -1494,6 +1496,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_llm_empty_user": "无法生成 AI 摘要。",
         "analyze_llm_header": "LLM 建议（{source}，{urgency}）：",
         "analyze_suggested": "建议行动：{actions}",
+        "analyze_suggested_header": "建议行动：",
         "analyze_llm_note": "LLM 说明：{note}",
         "ticker_header": "分析：{symbol}",
         "ticker_no_price": "无缓存价格。请先获取行情后重试。",
@@ -2103,6 +2106,7 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "analyze_llm_empty_user": "Не удалось сформировать ИИ-сводку.",
         "analyze_llm_header": "LLM-рекомендация ({source}, {urgency}):",
         "analyze_suggested": "Рекомендуемые действия: {actions}",
+        "analyze_suggested_header": "Рекомендуемые действия:",
         "analyze_llm_note": "Примечание LLM: {note}",
         "ticker_header": "Анализ: {symbol}",
         "ticker_no_price": "Нет кэшированной цены. Дождитесь обновления рынка и повторите.",
