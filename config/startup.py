@@ -24,6 +24,7 @@ from storage.models import (
     BotUsers,
     CatalystEventsFile,
     CatalystReminderRecord,
+    ChatSessions,
     ManualCatalystEvent,
     NewsCache,
     PerformanceHistory,
@@ -163,6 +164,7 @@ def validate_json_documents(repository: DataRepository) -> StartupReport:
         ("signals", paths.signals, SignalsFile),
         ("performance_history", paths.performance_history, PerformanceHistory),
         ("users", paths.users, BotUsers),
+        ("chat_sessions", paths.chat_sessions, ChatSessions),
     )
 
     report = StartupReport()
@@ -274,6 +276,14 @@ def log_startup_summary(
         "enabled" if app_config.enable_weekly_summary else "disabled",
         app_config.weekly_summary_hour,
         app_config.weekly_summary_minute,
+        app_config.timezone,
+    )
+    logger.info(
+        "Weekend digests: %s; Sunday evening summary: %s at %02d:%02d %s",
+        "muted" if app_config.mute_weekend_digests else "active",
+        "enabled" if app_config.enable_weekend_summary else "disabled",
+        app_config.weekend_summary_hour,
+        app_config.weekend_summary_minute,
         app_config.timezone,
     )
     logger.info("LLM summaries: %s", "enabled" if app_config.enable_llm_summaries else "disabled")

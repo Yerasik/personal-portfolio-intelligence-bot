@@ -674,19 +674,23 @@ def format_daily_summary(
     ticker_to_industry: dict[str, str] | None = None,
     performance_history: PerformanceHistory | None = None,
     lang: str = "en",
+    title_key: str = "daily_summary",
+    intro_key: str | None = None,
 ) -> str:
-    """Format a concise daily summary for Telegram delivery."""
+    """Format a concise daily (or weekend) summary for Telegram delivery."""
     _ = advisory
     visible_alerts = _visible_alerts(alerts, app_config)
-    lines = [
-        t("daily_summary", lang),
+    lines = [t(title_key, lang)]
+    if intro_key is not None:
+        lines.append(t(intro_key, lang))
+    lines.append(
         t(
             "holdings_alerts",
             lang,
             holdings=len(portfolio.positions),
             alerts=len(visible_alerts),
-        ),
-    ]
+        )
+    )
 
     if state is not None and portfolio.positions:
         valuation = build_portfolio_valuation(portfolio, state)
@@ -741,6 +745,35 @@ def format_daily_summary(
     lines.append(t("advisory_footer", lang))
     return truncate_message("\n".join(lines))
 
+
+def format_weekend_summary(
+    portfolio: Portfolio,
+    alerts: list[AlertCandidate],
+    advisory: LlmAdvisoryResult | None,
+    app_config: AppConfig,
+    news_summary: NewsSummary | None = None,
+    *,
+    state: BotState | None = None,
+    news_cache: NewsCache | None = None,
+    ticker_to_industry: dict[str, str] | None = None,
+    performance_history: PerformanceHistory | None = None,
+    lang: str = "en",
+) -> str:
+    """Format the Sunday evening weekend rollup for Telegram delivery."""
+    return format_daily_summary(
+        portfolio,
+        alerts,
+        advisory,
+        app_config,
+        news_summary,
+        state=state,
+        news_cache=news_cache,
+        ticker_to_industry=ticker_to_industry,
+        performance_history=performance_history,
+        lang=lang,
+        title_key="weekend_summary",
+        intro_key="weekend_summary_note",
+    )
 
 def format_start(*, lang: str = "en", is_developer: bool = False) -> str:
     """Welcome message for /start."""

@@ -74,7 +74,15 @@ from bot.sell_args import SellParseResult, parse_sell_args
 from bot.i18n import SUPPORTED_LANGUAGES, normalize_language, t
 from bot.notifier import TelegramNotifier
 from config.settings import RuntimeSettings
-from storage.models import DeveloperPortfolioAction, Portfolio, TickerStrategy, UserRole
+from storage.models import (
+    ChatTurn,
+    DeveloperPortfolioAction,
+    LlmProvider,
+    Portfolio,
+    TickerStrategy,
+    UserRole,
+    normalize_llm_provider,
+)
 from storage.portfolio_ops import (
     PortfolioTickerResult,
     normalize_ticker,
@@ -1264,6 +1272,79 @@ class BotCommands:
             return t("language_invalid", lang)
         return t("language_set", normalized, language=normalized)
 
+    def current_llm_message(self, chat_id: int) -> str:
+        """Show the user's preferred LLM provider and usage hint."""
+        lang = self._lang(chat_id)
+        user = self.repository.find_user(chat_id)
+        provider = user.llm_provider if user is not None else "ollama"
+        return (
+            f"{t('llm_current', lang, provider=provider)}\n\n"
+            f"{t('llm_usage', lang)}"
+        )
+
+    def set_llm_message(self, chat_id: int, provider_raw: str) -> str:
+        """Update the requesting user's preferred LLM provider."""
+        lang = self._lang(chat_id)
+        provider = normalize_llm_provider(provider_raw)
+        if provider is None:
+            return t("llm_invalid", lang)
+        ok, result = self.repository.set_user_llm_provider(chat_id, provider)
+        if not ok:
+            return t("llm_invalid", lang)
+        return t("llm_set", lang, provider=result)
+
+    def chat_message(self, chat_id: int, user_text: str) -> str:
+        """Answer a free-text question using portfolio context and the user's LLM."""
+        from datetime import UTC, datetime
+
+        from analysis.portfolio_chat import answer_portfolio_chat
+
+        lang = self._lang(chat_id)
+        app_config = self.repository.load_config()
+        if not app_config.enable_llm_summaries:
+            return t("chat_llm_disabled", lang)
+
+        user = self.repository.find_user(chat_id)
+        provider: LlmProvider = user.llm_provider if user is not None else "ollama"
+        if not self.llm.is_provider_configured(provider):
+            return t("chat_provider_unavailable", lang, provider=provider)
+
+        portfolio = self.repository.load_portfolio()
+        state = self.repository.load_state()
+        news_cache = self.repository.load_news_cache()
+        industries = self.repository.load_ticker_industries()
+        session = self.repository.get_chat_session(chat_id)
+
+        result = answer_portfolio_chat(
+            self.llm,
+            user_message=user_text,
+            portfolio=portfolio,
+            app_config=app_config,
+            state=state,
+            news_cache=news_cache,
+            history=session.turns,
+            provider=provider,
+            ticker_to_industry=industries.ticker_to_industry,
+            language=lang,
+        )
+        if result.error or not result.text:
+            return t(
+                "chat_failed",
+                lang,
+                provider=provider,
+                error=result.error or "empty_response",
+            )
+
+        now = datetime.now(UTC)
+        self.repository.append_chat_turns(
+            chat_id,
+            [
+                ChatTurn(role="user", content=user_text.strip(), created_at=now),
+                ChatTurn(role="assistant", content=result.text, created_at=now),
+            ],
+        )
+        return truncate_message(result.text)
+
     def reload_config_message(self, chat_id: int) -> str:
         """Reload config.json from disk (developer diagnostics)."""
         from scheduler.jobs import reload_scheduler_jobs
@@ -1330,7 +1411,7 @@ class BotCommands:
         if not users.users:
             return t("users_list", lang, lines="(none)")
         lines = [
-            f"- {user.chat_id}: role={user.role}, lang={user.language}"
+            f"- {user.chat_id}: role={user.role}, lang={user.language}, llm={user.llm_provider}"
             for user in users.users
         ]
         return t("users_list", lang, lines="\n".join(lines))

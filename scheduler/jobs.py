@@ -22,6 +22,8 @@ from apscheduler.triggers.interval import IntervalTrigger
 from analysis.change_briefing import run_change_briefing
 from analysis.catalyst_reminders import run_catalyst_reminder_job
 from analysis.deep_digest import parse_deep_digest_time, run_deep_digest
+from analysis.weekend_schedule import is_weekend
+from analysis.weekend_summary import run_weekend_summary
 from analysis.weekly_summary import run_weekly_summary
 from analysis.industries import build_news_fetch_industries
 from analysis.llm import LlmClient
@@ -54,6 +56,7 @@ JOB_CATALYST_CALENDAR: Final = "catalyst_calendar"
 JOB_CHANGE_BRIEFING: Final = "change_briefing"
 JOB_DAILY_SUMMARY: Final = "daily_summary"
 JOB_WEEKLY_SUMMARY: Final = "weekly_summary"
+JOB_WEEKEND_SUMMARY: Final = "weekend_summary"
 JOB_DEEP_DIGEST_PREFIX: Final = "deep_digest_"
 
 _built_scheduler: AppScheduler | None = None
@@ -254,6 +257,9 @@ def run_daily_summary_job(services: SchedulerServices) -> None:
     if not app_config.enable_daily_summary:
         logger.info("Daily summary disabled in config.json")
         return
+    if app_config.mute_weekend_digests and is_weekend(app_config.timezone):
+        logger.info("Daily summary skipped: weekend digests are muted")
+        return
 
     portfolio = services.repository.load_portfolio()
     ticker_industries = services.repository.load_ticker_industries()
@@ -314,11 +320,26 @@ def run_weekly_summary_job(services: SchedulerServices) -> None:
     )
 
 
+def run_weekend_summary_job(services: SchedulerServices) -> None:
+    """Build the Sunday evening weekend rollup and send it to Telegram."""
+    app_config = services.load_app_config()
+    llm = LlmClient(settings=services.runtime, app_config=app_config)
+    run_weekend_summary(
+        services.repository,
+        app_config,
+        services.get_notifier(),
+        llm,
+    )
+
+
 def run_deep_digest_job(services: SchedulerServices) -> None:
     """Build the morning/evening deep digest and send it to Telegram."""
     app_config = services.load_app_config()
     if not app_config.enable_deep_digest:
         logger.info("Deep digest disabled in config.json")
+        return
+    if app_config.mute_weekend_digests and is_weekend(app_config.timezone):
+        logger.info("Deep digest skipped: weekend digests are muted")
         return
 
     llm = LlmClient(settings=services.runtime, app_config=app_config)
@@ -379,6 +400,9 @@ def run_catalyst_calendar_job(services: SchedulerServices) -> None:
 def run_change_briefing_job(services: SchedulerServices) -> None:
     """Deliver the what-changed-since-yesterday briefing."""
     app_config = services.load_app_config()
+    if app_config.mute_weekend_digests and is_weekend(app_config.timezone):
+        logger.info("Change briefing skipped: weekend digests are muted")
+        return
     llm = LlmClient(settings=services.runtime, app_config=app_config)
     run_change_briefing(
         services.repository,
@@ -466,16 +490,19 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
             pass
 
     if app_config.enable_change_briefing:
+        change_trigger_kwargs: dict[str, object] = {
+            "hour": app_config.change_briefing_hour,
+            "minute": app_config.change_briefing_minute,
+            "timezone": timezone,
+        }
+        if app_config.mute_weekend_digests:
+            change_trigger_kwargs["day_of_week"] = "mon-fri"
         scheduler.add_job(
             lambda: _run_job(
                 JOB_CHANGE_BRIEFING,
                 lambda: run_change_briefing_job(services),
             ),
-            trigger=CronTrigger(
-                hour=app_config.change_briefing_hour,
-                minute=app_config.change_briefing_minute,
-                timezone=timezone,
-            ),
+            trigger=CronTrigger(**change_trigger_kwargs),
             id=JOB_CHANGE_BRIEFING,
             replace_existing=True,
         )
@@ -486,13 +513,16 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
             pass
 
     if app_config.enable_daily_summary:
+        daily_trigger_kwargs: dict[str, object] = {
+            "hour": app_config.digest_hour,
+            "minute": app_config.digest_minute,
+            "timezone": timezone,
+        }
+        if app_config.mute_weekend_digests:
+            daily_trigger_kwargs["day_of_week"] = "mon-fri"
         scheduler.add_job(
             lambda: _run_job(JOB_DAILY_SUMMARY, lambda: run_daily_summary_job(services)),
-            trigger=CronTrigger(
-                hour=app_config.digest_hour,
-                minute=app_config.digest_minute,
-                timezone=timezone,
-            ),
+            trigger=CronTrigger(**daily_trigger_kwargs),
             id=JOB_DAILY_SUMMARY,
             replace_existing=True,
         )
@@ -520,6 +550,27 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
         except JobLookupError:
             pass
 
+    if app_config.enable_weekend_summary:
+        scheduler.add_job(
+            lambda: _run_job(
+                JOB_WEEKEND_SUMMARY,
+                lambda: run_weekend_summary_job(services),
+            ),
+            trigger=CronTrigger(
+                day_of_week="sun",
+                hour=app_config.weekend_summary_hour,
+                minute=app_config.weekend_summary_minute,
+                timezone=timezone,
+            ),
+            id=JOB_WEEKEND_SUMMARY,
+            replace_existing=True,
+        )
+    else:
+        try:
+            scheduler.remove_job(JOB_WEEKEND_SUMMARY)
+        except JobLookupError:
+            pass
+
     _remove_deep_digest_jobs(scheduler)
     if app_config.enable_deep_digest:
         for time_str in app_config.deep_digest_times:
@@ -529,13 +580,16 @@ def register_jobs(scheduler: BlockingScheduler, services: SchedulerServices) -> 
                 logger.warning("Skipping invalid deep_digest_times entry: %s", time_str)
                 continue
             job_id = f"{JOB_DEEP_DIGEST_PREFIX}{hour:02d}_{minute:02d}"
+            deep_trigger_kwargs: dict[str, object] = {
+                "hour": hour,
+                "minute": minute,
+                "timezone": timezone,
+            }
+            if app_config.mute_weekend_digests:
+                deep_trigger_kwargs["day_of_week"] = "mon-fri"
             scheduler.add_job(
                 lambda: _run_job(job_id, lambda: run_deep_digest_job(services)),
-                trigger=CronTrigger(
-                    hour=hour,
-                    minute=minute,
-                    timezone=timezone,
-                ),
+                trigger=CronTrigger(**deep_trigger_kwargs),
                 id=job_id,
                 replace_existing=True,
             )

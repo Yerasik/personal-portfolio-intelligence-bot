@@ -18,7 +18,10 @@ from config.loader import ConfigurationBundle
 from config.settings import RuntimeSettings
 from scheduler.jobs import (
     JOB_AUTO_NEWS_DISCOVERY,
+    JOB_CATALYST_CALENDAR,
+    JOB_CHANGE_BRIEFING,
     JOB_DAILY_SUMMARY,
+    JOB_WEEKEND_SUMMARY,
     JOB_WEEKLY_SUMMARY,
     JOB_DEEP_DIGEST_PREFIX,
     JOB_MARKET_FETCH,
@@ -117,6 +120,9 @@ def run_test() -> None:
             JOB_PROS_CONS,
             JOB_DAILY_SUMMARY,
             JOB_WEEKLY_SUMMARY,
+            JOB_WEEKEND_SUMMARY,
+            JOB_CHANGE_BRIEFING,
+            JOB_CATALYST_CALENDAR,
             f"{JOB_DEEP_DIGEST_PREFIX}06_00",
             f"{JOB_DEEP_DIGEST_PREFIX}20_00",
         }

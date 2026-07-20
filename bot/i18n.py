@@ -26,18 +26,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  • Why each stock is held — /strategy\n"
             "  • Industry news and headlines — /industries, /news_summary\n"
             "  • Portfolio or single-stock review — /analyze or /analyze AAPL\n"
+            "  • Free-text chat about the portfolio — just type a question\n"
             "  • Urgent alerts and daily summaries — sent automatically"
         ),
         "welcome_quick_start": (
             "Quick start\n"
             "  1. Tap a button below (or type /menu to show the keyboard)\n"
             "  2. Run /portfolio to see your positions\n"
-            "  3. Run /analyze for an on-demand portfolio review\n"
-            "  4. Run /analyze AAPL to explain one stock's price move"
+            "  3. Ask a question in plain text (uses portfolio context)\n"
+            "  4. Run /analyze for an on-demand portfolio review"
         ),
         "welcome_tip": (
             "Tip: type /help for the full command list. "
-            "Change language with /set_language en (also de, zh, ru)."
+            "Change language with /set_language en (also de, zh, ru). "
+            "Choose the LLM with /set_llm ollama (also claude, gpt)."
         ),
         "welcome_dev_extra": (
             "Developer tools\n"
@@ -67,8 +69,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /stress [scenario_id] — scenario shocks and worst contributors\n\n"
             "Settings\n"
             "  /set_language <code> — language (en, de, zh, ru)\n"
+            "  /set_llm <provider> — chat model (ollama, claude, gpt)\n"
             "  /menu — show keyboard\n"
-            "  /help — this list"
+            "  /help — this list\n\n"
+            "Chat\n"
+            "  Type any message (not a command) to ask about the portfolio"
         ),
         "help_dev_commands": (
             "Portfolio edits\n"
@@ -94,7 +99,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Portfolio — /portfolio · /strategy · /performance\n"
             "News — /industries · /news_summary\n"
             "Analysis — /analyze · /risk_metrics · /stress\n"
-            "Settings — /set_language · /help"
+            "Settings — /set_language · /set_llm · /help\n\n"
+            "Or type a question about the portfolio in plain text."
         ),
         "menu_hint_dev": (
             "Developer menu is active.\n\n"
@@ -123,6 +129,23 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_user_invalid_id": "Invalid chat id: {value!r}",
         "language_current": "Your current language: {language}.",
+        "llm_current": "Your current LLM provider: {provider}.",
+        "llm_set": "LLM provider updated to {provider}.",
+        "llm_invalid": "Unsupported LLM provider. Use: ollama, claude, gpt",
+        "chat_llm_disabled": (
+            "Portfolio chat is disabled (enable_llm_summaries in config.json)."
+        ),
+        "chat_provider_unavailable": (
+            "The {provider} provider is not configured right now. "
+            "Try /set_llm ollama, or ask a developer to check API settings."
+        ),
+        "chat_failed": (
+            "Sorry, I could not answer with {provider}.\n"
+            "Error: {error}"
+        ),
+        "chat_unexpected_error": (
+            "Chat failed unexpectedly. Please try again in a moment."
+        ),
         "portfolio_empty": "Portfolio is empty.",
         "portfolio_empty_dev": (
             "Portfolio is empty. Use /add_ticker to add a position, "
@@ -469,6 +492,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "target": "Target",
         "suggested": "Suggested",
         "daily_summary": "Daily Portfolio Summary",
+        "weekend_summary": "Weekend Portfolio Summary",
+        "weekend_summary_note": (
+            "Scheduled digests were muted on Saturday. "
+            "This Sunday evening rollup covers the weekend."
+        ),
         "holdings_alerts": "Holdings: {holdings} | Active alerts: {alerts}",
         "daily_portfolio_value_hkd": "Portfolio value: HK${value:,.0f}",
         "daily_portfolio_pl_hkd": "Unrealized P/L: {amount:+,.0f} HKD ({pct:+.2f}%)",
@@ -693,6 +721,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Supported codes: en, de, zh, ru\n\n"
             "Example: /set_language de"
         ),
+        "llm_usage": (
+            "How to use /set_llm\n\n"
+            "Syntax: /set_llm <provider>\n\n"
+            "Supported providers:\n"
+            "• ollama — local model (default)\n"
+            "• claude — HKU Claude\n"
+            "• gpt — HKU OpenAI / GPT\n\n"
+            "Examples:\n"
+            "/set_llm ollama\n"
+            "/set_llm claude\n"
+            "/set_llm gpt"
+        ),
         "reload_ok": "Configuration reloaded from disk.",
         "reload_jobs_ok": "Scheduler jobs were refreshed from the updated config.",
         "debug_state": (
@@ -728,18 +768,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  • Idee hinter jeder Position — /strategy\n"
             "  • Branchennews und Schlagzeilen — /industries, /news_summary\n"
             "  • Portfolio- oder Einzelaktien-Analyse — /analyze oder /analyze AAPL\n"
+            "  • Freitext-Chat zum Portfolio — einfach eine Frage tippen\n"
             "  • Dringende Warnungen und Tageszusammenfassungen — automatisch"
         ),
         "welcome_quick_start": (
             "Schnellstart\n"
             "  1. Tippen Sie unten auf eine Schaltfläche (oder /menu für die Tastatur)\n"
             "  2. /portfolio — Ihre Positionen anzeigen\n"
-            "  3. /analyze — Portfolio-Beratung auf Abruf\n"
-            "  4. /analyze AAPL — Kursbewegung einer Aktie erklären"
+            "  3. Stellen Sie eine Frage in Freitext (mit Portfolio-Kontext)\n"
+            "  4. /analyze — Portfolio-Beratung auf Abruf"
         ),
         "welcome_tip": (
             "Tipp: /help zeigt alle Befehle. "
-            "Sprache ändern mit /set_language de (auch en, zh, ru)."
+            "Sprache ändern mit /set_language de (auch en, zh, ru). "
+            "LLM wählen mit /set_llm ollama (auch claude, gpt)."
         ),
         "welcome_dev_extra": (
             "Entwickler-Tools\n"
@@ -767,8 +809,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /stress [scenario_id] — Szenario-Schocks und größte Verlierer\n\n"
             "Einstellungen\n"
             "  /set_language <code> — Sprache (en, de, zh, ru)\n"
+            "  /set_llm <provider> — Chat-Modell (ollama, claude, gpt)\n"
             "  /menu — Tastatur anzeigen\n"
-            "  /help — diese Liste"
+            "  /help — diese Liste\n\n"
+            "Chat\n"
+            "  Tippen Sie eine Nachricht (kein Befehl), um zum Portfolio zu fragen"
         ),
         "help_dev_commands": (
             "Bestandsänderungen\n"
@@ -794,7 +839,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Portfolio — /portfolio · /strategy · /performance\n"
             "Nachrichten — /industries · /news_summary\n"
             "Analyse — /analyze · /risk_metrics · /stress\n"
-            "Einstellungen — /set_language · /help"
+            "Einstellungen — /set_language · /set_llm · /help\n\n"
+            "Oder stellen Sie eine Frage zum Portfolio in Freitext."
         ),
         "menu_hint_dev": (
             "Entwickler-Menü aktiv.\n\n"
@@ -820,6 +866,23 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_user_invalid_id": "Ungültige Chat-ID: {value!r}",
         "language_current": "Ihre aktuelle Sprache: {language}.",
+        "llm_current": "Ihr aktueller LLM-Anbieter: {provider}.",
+        "llm_set": "LLM-Anbieter auf {provider} geändert.",
+        "llm_invalid": "LLM-Anbieter nicht unterstützt. Verwenden: ollama, claude, gpt",
+        "chat_llm_disabled": (
+            "Portfolio-Chat ist deaktiviert (enable_llm_summaries in config.json)."
+        ),
+        "chat_provider_unavailable": (
+            "Der Anbieter {provider} ist derzeit nicht konfiguriert. "
+            "Versuchen Sie /set_llm ollama oder bitten Sie einen Entwickler, die API-Einstellungen zu prüfen."
+        ),
+        "chat_failed": (
+            "Leider konnte ich mit {provider} nicht antworten.\n"
+            "Fehler: {error}"
+        ),
+        "chat_unexpected_error": (
+            "Chat ist unerwartet fehlgeschlagen. Bitte versuchen Sie es gleich erneut."
+        ),
         "portfolio_empty": "Portfolio ist leer.",
         "portfolio_empty_dev": (
             "Portfolio ist leer. Nutzen Sie /add_ticker, z. B. /add_ticker AAPL 10 150.25"
@@ -1168,6 +1231,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "target": "Ziel",
         "suggested": "Empfehlung",
         "daily_summary": "Tägliche Portfolio-Zusammenfassung",
+        "weekend_summary": "Wochenend-Portfolio-Zusammenfassung",
+        "weekend_summary_note": (
+            "Geplante Digests waren am Samstag stummgeschaltet. "
+            "Diese Sonntagabend-Zusammenfassung deckt das Wochenende ab."
+        ),
         "holdings_alerts": "Bestände: {holdings} | Aktive Warnungen: {alerts}",
         "daily_portfolio_value_hkd": "Portfoliowert: {value:,.0f} HKD",
         "daily_portfolio_pl_hkd": "Unrealisierter G/V: {amount:+,.0f} HKD ({pct:+.2f} %)",
@@ -1316,6 +1384,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Unterstützte Codes: en, de, zh, ru\n\n"
             "Beispiel: /set_language de"
         ),
+        "llm_usage": (
+            "So verwenden Sie /set_llm\n\n"
+            "Syntax: /set_llm <provider>\n\n"
+            "Unterstützte Anbieter:\n"
+            "• ollama — lokales Modell (Standard)\n"
+            "• claude — HKU Claude\n"
+            "• gpt — HKU OpenAI / GPT\n\n"
+            "Beispiele:\n"
+            "/set_llm ollama\n"
+            "/set_llm claude\n"
+            "/set_llm gpt"
+        ),
         "reload_ok": "Konfiguration von der Festplatte neu geladen.",
         "reload_jobs_ok": "Geplante Aufgaben wurden aus der aktualisierten Konfiguration neu geladen.",
         "debug_state": (
@@ -1350,18 +1430,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  • 每只股票的持仓逻辑 — /strategy\n"
             "  • 行业新闻与头条 — /industries、/news_summary\n"
             "  • 组合或单股分析 — /analyze 或 /analyze AAPL\n"
+            "  • 关于投资组合的自由对话 — 直接输入问题\n"
             "  • 紧急预警与每日摘要 — 自动推送"
         ),
         "welcome_quick_start": (
             "快速开始\n"
             "  1. 点击下方按钮（或输入 /menu 显示键盘）\n"
             "  2. 运行 /portfolio 查看持仓\n"
-            "  3. 运行 /analyze 获取组合建议\n"
-            "  4. 运行 /analyze AAPL 解释单只股票涨跌"
+            "  3. 用自然语言提问（会带上组合上下文）\n"
+            "  4. 运行 /analyze 获取组合建议"
         ),
         "welcome_tip": (
             "提示：输入 /help 查看全部命令。\n"
-            "使用 /set_language zh 切换语言（也支持 en、de、ru）。"
+            "使用 /set_language zh 切换语言（也支持 en、de、ru）。\n"
+            "使用 /set_llm ollama 选择模型（也支持 claude、gpt）。"
         ),
         "welcome_dev_extra": (
             "开发者工具\n"
@@ -1389,8 +1471,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /stress [scenario_id] — 情景冲击与最大拖累项\n\n"
             "设置\n"
             "  /set_language <code> — 语言 (en, de, zh, ru)\n"
+            "  /set_llm <provider> — 对话模型 (ollama, claude, gpt)\n"
             "  /menu — 显示键盘\n"
-            "  /help — 本列表"
+            "  /help — 本列表\n\n"
+            "对话\n"
+            "  发送任意非命令消息，即可询问投资组合相关问题"
         ),
         "help_dev_commands": (
             "编辑持仓\n"
@@ -1416,7 +1501,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "投资组合 — /portfolio · /strategy · /performance\n"
             "新闻 — /industries · /news_summary\n"
             "分析 — /analyze · /risk_metrics · /stress\n"
-            "设置 — /set_language · /help"
+            "设置 — /set_language · /set_llm · /help\n\n"
+            "也可以直接用文字询问投资组合相关问题。"
         ),
         "menu_hint_dev": (
             "开发者菜单已启用。\n\n"
@@ -1442,6 +1528,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_user_invalid_id": "无效的 chat id：{value!r}",
         "language_current": "您当前的语言：{language}。",
+        "llm_current": "您当前的 LLM 提供方：{provider}。",
+        "llm_set": "LLM 提供方已更新为 {provider}。",
+        "llm_invalid": "不支持的 LLM 提供方。请使用：ollama、claude、gpt",
+        "chat_llm_disabled": (
+            "投资组合对话已禁用（请在 config.json 中开启 enable_llm_summaries）。"
+        ),
+        "chat_provider_unavailable": (
+            "当前未配置 {provider}。请尝试 /set_llm ollama，或请开发者检查 API 设置。"
+        ),
+        "chat_failed": (
+            "抱歉，无法使用 {provider} 回答。\n"
+            "错误：{error}"
+        ),
+        "chat_unexpected_error": "对话意外失败，请稍后再试。",
         "portfolio_empty": "投资组合为空。",
         "portfolio_empty_dev": (
             "投资组合为空。请使用 /add_ticker 添加，例如 /add_ticker AAPL 10 150.25"
@@ -1780,6 +1880,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "target": "目标",
         "suggested": "建议",
         "daily_summary": "每日投资组合摘要",
+        "weekend_summary": "周末投资组合摘要",
+        "weekend_summary_note": (
+            "周六已暂停定时摘要推送。"
+            "本周日晚间汇总覆盖整个周末。"
+        ),
         "holdings_alerts": "持仓：{holdings} | 活跃预警：{alerts}",
         "daily_portfolio_value_hkd": "组合市值：{value:,.0f} 港元",
         "daily_portfolio_pl_hkd": "浮动盈亏：{amount:+,.0f} 港元（{pct:+.2f}%）",
@@ -1921,6 +2026,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "支持的语言代码：en、de、zh、ru\n\n"
             "示例：/set_language zh"
         ),
+        "llm_usage": (
+            "如何使用 /set_llm\n\n"
+            "语法：/set_llm <provider>\n\n"
+            "支持的提供方：\n"
+            "• ollama — 本地模型（默认）\n"
+            "• claude — HKU Claude\n"
+            "• gpt — HKU OpenAI / GPT\n\n"
+            "示例：\n"
+            "/set_llm ollama\n"
+            "/set_llm claude\n"
+            "/set_llm gpt"
+        ),
         "reload_ok": "已从磁盘重新加载配置。",
         "reload_jobs_ok": "已根据更新后的配置刷新计划任务。",
         "debug_state": (
@@ -1956,18 +2073,20 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  • Логика каждой позиции — /strategy\n"
             "  • Новости по отраслям — /industries, /news_summary\n"
             "  • Обзор портфеля или одной акции — /analyze или /analyze AAPL\n"
+            "  • Свободный чат о портфеле — просто напишите вопрос\n"
             "  • Срочные предупреждения и ежедневные сводки — автоматически"
         ),
         "welcome_quick_start": (
             "Быстрый старт\n"
             "  1. Нажмите кнопку ниже (или введите /menu для клавиатуры)\n"
             "  2. /portfolio — ваши позиции\n"
-            "  3. /analyze — обзор портфеля по запросу\n"
-            "  4. /analyze AAPL — объяснить движение цены одной акции"
+            "  3. Задайте вопрос обычным текстом (с контекстом портфеля)\n"
+            "  4. /analyze — обзор портфеля по запросу"
         ),
         "welcome_tip": (
             "Подсказка: /help — полный список команд. "
-            "Сменить язык: /set_language ru (также en, de, zh)."
+            "Сменить язык: /set_language ru (также en, de, zh). "
+            "Выбрать LLM: /set_llm ollama (также claude, gpt)."
         ),
         "welcome_dev_extra": (
             "Инструменты разработчика\n"
@@ -1995,8 +2114,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "  /stress [scenario_id] — сценарные шоки и худшие вкладчики\n\n"
             "Настройки\n"
             "  /set_language <code> — язык (en, de, zh, ru)\n"
+            "  /set_llm <provider> — модель чата (ollama, claude, gpt)\n"
             "  /menu — показать клавиатуру\n"
-            "  /help — этот список"
+            "  /help — этот список\n\n"
+            "Чат\n"
+            "  Напишите любое сообщение (не команду), чтобы спросить о портфеле"
         ),
         "help_dev_commands": (
             "Изменение портфеля\n"
@@ -2022,7 +2144,8 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Портфель — /portfolio · /strategy · /performance\n"
             "Новости — /industries · /news_summary\n"
             "Анализ — /analyze · /risk_metrics · /stress\n"
-            "Настройки — /set_language · /help"
+            "Настройки — /set_language · /set_llm · /help\n\n"
+            "Или задайте вопрос о портфеле обычным текстом."
         ),
         "menu_hint_dev": (
             "Меню разработчика активно.\n\n"
@@ -2048,6 +2171,23 @@ _MESSAGES: dict[str, dict[str, str]] = {
         ),
         "add_user_invalid_id": "Неверный chat id: {value!r}",
         "language_current": "Ваш текущий язык: {language}.",
+        "llm_current": "Ваш текущий LLM-провайдер: {provider}.",
+        "llm_set": "LLM-провайдер изменён на {provider}.",
+        "llm_invalid": "Неподдерживаемый LLM-провайдер. Используйте: ollama, claude, gpt",
+        "chat_llm_disabled": (
+            "Чат по портфелю отключён (enable_llm_summaries в config.json)."
+        ),
+        "chat_provider_unavailable": (
+            "Провайдер {provider} сейчас не настроен. "
+            "Попробуйте /set_llm ollama или попросите разработчика проверить API."
+        ),
+        "chat_failed": (
+            "Не удалось ответить через {provider}.\n"
+            "Ошибка: {error}"
+        ),
+        "chat_unexpected_error": (
+            "Чат неожиданно завершился с ошибкой. Попробуйте ещё раз чуть позже."
+        ),
         "portfolio_empty": "Портфель пуст.",
         "portfolio_empty_dev": (
             "Портфель пуст. Добавьте позиции через /add_ticker, "
@@ -2396,6 +2536,11 @@ _MESSAGES: dict[str, dict[str, str]] = {
         "target": "Цель",
         "suggested": "Рекомендация",
         "daily_summary": "Ежедневная сводка по портфелю",
+        "weekend_summary": "Выходная сводка по портфелю",
+        "weekend_summary_note": (
+            "В субботу плановые дайджесты были отключены. "
+            "Эта сводка в воскресенье вечером покрывает выходные."
+        ),
         "holdings_alerts": "Позиции: {holdings} | Активные предупреждения: {alerts}",
         "daily_portfolio_value_hkd": "Стоимость портфеля: {value:,.0f} HKD",
         "daily_portfolio_pl_hkd": "Нереализ. P/L: {amount:+,.0f} HKD ({pct:+.2f}%)",
@@ -2543,6 +2688,18 @@ _MESSAGES: dict[str, dict[str, str]] = {
             "Синтаксис: /set_language <code>\n\n"
             "Поддерживаемые коды: en, de, zh, ru\n\n"
             "Пример: /set_language ru"
+        ),
+        "llm_usage": (
+            "Как использовать /set_llm\n\n"
+            "Синтаксис: /set_llm <provider>\n\n"
+            "Поддерживаемые провайдеры:\n"
+            "• ollama — локальная модель (по умолчанию)\n"
+            "• claude — HKU Claude\n"
+            "• gpt — HKU OpenAI / GPT\n\n"
+            "Примеры:\n"
+            "/set_llm ollama\n"
+            "/set_llm claude\n"
+            "/set_llm gpt"
         ),
         "reload_ok": "Конфигурация перезагружена с диска.",
         "reload_jobs_ok": "Запланированные задачи обновлены из новой конфигурации.",

@@ -89,8 +89,9 @@ def build_request_url(base_url: str, api: str, model: str, api_version: str) -> 
     if api == "claude":
         return f"{base}/claude/student/model/{model}/converse"
     if api == "openai":
+        # Student subscription keys use /openai/student/deployments/...
         return (
-            f"{base}/openai/deployments/{model}/chat/completions"
+            f"{base}/openai/student/deployments/{model}/chat/completions"
             f"?api-version={api_version}"
         )
     raise ValueError(f"unsupported API: {api}")
@@ -344,6 +345,8 @@ def main() -> int:
                 tips.extend(
                     [
                         "- Confirm your student-genai-services subscription is approved.",
+                        "- Student GPT path: /openai/student/deployments/{model}/chat/completions",
+                        "- If you see 'Insufficient token', monthly AI credits are exhausted.",
                         "- Try another model, e.g. --model gpt-4.1-nano",
                     ]
                 )

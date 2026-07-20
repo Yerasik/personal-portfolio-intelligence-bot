@@ -43,6 +43,10 @@ class DataPaths:
         return self.root / "users.json"
 
     @property
+    def chat_sessions(self) -> Path:
+        return self.root / "chat_sessions.json"
+
+    @property
     def signals(self) -> Path:
         return self.root / "signals.json"
 

@@ -25,7 +25,7 @@ from collectors.market_data import portfolio_tickers
 from config.hku_api import resolve_hku_api_settings
 from config.ollama import resolve_ollama_settings
 from config.settings import RuntimeSettings
-from storage.models import AppConfig, BotState, NewsCache, NewsItem, Portfolio
+from storage.models import AppConfig, BotState, LlmProvider, NewsCache, NewsItem, Portfolio
 
 logger = logging.getLogger(__name__)
 
@@ -312,58 +312,116 @@ class LlmClient:
             self._ollama_base_url and self._ollama_model
         )
 
-    def generate(self, prompt: str) -> str:
-        """Generate text using HKU APIs first, then Ollama."""
-        text, source = self._generate_with_fallback(prompt)
+    def is_provider_configured(self, provider: LlmProvider) -> bool:
+        """Return True when the requested provider has credentials/settings."""
+        if provider == "ollama":
+            return bool(self._ollama_base_url and self._ollama_model)
+        return bool(self._hku_api_key)
+
+    def generate(
+        self,
+        prompt: str,
+        *,
+        provider: LlmProvider | None = None,
+    ) -> str:
+        """Generate text using a specific provider, or the HKU → Ollama fallback."""
+        if provider is None:
+            text, source = self._generate_with_fallback(prompt)
+        else:
+            text, source = self._generate_with_provider(prompt, provider)
         self._last_source = source
         return text
+
+    def _generate_with_provider(
+        self,
+        prompt: str,
+        provider: LlmProvider,
+    ) -> tuple[str, AdvisorySource]:
+        """Generate with exactly one provider; do not cascade to others."""
+        if provider == "claude":
+            return self._generate_hku_claude(prompt)
+        if provider == "gpt":
+            return self._generate_hku_openai(prompt)
+        return self._generate_ollama_source(prompt)
+
+    def _generate_hku_claude(self, prompt: str) -> tuple[str, AdvisorySource]:
+        """Try configured HKU Claude models in order."""
+        if not self._hku_api_key:
+            raise LlmGenerationError("Claude requires HKU_API_KEY")
+        errors: list[str] = []
+        for claude_model in self._hku_claude_models:
+            try:
+                with httpx.Client(timeout=self._timeout) as client:
+                    text = call_hku_claude_converse(
+                        client=client,
+                        base_url=self._hku_base_url,
+                        api_key=self._hku_api_key,
+                        model=claude_model,
+                        prompt=prompt,
+                    )
+                return text, "hku_claude"
+            except Exception as exc:
+                message = f"HKU Claude ({claude_model}): {exc}"
+                logger.warning(message)
+                errors.append(message)
+        raise LlmGenerationError(
+            "; ".join(errors) if errors else "HKU Claude is not available"
+        )
+
+    def _generate_hku_openai(self, prompt: str) -> tuple[str, AdvisorySource]:
+        """Try configured HKU OpenAI models in order."""
+        if not self._hku_api_key:
+            raise LlmGenerationError("GPT requires HKU_API_KEY")
+        errors: list[str] = []
+        for openai_model in self._hku_openai_models:
+            try:
+                with httpx.Client(timeout=self._timeout) as client:
+                    text = call_hku_openai_chat(
+                        client=client,
+                        base_url=self._hku_base_url,
+                        api_key=self._hku_api_key,
+                        model=openai_model,
+                        api_version=self._hku_openai_api_version,
+                        prompt=prompt,
+                    )
+                return text, "hku_openai"
+            except Exception as exc:
+                message = f"HKU OpenAI ({openai_model}): {exc}"
+                logger.warning(message)
+                errors.append(message)
+        raise LlmGenerationError(
+            "; ".join(errors) if errors else "HKU OpenAI is not available"
+        )
+
+    def _generate_ollama_source(self, prompt: str) -> tuple[str, AdvisorySource]:
+        """Call local Ollama and tag the source."""
+        if not (self._ollama_base_url and self._ollama_model):
+            raise LlmGenerationError("Ollama is not configured")
+        try:
+            return self._generate_ollama(prompt), "ollama"
+        except Exception as exc:
+            raise LlmGenerationError(f"Ollama ({self._ollama_model}): {exc}") from exc
 
     def _generate_with_fallback(self, prompt: str) -> tuple[str, AdvisorySource]:
         """Try Claude Sonnet, GPT, then Ollama."""
         errors: list[str] = []
 
         if self._hku_api_key:
-            for claude_model in self._hku_claude_models:
-                try:
-                    with httpx.Client(timeout=self._timeout) as client:
-                        text = call_hku_claude_converse(
-                            client=client,
-                            base_url=self._hku_base_url,
-                            api_key=self._hku_api_key,
-                            model=claude_model,
-                            prompt=prompt,
-                        )
-                    return text, "hku_claude"
-                except Exception as exc:
-                    message = f"HKU Claude ({claude_model}): {exc}"
-                    logger.warning(message)
-                    errors.append(message)
+            try:
+                return self._generate_hku_claude(prompt)
+            except LlmGenerationError as exc:
+                errors.append(str(exc))
 
-            for openai_model in self._hku_openai_models:
-                try:
-                    with httpx.Client(timeout=self._timeout) as client:
-                        text = call_hku_openai_chat(
-                            client=client,
-                            base_url=self._hku_base_url,
-                            api_key=self._hku_api_key,
-                            model=openai_model,
-                            api_version=self._hku_openai_api_version,
-                            prompt=prompt,
-                        )
-                    return text, "hku_openai"
-                except Exception as exc:
-                    message = f"HKU OpenAI ({openai_model}): {exc}"
-                    logger.warning(message)
-                    errors.append(message)
+            try:
+                return self._generate_hku_openai(prompt)
+            except LlmGenerationError as exc:
+                errors.append(str(exc))
 
         if self._ollama_base_url and self._ollama_model:
             try:
-                text = self._generate_ollama(prompt)
-                return text, "ollama"
-            except Exception as exc:
-                message = f"Ollama ({self._ollama_model}): {exc}"
-                logger.warning(message)
-                errors.append(message)
+                return self._generate_ollama_source(prompt)
+            except LlmGenerationError as exc:
+                errors.append(str(exc))
 
         raise LlmGenerationError("; ".join(errors) if errors else "No LLM backend configured")
 

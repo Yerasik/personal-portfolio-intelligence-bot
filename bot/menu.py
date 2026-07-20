@@ -25,6 +25,7 @@ ORDINARY_BOT_COMMANDS: tuple[BotCommand, ...] = (
     BotCommand("analyze", "Portfolio advisory or /analyze AAPL"),
     BotCommand("chart", "Candlestick chart for a ticker"),
     BotCommand("set_language", "Set your language (en, de, zh, ru)"),
+    BotCommand("set_llm", "Choose LLM: ollama, claude, or gpt"),
 )
 
 DEVELOPER_BOT_COMMANDS: tuple[BotCommand, ...] = ORDINARY_BOT_COMMANDS + (
@@ -59,7 +60,8 @@ def main_menu_keyboard(*, is_developer: bool = False) -> ReplyKeyboardMarkup:
         [KeyboardButton("/stress"), KeyboardButton("/changes")],
         [KeyboardButton("/strategy"), KeyboardButton("/news_summary")],
         [KeyboardButton("/industries"), KeyboardButton("/set_language")],
-        [KeyboardButton("/help"), KeyboardButton("/menu")],
+        [KeyboardButton("/set_llm"), KeyboardButton("/help")],
+        [KeyboardButton("/menu")],
     ]
     if is_developer:
         rows.insert(

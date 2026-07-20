@@ -36,6 +36,18 @@ def _extract_openai_text(payload: dict[str, Any]) -> str:
     return content.strip()
 
 
+def _raise_for_status_with_body(response: httpx.Response, *, label: str) -> None:
+    """Raise HTTPStatusError and include the gateway body (e.g. Insufficient token)."""
+    if not response.is_error:
+        return
+    detail = (response.text or "").strip() or response.reason_phrase
+    raise httpx.HTTPStatusError(
+        f"{label} HTTP {response.status_code}: {detail}",
+        request=response.request,
+        response=response,
+    )
+
+
 def call_hku_claude_converse(
     *,
     client: httpx.Client,
@@ -63,7 +75,7 @@ def call_hku_claude_converse(
     }
     logger.info("Calling HKU Claude model=%s", model)
     response = client.post(url, headers=headers, json=payload)
-    response.raise_for_status()
+    _raise_for_status_with_body(response, label="HKU Claude")
     body = response.json()
     if not isinstance(body, dict):
         raise ValueError("HKU Claude response must be a JSON object")
@@ -80,9 +92,10 @@ def call_hku_openai_chat(
     prompt: str,
     max_tokens: int = DEFAULT_MAX_OUTPUT_TOKENS,
 ) -> str:
-    """Invoke HKU Azure OpenAI chat completions."""
+    """Invoke HKU student Azure OpenAI chat completions."""
+    # Student keys authenticate on /openai/student/..., not /openai/deployments/...
     url = (
-        f"{base_url.rstrip('/')}/openai/deployments/{model}/chat/completions"
+        f"{base_url.rstrip('/')}/openai/student/deployments/{model}/chat/completions"
         f"?api-version={api_version}"
     )
     payload = {
@@ -101,7 +114,7 @@ def call_hku_openai_chat(
     }
     logger.info("Calling HKU OpenAI model=%s", model)
     response = client.post(url, headers=headers, json=payload)
-    response.raise_for_status()
+    _raise_for_status_with_body(response, label="HKU OpenAI")
     body = response.json()
     if not isinstance(body, dict):
         raise ValueError("HKU OpenAI response must be a JSON object")

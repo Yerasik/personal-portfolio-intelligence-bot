@@ -22,6 +22,7 @@ from bot.formatter import (
     format_strategy_announcement,
     format_strategy_update_notification,
     format_urgent_alert,
+    format_weekend_summary,
     format_weekly_summary,
     truncate_message,
 )
@@ -329,6 +330,70 @@ class TelegramNotifier:
                 continue
             delivered = True
             logger.info("Daily summary delivered to chat_id=%s (lang=%s)", user.chat_id, lang)
+
+        return delivered
+
+    def deliver_weekend_summary(
+        self,
+        *,
+        portfolio,
+        alerts: list[AlertCandidate],
+        advisory_by_language: dict[str, LlmAdvisoryResult | None],
+        app_config: AppConfig,
+        repository: DataRepository,
+        news_summary_by_language: dict[str, NewsSummary | None] | None = None,
+        chart_png: bytes | None = None,
+    ) -> bool:
+        """Send the Sunday evening weekend rollup to each authorized user."""
+        if not self.is_configured:
+            logger.warning("Telegram notifier not configured; skipping weekend summary send")
+            return False
+
+        users = self._authorized_users(repository)
+        if not users:
+            logger.warning("No authorized users; skipping weekend summary send")
+            return False
+
+        summaries = news_summary_by_language or {}
+        state = repository.load_state()
+        news_cache = repository.load_news_cache()
+        performance_history = repository.load_performance_history()
+        ticker_to_industry = repository.load_ticker_industries().ticker_to_industry
+        delivered = False
+        for user in users:
+            lang = user.language
+            message = format_weekend_summary(
+                portfolio,
+                alerts,
+                advisory_by_language.get(lang),
+                app_config,
+                news_summary=summaries.get(lang),
+                state=state,
+                news_cache=news_cache,
+                ticker_to_industry=ticker_to_industry,
+                performance_history=performance_history,
+                lang=lang,
+            )
+            try:
+                self.send_text(user.chat_id, message)
+                if chart_png is not None:
+                    self.send_photo(
+                        user.chat_id,
+                        chart_png,
+                        filename="weekend_performance.png",
+                    )
+            except Exception:
+                logger.exception(
+                    "Failed to send weekend summary to chat_id=%s",
+                    user.chat_id,
+                )
+                continue
+            delivered = True
+            logger.info(
+                "Weekend summary delivered to chat_id=%s (lang=%s)",
+                user.chat_id,
+                lang,
+            )
 
         return delivered
 

@@ -98,6 +98,23 @@ class Portfolio(BaseModel):
 
 
 UserRole = Literal["developer", "ordinary"]
+LlmProvider = Literal["ollama", "claude", "gpt"]
+
+_LLM_PROVIDER_ALIASES: dict[str, LlmProvider] = {
+    "ollama": "ollama",
+    "local": "ollama",
+    "claude": "claude",
+    "anthropic": "claude",
+    "sonnet": "claude",
+    "gpt": "gpt",
+    "openai": "gpt",
+    "chatgpt": "gpt",
+}
+
+
+def normalize_llm_provider(value: str) -> LlmProvider | None:
+    """Map user input to a supported LLM provider, or None if invalid."""
+    return _LLM_PROVIDER_ALIASES.get(value.strip().lower())
 
 
 class BotUser(BaseModel):
@@ -106,6 +123,7 @@ class BotUser(BaseModel):
     chat_id: int
     language: str = "en"
     role: UserRole = "ordinary"
+    llm_provider: LlmProvider = "ollama"
 
     @field_validator("language")
     @classmethod
@@ -119,6 +137,27 @@ class BotUsers(BaseModel):
     """Access control list persisted in users.json."""
 
     users: list[BotUser] = Field(default_factory=list)
+
+
+class ChatTurn(BaseModel):
+    """One user or assistant message in a portfolio chat session."""
+
+    role: Literal["user", "assistant"]
+    content: str = Field(min_length=1)
+    created_at: datetime
+
+
+class ChatSession(BaseModel):
+    """Rolling chat history for one Telegram chat."""
+
+    chat_id: int
+    turns: list[ChatTurn] = Field(default_factory=list)
+
+
+class ChatSessions(BaseModel):
+    """Per-user chat histories persisted in chat_sessions.json."""
+
+    by_chat_id: dict[str, ChatSession] = Field(default_factory=dict)
 
 
 class TickerIndustryMap(BaseModel):
@@ -295,6 +334,10 @@ class AppConfig(BaseModel):
     enable_weekly_summary: bool = True
     weekly_summary_hour: int = Field(default=8, ge=0, le=23)
     weekly_summary_minute: int = Field(default=0, ge=0, le=59)
+    mute_weekend_digests: bool = True
+    enable_weekend_summary: bool = True
+    weekend_summary_hour: int = Field(default=20, ge=0, le=23)
+    weekend_summary_minute: int = Field(default=0, ge=0, le=59)
     performance_history_retention_days: int = Field(default=31, ge=7, le=365)
     performance_chart_period: Literal["week", "month", "all"] = "month"
     deep_digest_times: list[str] = Field(default_factory=lambda: ["06:00", "20:00"])
@@ -415,6 +458,7 @@ class BotState(BaseModel):
 
     last_digest_at: datetime | None = None
     last_weekly_summary_at: datetime | None = None
+    last_weekend_summary_at: datetime | None = None
     digest_sent_at: datetime | None = None
     deep_digest_price_snapshot: dict[str, float] = Field(default_factory=dict)
     deep_digest_sentiment_snapshot: dict[str, float] = Field(default_factory=dict)

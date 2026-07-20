@@ -13,9 +13,16 @@ import logging
 from io import BytesIO
 
 from telegram import CallbackQuery, Update
-from telegram.constants import ParseMode
+from telegram.constants import ChatAction, ParseMode
 from telegram.error import BadRequest
-from telegram.ext import Application, CallbackQueryHandler, CommandHandler, ContextTypes
+from telegram.ext import (
+    Application,
+    CallbackQueryHandler,
+    CommandHandler,
+    ContextTypes,
+    MessageHandler,
+    filters,
+)
 
 from bot.add_ticker_args import parse_add_ticker_args
 from bot.chart_args import parse_chart_args
@@ -794,6 +801,56 @@ async def set_language_command(update: Update, context: ContextTypes.DEFAULT_TYP
     await _reply_with_menu(update, message, user=user)
 
 
+async def set_llm_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Handle /set_llm — update the user's preferred LLM provider."""
+    user = await _guard(update, context)
+    if user is None:
+        return
+
+    args = context.args or []
+    if args and args[0].lower() in {"help", "?", "usage"}:
+        await _reply_command_usage(update, user, "llm_usage")
+        return
+    if not args:
+        await _reply_with_menu(
+            update,
+            _commands(context).current_llm_message(user.chat_id),
+            user=user,
+        )
+        return
+
+    message = _commands(context).set_llm_message(user.chat_id, args[0])
+    await _reply_with_menu(update, message, user=user)
+
+
+async def portfolio_chat_message(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+) -> None:
+    """Handle free-text messages with portfolio-aware LLM chat."""
+    user = await _guard(update, context)
+    if user is None or update.message is None or update.message.text is None:
+        return
+
+    text = update.message.text.strip()
+    if not text:
+        return
+
+    await update.message.chat.send_action(ChatAction.TYPING)
+    try:
+        reply = await asyncio.to_thread(
+            _commands(context).chat_message,
+            user.chat_id,
+            text,
+        )
+    except Exception:
+        logger.exception("Portfolio chat failed for chat_id=%s", user.chat_id)
+        await update.message.reply_text(t("chat_unexpected_error", user.language))
+        return
+
+    await update.message.reply_text(truncate_message(reply))
+
+
 async def reload_config_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Handle /reload_config — reload config.json (developer only)."""
     user = await _guard_developer(update, context)
@@ -978,6 +1035,7 @@ def register_handlers(
         ("analyze", analyze_command),
         ("chart", chart_command),
         ("set_language", set_language_command),
+        ("set_llm", set_llm_command),
         ("reload_config", reload_config_command),
         ("debug_state", debug_state_command),
         ("ta", ta_command),
@@ -994,8 +1052,12 @@ def register_handlers(
     application.add_handler(
         CallbackQueryHandler(dev_menu_callback, pattern=rf"^{DEV_MENU_CALLBACK_PREFIX}:")
     )
+    application.add_handler(
+        MessageHandler(filters.TEXT & ~filters.COMMAND, portfolio_chat_message)
+    )
 
     logger.info(
         "Registered Telegram commands: %s",
         ", ".join(f"/{name}" for name, _ in command_handlers),
     )
+    logger.info("Registered free-text portfolio chat handler")

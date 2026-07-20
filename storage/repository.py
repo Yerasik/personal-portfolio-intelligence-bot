@@ -16,7 +16,11 @@ from storage.models import (
     BotUser,
     BotUsers,
     CatalystEventsFile,
+    ChatSession,
+    ChatSessions,
+    ChatTurn,
     DeveloperPortfolioAction,
+    LlmProvider,
     NewsCache,
     PerformanceHistory,
     Portfolio,
@@ -494,6 +498,70 @@ class DataRepository:
         if not updated:
             return False, "not_found"
         return True, lang
+
+    def set_user_llm_provider(
+        self,
+        chat_id: int,
+        provider: LlmProvider,
+    ) -> tuple[bool, str]:
+        """Update a user's preferred LLM provider under file lock."""
+        updated = False
+
+        def _mutate(users: BotUsers) -> BotUsers:
+            nonlocal updated
+            for index, user in enumerate(users.users):
+                if user.chat_id != chat_id:
+                    continue
+                users.users[index] = user.model_copy(update={"llm_provider": provider})
+                updated = True
+                break
+            return users
+
+        self._store.mutate_model(self._paths.users, BotUsers, _mutate)
+        if not updated:
+            return False, "not_found"
+        return True, provider
+
+    def load_chat_sessions(self) -> ChatSessions:
+        """Read portfolio chat histories from data/chat_sessions.json."""
+        return self._store.read_model(self._paths.chat_sessions, ChatSessions)
+
+    def save_chat_sessions(self, sessions: ChatSessions) -> None:
+        """Write data/chat_sessions.json atomically."""
+        self._store.write_model(self._paths.chat_sessions, sessions)
+
+    def get_chat_session(self, chat_id: int) -> ChatSession:
+        """Return the chat session for a chat, or an empty session."""
+        sessions = self.load_chat_sessions()
+        existing = sessions.by_chat_id.get(str(chat_id))
+        if existing is not None:
+            return existing
+        return ChatSession(chat_id=chat_id)
+
+    def append_chat_turns(
+        self,
+        chat_id: int,
+        turns: list[ChatTurn],
+        *,
+        max_turns: int = 8,
+    ) -> ChatSession:
+        """Append turns to a chat session and trim to the most recent max_turns."""
+        key = str(chat_id)
+        updated: ChatSession | None = None
+
+        def _mutate(sessions: ChatSessions) -> ChatSessions:
+            nonlocal updated
+            session = sessions.by_chat_id.get(key) or ChatSession(chat_id=chat_id)
+            session.turns.extend(turns)
+            if len(session.turns) > max_turns:
+                session.turns = session.turns[-max_turns:]
+            sessions.by_chat_id[key] = session
+            updated = session
+            return sessions
+
+        self._store.mutate_model(self._paths.chat_sessions, ChatSessions, _mutate)
+        assert updated is not None
+        return updated
 
     def add_user(
         self,
